@@ -1,0 +1,221 @@
+<project name="org.supercsv" default="compile" basedir=".">
+
+	<property name="distro.name" value="SuperCSV" />
+	<property name="distro.version" value="1.00" />
+	<property name="distro.dir" value="distro" />
+
+	<property name="jar.junit" value="./lib/junit-4.4.jar" />
+	<property name="dir.src" value="./src/" />
+	<property name="dir.dst" value="./bin/" />
+	<property name="dir.javadoc" value="./web/javadoc/" />
+
+
+	<target name="testcoverage" description="run a test coverage">
+
+		<property name="coveragereport.dir" value="${basedir}/web/emmareports/" />  <!-- directory which emma coverage reports will be written to -->
+		<property name="coverage.dir" value="${basedir}/bin_emma/" />				<!-- Destination dir for modified files -->
+		<property name="emma.dir" value="${basedir}/lib/" />          				<!-- directory that contains emma.jar and emma_ant.jar -->
+
+
+		<!-- Set emma.lib to refer to the list of EMMA jar files -->
+		<path id="emma.lib" >
+		    <fileset dir="${emma.dir}">
+		        <include name="*.jar"/>
+		    </fileset>
+		</path>
+
+		<!-- Load <emma> and <emmajava> custom tasks so that they can be used in ANT -->
+		<taskdef resource="emma_ant.properties" classpathref="emma.lib" />
+	    <property name="emma.enabled" value="true" />
+
+
+	    <!-- this property, if overriden via -Demma.filter=<list of filter specs>
+	     on ANT's command line, will set the coverage filter; by default,
+	     all classes found in 'emma.coverage.classes' pathref will be instrumented:
+	    -->
+	    <property name="emma.filter" value="org.supercsv.*" />
+		<delete file="${coverage.dir}/coverage.emma" />
+		<delete file="${coverage.dir}/metadata.emma" />
+		<delete dir="${coverage.dir}" />
+		<mkdir dir="${coverage.dir}" />
+		<!-- no need
+		<delete dir="${coveragereport.dir}" />
+		<mkdir dir="${coveragereport.dir}" />
+		-->
+			<!-- build with debug -->
+			<javac verbose="false"
+				debuglevel="lines,source,vars"
+				srcdir="${dir.src}"
+				destdir="${coverage.dir}"
+				source="1.5"
+				optimize="off"
+				debug="true"
+			>
+				<classpath>
+					<pathelement location="${jar.junit}" />
+				</classpath>
+		</javac>
+
+
+			<!-- Define which classes will be reported in the coverage reports (by default, we will include all classes and assume -->
+			<!-- that your project's output folder is target/classes -->
+			<path id="emma.coverage.classes" >
+			    <pathelement location="${coverage.dir}" />
+			</path>
+
+			<!-- EMMA INSTRUMENTATION -->
+			<!-- Instrument the classes, this takes the normal classes, and makes instrumented classes instead -->
+			<emma enabled="${emma.enabled}" >
+			    <instr instrpathref="emma.coverage.classes"
+			         metadatafile="${coveragereport.dir}/metadata.emma"
+			         merge="true"
+			    	mode="overwrite"
+			    >
+			    	 <!-- exclude classes with a "Test" in the name: -->
+			    	 <filter excludes="*Test*" />
+			    	 <filter value="${emma.filter}" />
+			    </instr>
+			</emma>
+
+			<!-- run test -->
+			<junit haltonfailure="true" printsummary="true" fork="true" forkmode="once">
+				<batchtest>
+					<fileset dir="${coverage.dir}" includes="**/*Test.class" />
+				</batchtest>
+				<formatter type="brief" usefile="false" />
+				<classpath>
+					<path refid="emma.lib" />
+					<pathelement location="${coverage.dir}" />
+					<pathelement location="${jar.junit}" />
+				</classpath>
+
+				<jvmarg value="-Demma.coverage.out.file=${coveragereport.dir}/coverage.emma" />
+				<jvmarg value="-Demma.coverage.out.merge=false" />
+			</junit>
+
+
+			<!-- generate test coverage report -->
+			<!-- if enabled, generate coverage report(s): -->
+			<emma enabled="${emma.enabled}" verbosity="verbose">
+			    <report
+			          sort="+name,+block,+method,+class"
+			          metrics="method:80,block:80,line:80,class:100"
+			    >
+			        <sourcepath >
+				          <dirset dir="${dir.src}" >
+				          </dirset>
+<!--
+			        	<dirset dir="${basedir}/src" >
+				            <include name="**/*.java" />
+				          </dirset>
+				          -->
+			        </sourcepath>
+
+			    <!-- collect all EMMA data dumps (metadata and runtime)
+			         [this can be done via nested <fileset> fileset elements
+			         or <file> elements pointing to a single file]:
+			    -->
+			    <fileset dir="${coveragereport.dir}" >
+			        <include name="*.emma" />
+			    </fileset>
+
+			    <!-- for every type of report desired, configure a nested
+			         element; various report parameters
+			         can be inherited from the parent <report>
+			         and individually overridden for each report type:
+			    -->
+			    	<html outfile="${coveragereport.dir}/index.html"
+			        depth="method"
+			        columns="name,class,method,block,line"
+
+			    />
+			    </report>
+			</emma>
+
+	</target>
+
+
+	<target name="compile">
+		<delete dir="${dir.dst}" />
+		<mkdir dir="${dir.dst}" />
+		<javac
+			srcdir="${dir.src}"
+			destdir="${dir.dst}"
+			source="1.5"
+			optimize="${compiler.optimize}"
+			debug="${compiler.debug}"		>
+			<classpath>
+				<pathelement location="${jar.junit}" />
+			</classpath>
+	</javac>
+	</target>
+
+	<target name="test" description="Runs all the *Test tests">
+		<junit haltonfailure="true" printsummary="true" fork="true" forkmode="once">
+			<batchtest>
+				<fileset dir="${dir.dst}" includes="**/*Test.class" />
+			</batchtest>
+			<formatter type="brief" usefile="false" />
+			<classpath>
+				<pathelement location="${dir.dst}" />
+				<pathelement location="${jar.junit}" />
+			</classpath>
+		</junit>
+	</target>
+
+	<target name="javadoc">
+		<javadoc
+			excludepackagenames="org.test.supercsv.cellprocessor,org.test.supercsv.io,org.test.supercsv.mock"
+	  		access="public"
+		   	destdir="${dir.javadoc}"
+		   	author="true"
+		   	version="true"
+		   	use="true"
+		   	windowtitle="org.Super.CSV.API"
+			source="1.5"
+		   >
+
+			<fileset dir="${dir.src}" defaultexcludes="yes">
+				<include name="**/*.java"/>
+				<exclude name="org/test/**/*.java" />
+			</fileset>
+		</javadoc>
+	</target>
+
+
+
+	<target name="build" depends="compile">
+		<property name="compiler.debug" value="false" />
+		<property name="compilec.optimize" value="true" />
+		<description>Compile and test</description>
+		<antcall target="test">
+		</antcall>
+	</target>
+
+
+	<target name="distro" depends="javadoc" description="creates a distribution jar file">
+		<description>Compile, test and export as a .jar file</description>
+		<mkdir dir="distro"/>
+		<delete file="${distro.dir}/${distro.name}-${distro.version}.zip" failonerror="false" />
+		<!-- make jar -->
+		<jar destfile="${distro.dir}/${distro.name}-${distro.version}.jar"
+			basedir="./bin/"
+			includes="**/*.class"
+			excludes="/org/test/**/*.class" update="true"/>
+		<!-- zip javadoc -->
+		<zip basedir="web/" destfile="${distro.dir}/${distro.name}-${distro.version}-javadoc.zip" includes="javadoc/**/*.*" compress="true">
+		    <zipfileset dir="." includes="LICENSE.txt"/>
+		</zip>
+
+		<!-- zip javadoc+jar -->
+		<zip basedir="${distro.dir}" destfile="${distro.dir}/${distro.name}-${distro.version}.zip" compress="true" excludes="*.*">
+			<zipfileset dir="${distro.dir}" file="${distro.dir}/${distro.name}-${distro.version}.jar"/>
+			<zipfileset dir="${distro.dir}" file="${distro.dir}/${distro.name}-${distro.version}-javadoc.zip"/>
+			<zipfileset dir="." includes="LICENSE.txt"/>
+		</zip>
+		<delete file="${distro.dir}/${distro.name}-${distro.version}-javadoc.zip" failonerror="true" />
+		<delete file="${distro.dir}/${distro.name}-${distro.version}.jar" failonerror="true"/>
+	</target>
+
+
+</project>
