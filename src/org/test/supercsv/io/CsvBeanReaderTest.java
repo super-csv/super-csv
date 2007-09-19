@@ -61,12 +61,7 @@ public class CsvBeanReaderTest {
 	public void testSimplestRead() throws Exception {
 		PersonBean res;
 		// final StringBuilder errorLog = new StringBuilder();
-		res = inFile.read(PersonBean.class, nameMapper, processors); // read
-		// line
-		// and
-		// check
-		// the
-		// values
+		res = inFile.read(PersonBean.class, nameMapper, processors); // read line and check the values
 		Assert.assertEquals("read elem ", "Klaus", res.getFirstname());
 		Assert.assertEquals("read elem ", "Anderson", res.getPassword());
 		Assert.assertEquals("read elem ", "Mauler Street 43", res.getStreet());
@@ -74,12 +69,7 @@ public class CsvBeanReaderTest {
 		Assert.assertEquals("read elem ", "New York", res.getTown());
 		// Assert.assertEquals("no error log", 0, errorLog.length());
 
-		res = inFile.read(PersonBean.class, partialNameMapper, processors); // read
-		// line
-		// and
-		// check
-		// the
-		// values
+		res = inFile.read(PersonBean.class, partialNameMapper, processors); // read line and check the values
 		Assert.assertEquals("read elem from map", "Moby", res.getFirstname());
 		Assert.assertEquals("read elem from map", "Duck", res.getPassword());
 		Assert.assertEquals("read elem from map", "Sesam str", res.getStreet());

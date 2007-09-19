@@ -1,16 +1,12 @@
 package org.test.supercsv.mock;
 
 /** bean class used for the bean reader and writer tests */
-public class PersonBean {
-	String firstname, password, street, town;
+public class PersonBean extends SuperBean {
+	String password, street, town;
 	int zip;
 
 	public PersonBean() {
 		super();
-	}
-
-	public String getFirstname() {
-		return firstname;
 	}
 
 	public String getPassword() {
@@ -27,10 +23,6 @@ public class PersonBean {
 
 	public int getZip() {
 		return zip;
-	}
-
-	public void setFirstname(final String firstname) {
-		this.firstname = firstname;
 	}
 
 	public void setPassword(final String password) {

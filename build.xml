@@ -1,13 +1,14 @@
 <project name="org.supercsv" default="compile" basedir=".">
 
 	<property name="distro.name" value="SuperCSV" />
-	<property name="distro.version" value="1.00" />
+	<property name="distro.version" value="1.01" />
 	<property name="distro.dir" value="distro" />
 
 	<property name="jar.junit" value="./lib/junit-4.4.jar" />
 	<property name="dir.src" value="./src/" />
 	<property name="dir.dst" value="./bin/" />
 	<property name="dir.javadoc" value="./web/javadoc/" />
+	<property name="targetversion" value="5" />
 
 
 	<target name="testcoverage" description="run a test coverage">
@@ -47,10 +48,10 @@
 				debuglevel="lines,source,vars"
 				srcdir="${dir.src}"
 				destdir="${coverage.dir}"
-				source="1.5"
+				source="${targetversion}"
+				target="${targetversion}"
 				optimize="off"
-				debug="true"
-			>
+				debug="true" >
 				<classpath>
 					<pathelement location="${jar.junit}" />
 				</classpath>
@@ -141,13 +142,15 @@
 		<javac
 			srcdir="${dir.src}"
 			destdir="${dir.dst}"
-			source="1.5"
+			source="${targetversion}"
+			target="${targetversion}"
 			optimize="${compiler.optimize}"
-			debug="${compiler.debug}"		>
+			debug="${compiler.debug}" >
+
 			<classpath>
 				<pathelement location="${jar.junit}" />
 			</classpath>
-	</javac>
+		</javac>
 	</target>
 
 	<target name="test" description="Runs all the *Test tests">
@@ -172,7 +175,8 @@
 		   	version="true"
 		   	use="true"
 		   	windowtitle="org.Super.CSV.API"
-			source="1.5"
+			source="targetversion"
+			verbose="false"
 		   >
 
 			<fileset dir="${dir.src}" defaultexcludes="yes">
@@ -193,7 +197,7 @@
 	</target>
 
 
-	<target name="distro" depends="javadoc" description="creates a distribution jar file">
+	<target name="distro" depends="build, javadoc" description="creates a distribution jar file">
 		<description>Compile, test and export as a .jar file</description>
 		<mkdir dir="distro"/>
 		<delete file="${distro.dir}/${distro.name}-${distro.version}.zip" failonerror="false" />
@@ -201,7 +205,10 @@
 		<jar destfile="${distro.dir}/${distro.name}-${distro.version}.jar"
 			basedir="./bin/"
 			includes="**/*.class"
-			excludes="/org/test/**/*.class" update="true"/>
+			excludes="/org/test/**/*.class" update="true"
+			whenempty="fail"
+			duplicate="fail"
+		/>
 		<!-- zip javadoc -->
 		<zip basedir="web/" destfile="${distro.dir}/${distro.name}-${distro.version}-javadoc.zip" includes="javadoc/**/*.*" compress="true">
 		    <zipfileset dir="." includes="LICENSE.txt"/>
@@ -216,6 +223,4 @@
 		<delete file="${distro.dir}/${distro.name}-${distro.version}-javadoc.zip" failonerror="true" />
 		<delete file="${distro.dir}/${distro.name}-${distro.version}.jar" failonerror="true"/>
 	</target>
-
-
 </project>
