@@ -436,6 +436,14 @@ All the magic is taking place in the <tt>execute()</tt> method. It really need n
 <li>Jar file is now compiled for JDK 5.</li>
 </ul>
 </td></tr>
+<tr><td valign="top">1.02</td><td>Small bugfixes.
+<ul>
+<li>Empty cells with value <tt>""</tt> was mistakenly interpreted as an escaped quoted char rather than the empty line</li>
+<li>No longer removes trailing spaces inside quotes so <tt>" hello "</tt> is read as <tt>" hello "</tt> rather than <tt>" hello"</tt></li>
+<li>Renamed the cellprocessor <tt>MagicToken</tt> to <tt>Token</tt>
+<li>TABs are not regarded as whitespace anymore</li>
+</ul>
+</td></tr>
 </table>
 <p>
 The download section can be found at <a href="http://sourceforge.net/projects/supercsv">the Super Csv source forge download page</a>

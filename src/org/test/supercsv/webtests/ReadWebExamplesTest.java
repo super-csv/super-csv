@@ -1,5 +1,8 @@
 package org.test.supercsv.webtests;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
 import java.io.StringReader;
 import java.util.Date;
 
@@ -69,7 +72,7 @@ public class ReadWebExamplesTest {
 
 	@Before
 	public void setUp() throws Exception {
-		final String fileWithHeader = "username, password, 	date, 			zip, 		town\n" + "Klaus,     qwexyKiks,   1/10/2007,   4328,       New York\n";
+		final String fileWithHeader = "username, password, date, zip, town\n" + "Klaus,  qwexyKiks, 1/10/2007,  4328,    New York\n";
 		inFile = new CsvBeanReader(new StringReader(fileWithHeader), CsvPreference.EXCEL_PREFERENCE);
 	}
 
@@ -77,6 +80,7 @@ public class ReadWebExamplesTest {
 	public void testProcesssedRead() throws Exception {
 		UserBean user;
 		final String[] header = inFile.getCSVHeader(true);
+		assertThat(header[2], is("date"));
 		user = inFile.read(UserBean.class, header, processors);
 
 		Assert.assertEquals("read elem ", "Klaus", user.getUsername());

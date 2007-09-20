@@ -30,6 +30,11 @@ public class Tokenizer implements ITokenizer {
 		sb = new StringBuilder(500);
 	}
 
+	private void addSpaces(StringBuilder sb, int spaces) {
+		for(int i = 0; i < spaces; i++)
+			sb.append(" ");
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -69,11 +74,11 @@ public class Tokenizer implements ITokenizer {
 
 		// proccess the line (and maybe more lines of the file)
 		int p = 0; // the pos of the cursor on the line
-
-		int startToken = 0; // represents the position in each cell of the first character. Is used to detect if a
-		// quote char character of the cell (in which case it must always change the parser state
-
 		int linenoQuoteState = -1; // the line number of the file where the
+
+		int potentialSpaces = 0; // only add spaces if in quote mode. if in non-quote mode, count the spaces and only
+		// add them if a non-delimiter or non-end-of-line is met
+		// in other cases, we are ending the cell, and we do not want to do that with spaces..
 
 		while(true) {
 			// relies on p being incremented at least at the end of the while
@@ -86,30 +91,37 @@ public class Tokenizer implements ITokenizer {
 					// if(log.isDebugEnabled()) log.debug("normal " + p);
 
 					if(c == delim) {
-						result.add(sb.toString().trim()); // save token
+						result.add(sb.toString()); // save token
 						sb.delete(0, sb.length()); // reset the stringbuilder
+						potentialSpaces = 0;
 						break; // read more
 					}
 					else if(c == ' ') { // trim starting spaces (trailing spaces
 						// are removed using the String.trim()
 						if(sb.length() > 0) // add only space if it is not the
 							// first on the line
-							sb.append(c);
+							potentialSpaces++;
 						break; // read more
 					}
 					else if(c == '\n') {
 						// save token
-						result.add(sb.toString().trim());
+						result.add(sb.toString());
+						sb = null;
+						potentialSpaces = 0;
 						return true; // we've read a line
 					}
-					else if(c == quote && sb.length() == 0) { // quote char as first character in cell => state change
+					else if(c == quote && sb.length() == 0) { // quote first on line cannot be escaped
 						state = PARSERSTATE.QUOTESCOPE;
+						// update variable in order to do debug statements
 						linenoQuoteState = getLineNumber();
 						break; // read more
 					}
-					else if(c == quote && line.charAt(p + 1) == quote) { // an escaped quote,
-						sb.append(c); // add and skip the first quote (end of
-						// switch will skip the next quote
+					else if(c == quote && line.charAt(p + 1) == quote && sb.length() > 0) {
+						// an escaped quote - can not happen as first character
+						addSpaces(sb, potentialSpaces);
+						potentialSpaces = 0;
+						sb.append(c); // add and skip the first quote
+						// (end of switch will skip the next quote)
 						p++;
 						break; // read more
 					}
@@ -118,17 +130,20 @@ public class Tokenizer implements ITokenizer {
 						state = PARSERSTATE.QUOTESCOPE;
 						// update variable in order to do debug statements
 						linenoQuoteState = getLineNumber();
+						addSpaces(sb, potentialSpaces);
+						potentialSpaces = 0;
 						break; // read more
 					}
 					else { // if just a normal character
+						addSpaces(sb, potentialSpaces);
+						potentialSpaces = 0;
 						sb.append(c); // add the char
 					}
-
 					break;
 
 				// for each situation above, repeat now in the quote scope
 				case QUOTESCOPE:
-					// if(log.isDebugEnabled()) log.debug("quote: " + p);
+					// System.out.println("quote: '" + p + "'");
 
 					if(c == delim) {
 						// delimiter does not count as delimiter in quote scope
@@ -147,9 +162,8 @@ public class Tokenizer implements ITokenizer {
 						line = line + '\n'; // add \n to make parsing easy
 						break; // read more
 					}
-					else if(c == quote && line.charAt(p + 1) == quote) { // an
-						// escaped
-						// quote,
+					else if(c == quote && line.charAt(p + 1) == quote) {
+						// an escaped quote,
 						sb.append(c); // add and skip the first quote (end of
 						// switch will skip the next quote
 						p++;
@@ -162,9 +176,9 @@ public class Tokenizer implements ITokenizer {
 					}
 					else { // if just a normal character
 						sb.append(c); // add the char
+						// System.out.println("Adding char '" + c + "'");
 					}
 					break;
-
 			} // switch
 
 			p++; // read next char of the line

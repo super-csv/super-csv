@@ -1,7 +1,7 @@
 <project name="org.supercsv" default="compile" basedir=".">
 
 	<property name="distro.name" value="SuperCSV" />
-	<property name="distro.version" value="1.01" />
+	<property name="distro.version" value="1.02" />
 	<property name="distro.dir" value="distro" />
 
 	<property name="jar.junit" value="./lib/junit-4.4.jar" />
@@ -177,6 +177,7 @@
 		   	windowtitle="org.Super.CSV.API"
 			source="targetversion"
 			verbose="false"
+			failonerror="true"
 		   >
 
 			<fileset dir="${dir.src}" defaultexcludes="yes">

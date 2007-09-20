@@ -1,9 +1,9 @@
 package org.test.supercsv.io;
 
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,8 +12,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.supercsv.io.Tokenizer;
 import org.supercsv.prefs.CsvPreference;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
 
 public class TokenizerTest {
 	Tokenizer tokenizer;
@@ -39,6 +37,22 @@ public class TokenizerTest {
 	}
 
 	@Test
+	public void inputOneRow_2_quote_inside_quote() throws Exception {
+		String input = "\"\"\"hello\"\"\"";
+		tokenizer = new Tokenizer(new StringReader(input), CsvPreference.EXCEL_PREFERENCE);
+		tokenizer.readStringList(result);
+		assertThat("only two must yield empty entry", result.get(0), is("\"hello\""));
+	}
+
+	@Test
+	public void inputOneRow_2_quote_outside_quote() throws Exception {
+		String input = "  yo \"\"hello\"\"  "; // must not have " at start of line.. as that will not denote "
+		tokenizer = new Tokenizer(new StringReader(input), CsvPreference.EXCEL_PREFERENCE);
+		tokenizer.readStringList(result);
+		assertThat(result.get(0), is("yo \"hello\""));
+	}
+
+	@Test
 	public void inputOneRow_4_quote() throws Exception {
 		String input = "\"\"\"\"";
 		tokenizer = new Tokenizer(new StringReader(input), CsvPreference.EXCEL_PREFERENCE);
@@ -56,6 +70,36 @@ public class TokenizerTest {
 	}
 
 	@Test
+	public void inputOneRow_should_not_strim_spaces_before_and_after() throws Exception {
+		String input = "\"    hello    \" , \"   you  \" , \" there \"";
+		tokenizer = new Tokenizer(new StringReader(input), CsvPreference.EXCEL_PREFERENCE);
+		tokenizer.readStringList(result);
+		assertThat(result.get(0), is("    hello    "));
+		assertThat(result.get(1), is("   you  "));
+		assertThat(result.get(2), is(" there "));
+	}
+
+	@Test
+	public void inputOneRow_should_not_trim_tabs_before_and_after() throws Exception {
+		String input = " \thello\t ,\tyou\t,\tthere\t";
+		tokenizer = new Tokenizer(new StringReader(input), CsvPreference.EXCEL_PREFERENCE);
+		tokenizer.readStringList(result);
+		assertThat(result.get(0), is("\thello\t"));
+		assertThat(result.get(1), is("\tyou\t"));
+		assertThat(result.get(2), is("\tthere\t"));
+	}
+
+	@Test
+	public void inputOneRow_should_trim_spaces_before_and_after() throws Exception {
+		String input = "    hello    ,   you  ,  there  ";
+		tokenizer = new Tokenizer(new StringReader(input), CsvPreference.EXCEL_PREFERENCE);
+		tokenizer.readStringList(result);
+		assertThat(result.get(0), is("hello"));
+		assertThat(result.get(1), is("you"));
+		assertThat(result.get(2), is("there"));
+	}
+
+	@Test
 	public void inputOneRow_value() throws Exception {
 		String input = "k";
 		tokenizer = new Tokenizer(new StringReader(input), CsvPreference.EXCEL_PREFERENCE);
@@ -64,27 +108,27 @@ public class TokenizerTest {
 		assertThat(result.get(0), is("k"));
 	}
 
+	@Test(expected = IOException.class)
+	public void inputOneRow_value_missing_end_quote() throws Exception {
+		String input = "\"missing";
+		tokenizer = new Tokenizer(new StringReader(input), CsvPreference.EXCEL_PREFERENCE);
+		tokenizer.readStringList(result);
+		assertThat(result.size(), is(1));
+		assertThat(result.get(0), is("m\nn"));
+	}
+
+	@Test
+	public void inputOneRow_value_newline() throws Exception {
+		String input = "\"m\nn\"";
+		tokenizer = new Tokenizer(new StringReader(input), CsvPreference.EXCEL_PREFERENCE);
+		tokenizer.readStringList(result);
+		assertThat(result.size(), is(1));
+		assertThat(result.get(0), is("m\nn"));
+	}
+
 	@Before
 	public void setUp() throws Exception {
 		result = new ArrayList<String>();
-	}
-
-	@Test
-	public void test() throws Exception {
-
-	}
-
-	@Test
-	public void testTrailingSpacesRemoval() throws Exception {
-		final String fileWithHeader = "firstname , lastname , 	street , 			zip , 		town\n" + "Klaus,     Anderson ,   Mauler Street 43,   4328,       New York\n";
-		tokenizer = new Tokenizer(new StringReader(fileWithHeader), CsvPreference.EXCEL_PREFERENCE);
-
-		assertTrue(tokenizer.readStringList(result));
-		assertEquals("pre-post-fix whitespace trimming works", "firstname", result.get(0));
-		assertEquals("pre-post-fix whitespace trimming works", "lastname", result.get(1));
-		assertEquals("pre-post-fix whitespace trimming works", "street", result.get(2));
-		assertEquals("pre-post-fix whitespace trimming works", "zip", result.get(3));
-		assertEquals("pre-post-fix whitespace trimming works", "town", result.get(4));
 	}
 
 	@Test
