@@ -25,6 +25,7 @@ import org.supercsv.util.CSVContext;
  * <p>
  * Use this class instead of the MagicToken class (Token is simply a better name)
  * 
+ * @since 1.02
  * @author Kasper B. Graversen
  */
 public class Token extends CellProcessorAdaptor implements DateCellProcessor, DoubleCellProcessor, LongCellProcessor, StringCellProcessor, BoolCellProcessor {
