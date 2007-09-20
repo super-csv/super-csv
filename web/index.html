@@ -468,13 +468,14 @@ for further information on (E)BNF.
 <pre>
 CSV file
 --------
-file      ::= [ header ] { line }
-header    ::= [ { entry separator } entry ] newline
-line      ::= [ { entry separator } entry ] newline
-entry     ::= character+ | { character* " separator " } | " entry newline entry "
-newline   ::= \n
-separator ::= ,
-character ::= a|b|..|A|B|..|0|1|..
+file         ::= [ header ] { line }
+header       ::= [ { entry separator } entry ] newline
+line         ::= [ { entry separator } entry ] newline
+entry        ::= character+ | { character* " separator " } | " entry newline entry "
+newline      ::= \n
+separator    ::= ,
+character    ::= a|b|..|A|B|..|0|1|..
+escapedQuote ::= ""
 </pre>
 
 Or more informally..
@@ -484,8 +485,15 @@ Or more informally..
 <li>Entries of an entity are separated by a separation character, often a comma (",") excluding the the last element of a line</li>
 <li>An entry may contain the separation character in which case that character is enclosed in quotes</li>
 <li>An entry may contain newlines in which case the whole entry is enclosed in quotation marks</li>
-<li>The first line of the file may contain the header descriptions for the colums of the file and may be ignored (or as in the case of Super Csv be utilized when reading data into maps or beans.</li>
-<li>Any white-spaces at the start of a line, just after the separation character, just before a separation character or just before a newline character is ignored.</li>
+<li>The first line of the file may contain the header descriptions for the columns of the file,
+ and may be ignored (or as in the case of Super Csv be utilized when reading data into maps or beans.</li>
+<li>Any white-spaces at the start of a line, just after the separation character, just before a separation character,
+ or just before a newline character is ignored.
+ </li>
+ <li>An escaped quote is two consecutive quote characters. The only exception to this rule is when the first character in
+ a cell is a quote it always denotes a quote for the form <tt>" entry newline entry "</tt>. Hence the entry <tt>""</tt>
+ (double quote in a cell) denotes the empty string, whereas the input <tt>""""</tt> denotes the string <tt>"</tt>
+ </li>
 </ul>
 
 

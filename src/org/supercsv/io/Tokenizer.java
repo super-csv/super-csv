@@ -69,7 +69,11 @@ public class Tokenizer implements ITokenizer {
 
 		// proccess the line (and maybe more lines of the file)
 		int p = 0; // the pos of the cursor on the line
-		int linenoQuoteState = -1; // the linenumber of the file where the
+
+		int startToken = 0; // represents the position in each cell of the first character. Is used to detect if a
+		// quote char character of the cell (in which case it must always change the parser state
+
+		int linenoQuoteState = -1; // the line number of the file where the
 
 		while(true) {
 			// relies on p being incremented at least at the end of the while
@@ -98,16 +102,19 @@ public class Tokenizer implements ITokenizer {
 						result.add(sb.toString().trim());
 						return true; // we've read a line
 					}
-					else if(c == quote && line.charAt(p + 1) == quote) { // an
-						// escaped
-						// quote,
+					else if(c == quote && sb.length() == 0) { // quote char as first character in cell => state change
+						state = PARSERSTATE.QUOTESCOPE;
+						linenoQuoteState = getLineNumber();
+						break; // read more
+					}
+					else if(c == quote && line.charAt(p + 1) == quote) { // an escaped quote,
 						sb.append(c); // add and skip the first quote (end of
 						// switch will skip the next quote
 						p++;
 						break; // read more
 					}
-					else if(c == quote && line.charAt(p + 1) != quote) {
-						// a single quote, change state and don't append
+					else if(c == quote && line.charAt(p + 1) != quote) { // a single quote, change state and don't
+						// append
 						state = PARSERSTATE.QUOTESCOPE;
 						// update variable in order to do debug statements
 						linenoQuoteState = getLineNumber();
@@ -136,9 +143,7 @@ public class Tokenizer implements ITokenizer {
 						// -1 as it will be incremented to 0 at the end of
 						// the switch)
 						line = lnr.readLine();
-						if(line == null)
-							throw new IOException("File ended unexpectedly while reading a quoted cell starting on line: "
-									+ linenoQuoteState);
+						if(line == null) throw new IOException("File ended unexpectedly while reading a quoted cell starting on line: " + linenoQuoteState);
 						line = line + '\n'; // add \n to make parsing easy
 						break; // read more
 					}
@@ -150,8 +155,8 @@ public class Tokenizer implements ITokenizer {
 						p++;
 						break; // read more
 					}
-					else if(line.charAt(p) == quote && line.charAt(p + 1) != quote) { // a single quote,
-						// change state
+					else if(line.charAt(p) == quote && line.charAt(p + 1) != quote) {
+						// a single quote, only change state
 						state = PARSERSTATE.NORMAL;
 						break; // read more
 					}

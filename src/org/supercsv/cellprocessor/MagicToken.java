@@ -8,47 +8,23 @@
  */
 package org.supercsv.cellprocessor;
 
-import org.supercsv.cellprocessor.ift.BoolCellProcessor;
 import org.supercsv.cellprocessor.ift.CellProcessor;
-import org.supercsv.cellprocessor.ift.DateCellProcessor;
-import org.supercsv.cellprocessor.ift.DoubleCellProcessor;
-import org.supercsv.cellprocessor.ift.LongCellProcessor;
-import org.supercsv.cellprocessor.ift.StringCellProcessor;
-import org.supercsv.util.CSVContext;
 
-/**
- * This processor is used in the situations you want to be able to check for the presence of a special "magic token".
- * Such a token could be the string "[empty]" which could denote that a column is different from the empty string "". It
- * can be used in conjunction with a ParseLong() processor, since the magic token would be discovered before the parser
- * attempt so parse the token as a number. Comparison between column value and the <tt>magicToken</tt> is based on the
- * object's <tt>equals()</tt> method.
- * 
- * @author Kasper B. Graversen
- */
-public class MagicToken extends CellProcessorAdaptor implements DateCellProcessor, DoubleCellProcessor, LongCellProcessor,
-		StringCellProcessor, BoolCellProcessor {
-	Object returnValue = "";
-	Object magicToken = "";
+public class MagicToken extends Token {
 
+	/**
+	 * @deprecated use Token class instead
+	 */
+	@Deprecated
 	public MagicToken(final Object magicToken, final Object returnValue) {
-		super();
-		this.magicToken = magicToken;
-		this.returnValue = returnValue;
-	}
-
-	public MagicToken(final Object magicToken, final Object returnValue, final CellProcessor next) {
-		super(next);
-		this.magicToken = magicToken;
-		this.returnValue = returnValue;
+		super(magicToken, returnValue);
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @deprecated use Token class instead
 	 */
-	@Override
-	public Object execute(final Object value, final CSVContext context) {
-		if(value.equals(magicToken)) return returnValue;
-
-		return next.execute(value, context);
+	@Deprecated
+	public MagicToken(final Object magicToken, final Object returnValue, final CellProcessor next) {
+		super(magicToken, returnValue, next);
 	}
 }
