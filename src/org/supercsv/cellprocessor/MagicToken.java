@@ -10,6 +10,14 @@ package org.supercsv.cellprocessor;
 
 import org.supercsv.cellprocessor.ift.CellProcessor;
 
+/**
+ * This class is deprecated and will be removed in comming releases. Instead you should use the <tt>Token</tt>
+ * cellprocessor instead
+ * 
+ * @deprecated
+ * @author Kasper B. Graversen
+ */
+@Deprecated
 public class MagicToken extends Token {
 
 	/**
