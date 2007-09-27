@@ -318,7 +318,10 @@ class ReadingObjects {
     ICsvBeanReader inFile = new CsvBeanReader(new FileReader("foo.csv"), CsvPreference.EXCEL_PREFERENCE);
     try {
       final String[] header = inFile.getCSVHeader(true);
-      UserBean user = inFile.read(UserBean.class, header, processors);
+      UserBean user;
+      while( (user = inFile.read(UserBean.class, header, processors) != null) {
+        System.out.println(user.getZip());
+      }
     } finally {
       inFile.close();
     }
