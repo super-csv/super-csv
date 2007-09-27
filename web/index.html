@@ -10,6 +10,11 @@
 <meta name="language" content="en-uk">
 <meta name="copyright" content="2006-2007 Kasper B. Graversen">
 
+<!-- google pretty print - start -->
+<link href="prettify.css" type="text/css" rel="stylesheet" />
+<script type="text/javascript" src="prettify.js"></script>
+<!-- google pretty print - end -->
+
 <style type="text/css">
 body {
     border:0px none;
@@ -17,6 +22,17 @@ body {
     VERTICAL-ALIGN: middle;
     background: url('img/bg.gif');
 }
+a {
+	color:#445599;
+	font-weight:bold;
+	text-decoration:none;
+}
+
+a:hover{
+	background:#445599;
+	color:#FFE;
+}
+
 #content {
     color: #000000;
     font-weight: normal;
@@ -71,8 +87,7 @@ body {
 }
 </style>
 </head>
-<body bgcolor="#cccccc">
-
+<body bgcolor="#cccccc" onload="prettyPrint()">
 <table width="100%" border="0" cellpadding="0" cellspacing="1">
 <tr>
 <td>&nbsp;</td>
@@ -83,18 +98,18 @@ body {
 <div style="text-align: center;">by Kasper B. Graversen, 2006-2007<p>
 <div style="links">
 <a href="#motivation">Motivation</a> |
- <a href="#price">Pricing &amp; license</a> |
+ <a href="#price">Pricing &amp; License</a> |
  <a href="#usage">Usage/Javadoc</a> |
  <a href="#codeExamples">Code examples</a> |
  <a href="#downloads">Downloads</a> |
- <a href="#csvSpecification">CSV specification</a>
+ <a href="#csvSpecification">CSV Specification</a>
 </div>
 </div>
 <div id="content">
 
-<a name="motivation">
+<a name="motivation"></a>
 <h1>Motivation</h1>
-The main motivation for Super Csv is to create the <b>best</b> CSV package for processing CSV files.
+The main motivation for Super Csv is to create the <b>best free</b> CSV package for processing CSV files.
 Super Csv's unique features raises the bar and sets a new standard for CSV packages. Super Csv is designed around solid Object-oriented principles,
 and thus aims to leverage your Object-oriented code, making it easier to write and maintain.
 <p>
@@ -134,7 +149,9 @@ filenames as arguments rather than <tt>Reader</tt> and <tt>Writer</tt> objects. 
 
 
 
-<a name="price">
+
+
+<a name="price"></a>
 <h1>Price and license</h1>
 Super Csv is Copyright 2007, Kasper B. Graversen
 <P>
@@ -168,8 +185,13 @@ Contact me for more information and pricing.
 </table>
 
 
-<a name="usage">
-<a name="usage"/>
+
+
+
+
+
+
+<a name="usage"></a>
 <h1>Using Super Csv</h1>
 
 <h2>Dependencies</h2>
@@ -246,7 +268,8 @@ and <a href="javadoc/org/supercsv/cellprocessor/constraint/package-summary.html"
 
 
 
-<a name="codeExamples">
+
+<a name="codeExamples"></a>
 <h1>Code examples</h1>
 
 
@@ -254,7 +277,7 @@ and <a href="javadoc/org/supercsv/cellprocessor/constraint/package-summary.html"
 
 To read lines from a file into an object, assume you have the bean class
 
-<pre>
+<pre class="prettyprint">
 public class UserBean {
     String username, password, street, town;
     int zip;
@@ -274,7 +297,7 @@ public class UserBean {
 
 and that you have a CSV file with a header. Let's assume the following content
 
-<pre>
+<pre class="prettyprint">
 username, password,   date,        zip,  town
 Klaus,    qwexyKiks,  17/1/2007,   1111, New York
 Oufu,     bobilop,    10/10/2007,  4555, New York
@@ -282,7 +305,7 @@ Oufu,     bobilop,    10/10/2007,  4555, New York
 
 You can then create an instance of the <tt>UserBean</tt> and populate it with values from the second line of the file with the following code
 
-<pre>
+<pre class="prettyprint">
 import java.io.*;
 import org.supercsv.cellprocessor.*;
 import org.supercsv.cellprocessor.constraint.*;
@@ -311,7 +334,7 @@ Each processor can be <b>nested</b>. This means that processors and constraints 
 <p>
 One definition could be
 
-<pre>
+<pre class="prettyprint">
 final CellProcessor[] processors = new CellProcessor[] {
     new Unique(new StrMinMax(5, 20)),
     new StrMinMax(8, 35),
@@ -334,7 +357,7 @@ The above definition captures the following semantics:
 Notice how Super Csv utilizes the fact that the file had a header. If your files are without headers,
 you can easily create the missing information by means of a string array such as
 
-<pre>
+<pre class="prettyprint">
 final String[] header = new String[] { "username", "password", "date", "zip", "town"};
 </pre>
 
@@ -353,7 +376,7 @@ Writing a file is as easy as reading one. You decide on the column format and st
 functionality, however, you will most likely only use the constraint parts. Any value is being written to the output stream using
 the <tt>toString()</tt> method on each object, thus reducing the need for the cell processors that convert data.
 
-<pre>
+<pre class="prettyprint">
 import java.util.HashMap;
 import org.supercsv.io.*;
 import org.supercsv.prefs.CsvPreference;
@@ -363,7 +386,7 @@ class WritingMaps {
     ICsvMapWriter writer = new CsvMapWriter(new FileWriter(...), CsvPreference.EXCEL_PREFERENCE);
     try {
       final String[] header = new String[] { "name", "city", "zip" };
-      <b>// set up some data to write</b>
+      // set up some data to write
       final HashMap&lt;String, ? super Object> data1 = new HashMap&lt;String, Object>();
       data1.put(header[0], "Karl");
       data1.put(header[1], "Tent city");
@@ -372,7 +395,7 @@ class WritingMaps {
       data2.put(header[0], "Banjo");
       data2.put(header[1], "River side");
       data2.put(header[2], 5551);
-      <b>// the actual writing</b>
+      // the actual writing
       writer.writeHeader(header);
       writer.write(data1, header);
       writer.write(data2, header);
@@ -397,7 +420,7 @@ existing processors are around 10 lines of code. Let's investigate the implement
  a column and converts it into a <tt>Long</tt> object. The cell processors are build around the patters "null object pattern" and
  "chain of responsibility" hence all the infrastructure is set up outset the processors.
 
- <pre>
+ <pre class="prettyprint">
  public class ParseLong extends CellProcessorAdaptor {
     <b>/** important to invoke super */</b>
     public ParseLong() {
@@ -424,7 +447,7 @@ All the magic is taking place in the <tt>execute()</tt> method. It really need n
 
 
 
-<a name="downloads">
+<a name="downloads"></a>
 <h1>Downloads & Versions</h1>
 
 <table cellspacing="8">
@@ -464,7 +487,7 @@ Ideas for the future
 
 
 
-<a name="csvSpecification">
+<a name="csvSpecification"></a>
 <h1>The CSV format specification</h1>
 The following is my understanding of the CSV formats definition (and correspondingly what is supported in Super Csv.
 <p>
@@ -473,7 +496,7 @@ See <a href="http://en.wikipedia.org/wiki/Backus-Naur_form">Wikipedia/BNF</a> an
 <a href="http://en.wikipedia.org/wiki/Extended_Backus-Naur_form">Wikipedia/EBNF</a>
 for further information on (E)BNF.
 </p>
-<pre>
+<pre class="prettyprint">
 CSV file
 --------
 file         ::= [ header ] { line }
