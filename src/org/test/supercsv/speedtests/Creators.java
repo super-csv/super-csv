@@ -11,7 +11,7 @@ package org.test.supercsv.speedtests;
 import java.util.Random;
 
 /**
- * @author Kasper B. Graversen
+ * @author Kasper B. Graversen generate random content
  */
 public class Creators {
 	static Random r = new Random();
@@ -20,7 +20,9 @@ public class Creators {
 	}
 
 	public static String createAnonymousLine() {
-		return "" + number(100000) + ", " + string(7) + ", " + string(10) + ", " + number(200) + ", " + date() + "\n";
+		String s = "" + number(100000) + ", " + string(7) + ", " + string(10) + ", " + number(200) + ", " + date() + "\n";
+		if(r.nextInt() % 30 == 0) return "\"" + s + "\"";
+		return s;
 	}
 
 	public static String date() {
@@ -40,8 +42,13 @@ public class Creators {
 	public static String string(final int maxLengh) {
 		final int len = 1 + r.nextInt(maxLengh);
 		final StringBuffer sb = new StringBuffer();
-		for(int i = 0; i < len; i++)
-			sb.append(Character.toChars(65 + r.nextInt(25)));
+		for(int i = 0; i < len; i++) {
+			if(r.nextInt() % 6 == 0) // sometimes its a space
+				sb.append(' ');
+			else
+				sb.append(Character.toChars(65 + r.nextInt(25)));
+		}
+		if(r.nextInt() % 30 == 0) return "\"" + sb.toString() + "\""; // some times make it a "" string
 		return sb.toString();
 	}
 }

@@ -10,14 +10,12 @@ package org.test.supercsv.speedtests;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.util.Date;
 
-import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.supercsv.cellprocessor.ParseDate;
@@ -26,6 +24,7 @@ import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.io.CsvBeanReader;
 import org.supercsv.io.CsvListReader;
 import org.supercsv.io.CsvMapReader;
+import org.supercsv.io.Tokenizer_if;
 import org.supercsv.prefs.CsvPreference;
 
 /**
@@ -127,10 +126,10 @@ public class ReadingSpeedTest {
 	static final String[] header = new String[] { "no", "name1", "name2", "phone", "date" };
 	static final CellProcessor[] processors = new CellProcessor[] { new ParseLong(), null, null, new ParseLong(), new ParseDate("dd/MM/yy") };
 
-	public static final String TEST_FILE = "testfile.csv";
-	public static final int LINES_IN_TEST_FILE = 250000 / 100000;
+	public static final String TEST_FILE = "supercsv.speedtest.testfile.csv";
+	public static final int LINES_IN_TEST_FILE = 250000;// 100000;
 
-	public static final int TEST_RUNS = 1;
+	public static final int TEST_RUNS = 5;// 1;
 
 	@BeforeClass
 	public static void createTestFile() throws Exception {
@@ -140,10 +139,15 @@ public class ReadingSpeedTest {
 		w.close();
 	}
 
-	@AfterClass
-	public static void tearDown() throws Exception {
-		final File f = new File(TEST_FILE);
-		f.delete();
+	//
+	// @AfterClass
+	// public static void tearDown() throws Exception {
+	// final File f = new File(TEST_FILE);
+	// f.delete();
+	// }
+
+	private String makeTableLine(String msg, long baseTime, long runTime) {
+		return String.format("<tr><td>%s</td><td>%4.2f%%</td><td>%4.2f</td></tr>", msg, (100.0 * runTime) / baseTime, runTime / (TEST_RUNS * 1000.0));
 	}
 
 	private void readCsvBeanFullReader(final Reader r) throws Exception {
@@ -170,6 +174,15 @@ public class ReadingSpeedTest {
 		r.close();
 	}
 
+	private void readCsvListReaderOldTokenizer(final Reader r) throws Exception {
+		final CsvListReader csv = new CsvListReader(r, CsvPreference.EXCEL_PREFERENCE);
+		csv.setTokenizer(new Tokenizer_if(r, CsvPreference.EXCEL_PREFERENCE));
+		while(csv.read() != null) {
+			// System.out.print("*");
+		}
+		r.close();
+	}
+
 	private void readCsvMapReader(final Reader r) throws Exception {
 		final CsvMapReader csv = new CsvMapReader(r, CsvPreference.EXCEL_PREFERENCE);
 		while(csv.read(header) != null) {
@@ -188,37 +201,46 @@ public class ReadingSpeedTest {
 
 	@Test
 	public void readSpeedTest() throws Exception {
-		final long[] times = { 0, 0, 0, 0, 0 };
+		final long[] times = { 0, 0, 0, 0, 0, 0 };
 		for(int i = 0; i < TEST_RUNS; i++) {
+			int testNo = 0;
 			System.out.println(i);
 			long t;
 			t = System.currentTimeMillis();
 			readNative(new BufferedReader(new FileReader(TEST_FILE)));
-			times[0] += System.currentTimeMillis() - t;
+			times[testNo++] += System.currentTimeMillis() - t;
 
 			t = System.currentTimeMillis();
 			readCsvListReader(new FileReader(TEST_FILE));
-			times[1] += System.currentTimeMillis() - t;
+			times[testNo++] += System.currentTimeMillis() - t;
 
 			t = System.currentTimeMillis();
-			readCsvMapReader(new FileReader(TEST_FILE));
-			times[2] += System.currentTimeMillis() - t;
+			readCsvListReaderOldTokenizer(new FileReader(TEST_FILE));
+			times[testNo++] += System.currentTimeMillis() - t;
 
-			t = System.currentTimeMillis();
-			readCsvBeanReader(new FileReader(TEST_FILE));
-			times[3] += System.currentTimeMillis() - t;
-
-			t = System.currentTimeMillis();
-			readCsvBeanFullReader(new FileReader(TEST_FILE));
-			times[4] += System.currentTimeMillis() - t;
+			// time only simple string
+			// t = System.currentTimeMillis();
+			// readCsvMapReader(new FileReader(TEST_FILE));
+			// times[testNo++] += System.currentTimeMillis() - t;
+			//
+			// t = System.currentTimeMillis();
+			// readCsvBeanReader(new FileReader(TEST_FILE));
+			// times[testNo++] += System.currentTimeMillis() - t;
+			//
+			// t = System.currentTimeMillis();
+			// readCsvBeanFullReader(new FileReader(TEST_FILE));
+			// times[testNo++] += System.currentTimeMillis() - t;
 		}
-		System.out.println("<table><tr><th>Method</th><th>Relative speed</th><th>Average execution time</th></tr>");
-		System.out.println(String.format("<tr><td>split()</td><td>%4.2f%%</td><td>%4.2f</td></tr>", (100.0 * times[0]) / times[0], times[0] / (TEST_RUNS * 1000.0)));
-		System.out.println(String.format("<tr><td>ListReader</td><td>%4.2f%%</td><td>%4.2f</td></tr>", (100.0 * times[1]) / times[0], times[1] / (TEST_RUNS * 1000.0)));
-		System.out.println(String.format("<tr><td>MapReader</td><td>%4.2f%%</td><td>%4.2f</td></tr>", (100.0 * times[2]) / times[0], times[2] / (TEST_RUNS * 1000.0)));
-		System.out.println(String.format("<tr><td>BeanReader</td><td>%4.2f%%</td><td>%4.2f</td></tr>", (100.0 * times[3]) / times[0], times[3] / (TEST_RUNS * 1000.0)));
-		System.out.println(String.format("<tr><td>BeanReader (full)</td><td>%4.2f%%</td><td>%4.2f</td></tr>", (100.0 * times[4]) / times[0], times[4] / (TEST_RUNS * 1000.0)));
-		System.out.println("</table>");
+		{
+			int i = 0;
+			System.out.println("<table><tr><th>Method</th><th>Relative speed</th><th>Average execution time</th></tr>");
+			System.out.println(makeTableLine("split()", times[0], times[i++]));
+			System.out.println(makeTableLine("ListReader", times[0], times[i++]));
+			System.out.println(makeTableLine("ListReader_old tokenizer", times[0], times[i++]));
+			System.out.println(makeTableLine("MapReader", times[0], times[i++]));
+			System.out.println(makeTableLine("BeanReader", times[0], times[i++]));
+			System.out.println(makeTableLine("BeanReader (full)", times[0], times[i++]));
+			System.out.println("</table>");
+		}
 	}
-
 }
