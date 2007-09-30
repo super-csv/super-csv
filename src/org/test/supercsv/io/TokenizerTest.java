@@ -80,6 +80,16 @@ public class TokenizerTest {
 	}
 
 	@Test
+	public void inputOneRow_should_not_trim_spaces_between_words() throws Exception {
+		String input = "    hello  you  ,   there  on   the  ,  corner ";
+		tokenizer = new Tokenizer(new StringReader(input), CsvPreference.EXCEL_PREFERENCE);
+		tokenizer.readStringList(result);
+		assertThat(result.get(0), is("hello  you"));
+		assertThat(result.get(1), is("there  on   the"));
+		assertThat(result.get(2), is("corner"));
+	}
+
+	@Test
 	public void inputOneRow_should_not_trim_tabs_before_and_after() throws Exception {
 		String input = " \thello\t ,\tyou\t,\tthere\t";
 		tokenizer = new Tokenizer(new StringReader(input), CsvPreference.EXCEL_PREFERENCE);
