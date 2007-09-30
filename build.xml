@@ -7,12 +7,18 @@
 	<property name="jar.junit" value="./lib/junit-4.4.jar" />
 	<property name="dir.src" value="./src/" />
 	<property name="dir.dst" value="./bin/" />
+	<property name="dir.lib" value="./lib/" />
 	<property name="dir.javadoc" value="./web/javadoc/" />
 	<property name="targetversion" value="5" />
 
+	<path id="classpath">
+	    <fileset dir="${dir.lib}">
+	        <include name="**/*.jar"/>
+	    </fileset>
+	</path>
+
 
 	<target name="testcoverage" description="run a test coverage">
-
 		<property name="coveragereport.dir" value="${basedir}/web/emmareports/" />  <!-- directory which emma coverage reports will be written to -->
 		<property name="coverage.dir" value="${basedir}/bin_emma/" />				<!-- Destination dir for modified files -->
 		<property name="emma.dir" value="${basedir}/lib/" />          				<!-- directory that contains emma.jar and emma_ant.jar -->
@@ -53,7 +59,7 @@
 				optimize="off"
 				debug="true" >
 				<classpath>
-					<pathelement location="${jar.junit}" />
+					<path refid="classpath" />
 				</classpath>
 		</javac>
 
@@ -79,6 +85,8 @@
 			</emma>
 
 			<!-- run test -->
+
+
 			<junit haltonfailure="true" printsummary="true" fork="true" forkmode="once">
 				<batchtest>
 					<fileset dir="${coverage.dir}" includes="**/*Test.class" />
@@ -87,7 +95,7 @@
 				<classpath>
 					<path refid="emma.lib" />
 					<pathelement location="${coverage.dir}" />
-					<pathelement location="${jar.junit}" />
+					<path refid="classpath" />
 				</classpath>
 
 				<jvmarg value="-Demma.coverage.out.file=${coveragereport.dir}/coverage.emma" />
