@@ -37,43 +37,37 @@
 </div>
 <div id="content">
 
-<a name="motivation"></a>
-<h1>Motivation</h1>
-The main motivation for Super Csv is to create the <b>best free</b> CSV package for processing CSV files.
-Super Csv's unique features raises the bar and sets a new standard for CSV packages. Super Csv is designed around solid Object-oriented principles,
-and thus aims to leverage your Object-oriented code, making it easier to write and maintain.
+<h1>Downloads & Versions</h1>
+
+<table cellspacing="8">
+<tr><th>Version</th><th>Changes</th></tr>
+<tr><td valign="top">1.0</td><td>Initial release</td></tr>
+<tr><td valign="top">1.01</td><td>Small bugfixes.
+<ul>
+<li>Inherited properties are now supported by the bean reader/writer</li>
+<li>Jar file is now compiled for JDK 5.</li>
+</ul>
+</td></tr>
+<tr><td valign="top">1.02</td><td>Small bugfixes.
+<ul>
+<li>Empty cells with value <tt>""</tt> was mistakenly interpreted as an escaped quoted char rather than the empty line</li>
+<li>No longer removes trailing spaces inside quotes so <tt>" hello "</tt> is read as <tt>" hello "</tt> rather than <tt>" hello"</tt></li>
+<li>Renamed the cellprocessor <tt>MagicToken</tt> to <tt>Token</tt>
+<li>TABs are not regarded as whitespace anymore</li>
+</ul>
+</td></tr>
+</table>
 <p>
-If you are unsure about what the CSV format is, please read my specification which covers my understanding of the concept:
-<a href="#csvSpecification">The CSV format specification</a>.
+The download section can be found at <a href="http://sourceforge.net/projects/supercsv">the Super Csv source forge download page</a>
 <p>
-Super Csv offers the following features not found together in other CSV packages
+Ideas for the future
 
 <ul>
-<li>The ability to read/write POJO beans, Maps and String lists.</li>
-<li>The ability to easily convert input/output to integers, dates, trimming strings, etc...</li>
-<li>The ability to easily verify data conforms to some specification, such as number ranges, string sizes, uniqueness and even optional columns.</li>
-<li>The ability to read/write data from anywhere in any encoding. As long as you provide a <tt>Reader</tt> or a <tt>Writer</tt>.
-<li>Support for Windows, MAC and Linux line breaks.</li>
-<li>Configurable separation character, espace character end end of line character (for writing files)</li>
-<li>Correctly handling of characters such as <tt>"</tt> and <tt>,</tt></li>
-<li>Operates on streams rather than filenames, enabling you to read/write CSV files e.g. over a network connection.</li>
+<li>Comment character support (is anyone using this anyway??)</li>
+<li>More cell processors</li>
+<li>Batch reading and writing, delaying errors</li>
 </ul>
 
-When combined, these features enables you to express clear and robust code for handling CSV files.
-<p>
-My years in industry dealing with  CSV files (among other things ;-), has enabled me to identify a number of limitations with existing CSV packages.
-These limitations led me to write SuperCsv.
-My main critisism of existing CSV packages is that reading and writing takes outset in operating on lists of strings.
-What you really needed is the ability
-to operate on a fan of different types of objects. Moreover, often you need to restrict input/output data such as minimum
-and maximum sizes, or numeric ranges. Or maybe you are reading image names, and want to ensure you do not read names
-contain the characters ":", " ", "/", "^", "%". SuperCSV deals with all these and many other issues. And should you have a constraint
-not readily expressible in the package, new cellprocessors can easily be constructed.
-<p>
-The underlying implementation of Super Csv has been written in an extendible fashion, hence new readers/writters and cell processors can easily be supported.
-The IoC (Inversion of Control) implementation patterns has been enforced, eradicating long-lived mistakes such as using
-filenames as arguments rather than <tt>Reader</tt> and <tt>Writer</tt> objects. Design patterns such as "Chain of responsibility",
-"The Null object pattern" can also be found in the code. Feel free to have a look.
 
 
 
