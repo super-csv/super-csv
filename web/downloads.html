@@ -31,7 +31,7 @@
  <a href="price.html">Pricing &amp; License</a> |
  <a href="usage.html">Usage/Javadoc</a> |
  <a href="codeExamples.html">Code examples</a> |
- <a href="downloads.html">Downloads</a> |
+ <a href="downloads.html">Downloads &amp; versions</a> |
  <a href="csvSpecification.html">CSV Specification</a>
 </div>
 </div>
@@ -41,14 +41,19 @@
 
 <table cellspacing="8">
 <tr><th>Version</th><th>Changes</th></tr>
-<tr><td valign="top">1.0</td><td>Initial release</td></tr>
-<tr><td valign="top">1.01</td><td>Small bugfixes.
+
+
+<tr><td valign="top">1.10</td><td>Faster and better, 10/2007.
 <ul>
-<li>Inherited properties are now supported by the bean reader/writer</li>
-<li>Jar file is now compiled for JDK 5.</li>
+<li>Introduced new cell processors <tt>parseChar</tt>, <tt>ForbidSubStr</tt>, <tt>RequireSubStr</tt></li>
+<li>Made the tokenizer 5% faster! Reading files is now faster than ever!</li>
+<li>Enabled easy plugging in new tokenizers. Feel free to author your own faster tokenizer</li>
+<li>Improved the Javadoc</li>
 </ul>
 </td></tr>
-<tr><td valign="top">1.02</td><td>Small bugfixes.
+
+
+<tr><td valign="top">1.02</td><td>Small bugfixes, 09/2007.
 <ul>
 <li>Empty cells with value <tt>""</tt> was mistakenly interpreted as an escaped quoted char rather than the empty line</li>
 <li>No longer removes trailing spaces inside quotes so <tt>" hello "</tt> is read as <tt>" hello "</tt> rather than <tt>" hello"</tt></li>
@@ -56,11 +61,31 @@
 <li>TABs are not regarded as whitespace anymore</li>
 </ul>
 </td></tr>
+
+
+<tr><td valign="top">1.01</td><td>Small bugfixes, 09/2007.
+<ul>
+<li>Inherited properties are now supported by the bean reader/writer</li>
+<li>Jar file is now compiled for JDK 5.</li>
+</ul>
+</td></tr>
+
+<tr><td valign="top">1.0</td><td>Initial release</td></tr>
+
 </table>
 <p>
 The download section can be found at <a href="http://sourceforge.net/projects/supercsv">the Super Csv source forge download page</a>
 <p>
-Ideas for the future
+
+Planned future releases
+
+<ul>
+<li>v1.10 - make Super CSV much more convenient to use. We have quite a few nice ideas! Look forward to this!</li>
+<li>v1.15 - further improve read speed of CSV files. The 1.03 release optimizations convinced us there are more speed gains ahead!</li>
+</ul>
+
+
+Othe ideas for the future
 
 <ul>
 <li>Comment character support (is anyone using this anyway??)</li>

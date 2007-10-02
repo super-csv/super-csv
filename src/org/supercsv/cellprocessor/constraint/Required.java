@@ -13,7 +13,7 @@ import org.supercsv.exception.SuperCSVException;
 import org.supercsv.util.CSVContext;
 
 /**
- * This processor converts the input to a string, and enforces a requirement that the input's hashfunction returns any
+ * This processor converts the input to a string, and enforces a requirement that the input's hash function returns any
  * of given hashcode (specified as one or one in a set of hash codes). Lookup time is O(1). This constraint is a very
  * efficient way of ensuring constant expressions are present in certain columns of the CSV file, such as "BOSS",
  * "EMPLOYEE", or when a column denote an action to be taken for the input line such as "D" (delete), "I" (insert), ...

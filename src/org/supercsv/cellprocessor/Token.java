@@ -17,11 +17,11 @@ import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.util.CSVContext;
 
 /**
- * This processor is used in the situations you want to be able to check for the presence of a special "magic token".
- * Such a token could be the string "[empty]" which could denote that a column is different from the empty string "". It
- * can be used in conjunction with a ParseLong() processor, since the magic token would be discovered before the parser
- * attempt so parse the token as a number. Comparison between column value and the <tt>magicToken</tt> is based on the
- * object's <tt>equals()</tt> method.
+ * This processor is used in the situations you want to be able to check for the presence of a meta data or "special
+ * magical token". Such a token could be the string "[empty]" which could denote that a column is different from the
+ * empty string "". It can be used in conjunction with a ParseLong() processor, since the magic token would be
+ * discovered before the parser attempt so parse the token as a number. Comparison between column value and the
+ * <tt>token</tt> is based on the object's <tt>equals()</tt> method.
  * <p>
  * Use this class instead of the MagicToken class (Token is simply a better name)
  * 
@@ -30,17 +30,36 @@ import org.supercsv.util.CSVContext;
  */
 public class Token extends CellProcessorAdaptor implements DateCellProcessor, DoubleCellProcessor, LongCellProcessor, StringCellProcessor, BoolCellProcessor {
 	Object returnValue = "";
-	Object magicToken = "";
+	Object token = "";
 
-	public Token(final Object magicToken, final Object returnValue) {
+	/**
+	 * Constructor To have the string <tt>"[empty]"</tt> represent the empty amount -1 you could use use this class as
+	 * <code>
+	 * new Token("[empty]", -1);
+	 * </code>
+	 * 
+	 * @param token
+	 *            the metadata identification
+	 * @param returnValue
+	 *            the data being returned in case the meta data is encountered
+	 */
+	public Token(final Object token, final Object returnValue) {
 		super();
-		this.magicToken = magicToken;
+		this.token = token;
 		this.returnValue = returnValue;
 	}
 
-	public Token(final Object magicToken, final Object returnValue, final CellProcessor next) {
+	/**
+	 * Constructor
+	 * 
+	 * @param token
+	 *            the metadata identification
+	 * @param returnValue
+	 *            the data being returned in case the meta data is encountered
+	 */
+	public Token(final Object token, final Object returnValue, final CellProcessor next) {
 		super(next);
-		this.magicToken = magicToken;
+		this.token = token;
 		this.returnValue = returnValue;
 	}
 
@@ -49,7 +68,7 @@ public class Token extends CellProcessorAdaptor implements DateCellProcessor, Do
 	 */
 	@Override
 	public Object execute(final Object value, final CSVContext context) {
-		if(value.equals(magicToken)) return returnValue;
+		if(value.equals(token)) return returnValue;
 
 		return next.execute(value, context);
 	}

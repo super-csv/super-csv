@@ -44,16 +44,24 @@ interface ICsvReader {
 	public int getLineNumber();
 
 	/**
-	 * returns the length of the current line *
+	 * returns the length of the current line
 	 * 
 	 * @since 1.0
 	 */
 	public int length() throws IOException;
 
 	/**
-	 * Determine how the reader reads the input source. *
+	 * Determine how the reader reads the input source.
 	 * 
 	 * @since 1.0
 	 */
 	public ICsvReader setPreferences(CsvPreference preference);
+
+	/**
+	 * Determine how the reader reads the csv file.
+	 * 
+	 * @since 1.10
+	 */
+	public ICsvReader setTokenizer(ITokenizer tokenizer);
+
 }

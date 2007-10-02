@@ -1,5 +1,6 @@
 package org.supercsv.io;
 
+
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.Reader;
@@ -12,7 +13,7 @@ import org.supercsv.prefs.CsvPreference;
  * 
  * @author Kasper B. Graversen
  */
-public class Tokenizer implements ITokenizer {
+public class Tokenizer_if implements ITokenizer {
 	/** states of the parser */
 	protected enum PARSERSTATE {
 		NORMAL, // normal text
@@ -24,7 +25,7 @@ public class Tokenizer implements ITokenizer {
 
 	StringBuilder sb = null;
 
-	public Tokenizer(final Reader stream, final CsvPreference preference) {
+	public Tokenizer_if(final Reader stream, final CsvPreference preference) {
 		this.preferences = preference;
 		lnr = new LineNumberReader(stream);
 		sb = new StringBuilder(500);
@@ -70,17 +71,15 @@ public class Tokenizer implements ITokenizer {
 		// start parsing
 		line = line + "\n"; // add a newline to determine end of line (making
 		// parsing easier)
-
-		sb.delete(0, sb.length()); // reset the stringbuilder
+		sb = new StringBuilder();
 
 		// proccess the line (and maybe more lines of the file)
 		int p = 0; // the pos of the cursor on the line
-		int linenoQuoteState = -1; // the line number of the file where a potential multiline cell starts
+		int linenoQuoteState = -1; // the line number of the file where the
 
-		int potentialSpaces = 0; // spaces between words or after the last word.
-		// when in non-quote mode, count the spaces and add them only if a non-delimiter or non-end-of-line is met
-		// (otherwise its just empty stuff at the end of the cell which is ignored such as 'foo ,' which is read as
-		// 'foo' whereas 'foo a' -> 'foo a'
+		int potentialSpaces = 0; // only add spaces if in quote mode. if in non-quote mode, count the spaces and only
+		// add them if a non-delimiter or non-end-of-line is met
+		// in other cases, we are ending the cell, and we do not want to do that with spaces..
 
 		while(true) {
 			// relies on p being incremented at least at the end of the while
@@ -108,36 +107,35 @@ public class Tokenizer implements ITokenizer {
 					else if(c == '\n') {
 						// save token
 						result.add(sb.toString());
-						// done at start of method: sb.delete(0, sb.length()); // reset the stringbuilder
-						// done at start of method: potentialSpaces = 0;
+						sb = null;
+						potentialSpaces = 0;
 						return true; // we've read a line
 					}
-					else if(c == quote) {
-						if(sb.length() == 0) { // quote first on line cannot be escaped
-							state = PARSERSTATE.QUOTESCOPE;
-							// update variable in order to do debug statements
-							linenoQuoteState = getLineNumber();
-							break; // read more
-						}
-						else if(line.charAt(p + 1) == quote && sb.length() > 0) {
-							// an escaped quote - can not happen as first character, hence the "sb.length > 0"
-							addSpaces(sb, potentialSpaces);
-							potentialSpaces = 0;
-							sb.append(c); // add and skip the first quote
-							// (end of switch will skip the next quote)
-							p++;
-							break; // read more
-						}
-						else if(line.charAt(p + 1) != quote) { // a single quote, change state and don't
-							// append
-							state = PARSERSTATE.QUOTESCOPE;
-							// update variable in order to do debug statements
-							linenoQuoteState = getLineNumber();
-							addSpaces(sb, potentialSpaces);
-							potentialSpaces = 0;
-							break; // read more
-						}
+					else if(c == quote && sb.length() == 0) { // quote first on line cannot be escaped
+						state = PARSERSTATE.QUOTESCOPE;
+						// update variable in order to do debug statements
+						linenoQuoteState = getLineNumber();
+						break; // read more
 					}
+					else if(c == quote && line.charAt(p + 1) == quote && sb.length() > 0) {
+						// an escaped quote - can not happen as first character
+						addSpaces(sb, potentialSpaces);
+						potentialSpaces = 0;
+						sb.append(c); // add and skip the first quote
+						// (end of switch will skip the next quote)
+						p++;
+						break; // read more
+					}
+					else if(c == quote && line.charAt(p + 1) != quote) { // a single quote, change state and don't
+						// append
+						state = PARSERSTATE.QUOTESCOPE;
+						// update variable in order to do debug statements
+						linenoQuoteState = getLineNumber();
+						addSpaces(sb, potentialSpaces);
+						potentialSpaces = 0;
+						break; // read more
+					}
+
 					else { // if just a normal character
 						addSpaces(sb, potentialSpaces);
 						potentialSpaces = 0;
@@ -149,7 +147,12 @@ public class Tokenizer implements ITokenizer {
 				case QUOTESCOPE:
 					// System.out.println("quote: '" + p + "'");
 
-					if(c == '\n') { // newline does not count as newline in
+					if(c == delim) {
+						// delimiter does not count as delimiter in quote scope
+						sb.append(c);
+						break; // read more
+					}
+					else if(c == '\n') { // newline does not count as newline in
 						// quote scope
 						sb.append('\n');
 						// parse the next line of the file
@@ -161,21 +164,19 @@ public class Tokenizer implements ITokenizer {
 						line = line + '\n'; // add \n to make parsing easy
 						break; // read more
 					}
-					else if(c == quote) {
-						if(line.charAt(p + 1) == quote) {
-							// an escaped quote,
-							sb.append(c); // add and skip the first quote (end of
-							// switch will skip the next quote
-							p++;
-							break; // read more
-						}
-						else { // if(line.charAt(p + 1) != quote) {
-							// a single quote, only change state
-							state = PARSERSTATE.NORMAL;
-							break; // read more
-						}
+					else if(c == quote && line.charAt(p + 1) == quote) {
+						// an escaped quote,
+						sb.append(c); // add and skip the first quote (end of
+						// switch will skip the next quote
+						p++;
+						break; // read more
 					}
-					else { // if just a normal character or delimiter (they don't count in this mode)
+					else if(line.charAt(p) == quote && line.charAt(p + 1) != quote) {
+						// a single quote, only change state
+						state = PARSERSTATE.NORMAL;
+						break; // read more
+					}
+					else { // if just a normal character
 						sb.append(c); // add the char
 						// System.out.println("Adding char '" + c + "'");
 					}
