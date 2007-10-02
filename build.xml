@@ -168,7 +168,7 @@
 			<formatter type="brief" usefile="false" />
 			<classpath>
 				<pathelement location="${dir.dst}" />
-				<pathelement location="${jar.junit}" />
+				<path refid="classpath" />
 			</classpath>
 		</junit>
 	</target>
