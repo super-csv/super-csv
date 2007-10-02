@@ -46,9 +46,10 @@
 <tr><td valign="top">1.10</td><td>Faster and better, 10/2007.
 <ul>
 <li>Introduced new cell processors <tt>parseChar</tt>, <tt>ForbidSubStr</tt>, <tt>RequireSubStr</tt></li>
-<li>Made the tokenizer 5% faster! Reading files is now faster than ever!</li>
-<li>Enabled easy plugging in new tokenizers. Feel free to author your own faster tokenizer</li>
-<li>Improved the Javadoc</li>
+<li>Made the tokenizer 5% faster (the thing that reads and interprets the CSV files)! Reading files has never been faster!</li>
+<li>The framework now support plugging in new tokenizers onto readers. Feel free to author your own fast tokenizer</li>
+<li>Improved the Javadoc for some processors</li>
+<li>Added source branch specifically for tokenizer speed testing and comparison. It is now easy to experiment with various tokenizing strategies.</li>
 </ul>
 </td></tr>
 
@@ -57,7 +58,7 @@
 <ul>
 <li>Empty cells with value <tt>""</tt> was mistakenly interpreted as an escaped quoted char rather than the empty line</li>
 <li>No longer removes trailing spaces inside quotes so <tt>" hello "</tt> is read as <tt>" hello "</tt> rather than <tt>" hello"</tt></li>
-<li>Renamed the cellprocessor <tt>MagicToken</tt> to <tt>Token</tt>
+<li>Renamed the cell processor <tt>MagicToken</tt> to <tt>Token</tt>
 <li>TABs are not regarded as whitespace anymore</li>
 </ul>
 </td></tr>
@@ -77,15 +78,15 @@
 The download section can be found at <a href="http://sourceforge.net/projects/supercsv">the Super Csv source forge download page</a>
 <p>
 
-Planned future releases
+<h2>Planned future releases</h2>
 
 <ul>
-<li>v1.10 - make Super CSV much more convenient to use. We have quite a few nice ideas! Look forward to this!</li>
-<li>v1.15 - further improve read speed of CSV files. The 1.03 release optimizations convinced us there are more speed gains ahead!</li>
+<li>v1.20 - make Super CSV much more convenient to use. We have quite a few nice ideas! Look forward to this!</li>
+<li>v1.30 - further improve read speed of CSV files. The 1.10 release optimizations convinced us there are more speed gains ahead!</li>
 </ul>
 
 
-Othe ideas for the future
+<h2>Other ideas for the future</h2>
 
 <ul>
 <li>Comment character support (is anyone using this anyway??)</li>
