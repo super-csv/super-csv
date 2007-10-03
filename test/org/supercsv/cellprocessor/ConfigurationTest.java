@@ -1,4 +1,4 @@
-package org.test.supercsv.cellprocessor;
+package org.supercsv.cellprocessor;
 
 import org.junit.Test;
 import org.supercsv.prefs.CsvPreference;
