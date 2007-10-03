@@ -49,13 +49,13 @@ If you are unsure about what the CSV format is, please read my specification whi
 Super Csv offers the following features not found together in other CSV packages
 
 <ul>
-<li>The ability to read/write POJO beans, Maps and String lists.</li>
-<li>The ability to easily convert input/output to integers, dates, trimming strings, etc...</li>
-<li>The ability to easily verify data conforms to some specification, such as number ranges, string sizes, uniqueness and even optional columns.</li>
-<li>The ability to read/write data from anywhere in any encoding. As long as you provide a <tt>Reader</tt> or a <tt>Writer</tt>.
+<li>The ability to read/write <b>POJO beans</b>, Maps and String lists.</li>
+<li><b>Automatic "CSV encoding"</b> of output on a per need basis. Thus when you write special characters such as <tt>,</tt> or <tt>"</tt> Super CSV ensure the content is properly escaped (according to <a href="csvSpecification.html">my CSV specification</a>).
+<li>The ability to <b>easily convert</b> input/output to integers, dates, trimming strings, etc...</li>
+<li>The ability to easily <b>verify data</b> conforms to some specification, such as number ranges, string sizes, uniqueness and even optional columns.</li>
+<li>The ability to read/write data from <b>anywhere</b> in <b>any encoding</b>. As long as you provide a <tt>Reader</tt> or a <tt>Writer</tt>.
 <li>Support for Windows, MAC and Linux line breaks.</li>
-<li>Configurable separation character, espace character end end of line character (for writing files)</li>
-<li>Correctly handling of characters such as <tt>"</tt> and <tt>,</tt></li>
+<li>Configurable separation character, space character and end of line character (for writing files to different platforms)</li>
 <li>Operates on streams rather than filenames, enabling you to read/write CSV files e.g. over a network connection.</li>
 </ul>
 
@@ -68,7 +68,9 @@ What you really needed is the ability
 to operate on a fan of different types of objects. Moreover, often you need to restrict input/output data such as minimum
 and maximum sizes, or numeric ranges. Or maybe you are reading image names, and want to ensure you do not read names
 contain the characters ":", " ", "/", "^", "%". SuperCSV deals with all these and many other issues. And should you have a constraint
-not readily expressible in the package, new cell processors can easily be constructed.
+not readily expressible in the package, new cell processors can easily be constructed. Further more, you don't want to "CSV encode" strings you write.
+Should they happen to contain characters that needs escaping, then the CSV package should take care of this automatically!
+
 <p>
 The underlying implementation of Super Csv has been written in an extendible fashion, hence new readers/writters and cell processors can easily be supported.
 The IoC (Inversion of Control) implementation patterns has been enforced, eradicating long-lived mistakes such as using
