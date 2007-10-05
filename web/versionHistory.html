@@ -38,22 +38,46 @@
 </div>
 <div id="content">
 
-<h1>Download</h1>
-<p>
-The download section can be found at <br>
-<p>
-<br>
- 	<div style="text-align: center"><a href="http://sourceforge.net/projects/supercsv">the Super Csv source forge download page</a></div>
-<p>
+<h1>Version history</h1>
 
-<br>
-<h2><img height="20" src="img/Feed-icon.png"> RSS feeds</h2>
+<table cellspacing="8">
+<tr><th>Version</th><th>Changes</th></tr>
 
-Project news releases <a href="http://sourceforge.net/export/rss2_projnews.php?group_id=201724"><img border="0" src="img/xml.png"></a>
+
+<tr><td valign="top">1.10</td><td>Faster and better, 10/2007.
+<ul>
+<li>Introduced new cell processors <tt>parseChar</tt>, <tt>ForbidSubStr</tt>, <tt>RequireSubStr</tt></li>
+<li>Made the tokenizer 5% faster (the thing that reads and interprets the CSV files)! Reading files has never been faster!</li>
+<li>The framework now support plugging in new tokenizers onto readers. Feel free to author your own fast tokenizer</li>
+<li>Improved the Javadoc for some processors</li>
+<li>Added source branch specifically for tokenizer speed testing and comparison. It is now easy to experiment with various tokenizing strategies.</li>
+</ul>
+</td></tr>
+
+
+<tr><td valign="top">1.02</td><td>Small bugfixes, 09/2007.
+<ul>
+<li>Empty cells with value <tt>""</tt> was mistakenly interpreted as an escaped quoted char rather than the empty line</li>
+<li>No longer removes trailing spaces inside quotes so <tt>" hello "</tt> is read as <tt>" hello "</tt> rather than <tt>" hello"</tt></li>
+<li>Renamed the cell processor <tt>MagicToken</tt> to <tt>Token</tt>
+<li>TABs are not regarded as whitespace anymore</li>
+</ul>
+</td></tr>
+
+
+<tr><td valign="top">1.01</td><td>Small bugfixes, 09/2007.
+<ul>
+<li>Inherited properties are now supported by the bean reader/writer</li>
+<li>Jar file is now compiled for JDK 5.</li>
+</ul>
+</td></tr>
+
+<tr><td valign="top">1.0</td><td>Initial release</td></tr>
+
+</table>
 <p>
-Project file releases <a href="http://sourceforge.net/export/rss2_projfiles.php?group_id=201724"><img border="0" src="img/xml.png"></a>
+The download section can be found at <a href="http://sourceforge.net/projects/supercsv">the Super Csv source forge download page</a>
 <p>
-More feeds: <a href="http://sourceforge.net/export/rss2_project.php?group_id=201724">http://sourceforge.net/export/rss2_project.php?group_id=201724</a>
 
 <h2>Planned future releases</h2>
 
@@ -66,7 +90,6 @@ More feeds: <a href="http://sourceforge.net/export/rss2_project.php?group_id=201
 <h2>Other ideas for the future</h2>
 
 <ul>
-<li>Your ideas! Your input is highly valued, so get out of the bush and start writing in the forums :-)</li>
 <li>Comment character support (is anyone using this anyway??)</li>
 <li>More cell processors</li>
 <li>Batch reading and writing, delaying errors</li>
