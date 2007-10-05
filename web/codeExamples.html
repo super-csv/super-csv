@@ -27,7 +27,7 @@
 <div id="header">Super CSV</div>
 <div style="text-align: center;">by Kasper B. Graversen, 2006-2007<p>
 <div style="links">
- <a href="motivation.html">Motivation</a> |
+ <a href="index.html">Motivation</a> |
  <a href="price.html">Pricing &amp; License</a> |
  <a href="usage.html">Usage/Javadoc</a> |
  <a href="codeExamples.html">Code examples</a> |
@@ -35,6 +35,26 @@
  <a href="versionHistory.html">Version history</a> |
  <a href="csvSpecification.html">CSV Specification</a>
 </div>
+</div>
+<div id="adds_top">
+<script type="text/javascript"><!--
+google_ad_client = "pub-1222515461989279";
+google_ad_width = 728;
+google_ad_height = 90;
+google_ad_format = "728x90_as";
+google_ad_type = "text_image";
+google_ad_channel = "";
+google_color_border = "FFFFFF";
+google_color_bg = "FFFFFF";
+google_color_link = "0000FF";
+google_color_text = "000000";
+google_color_url = "008000";
+google_ui_features = "rc:10";
+//-->
+</script>
+<script type="text/javascript"
+  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
 </div>
 <div id="content">
 <h1>Code examples</h1>
@@ -145,6 +165,10 @@ setting a processor array element to <tt>null</tt> which disables processing of 
 Writing a file is as easy as reading one. You decide on the column format and start writing. You can still enjoy the cell processor
 functionality, however, you will most likely only use the constraint parts. Any value is being written to the output stream using
 the <tt>toString()</tt> method on each object, thus reducing the need for the cell processors that convert data.
+<b>Notice that data is automatically "CSV encoded"</b>. This means that when you write the string <tt>Hello, world</tt>, the actual data
+written will be <tt>"Hello, world"</tt> as the comma must be escaped since you are only writing one column of data. Similarly, the string
+<tt>"Hello" world</tt> becomes <tt>"""Hello"" world"</tt> etc. etc. In other words, <b>You can safely leave it up to Super csv to properly write
+your data.</b>
 
 <pre class="prettyprint">
 import java.util.HashMap;
@@ -218,63 +242,32 @@ All the magic is taking place in the <tt>execute()</tt> method. It really need n
 
 
 
+<div id="adds_bottom">
+<script type="text/javascript"><!--
+google_ad_client = "pub-1222515461989279";
+google_ad_width = 728;
+google_ad_height = 90;
+google_ad_format = "728x90_as";
+google_ad_type = "text_image";
+google_ad_channel = "";
+google_color_border = "FFFFFF";
+google_color_bg = "FFFFFF";
+google_color_link = "0000FF";
+google_color_text = "000000";
+google_color_url = "008000";
+google_ui_features = "rc:10";
+//-->
+</script>
+<script type="text/javascript"
+  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>
 
 
 </div>
 </td>
 <td valign="top" width="36" background="img/bgsideright.gif">&nbsp;</td>
-<td valign="top">&nbsp;
-<script type="text/javascript">
-			google_ad_client = "pub-1222515461989279";
-			google_alternate_color = "8B725A";
-			google_ad_width = 160;
-			google_ad_height = 600;
-			google_ad_format = "160x600_as";
-			google_ad_type = "text_image";
-			google_ad_channel ="";
-			google_color_border = "8B725A";
-			google_color_bg = "FFFFFF";
-			google_color_link = "333399";
-			google_color_url = "008000";
-			google_color_text = "000000";
-			</script>
-<br><br>
-<script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js"/>
-<br><br>
-<script type="text/javascript">
-			google_ad_client = "pub-1222515461989279";
-			google_alternate_color = "8B725A";
-			google_ad_width = 160;
-			google_ad_height = 600;
-			google_ad_format = "160x600_as";
-			google_ad_type = "text_image";
-			google_ad_channel ="";
-			google_color_border = "8B725A";
-			google_color_bg = "FFFFFF";
-			google_color_link = "333399";
-			google_color_url = "008000";
-			google_color_text = "000000";
-			</script>
-<br><br>
-<script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js"/>
-<br><br>
-<script type="text/javascript">
-			google_ad_client = "pub-1222515461989279";
-			google_alternate_color = "8B725A";
-			google_ad_width = 160;
-			google_ad_height = 600;
-			google_ad_format = "160x600_as";
-			google_ad_type = "text_image";
-			google_ad_channel ="";
-			google_color_border = "8B725A";
-			google_color_bg = "FFFFFF";
-			google_color_link = "333399";
-			google_color_url = "008000";
-			google_color_text = "000000";
-			</script>
-<br><br>
-<script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js"/>
-</td>
+<td valign="top">&nbsp;</td>
 </tr>
 </table>
 
