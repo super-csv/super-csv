@@ -31,8 +31,7 @@ public class ParseDouble extends CellProcessorAdaptor {
 		else if(value instanceof String)
 			result = new Double((String) value);
 		else
-			throw new SuperCSVException("Can't convert \"" + value
-					+ "\" to double. Input is not of type Double nor type String, but of type " + value.getClass().getName());
+			throw new SuperCSVException("Can't convert \"" + value + "\" to double. Input is not of type Double nor type String, but of type " + value.getClass().getName());
 
 		return next.execute(result, context);
 	}

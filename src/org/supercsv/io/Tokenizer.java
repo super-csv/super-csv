@@ -13,12 +13,6 @@ import org.supercsv.prefs.CsvPreference;
  * @author Kasper B. Graversen
  */
 public class Tokenizer implements ITokenizer {
-	/** states of the parser */
-	protected enum PARSERSTATE {
-		NORMAL, // normal text
-		QUOTESCOPE, // inside quote scope (e.g.: " here "
-	}
-
 	CsvPreference preferences;
 	LineNumberReader lnr;
 
@@ -30,7 +24,7 @@ public class Tokenizer implements ITokenizer {
 		sb = new StringBuilder(500);
 	}
 
-	private void addSpaces(StringBuilder sb, int spaces) {
+	private void addSpaces(final StringBuilder sb, final int spaces) {
 		for(int i = 0; i < spaces; i++)
 			sb.append(" ");
 	}

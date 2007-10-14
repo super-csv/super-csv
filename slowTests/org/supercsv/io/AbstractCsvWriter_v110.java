@@ -1,3 +1,11 @@
+/*
+ * SuperCSV is Copyright 2007, Kasper B. Graversen Licensed under the Apache License, Version 2.0 (the "License"); you
+ * may not use this file except in compliance with the License. You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language governing permissions and limitations under the
+ * License.
+ */
 package org.supercsv.io;
 
 import java.io.BufferedWriter;
@@ -9,19 +17,14 @@ import org.supercsv.exception.SuperCSVException;
 import org.supercsv.prefs.CsvPreference;
 
 /**
- * The writer class capable of writing arrays, maps,... to a CSV file. Notice that the cell processors can also be
- * utilized when writing. E.g. they can help ensure that only numbers are written in numeric columns, that numbers are
- * unique or the output does not contain certain characters or exceed specified string lengths.
- * 
  * @author Kasper B. Graversen
  */
-public abstract class AbstractCsvWriter implements ICsvWriter {
-	final StringBuilder sb = new StringBuilder();
+public abstract class AbstractCsvWriter_v110 implements ICsvWriter {
 	BufferedWriter outStream;
 	int lineNo;
 	CsvPreference preference;
 
-	public AbstractCsvWriter(final Writer stream, final CsvPreference preference) {
+	public AbstractCsvWriter_v110(final Writer stream, final CsvPreference preference) {
 		setPreferences(preference);
 		outStream = new BufferedWriter(stream);
 		lineNo = 1;
@@ -42,59 +45,7 @@ public abstract class AbstractCsvWriter implements ICsvWriter {
 	 *            an elem of a csv file
 	 * @return an escaped version of the csv elem ready for persisting
 	 */
-
-	protected String escapeString(final String csvElem) {
-		if(csvElem.length() == 0) return "";
-
-		sb.delete(0, sb.length()); // reusing builder object
-
-		final int delimiter = preference.getDelimiterChar();
-		final char quote = (char) preference.getQuoteChar();
-		final char whiteSpace = ' ';
-		final String EOLSymbols = preference.getEndOfLineSymbols();
-
-		boolean needForEscape = false; // if newline or start with space
-		if(csvElem.charAt(0) == whiteSpace) needForEscape = true;
-
-		char c;
-		final int lastPos = csvElem.length() - 1;
-		for(int i = 0; i <= lastPos; i++) {
-
-			c = csvElem.charAt(i);
-
-			if(c == delimiter) {
-				needForEscape = true;
-				sb.append(c);
-			}
-			else if(c == quote) {
-				// if its the first character, escape it and set need for space
-				if(i == 0) {
-					sb.append(quote);
-					sb.append(quote);
-					needForEscape = true;
-				}
-				else {
-					sb.append(quote);
-					sb.append(quote);
-				}
-			}
-			else if(c == '\n') {
-				needForEscape = true;
-				sb.append(EOLSymbols);
-			}
-			else
-				sb.append(c);
-		}
-
-		// if element contains a newline (mac,windows or linux), escape the
-		// whole with a surrounding quotes
-		if(needForEscape) return quote + sb.toString() + quote;
-
-		return sb.toString();
-
-	}
-
-	protected String escapeString2e(final String csvElem) {
+	private String escapeString(final String csvElem) {
 		final StringBuilder sb = new StringBuilder();
 		final int delimiter = preference.getDelimiterChar();
 		final char quote = (char) preference.getQuoteChar();

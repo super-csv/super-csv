@@ -66,8 +66,7 @@ public class Strlen extends CellProcessorAdaptor implements StringCellProcessor 
 				sb.append(length + ", ");
 			sb.deleteCharAt(sb.length() - 2); // delete last comma
 
-			throw new SuperCSVException("Entry \"" + value + "\" on line " + context.lineNumber + " column "
-					+ context.columnNumber + " is not of any of the required lengths " + sb.toString());
+			throw new SuperCSVException("Entry \"" + value + "\" on line " + context.lineNumber + " column " + context.columnNumber + " is not of any of the required lengths " + sb.toString());
 		}
 
 		return next.execute(value, context);

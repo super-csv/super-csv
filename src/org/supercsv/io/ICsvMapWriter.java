@@ -43,7 +43,6 @@ public interface ICsvMapWriter extends ICsvWriter {
 	 *             in case one of the cell processors fail processing
 	 * @since 1.0
 	 */
-	void write(Map<String, ? extends Object> source, String[] nameMapping, CellProcessor[] processor, StringBuilder errorLog)
-			throws IOException;
+	void write(Map<String, ? extends Object> source, String[] nameMapping, CellProcessor[] processor, StringBuilder errorLog) throws IOException;
 
 }

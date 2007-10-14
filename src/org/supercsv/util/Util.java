@@ -32,9 +32,7 @@ public abstract class Util {
 	 *            A list of values TODO: see if using an iterator for the values is more efficient
 	 */
 	public static <T> void mapStringList(final Map<String, T> destination, final String[] nameMapper, final List<T> values) {
-		if(nameMapper.length != values.size())
-			throw new SuperCSVException(
-					"The namemapper array and the value list must match in size. Number of columns mismatch number of entries for your map.");
+		if(nameMapper.length != values.size()) throw new SuperCSVException("The namemapper array and the value list must match in size. Number of columns mismatch number of entries for your map.");
 		destination.clear();
 
 		// map each element of the array
@@ -45,8 +43,7 @@ public abstract class Util {
 			if(key == null) continue;
 
 			// only perform safe inserts
-			if(destination.containsKey(key))
-				throw new SuperCSVException("nameMapper array contains duplicate key \"" + key + "\" cannot map the list...");
+			if(destination.containsKey(key)) throw new SuperCSVException("nameMapper array contains duplicate key \"" + key + "\" cannot map the list...");
 
 			destination.put(key, values.get(i));
 		}
@@ -73,17 +70,12 @@ public abstract class Util {
 	 * @return true in case no problems were encountered, false in case an exception was thrown. The message is found in
 	 *         the errorlog
 	 */
-	public static boolean processStringList(final List<? super Object> destination, final List<? extends Object> source,
-			final CellProcessor[] processors, final int lineNo, final StringBuilder errorLog) throws SuperCSVException {
+	public static boolean processStringList(final List<? super Object> destination, final List<? extends Object> source, final CellProcessor[] processors, final int lineNo,
+			final StringBuilder errorLog) throws SuperCSVException {
 		final boolean success = true;
 		if(source.size() != processors.length)
-			throw new SuperCSVException(
-					"The value array (size "
-							+ source.size()
-							+ ")  must match the processors array (size "
-							+ processors.length
-							+ ")."
-							+ " You are probably reading a CSV line with a different number of columns than the number of cellprocessors specified...");
+			throw new SuperCSVException("The value array (size " + source.size() + ")  must match the processors array (size " + processors.length + ")."
+					+ " You are probably reading a CSV line with a different number of columns than the number of cellprocessors specified...");
 
 		destination.clear();
 		final CSVContext context = new CSVContext();

@@ -48,8 +48,7 @@ public class LMinMax extends CellProcessorAdaptor {
 			result = Long.parseLong(value.toString());
 
 		if(!(result >= min && result <= max))
-			throw new SuperCSVException("Entry \"" + value + "\" on line " + context.lineNumber + " column "
-					+ context.columnNumber + " is not within the numerical range " + min + "-" + max);
+			throw new SuperCSVException("Entry \"" + value + "\" on line " + context.lineNumber + " column " + context.columnNumber + " is not within the numerical range " + min + "-" + max);
 
 		return next.execute(result, context);
 	}

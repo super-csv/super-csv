@@ -36,8 +36,7 @@ public class ParseBool extends CellProcessorAdaptor {
 		else if(sval.equals("1") || sval.equalsIgnoreCase("true") || sval.equalsIgnoreCase("t") || sval.equalsIgnoreCase("y"))
 			result = Boolean.TRUE;
 		else
-			throw new SuperCSVException("Cannot parse \"" + value + "\" to a boolean on line " + context.lineNumber + " column "
-					+ context.columnNumber);
+			throw new SuperCSVException("Cannot parse \"" + value + "\" to a boolean on line " + context.lineNumber + " column " + context.columnNumber);
 
 		return next.execute(result, context);
 	}

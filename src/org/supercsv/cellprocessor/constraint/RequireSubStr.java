@@ -58,8 +58,8 @@ public class RequireSubStr extends CellProcessorAdaptor implements StringCellPro
 				break;
 			}
 		}
-		if(found == false) { throw new SuperCSVException("Entry \"" + value + "\" on line " + context.lineNumber + " column " + context.columnNumber
-				+ " doesn't contain any of the required substrings"); }
+		if(found == false)
+			throw new SuperCSVException("Entry \"" + value + "\" on line " + context.lineNumber + " column " + context.columnNumber + " doesn't contain any of the required substrings");
 
 		return next.execute(value, context);
 	}

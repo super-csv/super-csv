@@ -1,6 +1,5 @@
 package org.supercsv.io;
 
-
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.Reader;
@@ -9,29 +8,23 @@ import java.util.List;
 import org.supercsv.prefs.CsvPreference;
 
 /**
- * The tokenizer is an internal mechanism to the csv parser
+ * Super CSV v1.02 tokenizer
  * 
  * @author Kasper B. Graversen
  */
-public class Tokenizer_if implements ITokenizer {
-	/** states of the parser */
-	protected enum PARSERSTATE {
-		NORMAL, // normal text
-		QUOTESCOPE, // inside quote scope (e.g.: " here "
-	}
-
+public class Tokenizer_v102 implements ITokenizer {
 	CsvPreference preferences;
 	LineNumberReader lnr;
 
 	StringBuilder sb = null;
 
-	public Tokenizer_if(final Reader stream, final CsvPreference preference) {
+	public Tokenizer_v102(final Reader stream, final CsvPreference preference) {
 		this.preferences = preference;
 		lnr = new LineNumberReader(stream);
 		sb = new StringBuilder(500);
 	}
 
-	private void addSpaces(StringBuilder sb, int spaces) {
+	private void addSpaces(final StringBuilder sb, final int spaces) {
 		for(int i = 0; i < spaces; i++)
 			sb.append(" ");
 	}

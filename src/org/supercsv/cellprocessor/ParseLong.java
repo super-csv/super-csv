@@ -30,8 +30,7 @@ public class ParseLong extends CellProcessorAdaptor {
 		else if(value instanceof String)
 			result = Long.parseLong((String) value);
 		else
-			throw new SuperCSVException("Can't convert \"" + value
-					+ "\" to long. Input is not of type Long nor type String but of type " + value.getClass().getName());
+			throw new SuperCSVException("Can't convert \"" + value + "\" to long. Input is not of type Long nor type String but of type " + value.getClass().getName());
 
 		return next.execute(result, context);
 	}

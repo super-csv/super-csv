@@ -9,7 +9,7 @@ import org.supercsv.prefs.CsvPreference;
  * 
  * @author Kasper B. Graversen
  */
-interface ICsvWriter {
+public interface ICsvWriter {
 	/**
 	 * close the stream *
 	 * 

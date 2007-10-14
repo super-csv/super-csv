@@ -34,13 +34,11 @@ public class ParseChar extends CellProcessorAdaptor {
 			if(tmp.length() == 1) {
 				result = new Character(tmp.charAt(0));
 			}
-			else {
+			else
 				throw new SuperCSVException("Can't convert \"" + value + "\" to a char. It must have a length of 1 to be a valid char.");
-			}
 		}
-		else {
+		else
 			throw new SuperCSVException("Can't convert \"" + value + "\" to char. Input is not of type Character nor type String, but of type " + value.getClass().getName());
-		}
 
 		return next.execute(result, context);
 	}

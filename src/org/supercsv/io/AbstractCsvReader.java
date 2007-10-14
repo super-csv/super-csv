@@ -91,7 +91,7 @@ public abstract class AbstractCsvReader implements ICsvReader {
 	/**
 	 * {@inheritDoc}
 	 */
-	public ICsvReader setTokenizer(ITokenizer tokenizer) {
+	public ICsvReader setTokenizer(final ITokenizer tokenizer) {
 		this.tokenizer = tokenizer;
 		return this;
 	}
