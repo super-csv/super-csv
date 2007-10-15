@@ -7,5 +7,6 @@
 	<classpathentry kind="lib" path="lib/emma_ant.jar"/>
 	<classpathentry kind="lib" path="lib/emma.jar"/>
 	<classpathentry kind="lib" path="lib/junit-4.4.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/TimeSpread"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

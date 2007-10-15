@@ -13,10 +13,8 @@ import org.supercsv.util.CSVContext;
 /**
  * @author Kasper B. Graversen
  */
-
-// TODO fix failing tests...
 public class ParseDateTest {
-	CellProcessor cp, ccp;
+	CellProcessor	cp, ccp;
 
 	@Before
 	public void setUp() throws Exception {
@@ -51,9 +49,11 @@ public class ParseDateTest {
 
 	@Test
 	public void validInputTest() throws Exception {
-		Assert.assertEquals("read date", new Date(2007 - 1900, 4 - 1, 17), cp.execute("17/04/2007", new CSVContext(0, 0)));
+		Assert.assertEquals("read date", new Date(2007 - 1900, 4 - 1, 17), cp.execute("17/04/2007",
+				new CSVContext(0, 0)));
 
 		cp = new ParseDate("MM-dd-yy");
-		Assert.assertEquals("read date", new Date(2006 - 1900, 4 - 1, 17), cp.execute("04-17-2006", new CSVContext(0, 0)));
+		Assert.assertEquals("read date", new Date(2006 - 1900, 4 - 1, 17), cp.execute("04-17-2006",
+				new CSVContext(0, 0)));
 	}
 }
