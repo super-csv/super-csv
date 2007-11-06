@@ -1,9 +1,8 @@
 <project name="org.supercsv" default="-compile" basedir=".">
 	<!-- The general idea is to copy the files needed to a temp directory and compile in this one.
 	 	This way we can easily select the files of interest, instrument code as needed, etc. -->
-
 	<property name="distro.name" value="SuperCSV" />
-	<property name="distro.version" value="1.15" />
+	<property name="distro.version" value="1.16" />
 	<property name="distro.dir" value="distro" />
 
 	<property name="dir.src" value="src/" />
@@ -12,6 +11,7 @@
 	<property name="dir.build" value="build/" />
 	<property name="dir.lib" value="lib/" />
 	<property name="dir.javadoc" value="web/javadoc/" />
+	<property name="compile.src_version" value="5" />
 
 	<path id="classpath">
 	    <fileset dir="${dir.lib}">
@@ -21,8 +21,12 @@
 
 
 	<target name="-init">
-		<tstamp/>
-		<echo message="${TSTAMP}"/>
+		<tstamp>
+		     <format property="TODAY" pattern="yyyy-MM-dd HH:mm:ss" />
+		</tstamp>
+		<buildnumber file="build.num"/>
+
+		<echo message="${TODAY} build ${build.number}"/>
 		<mkdir  dir="${distro.dir}"/>
 
 		<delete dir="${dir.build}"/>
@@ -42,7 +46,6 @@
 
 		<!-- compiler options -->
 		<property name="compile.optimize" value="true" />
-		<property name="compile.src_version" value="5" />
 		<property name="compile.debug" value="false" />
 	</target>
 
@@ -56,13 +59,17 @@
 
 		<!-- compiler options -->
 		<property name="compile.optimize" value="false" />
-		<property name="compile.src_version" value="5" />
 		<property name="compile.debug" value="true" />
 	</target>
 
 
 	<target name="-compile">
-		<javac verbose="false"
+		<echo message="-compile"/>
+		<echo message="${compile.src_version}"/>
+		<echo message="compile.optimize" />
+		<echo message="compile.debug"  />
+		<javac verbose="true"
+			fork="true"
 			srcdir="${dir.tmp_src}"
 			destdir="${dir.build}"
 			classpathref="classpath"
@@ -218,6 +225,22 @@
 
 
 
+	<property name="dir.web.src" value="src_web/" />     <!-- source html -->
+	<property name="dir.web.build" value="web/" /> <!-- where the generated html goes -->
+
+	<target name="generateWeb">
+		<!-- copy files to another dir in order not to mess up the originals -->
+	    <mkdir dir="${dir.web.build}" />
+	    <copy verbose="true" failonerror="true" todir="${dir.web.build}" overwrite="true">
+			<fileset dir="${dir.web.src}" includes="**/*" excludes="**/*.properties"/>
+		</copy>
+
+	    <!-- replace them files -->
+		<replace replacefilterfile="${dir.web.src}web.properties" dir="${dir.web.build}" />
+	</target>
+
+
+
 
 	<target name="distro" depends="-init_distro"  description="creates a distribution jar file">
 		<antcall target="-javadoc"/>
@@ -228,10 +251,18 @@
 		<jar destfile="${distro.dir}/${distro.name}-${distro.version}.jar"
 			basedir="./bin/"
 			includes="**/*.class"
-			excludes="/org/test/**/*.class" update="true"
-			whenempty="fail"
+			update="true"
 			duplicate="fail"
-		/>
+		>
+			<manifest>
+				<attribute name="Built-By" value="Kasper B. Graversen"/>
+				<attribute name="Implementation-Version"  value="${distro.version}-build${build.number}"/>
+				<attribute name="Built-Date" value="${TODAY}"/>
+			</manifest>
+		</jar>
+
+		<copyfile dest="C:\coding\superCsv_jartester\supercsv.jar" src="${distro.dir}/${distro.name}-${distro.version}.jar"/>
+
 		<!-- zip javadoc -->
 		<zip basedir="web/" destfile="${distro.dir}/${distro.name}-${distro.version}-javadoc.zip" includes="javadoc/**/*.*" compress="true">
 		    <zipfileset dir="." includes="LICENSE.txt"/>
@@ -253,7 +284,6 @@
 	<target name="-post_clean">
 		<delete file="${distro.dir}/${distro.name}-${distro.version}-javadoc.zip" failonerror="true" />
 		<delete file="${distro.dir}/${distro.name}-${distro.version}.jar" failonerror="true"/>
-
 		<delete dir="${dir.build}"/>
 		<delete dir="${dir.tmp_src}"/>
 	</target>
