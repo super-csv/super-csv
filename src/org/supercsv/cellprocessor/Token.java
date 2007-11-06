@@ -18,19 +18,18 @@ import org.supercsv.util.CSVContext;
 
 /**
  * This processor is used in the situations you want to be able to check for the presence of a meta data or "special
- * magical token". Such a token could be the string "[empty]" which could denote that a column is different from the
- * empty string "". It can be used in conjunction with a ParseLong() processor, since the magic token would be
- * discovered before the parser attempt so parse the token as a number. Comparison between column value and the
- * <tt>token</tt> is based on the object's <tt>equals()</tt> method.
- * <p>
- * Use this class instead of the MagicToken class (Token is simply a better name)
+ * token". Such a token could be the string "[empty]" which could denote that a column is different from the empty
+ * string "". It can be used in conjunction with a ParseLong() processor, since the token would be discovered before the
+ * parser attempt so parse the token as a number. Comparison between column value and the <tt>token</tt> is based on
+ * the object's <tt>equals()</tt> method.
  * 
  * @since 1.02
  * @author Kasper B. Graversen
  */
-public class Token extends CellProcessorAdaptor implements DateCellProcessor, DoubleCellProcessor, LongCellProcessor, StringCellProcessor, BoolCellProcessor {
-	Object returnValue = "";
-	Object token = "";
+public class Token extends CellProcessorAdaptor implements DateCellProcessor, DoubleCellProcessor, LongCellProcessor,
+		StringCellProcessor, BoolCellProcessor {
+	Object	returnValue	= "";
+	Object	token		= "";
 
 	/**
 	 * Constructor To have the string <tt>"[empty]"</tt> represent the empty amount -1 you could use use this class as
@@ -68,7 +67,9 @@ public class Token extends CellProcessorAdaptor implements DateCellProcessor, Do
 	 */
 	@Override
 	public Object execute(final Object value, final CSVContext context) {
-		if(value.equals(token)) return returnValue;
+		if(value.equals(token)) {
+			return returnValue;
+		}
 
 		return next.execute(value, context);
 	}

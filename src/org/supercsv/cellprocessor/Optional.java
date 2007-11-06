@@ -9,7 +9,7 @@ import org.supercsv.cellprocessor.ift.CellProcessor;
  * 
  * @author Kasper B. Graversen
  */
-public class Optional extends MagicToken {
+public class Optional extends Token {
 	/**
 	 * Upon meeting the empty string in a column, return null
 	 */
