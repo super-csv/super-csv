@@ -27,19 +27,19 @@ To read lines from a file into an object, assume you have the bean class
 
 <pre class="prettyprint">
 public class UserBean {
-	String username, password, street, town;
-	int zip;
+    String username, password, street, town;
+    int zip;
 
-	public String getPassword() { return password; }
-	public String getStreet() { return street; }
-	public String getTown() { return town; }
-	public String getUsername() { return username; }
-	public int getZip() { return zip; }
-	public void setPassword(String password) { this.password = password; }
-	public void setStreet(String street) { this.street = street; }
-	public void setTown(String town) { this.town = town; }
-	public void setUsername(String username) { this.username = username; }
-	public void setZip(int zip) { this.zip = zip; }
+    public String getPassword() { return password; }
+    public String getStreet() { return street; }
+    public String getTown() { return town; }
+    public String getUsername() { return username; }
+    public int getZip() { return zip; }
+    public void setPassword(String password) { this.password = password; }
+    public void setStreet(String street) { this.street = street; }
+    public void setTown(String town) { this.town = town; }
+    public void setUsername(String username) { this.username = username; }
+    public void setZip(int zip) { this.zip = zip; }
 }
 </pre>
 
@@ -54,25 +54,18 @@ Oufu,     bobilop,    10/10/2007,  4555, New York
 You can then create an instance of the <tt>UserBean</tt> and populate it with values from the second line of the file with the following code
 
 <pre class="prettyprint">
-import java.io.*;
-import org.supercsv.cellprocessor.*;
-import org.supercsv.cellprocessor.constraint.*;
-import org.supercsv.io.ICsvBeanReader;
-import org.supercsv.io.CsvBeanReader;
-import org.supercsv.prefs.CsvPreference;
-
 class ReadingObjects {
   public static void main(String[] args) throws Exception{
-	ICsvBeanReader inFile = new CsvBeanReader(new FileReader("foo.csv"), CsvPreference.EXCEL_PREFERENCE);
-	try {
-	  final String[] header = inFile.getCSVHeader(true);
-	  UserBean user;
-	  while( (user = inFile.read(UserBean.class, header, processors) != null) {
-		System.out.println(user.getZip());
-	  }
-	} finally {
-	  inFile.close();
-	}
+    ICsvBeanReader inFile = new CsvBeanReader(new FileReader("foo.csv"), CsvPreference.EXCEL_PREFERENCE);
+    try {
+      final String[] header = inFile.getCSVHeader(true);
+      UserBean user;
+      while( (user = inFile.read(UserBean.class, header, processors)) != null) {
+        System.out.println(user.getZip());
+      }
+    } finally {
+      inFile.close();
+    }
   }
 }
 </pre>
@@ -87,11 +80,11 @@ One definition could be
 
 <pre class="prettyprint">
 final CellProcessor[] processors = new CellProcessor[] {
-	new Unique(new StrMinMax(5, 20)),
-	new StrMinMax(8, 35),
-	new ParseDate("dd/MM/yyyy"),
-	new Optional(new ParseInt()),
-	null
+    new Unique(new StrMinMax(5, 20)),
+    new StrMinMax(8, 35),
+    new ParseDate("dd/MM/yyyy"),
+    new Optional(new ParseInt()),
+    null
 };
 </pre>
 
@@ -115,6 +108,93 @@ final String[] header = new String[] { "username", "password", "date", "zip", "t
 If we want to omit a column when reading/writing, simply set the header array element to <tt>null</tt>. This is somewhat analogous to
 setting a processor array element to <tt>null</tt> which disables processing of that column.
 
+
+<p>
+The full code looks as follows
+
+<pre class="prettyprint">
+import java.io.FileReader;
+import java.io.IOException;
+
+import org.supercsv.cellprocessor.Optional;
+import org.supercsv.cellprocessor.ParseDate;
+import org.supercsv.cellprocessor.ParseInt;
+import org.supercsv.cellprocessor.constraint.StrMinMax;
+import org.supercsv.cellprocessor.constraint.Unique;
+import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.io.CsvBeanReader;
+import org.supercsv.io.ICsvBeanReader;
+import org.supercsv.prefs.CsvPreference;
+
+class ReadingObjects {
+    static final CellProcessor[] userProcessors = new CellProcessor[] {
+        new Unique(new StrMinMax(5, 20)),
+        new StrMinMax(8, 35),
+        new ParseDate("dd/MM/yyyy"),
+        new Optional(new ParseInt()),
+        null
+    };
+
+    public static void main(String[] args) throws Exception {
+        ICsvBeanReader inFile = new CsvBeanReader(new FileReader("foo.csv"), CsvPreference.EXCEL_PREFERENCE);
+        try {
+          final String[] header = inFile.getCSVHeader(true);
+          UserBean user;
+          while( (user = inFile.read(UserBean.class, header, userProcessors)) != null) {
+            System.out.println(user.getZip());
+          }
+        } finally {
+          inFile.close();
+        }
+   }
+}
+
+public class UserBean {
+    String username, password, town;
+    Date date;
+    int zip;
+
+    public Date getDate() {
+        return date;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getTown() {
+        return town;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public int getZip() {
+        return zip;
+    }
+
+    public void setDate(final Date date) {
+        this.date = date;
+    }
+
+    public void setPassword(final String password) {
+        this.password = password;
+    }
+
+    public void setTown(final String town) {
+        this.town = town;
+    }
+
+    public void setUsername(final String username) {
+        this.username = username;
+    }
+
+    public void setZip(final int zip) {
+        this.zip = zip;
+    }
+}
+</pre>
 
 
 <p><br><p>
@@ -142,25 +222,25 @@ import org.supercsv.prefs.CsvPreference;
 
 class WritingMaps {
   main(String[] args) throws Exception {
-	ICsvMapWriter writer = new CsvMapWriter(new FileWriter(...), CsvPreference.EXCEL_PREFERENCE);
-	try {
-	  final String[] header = new String[] { "name", "city", "zip" };
-	  // set up some data to write
-	  final HashMap&lt;String, ? super Object> data1 = new HashMap&lt;String, Object>();
-	  data1.put(header[0], "Karl");
-	  data1.put(header[1], "Tent city");
-	  data1.put(header[2], 5565);
-	  final HashMap&lt;String, ? super Object> data2 = new HashMap&lt;String, Object>();
-	  data2.put(header[0], "Banjo");
-	  data2.put(header[1], "River side");
-	  data2.put(header[2], 5551);
-	  // the actual writing
-	  writer.writeHeader(header);
-	  writer.write(data1, header);
-	  writer.write(data2, header);
-	} finally {
-	  writer.close();
-	}
+    ICsvMapWriter writer = new CsvMapWriter(new FileWriter(...), CsvPreference.EXCEL_PREFERENCE);
+    try {
+      final String[] header = new String[] { "name", "city", "zip" };
+      // set up some data to write
+      final HashMap&lt;String, ? super Object> data1 = new HashMap&lt;String, Object>();
+      data1.put(header[0], "Karl");
+      data1.put(header[1], "Tent city");
+      data1.put(header[2], 5565);
+      final HashMap&lt;String, ? super Object> data2 = new HashMap&lt;String, Object>();
+      data2.put(header[0], "Banjo");
+      data2.put(header[1], "River side");
+      data2.put(header[2], 5551);
+      // the actual writing
+      writer.writeHeader(header);
+      writer.write(data1, header);
+      writer.write(data2, header);
+    } finally {
+      writer.close();
+    }
   }
 }
 </pre>
@@ -181,20 +261,20 @@ existing processors are around 10 lines of code. Let's investigate the implement
 
  <pre class="prettyprint">
  public class ParseLong extends CellProcessorAdaptor {
-	<b>/** important to invoke super */</b>
-	public ParseLong() {
-		super();
-	}
+    <b>/** important to invoke super */</b>
+    public ParseLong() {
+        super();
+    }
 
-	<b>/** important to invoke super */</b>
-	public ParseLong(final LongCellProcessor next) {
-		super(next);
-	}
-	<b>/** simplife conversion of column to Long */</b>
-	public Object execute(final Object value, final CSVContext context) throws NumberFormatException {
-		final Long result = Long.parseLong((String) value);
-		return next.execute(result, context);
-	}
+    <b>/** important to invoke super */</b>
+    public ParseLong(final LongCellProcessor next) {
+        super(next);
+    }
+    <b>/** simplify conversion of column to Long */</b>
+    public Object execute(final Object value, final CSVContext context) throws NumberFormatException {
+        final Long result = Long.parseLong((String) value);
+        return next.execute(result, context);
+    }
 }
  </pre>
 
