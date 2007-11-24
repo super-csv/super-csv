@@ -20,18 +20,15 @@ import org.supercsv.util.CSVContext;
  * 
  * @author Kasper B. Graversen
  */
-public class Required extends CellProcessorAdaptor implements BoolCellProcessor, DateCellProcessor, DoubleCellProcessor, LongCellProcessor, StringCellProcessor {
-	protected HashMap<Integer, Object> requireds = new HashMap<Integer, Object>();
-
-	public Required(final int requiredHashcodes) {
-		this(new int[] { requiredHashcodes });
-	}
+public class Required extends CellProcessorAdaptor implements BoolCellProcessor, DateCellProcessor,
+		DoubleCellProcessor, LongCellProcessor, StringCellProcessor {
+	protected HashMap<Integer, Object>	requireds	= new HashMap<Integer, Object>();
 
 	public Required(final int requiredHashcode, final CellProcessor next) {
 		this(new int[] { requiredHashcode });
 	}
 
-	public Required(final int[] requiredHashcodes) {
+	public Required(final int... requiredHashcodes) {
 		super();
 		addValues(requiredHashcodes);
 	}
@@ -43,7 +40,9 @@ public class Required extends CellProcessorAdaptor implements BoolCellProcessor,
 
 	protected void addValues(final int[] requiredHashcodes) throws SuperCSVException {
 		for(final int hash : requiredHashcodes) {
-			if(requireds.containsKey(hash)) throw new SuperCSVException("Cannot accept two identical hash codes");
+			if(requireds.containsKey(hash)) {
+				throw new SuperCSVException("Cannot accept two identical hash codes");
+			}
 			requireds.put(hash, null);
 		}
 	}
@@ -63,11 +62,13 @@ public class Required extends CellProcessorAdaptor implements BoolCellProcessor,
 		if(!requireds.containsKey(value.hashCode())) {
 			// create string of required hash'es for error msg
 			final StringBuilder sb = new StringBuilder();
-			for(final int hash : requireds.keySet())
+			for(final int hash : requireds.keySet()) {
 				sb.append(hash + ", ");
+			}
 			sb.deleteCharAt(sb.length() - 1); // delete last comma
 
-			throw new SuperCSVException("Entry \"" + value + "\" on line " + context.lineNumber + " column " + context.columnNumber + " has hashcode " + value.hashCode()
+			throw new SuperCSVException("Entry \"" + value + "\" on line " + context.lineNumber + " column "
+					+ context.columnNumber + " has hashcode " + value.hashCode()
 					+ " which is not one of the required hash codes: " + sb.toString());
 		}
 

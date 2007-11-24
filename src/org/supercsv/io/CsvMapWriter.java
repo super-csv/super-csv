@@ -19,7 +19,7 @@ import org.supercsv.util.Util;
  * @author Kasper B. Graversen
  */
 public class CsvMapWriter extends AbstractCsvWriter implements ICsvMapWriter {
-	List<? super Object> tmpDst = new ArrayList<Object>();
+	List<? super Object>	tmpDst	= new ArrayList<Object>();
 
 	/**
 	 * Create a CSV writer. Note that the <tt>writer</tt> provided in the argument will be wrapped in a
@@ -45,10 +45,20 @@ public class CsvMapWriter extends AbstractCsvWriter implements ICsvMapWriter {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void write(final Map<String, ? extends Object> source, final String[] nameMapping, final CellProcessor[] processor, final StringBuilder errorLog) throws IOException, SuperCSVException {
+	public void write(final Map<String, ? extends Object> source, final String[] nameMapping,
+			final CellProcessor[] processor, final StringBuilder errorLog) throws IOException, SuperCSVException {
 		tmpDst.clear();
 		// only write if we are not failing
-		if(Util.processStringList(tmpDst, Util.map2List(source, nameMapping), processor, getLineNumber(), errorLog)) super.write(tmpDst.toArray());
+		if(Util.processStringList(tmpDst, Util.map2List(source, nameMapping), processor, getLineNumber(), errorLog)) {
+			super.write(tmpDst.toArray());
+		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	public void write(final Map<String, ? extends Object> source, final String[] nameMapping,
+			final CellProcessor[] processor) throws IOException, SuperCSVException {
+		this.write(source, nameMapping, processor, null);
+	}
 }

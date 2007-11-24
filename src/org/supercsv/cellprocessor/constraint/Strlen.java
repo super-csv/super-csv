@@ -16,17 +16,13 @@ import org.supercsv.util.CSVContext;
  */
 public class Strlen extends CellProcessorAdaptor implements StringCellProcessor {
 	/** Map of all accepted lengths */
-	protected HashMap<Integer, Object> requiredLengths = new HashMap<Integer, Object>();
-
-	public Strlen(final int requiredLength) {
-		this(new int[] { requiredLength });
-	}
+	protected HashMap<Integer, Object>	requiredLengths	= new HashMap<Integer, Object>();
 
 	public Strlen(final int requiredLength, final CellProcessor next) {
-		this(new int[] { requiredLength });
+		this(new int[] { requiredLength }, next);
 	}
 
-	public Strlen(final int[] requiredLengths) {
+	public Strlen(final int... requiredLengths) {
 		super();
 		addValues(requiredLengths);
 	}
@@ -37,9 +33,11 @@ public class Strlen extends CellProcessorAdaptor implements StringCellProcessor 
 	}
 
 	/** Ensure we only memorize valid lengths */
-	protected void addValues(final int[] requiredLengths) throws SuperCSVException {
+	protected void addValues(final int... requiredLengths) throws SuperCSVException {
 		for(final int length : requiredLengths) {
-			if(length < 0) throw new SuperCSVException("Cannot accept length below 0");
+			if(length < 0) {
+				throw new SuperCSVException("Cannot accept length below 0");
+			}
 			this.requiredLengths.put(length, null);
 		}
 	}
@@ -62,11 +60,13 @@ public class Strlen extends CellProcessorAdaptor implements StringCellProcessor 
 
 			// create string of required lengths
 			final StringBuilder sb = new StringBuilder();
-			for(final int length : requiredLengths.keySet())
+			for(final int length : requiredLengths.keySet()) {
 				sb.append(length + ", ");
+			}
 			sb.deleteCharAt(sb.length() - 2); // delete last comma
 
-			throw new SuperCSVException("Entry \"" + value + "\" on line " + context.lineNumber + " column " + context.columnNumber + " is not of any of the required lengths " + sb.toString());
+			throw new SuperCSVException("Entry \"" + value + "\" on line " + context.lineNumber + " column "
+					+ context.columnNumber + " is not of any of the required lengths " + sb.toString());
 		}
 
 		return next.execute(value, context);

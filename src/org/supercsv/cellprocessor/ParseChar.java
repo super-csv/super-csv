@@ -26,19 +26,24 @@ public class ParseChar extends CellProcessorAdaptor {
 	@Override
 	public Object execute(final Object value, final CSVContext context) throws NumberFormatException {
 		final Character result;
-		if(value instanceof Character)
+		if(value instanceof Character) {
 			result = (Character) value;
-
+		}
 		else if(value instanceof String) {
 			final String tmp = (String) value;
 			if(tmp.length() == 1) {
-				result = new Character(tmp.charAt(0));
+				result = Character.valueOf(tmp.charAt(0));
 			}
-			else
-				throw new SuperCSVException("Can't convert \"" + value + "\" to a char. It must have a length of 1 to be a valid char.");
+			else {
+				throw new SuperCSVException("Can't convert \"" + value
+						+ "\" to a char. It must have a length of 1 to be a valid char.");
+			}
 		}
-		else
-			throw new SuperCSVException("Can't convert \"" + value + "\" to char. Input is not of type Character nor type String, but of type " + value.getClass().getName());
+		else {
+			throw new SuperCSVException("Can't convert \"" + value
+					+ "\" to char. Input is not of type Character nor type String, but of type "
+					+ value.getClass().getName());
+		}
 
 		return next.execute(result, context);
 	}

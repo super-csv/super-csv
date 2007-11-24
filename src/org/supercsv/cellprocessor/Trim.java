@@ -5,18 +5,21 @@ import org.supercsv.exception.SuperCSVException;
 import org.supercsv.util.CSVContext;
 
 /**
- * Ensure that Strings or String-representations of objects has a maximum size
+ * Ensure that Strings or String-representations of objects has a maximum size. If you desire, you can append a string
+ * to denote that the data has been trimmed.
  * 
  * @author Kasper B. Graversen
  */
 public class Trim extends CellProcessorAdaptor implements StringCellProcessor {
-	int maxSize;
-	String trimPostfix = "";
+	int		maxSize;
+	String	trimPostfix	= "";
 
 	/** Trim strings to ensure a maximum size */
 	public Trim(final int maxSize) {
 		super(NullObjectPattern.INSTANCE);
-		if(maxSize < 1) throw new SuperCSVException("argument maxSize must be > 0");
+		if(maxSize < 1) {
+			throw new SuperCSVException("argument maxSize must be > 0");
+		}
 		this.maxSize = maxSize;
 	}
 
@@ -53,10 +56,12 @@ public class Trim extends CellProcessorAdaptor implements StringCellProcessor {
 		final String sval = value.toString(); // cast
 
 		String result;
-		if(sval.length() <= maxSize)
+		if(sval.length() <= maxSize) {
 			result = sval;
-		else
+		}
+		else {
 			result = sval.substring(0, maxSize) + trimPostfix;
+		}
 
 		return next.execute(result, context);
 	}

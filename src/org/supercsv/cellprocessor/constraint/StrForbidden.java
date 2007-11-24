@@ -25,15 +25,11 @@ public class StrForbidden extends ForbidSubStr {
 		this(forbiddenStrings.toArray(new String[0]), next);
 	}
 
-	public StrForbidden(final String forbiddenString) {
-		this(new String[] { forbiddenString });
-	}
-
 	public StrForbidden(final String forbiddenString, final CellProcessor next) {
 		this(new String[] { forbiddenString }, next);
 	}
 
-	public StrForbidden(final String[] forbiddenStrings) {
+	public StrForbidden(final String... forbiddenStrings) {
 		super(forbiddenStrings);
 	}
 

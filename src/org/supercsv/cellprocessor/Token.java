@@ -32,7 +32,7 @@ public class Token extends CellProcessorAdaptor implements DateCellProcessor, Do
 	Object	token		= "";
 
 	/**
-	 * Constructor To have the string <tt>"[empty]"</tt> represent the empty amount -1 you could use use this class as
+	 * Constructor To have the string <tt>"[empty]"</tt> represent the empty amount -1 you could use this class as
 	 * <code>
 	 * new Token("[empty]", -1);
 	 * </code>

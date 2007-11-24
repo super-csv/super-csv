@@ -16,10 +16,10 @@ import org.supercsv.prefs.CsvPreference;
  * @author Kasper B. Graversen
  */
 public abstract class AbstractCsvWriter implements ICsvWriter {
-	final StringBuilder sb = new StringBuilder();
-	BufferedWriter outStream;
-	int lineNo;
-	CsvPreference preference;
+	final StringBuilder	sb	= new StringBuilder();
+	BufferedWriter		outStream;
+	int					lineNo;
+	CsvPreference		preference;
 
 	public AbstractCsvWriter(final Writer stream, final CsvPreference preference) {
 		setPreferences(preference);
@@ -44,7 +44,9 @@ public abstract class AbstractCsvWriter implements ICsvWriter {
 	 */
 
 	protected String escapeString(final String csvElem) {
-		if(csvElem.length() == 0) return "";
+		if(csvElem.length() == 0) {
+			return "";
+		}
 
 		sb.delete(0, sb.length()); // reusing builder object
 
@@ -54,7 +56,9 @@ public abstract class AbstractCsvWriter implements ICsvWriter {
 		final String EOLSymbols = preference.getEndOfLineSymbols();
 
 		boolean needForEscape = false; // if newline or start with space
-		if(csvElem.charAt(0) == whiteSpace) needForEscape = true;
+		if(csvElem.charAt(0) == whiteSpace) {
+			needForEscape = true;
+		}
 
 		char c;
 		final int lastPos = csvElem.length() - 1;
@@ -82,46 +86,19 @@ public abstract class AbstractCsvWriter implements ICsvWriter {
 				needForEscape = true;
 				sb.append(EOLSymbols);
 			}
-			else
+			else {
 				sb.append(c);
-		}
-
-		// if element contains a newline (mac,windows or linux), escape the
-		// whole with a surrounding quotes
-		if(needForEscape) return quote + sb.toString() + quote;
-
-		return sb.toString();
-
-	}
-
-	protected String escapeString2e(final String csvElem) {
-		final StringBuilder sb = new StringBuilder();
-		final int delimiter = preference.getDelimiterChar();
-		final char quote = (char) preference.getQuoteChar();
-
-		// scan line, if element contains a new line
-		boolean isEscaped = false;
-		if(csvElem.indexOf('\n') > -1 || csvElem.indexOf('\r') > -1) {
-			isEscaped = true;
-			sb.append(quote);
-		}
-
-		char c;
-		for(int i = 0; i < csvElem.length(); i++) {
-			if((c = csvElem.charAt(i)) == delimiter) {
-				sb.append(quote);
-				sb.append(c); // if is delimiter found, escape it by quotes
-				sb.append(quote);
 			}
-			else
-				sb.append(c);
 		}
 
 		// if element contains a newline (mac,windows or linux), escape the
 		// whole with a surrounding quotes
-		if(isEscaped) sb.append(quote);
+		if(needForEscape) {
+			return quote + sb.toString() + quote;
+		}
 
 		return sb.toString();
+
 	}
 
 	/**
@@ -150,9 +127,15 @@ public abstract class AbstractCsvWriter implements ICsvWriter {
 		// convert object array to strings and write them
 		final String[] strarr = new String[content.length];
 		int i = 0;
-		for(final Object o : content)
-			strarr[i++] = o.toString();
-		write(strarr);
+		try {
+			for(final Object o : content) {
+				strarr[i++] = o.toString();
+			}
+			write(strarr);
+		}
+		catch(NullPointerException e) {
+			throw new RuntimeException("Object at possition " + i + " is null.", e);
+		}
 	}
 
 	protected void write(final String[] content) throws IOException {
@@ -185,7 +168,7 @@ public abstract class AbstractCsvWriter implements ICsvWriter {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void writeHeader(final String[] header) throws IOException, SuperCSVException {
+	public void writeHeader(final String... header) throws IOException, SuperCSVException {
 		this.write(header);
 	}
 

@@ -13,8 +13,8 @@ import org.supercsv.util.CSVContext;
  * @author Kasper B. Graversen
  */
 public class StrlenTest {
-	Strlen cp;
-	CellProcessor ccp;
+	Strlen			cp;
+	CellProcessor	ccp;
 
 	@Test(expected = SuperCSVException.class)
 	public void invalidInputTest() throws Exception {
@@ -35,7 +35,7 @@ public class StrlenTest {
 
 	@Test(expected = SuperCSVException.class)
 	public void testInValidArrInput() throws Exception {
-		new Strlen(new int[] { 2, -1 }); // cannot pass a 0
+		new Strlen(2, -1); // cannot pass a 0
 	}
 
 	@Test(expected = SuperCSVException.class)
@@ -55,7 +55,7 @@ public class StrlenTest {
 	@Test
 	public void validInputTest() throws Exception {
 		Assert.assertEquals("test length", "he", cp.execute("he", new CSVContext(0, 0)));
-		cp = new Strlen(new int[] { 1, 3 });
+		cp = new Strlen(1, 3);
 		Assert.assertEquals("one of many req. lengths", "hel", cp.execute("hel", new CSVContext(0, 0)));
 		Assert.assertEquals("one of many req. lengths", "h", cp.execute("h", new CSVContext(0, 0)));
 	}

@@ -43,6 +43,28 @@ public interface ICsvMapWriter extends ICsvWriter {
 	 *             in case one of the cell processors fail processing
 	 * @since 1.0
 	 */
-	void write(Map<String, ? extends Object> source, String[] nameMapping, CellProcessor[] processor, StringBuilder errorLog) throws IOException;
+	void write(Map<String, ? extends Object> source, String[] nameMapping, CellProcessor[] processor,
+			StringBuilder errorLog) throws IOException;
+
+	/**
+	 * Write a line from a map converting processing the values before writing
+	 * 
+	 * @param source
+	 *            denotes map of values must be saved
+	 * @param nameMapping
+	 *            defines order of the map's elements that are to be written. You need only to include the names you
+	 *            want to write.
+	 * @param processor
+	 *            An array of processors to process the map's values before writing. <code>null</code> denotes no
+	 *            processing is to be taken place for that element. The size of the array must match the
+	 *            <code>nameMapping</code> array.
+	 * @throws IOException
+	 *             in case of an I/O error
+	 * @throws Exception
+	 *             in case one of the cell processors fail processing
+	 * @since 1.20
+	 */
+	void write(Map<String, ? extends Object> source, String[] nameMapping, CellProcessor[] processor)
+			throws IOException;
 
 }

@@ -39,6 +39,6 @@ public interface ICsvWriter {
 	 * @param header
 	 * @since 1.0
 	 */
-	void writeHeader(String[] header) throws IOException;
+	void writeHeader(String... header) throws IOException;
 
 }

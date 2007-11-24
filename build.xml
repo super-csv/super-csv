@@ -2,7 +2,7 @@
 	<!-- The general idea is to copy the files needed to a temp directory and compile in this one.
 	 	This way we can easily select the files of interest, instrument code as needed, etc. -->
 	<property name="distro.name" value="SuperCSV" />
-	<property name="distro.version" value="1.16" />
+	<property name="distro.version" value="1.20" />
 	<property name="distro.dir" value="distro" />
 
 	<property name="dir.src" value="src/" />
@@ -231,7 +231,7 @@
 	<target name="generateWeb">
 		<!-- copy files to another dir in order not to mess up the originals -->
 	    <mkdir dir="${dir.web.build}" />
-	    <copy verbose="true" failonerror="true" todir="${dir.web.build}" overwrite="true">
+	    <copy verbose="false" failonerror="true" todir="${dir.web.build}" overwrite="true">
 			<fileset dir="${dir.web.src}" includes="**/*" excludes="**/*.properties"/>
 		</copy>
 
@@ -242,7 +242,7 @@
 
 
 
-	<target name="distro" depends="-init_distro"  description="creates a distribution jar file">
+	<target name="distro" depends="-init_distro, generateWeb"  description="creates a distribution jar file">
 		<antcall target="-javadoc"/>
 
 		<delete file="${distro.dir}/${distro.name}-${distro.version}.zip" failonerror="false" />

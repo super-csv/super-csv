@@ -20,7 +20,7 @@ import org.supercsv.util.CSVContext;
  */
 public class ForbidSubStr extends CellProcessorAdaptor implements StringCellProcessor {
 
-	String[] forbiddenSubStrings;
+	String[]	forbiddenSubStrings;
 
 	public ForbidSubStr(final List<String> forbiddenSubStrings) {
 		this(forbiddenSubStrings.toArray(new String[0]));
@@ -30,15 +30,11 @@ public class ForbidSubStr extends CellProcessorAdaptor implements StringCellProc
 		this(forbiddenSubStrings.toArray(new String[0]), next);
 	}
 
-	public ForbidSubStr(final String forbiddenSubString) {
-		this(new String[] { forbiddenSubString });
-	}
-
 	public ForbidSubStr(final String forbiddenSubString, final CellProcessor next) {
 		this(new String[] { forbiddenSubString }, next);
 	}
 
-	public ForbidSubStr(final String[] forbiddenSubStrings) {
+	public ForbidSubStr(final String... forbiddenSubStrings) {
 		super();
 		this.forbiddenSubStrings = forbiddenSubStrings.clone();
 	}
@@ -63,8 +59,10 @@ public class ForbidSubStr extends CellProcessorAdaptor implements StringCellProc
 
 		// check for forbidden strings
 		for(final String forbidden : forbiddenSubStrings) {
-			if(sval.indexOf(forbidden) != -1)
-				throw new SuperCSVException("Entry \"" + value + "\" on line " + context.lineNumber + " column " + context.columnNumber + " contains the forbidden char \"" + forbidden + "\"");
+			if(sval.indexOf(forbidden) != -1) {
+				throw new SuperCSVException("Entry \"" + value + "\" on line " + context.lineNumber + " column "
+						+ context.columnNumber + " contains the forbidden char \"" + forbidden + "\"");
+			}
 		}
 
 		return next.execute(value, context);

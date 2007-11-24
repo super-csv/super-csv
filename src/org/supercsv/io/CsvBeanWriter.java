@@ -23,8 +23,8 @@ public class CsvBeanWriter extends AbstractCsvWriter implements ICsvBeanWriter {
 	 * object used for storing intermediate result of a processing of cell processors and before put into maps/objects
 	 * etc..
 	 */
-	protected List<? super Object> result;
-	protected MethodCache cache = new MethodCache();
+	protected List<? super Object>	result;
+	protected MethodCache			cache	= new MethodCache();
 
 	/**
 	 * Create a CSV writer. Note that the <tt>writer</tt> provided in the argument will be wrapped in a
@@ -47,7 +47,8 @@ public class CsvBeanWriter extends AbstractCsvWriter implements ICsvBeanWriter {
 	 * @throws IllegalAccessException
 	 * @throws InvocationTargetException
 	 */
-	protected void fillListFromObject(final Object source, final String[] nameMapping) throws IllegalAccessException, InvocationTargetException {
+	protected void fillListFromObject(final Object source, final String[] nameMapping) throws IllegalAccessException,
+			InvocationTargetException {
 		result.clear(); // object re-use
 
 		// map results from an object by traversing the list of nameMapping and
@@ -60,7 +61,8 @@ public class CsvBeanWriter extends AbstractCsvWriter implements ICsvBeanWriter {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void write(final Object source, final String[] nameMapping) throws IOException, IllegalAccessException, InvocationTargetException {
+	public void write(final Object source, final String[] nameMapping) throws IOException, IllegalAccessException,
+			InvocationTargetException {
 		fillListFromObject(source, nameMapping);
 		super.write(result);
 	}
@@ -68,14 +70,23 @@ public class CsvBeanWriter extends AbstractCsvWriter implements ICsvBeanWriter {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void write(final Object source, final String[] nameMapping, final CellProcessor[] processor, final StringBuilder errorLog) throws IOException, IllegalAccessException,
-			InvocationTargetException {
+	public void write(final Object source, final String[] nameMapping, final CellProcessor[] processor,
+			final StringBuilder errorLog) throws IOException, IllegalAccessException, InvocationTargetException {
 		fillListFromObject(source, nameMapping);
 		final List<? super Object> processedRes = new ArrayList<Object>();
 
-		if(Util.processStringList(processedRes, result, processor, super.getLineNumber(), errorLog)) // only write if
+		if(Util.processStringList(processedRes, result, processor, super.getLineNumber(), errorLog)) {
 			// we are not
 			// failing
 			super.write(processedRes);
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void write(final Object source, final String[] nameMapping, final CellProcessor[] processor)
+			throws IOException, IllegalAccessException, InvocationTargetException {
+		this.write(source, nameMapping, processor, null);
 	}
 }

@@ -17,14 +17,14 @@ import org.supercsv.util.CSVContext;
  */
 @Deprecated
 public class StrForbiddenTest {
-	private static final CSVContext CSVCONTEXT = new CSVContext(0, 0);
-	CellProcessorAdaptor cp1 = null;
-	CellProcessorAdaptor cp2 = null;
+	private static final CSVContext	CSVCONTEXT	= new CSVContext(0, 0);
+	CellProcessorAdaptor			cp1			= null;
+	CellProcessorAdaptor			cp2			= null;
 
 	@Before
 	public void setup() {
 		cp1 = new StrForbidden("bomb");
-		cp2 = new StrForbidden(new String[] { "error", "thunder", "fatal" });
+		cp2 = new StrForbidden("error", "thunder", "fatal");
 	}
 
 	@Test

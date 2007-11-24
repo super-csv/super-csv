@@ -20,9 +20,9 @@ import org.supercsv.prefs.CsvPreference;
  * @author Kasper B. Graversen
  */
 public abstract class AbstractCsvWriter_v110 implements ICsvWriter {
-	BufferedWriter outStream;
-	int lineNo;
-	CsvPreference preference;
+	BufferedWriter	outStream;
+	int				lineNo;
+	CsvPreference	preference;
 
 	public AbstractCsvWriter_v110(final Writer stream, final CsvPreference preference) {
 		setPreferences(preference);
@@ -64,13 +64,16 @@ public abstract class AbstractCsvWriter_v110 implements ICsvWriter {
 				sb.append(c); // if is delimiter found, escape it by quotes
 				sb.append(quote);
 			}
-			else
+			else {
 				sb.append(c);
+			}
 		}
 
 		// if element contains a newline (mac,windows or linux), escape the
 		// whole with a surrounding quotes
-		if(isEscaped) sb.append(quote);
+		if(isEscaped) {
+			sb.append(quote);
+		}
 
 		return sb.toString();
 	}
@@ -101,8 +104,9 @@ public abstract class AbstractCsvWriter_v110 implements ICsvWriter {
 		// convert object array to strings and write them
 		final String[] strarr = new String[content.length];
 		int i = 0;
-		for(final Object o : content)
+		for(final Object o : content) {
 			strarr[i++] = o.toString();
+		}
 		write(strarr);
 	}
 
@@ -136,7 +140,7 @@ public abstract class AbstractCsvWriter_v110 implements ICsvWriter {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void writeHeader(final String[] header) throws IOException, SuperCSVException {
+	public void writeHeader(final String... header) throws IOException, SuperCSVException {
 		this.write(header);
 	}
 

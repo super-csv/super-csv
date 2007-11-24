@@ -17,10 +17,10 @@ import org.supercsv.prefs.CsvPreference;
  * @author Kasper B. Graversen
  */
 public class CsvMapWriterTest {
-	CsvPreference prefs;
-	CsvMapWriter cw;
-	StringWriter outfile;
-	Map<String, Object> m;
+	CsvPreference		prefs;
+	CsvMapWriter		cw;
+	StringWriter		outfile;
+	Map<String, Object>	m;
 
 	@Before
 	public void setUp() throws Exception {
@@ -61,11 +61,12 @@ public class CsvMapWriterTest {
 
 	@Test
 	public void writeTwoColAndHeader() throws IOException {
-		cw.writeHeader(new String[] { "headerA", "headerB" });
+		cw.writeHeader("headerA", "headerB");
 		cw.write(m, new String[] { "a", "b" });
 		cw.write(m, new String[] { "b", "c" });
 		cw.close(); // flush before compare
-		Assert.assertEquals("two column writes and header", "headerA,headerB\nhello,world\nworld,1\n", outfile.toString());
+		Assert.assertEquals("two column writes and header", "headerA,headerB\nhello,world\nworld,1\n", outfile
+				.toString());
 	}
 
 	@Test

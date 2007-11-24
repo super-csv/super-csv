@@ -15,14 +15,14 @@ import org.supercsv.util.CSVContext;
  * @author Kasper B. Graversen
  */
 public class ForbidSubStrTest {
-	private static final CSVContext CSVCONTEXT = new CSVContext(0, 0);
-	CellProcessorAdaptor cp1 = null;
-	CellProcessorAdaptor cp2 = null;
+	private static final CSVContext	CSVCONTEXT	= new CSVContext(0, 0);
+	CellProcessorAdaptor			cp1			= null;
+	CellProcessorAdaptor			cp2			= null;
 
 	@Before
 	public void setup() {
 		cp1 = new ForbidSubStr("bomb");
-		cp2 = new ForbidSubStr(new String[] { "error", "thunder", "fatal" });
+		cp2 = new ForbidSubStr("error", "thunder", "fatal");
 	}
 
 	@Test
