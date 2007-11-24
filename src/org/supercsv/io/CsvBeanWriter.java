@@ -41,9 +41,10 @@ public class CsvBeanWriter extends AbstractCsvWriter implements ICsvBeanWriter {
 	}
 
 	/**
+	 * populate <tt>result</tt> based on the source
+	 * 
 	 * @param source
 	 * @param nameMapping
-	 * @return A filled object
 	 * @throws IllegalAccessException
 	 * @throws InvocationTargetException
 	 */
