@@ -38,7 +38,7 @@
 
 	<target name="-init_distro" depends="-init">
 		<!-- copy all source files -->
-		<copy todir="${dir.tmp_src}">
+		<copy todir="${dir.tmp_src}" verbose="true">
 			<fileset dir="${dir.src}">
 				<include name="**/*"/>
 			</fileset>
@@ -119,7 +119,6 @@
 
 
 	<target name="testcoverage" depends="-init_test">
-
 		<property name="dir.coveragereport" value="${basedir}/web/emmareports/" />  <!-- directory which emma coverage reports will be written to -->
 		<mkdir dir="${dir.coveragereport}"/>
 		<delete file="${dir.coveragereport}/coverage.emma" />
@@ -225,19 +224,6 @@
 
 
 
-	<property name="dir.web.src" value="src_web/" />     <!-- source html -->
-	<property name="dir.web.build" value="web/" /> <!-- where the generated html goes -->
-
-	<target name="generateWeb">
-		<!-- copy files to another dir in order not to mess up the originals -->
-	    <mkdir dir="${dir.web.build}" />
-	    <copy verbose="false" failonerror="true" todir="${dir.web.build}" overwrite="true">
-			<fileset dir="${dir.web.src}" includes="**/*" excludes="**/*.properties"/>
-		</copy>
-
-	    <!-- replace them files -->
-		<replace replacefilterfile="${dir.web.src}web.properties" dir="${dir.web.build}" />
-	</target>
 
 
 
@@ -249,7 +235,7 @@
 
 		<!-- make jar -->
 		<jar destfile="${distro.dir}/${distro.name}-${distro.version}.jar"
-			basedir="./bin/"
+			basedir="${dir.build}"
 			includes="**/*.class"
 			update="true"
 			duplicate="fail"
@@ -261,7 +247,9 @@
 			</manifest>
 		</jar>
 
-		<copyfile dest="C:\coding\superCsv_jartester\supercsv.jar" src="${distro.dir}/${distro.name}-${distro.version}.jar"/>
+		<!-- only for internal use
+	 	<copyfile dest="C:\coding\superCsv_jartester\supercsv.jar" src="${distro.dir}/${distro.name}.jar"/>
+	 	-->
 
 		<!-- zip javadoc -->
 		<zip basedir="web/" destfile="${distro.dir}/${distro.name}-${distro.version}-javadoc.zip" includes="javadoc/**/*.*" compress="true">
@@ -288,4 +276,48 @@
 		<delete dir="${dir.tmp_src}"/>
 	</target>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<!--
+	  -
+	  - Webstuff
+	  -->
+	<property name="dir.web.src" value="src_web/" />     <!-- source html -->
+	<property name="dir.web.build" value="web/" /> <!-- where the generated html goes -->
+
+	<target name="generateWeb">
+		<!-- copy files to another dir in order not to mess up the originals -->
+	    <mkdir dir="${dir.web.build}" />
+	    <copy verbose="false" failonerror="true" todir="${dir.web.build}" overwrite="true">
+			<fileset dir="${dir.web.src}" includes="**/*" excludes="**/*.properties"/>
+		</copy>
+
+	    <!-- replace them files -->
+		<replace replacefilterfile="${dir.web.src}web.properties" dir="${dir.web.build}" />
+	</target>
 </project>
