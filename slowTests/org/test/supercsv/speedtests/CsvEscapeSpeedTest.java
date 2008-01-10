@@ -66,14 +66,15 @@ public class CsvEscapeSpeedTest {
 	}
 
 	/** data to be written */
-	static List<String[]> testData;
+	static List<String[]>	testData;
 
 	@BeforeClass
 	public static void fillTestDataArray() throws IOException {
 		final long MAX_LINES_TO_READ = 200000;
 
 		testData = new ArrayList<String[]>();
-		final CsvListReader reader = new CsvListReader(new FileReader(SpeedTestConstants.TEST_FILE), CsvPreference.EXCEL_PREFERENCE);
+		final CsvListReader reader = new CsvListReader(new FileReader(SpeedTestConstants.TEST_FILE),
+				CsvPreference.EXCEL_PREFERENCE);
 		List<String> line;
 		long lineReadCounter = 0;
 		while((line = reader.read()) != null && lineReadCounter++ < MAX_LINES_TO_READ) {
