@@ -38,6 +38,8 @@ public abstract class CellProcessorAdaptor implements CellProcessor {
 	}
 
 	/**
+	 * This method is invoked by the framework when the processor needs to process data or check constraints.
+	 * 
 	 * @since 1.0
 	 */
 	public abstract Object execute(final Object value, CSVContext context);
