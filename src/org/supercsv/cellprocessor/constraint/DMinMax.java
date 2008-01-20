@@ -38,7 +38,7 @@ public class DMinMax extends CellProcessorAdaptor {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Object execute(final Object value, final CSVContext context) throws NumberFormatException {
+	public Object execute(final Object value, final CSVContext context) throws SuperCSVException {
 		final Double result;
 		if(value instanceof Double) {
 			result = (Double) value;
