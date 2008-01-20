@@ -71,23 +71,12 @@ public class CsvBeanWriter extends AbstractCsvWriter implements ICsvBeanWriter {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void write(final Object source, final String[] nameMapping, final CellProcessor[] processor,
-			final StringBuilder errorLog) throws IOException, IllegalAccessException, InvocationTargetException {
+	public void write(final Object source, final String[] nameMapping, final CellProcessor[] processor)
+			throws IOException, IllegalAccessException, InvocationTargetException {
 		fillListFromObject(source, nameMapping);
 		final List<? super Object> processedRes = new ArrayList<Object>();
 
-		if(Util.processStringList(processedRes, result, processor, super.getLineNumber(), errorLog)) {
-			// we are not
-			// failing
-			super.write(processedRes);
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void write(final Object source, final String[] nameMapping, final CellProcessor[] processor)
-			throws IOException, IllegalAccessException, InvocationTargetException {
-		this.write(source, nameMapping, processor, null);
+		Util.processStringList(processedRes, result, processor, super.getLineNumber());
+		super.write(processedRes);
 	}
 }

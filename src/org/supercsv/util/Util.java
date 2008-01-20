@@ -16,8 +16,9 @@ public abstract class Util {
 
 	public static List<? extends Object> map2List(final Map<String, ? extends Object> source, final String[] nameMapping) {
 		final List<? super Object> result = new ArrayList<Object>(nameMapping.length);
-		for(final String element : nameMapping)
+		for(final String element : nameMapping) {
 			result.add(source.get(element));
+		}
 		return result;
 	}
 
@@ -31,8 +32,12 @@ public abstract class Util {
 	 * @param values
 	 *            A list of values TODO: see if using an iterator for the values is more efficient
 	 */
-	public static <T> void mapStringList(final Map<String, T> destination, final String[] nameMapper, final List<T> values) {
-		if(nameMapper.length != values.size()) throw new SuperCSVException("The namemapper array and the value list must match in size. Number of columns mismatch number of entries for your map.");
+	public static <T> void mapStringList(final Map<String, T> destination, final String[] nameMapper,
+			final List<T> values) {
+		if(nameMapper.length != values.size()) {
+			throw new SuperCSVException(
+					"The namemapper array and the value list must match in size. Number of columns mismatch number of entries for your map.");
+		}
 		destination.clear();
 
 		// map each element of the array
@@ -40,10 +45,15 @@ public abstract class Util {
 			final String key = nameMapper[i];
 
 			// null's in the name mapping means skip column
-			if(key == null) continue;
+			if(key == null) {
+				continue;
+			}
 
 			// only perform safe inserts
-			if(destination.containsKey(key)) throw new SuperCSVException("nameMapper array contains duplicate key \"" + key + "\" cannot map the list...");
+			if(destination.containsKey(key)) {
+				throw new SuperCSVException("nameMapper array contains duplicate key \"" + key
+						+ "\" cannot map the list...");
+			}
 
 			destination.put(key, values.get(i));
 		}
@@ -67,45 +77,33 @@ public abstract class Util {
 	 * @param errorLog
 	 *            a builder of error messages. In case of an exception, this builder is populated with a message. All
 	 *            cells are attempted processed even in case one cell throws an exception.
-	 * @return true in case no problems were encountered, false in case an exception was thrown. The message is found in
-	 *         the errorlog
 	 */
-	public static boolean processStringList(final List<? super Object> destination, final List<? extends Object> source, final CellProcessor[] processors, final int lineNo,
-			final StringBuilder errorLog) throws SuperCSVException {
-		final boolean success = true;
-		if(source.size() != processors.length)
-			throw new SuperCSVException("The value array (size " + source.size() + ")  must match the processors array (size " + processors.length + ")."
-					+ " You are probably reading a CSV line with a different number of columns than the number of cellprocessors specified...");
+	public static void processStringList(final List<? super Object> destination, final List<? extends Object> source,
+			final CellProcessor[] processors, final int lineNo) throws SuperCSVException {
+		if(source.size() != processors.length) {
+			throw new SuperCSVException(
+					"The value array (size "
+							+ source.size()
+							+ ")  must match the processors array (size "
+							+ processors.length
+							+ ")."
+							+ " You are probably reading a CSV line with a different number of columns than the number of cellprocessors specified...");
+		}
 
 		destination.clear();
 		final CSVContext context = new CSVContext();
 
 		for(int i = 0; i < source.size(); i++) {
 			// if no processor, just add the string
-			if(processors[i] == null)
+			if(processors[i] == null) {
 				destination.add(source.get(i));
+			}
 			else {
-
-				// try {
 				context.lineNumber = lineNo;
 				context.columnNumber = i;
 				destination.add(processors[i].execute(source.get(i), context)); // add
-				// the
-				// result
-				// of
-				// the
-				// processing
-				// }
-				// catch(org.bestcsv.exception.BestCSVExceptione e) {
-				// System.out.println(e);
-				// //errorLog.append(e.toString()); // report the error, but
-				// don't stop processing the rest of the line
-				// success = false; // we have encountered an error
-				// throw e;
-				// }
 			}
 		}
-		return success; // return whether everything went smooth
 	}
 
 	/**

@@ -31,12 +31,18 @@ public class ParseBool extends CellProcessorAdaptor {
 	public Object execute(final Object value, final CSVContext context) throws SuperCSVException {
 		Boolean result;
 		final String sval = ((String) value).toLowerCase();
-		if(sval.equals("0") || sval.equalsIgnoreCase("false") || sval.equalsIgnoreCase("f") || sval.equalsIgnoreCase("n"))
+		if(sval.equals("0") || sval.equalsIgnoreCase("false") || sval.equalsIgnoreCase("f")
+				|| sval.equalsIgnoreCase("n")) {
 			result = Boolean.FALSE;
-		else if(sval.equals("1") || sval.equalsIgnoreCase("true") || sval.equalsIgnoreCase("t") || sval.equalsIgnoreCase("y"))
+		}
+		else if(sval.equals("1") || sval.equalsIgnoreCase("true") || sval.equalsIgnoreCase("t")
+				|| sval.equalsIgnoreCase("y")) {
 			result = Boolean.TRUE;
-		else
-			throw new SuperCSVException("Cannot parse \"" + value + "\" to a boolean on line " + context.lineNumber + " column " + context.columnNumber);
+		}
+		else {
+			throw new SuperCSVException("Cannot parse \"" + value + "\" to a boolean on line " + context.lineNumber
+					+ " column " + context.columnNumber, context);
+		}
 
 		return next.execute(result, context);
 	}

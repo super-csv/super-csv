@@ -22,8 +22,8 @@ public class CsvBeanReader extends AbstractCsvReader implements ICsvBeanReader {
 	 * object used for storing intermediate result of a processing of cell processors and before put into maps/objects
 	 * etc.. due to the typing, we cannot use super.line
 	 */
-	protected List<? super Object> lineResult = new ArrayList<Object>();
-	protected MethodCache cache = new MethodCache();
+	protected List<? super Object>	lineResult	= new ArrayList<Object>();
+	protected MethodCache			cache		= new MethodCache();
 
 	/**
 	 * Create a csv reader with a specific preference. Note that the <tt>reader</tt> provided in the argument will be
@@ -42,7 +42,8 @@ public class CsvBeanReader extends AbstractCsvReader implements ICsvBeanReader {
 	 * @throws IllegalAccessException
 	 * @throws InvocationTargetException
 	 */
-	<T> T fillObject(final Class<T> clazz, final String[] nameMapping) throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+	<T> T fillObject(final Class<T> clazz, final String[] nameMapping) throws InstantiationException,
+			IllegalAccessException, InvocationTargetException, NoSuchMethodException {
 		final T resultBean = clazz.newInstance();
 
 		// map results into an object by traversing the list of nameMapping and for each non-null,
@@ -50,13 +51,16 @@ public class CsvBeanReader extends AbstractCsvReader implements ICsvBeanReader {
 		// map results to the setter methods
 		for(int i = 0; i < nameMapping.length; i++) {
 			// don't call a set-method in the bean, if there is no result to store
-			if(nameMapping[i] == null) continue;
+			if(nameMapping[i] == null) {
+				continue;
+			}
 			try {
 				cache.getSetMethod(resultBean, nameMapping[i]).invoke(resultBean, lineResult.get(i));
 			}
 			catch(final IllegalArgumentException e) {
-				throw new SuperCSVException("Method set" + nameMapping[i].substring(0, 1).toUpperCase() + nameMapping[i].substring(1) + "() does not accept input \"" + lineResult.get(i)
-						+ "\" of type " + lineResult.get(i).getClass().getName(), e);
+				throw new SuperCSVException("Method set" + nameMapping[i].substring(0, 1).toUpperCase()
+						+ nameMapping[i].substring(1) + "() does not accept input \"" + lineResult.get(i)
+						+ "\" of type " + lineResult.get(i).getClass().getName(), null, e);
 			}
 		}
 		return resultBean;
@@ -65,8 +69,8 @@ public class CsvBeanReader extends AbstractCsvReader implements ICsvBeanReader {
 	/**
 	 * {@inheritDoc}
 	 */
-	public <T> T read(final Class<T> clazz, final String[] nameMapping) throws IOException, ClassNotFoundException, IllegalAccessException, InstantiationException, InvocationTargetException,
-			NoSuchMethodException {
+	public <T> T read(final Class<T> clazz, final String[] nameMapping) throws IOException, ClassNotFoundException,
+			IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException {
 		if(tokenizer.readStringList(super.line)) {
 			lineResult.clear();
 			lineResult.addAll(super.line);
@@ -78,10 +82,12 @@ public class CsvBeanReader extends AbstractCsvReader implements ICsvBeanReader {
 	/**
 	 * {@inheritDoc}
 	 */
-	public <T> T read(final Class<T> clazz, final String[] nameMapping, final CellProcessor[] processors) throws IOException, ClassNotFoundException, IllegalAccessException, InstantiationException,
+	public <T> T read(final Class<T> clazz, final String[] nameMapping, final CellProcessor[] processors)
+			throws IOException, ClassNotFoundException, IllegalAccessException, InstantiationException,
 			InvocationTargetException, NoSuchMethodException, SuperCSVException {
 		if(tokenizer.readStringList(super.line)) {
-			if(Util.processStringList(lineResult, super.line, processors, tokenizer.getLineNumber(), null)) return fillObject(clazz, nameMapping);
+			Util.processStringList(lineResult, super.line, processors, tokenizer.getLineNumber());
+			return fillObject(clazz, nameMapping);
 		}
 		return null; // EOF
 	}

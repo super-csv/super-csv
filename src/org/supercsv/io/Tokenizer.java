@@ -5,7 +5,9 @@ import java.io.LineNumberReader;
 import java.io.Reader;
 import java.util.List;
 
+import org.supercsv.exception.SuperCSVException;
 import org.supercsv.prefs.CsvPreference;
+import org.supercsv.util.CSVContext;
 
 /**
  * The tokenizer is an internal mechanism to the csv parser
@@ -13,10 +15,10 @@ import org.supercsv.prefs.CsvPreference;
  * @author Kasper B. Graversen
  */
 public class Tokenizer implements ITokenizer {
-	CsvPreference preferences;
-	LineNumberReader lnr;
+	CsvPreference		preferences;
+	LineNumberReader	lnr;
 
-	StringBuilder sb = null;
+	StringBuilder		sb	= null;
 
 	public Tokenizer(final Reader stream, final CsvPreference preference) {
 		this.preferences = preference;
@@ -25,8 +27,9 @@ public class Tokenizer implements ITokenizer {
 	}
 
 	private void addSpaces(final StringBuilder sb, final int spaces) {
-		for(int i = 0; i < spaces; i++)
+		for(int i = 0; i < spaces; i++) {
 			sb.append(" ");
+		}
 	}
 
 	/**
@@ -58,8 +61,11 @@ public class Tokenizer implements ITokenizer {
 		// read non-empty lines only
 		do {
 			line = lnr.readLine();
-			if(line == null) return false; // EOF
-		} while(line.length() == 0); // skip zero len lines
+			if(line == null) {
+				return false; // EOF
+			}
+		}
+		while(line.length() == 0); // skip zero len lines
 
 		// start parsing
 		line = line + "\n"; // add a newline to determine end of line (making
@@ -94,9 +100,10 @@ public class Tokenizer implements ITokenizer {
 					}
 					else if(c == ' ') { // trim starting spaces (trailing spaces
 						// are removed using the String.trim()
-						if(sb.length() > 0) // add only space if it is not the
+						if(sb.length() > 0) {
 							// first on the line
 							potentialSpaces++;
+						}
 						break; // read more
 					}
 					else if(c == '\n') {
@@ -151,7 +158,11 @@ public class Tokenizer implements ITokenizer {
 						// -1 as it will be incremented to 0 at the end of
 						// the switch)
 						line = lnr.readLine();
-						if(line == null) throw new IOException("File ended unexpectedly while reading a quoted cell starting on line: " + linenoQuoteState);
+						if(line == null) {
+							throw new SuperCSVException(
+									"File ended unexpectedly while reading a quoted cell starting on line: "
+											+ linenoQuoteState, new CSVContext(linenoQuoteState, 0));
+						}
 						line = line + '\n'; // add \n to make parsing easy
 						break; // read more
 					}

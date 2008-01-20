@@ -30,18 +30,6 @@ public interface ICsvBeanWriter extends ICsvWriter {
 	 *            at object (bean instance) whose values to extract
 	 * @param nameMapping
 	 *            defines the fields of the class that must be written. null values are not allowed
-	 * @since 1.0
-	 */
-	public void write(Object source, String[] nameMapping, CellProcessor[] processor, StringBuilder errorLog)
-			throws IOException, IllegalAccessException, InvocationTargetException;
-
-	/**
-	 * Write an object
-	 * 
-	 * @param source
-	 *            at object (bean instance) whose values to extract
-	 * @param nameMapping
-	 *            defines the fields of the class that must be written. null values are not allowed
 	 * @param processor
 	 *            array of processors changing the data before it is written
 	 * @since 1.29

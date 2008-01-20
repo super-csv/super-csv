@@ -45,7 +45,8 @@ public class CsvMapReader extends AbstractCsvReader implements ICsvMapReader {
 	/**
 	 * {@inheritDoc}
 	 */
-	public Map<String, ? super Object> read(final String[] nameMapping, final CellProcessor[] processors) throws IOException {
+	public Map<String, ? super Object> read(final String[] nameMapping, final CellProcessor[] processors)
+			throws IOException {
 		final Map<String, ? super Object> destination = new HashMap<String, Object>();
 
 		/**
@@ -54,7 +55,9 @@ public class CsvMapReader extends AbstractCsvReader implements ICsvMapReader {
 		 */
 		final List<? super Object> lineResult = new ArrayList<Object>();
 
-		if(tokenizer.readStringList(super.line) == false) return null;
+		if(tokenizer.readStringList(super.line) == false) {
+			return null;
+		}
 
 		// set to null all read columns we want to ignore
 		for(int i = 0; i < line.size(); i++) {
@@ -62,7 +65,7 @@ public class CsvMapReader extends AbstractCsvReader implements ICsvMapReader {
 				super.line.set(i, null);
 			}
 		}
-		if(Util.processStringList(lineResult, super.line, processors, getLineNumber(), null) == false) return null;
+		Util.processStringList(lineResult, super.line, processors, getLineNumber());
 		Util.mapStringList((Map<String, Object>) destination, nameMapping, (List<Object>) lineResult);
 
 		return destination;

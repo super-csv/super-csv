@@ -15,11 +15,12 @@ import org.supercsv.prefs.CsvPreference;
 
 public class CsvBeanWriterTest {
 
-	CsvBeanWriter cw = null;
-	String[] nameMapper = { "firstname", "password", "street", "zip", "town" };
-	final CellProcessor[] processors = new CellProcessor[] { new Strlen(5), null, null, new Optional(new ParseInt()), null };
-	StringWriter outfile;
-	PersonBean p1;
+	CsvBeanWriter			cw			= null;
+	String[]				nameMapper	= { "firstname", "password", "street", "zip", "town" };
+	final CellProcessor[]	processors	= new CellProcessor[] { new Strlen(5), null, null,
+		new Optional(new ParseInt()), null };
+	StringWriter			outfile;
+	PersonBean				p1;
 
 	@Before
 	public void setUp() throws Exception {
@@ -38,7 +39,7 @@ public class CsvBeanWriterTest {
 	public void testFail() throws Exception {
 		p1.setFirstname("longerthanfive");
 		// final StringBuilder sb = new StringBuilder();
-		cw.write(p1, nameMapper, processors, null);
+		cw.write(p1, nameMapper, processors);
 		cw.close();
 		// Assert.assertEquals("error in log", "java.lang.BestCSVException: Entry \"longerthanfive\" on line 1 is not of
 		// any of the required lengths 5 ", sb.toString());
@@ -57,13 +58,13 @@ public class CsvBeanWriterTest {
 		p1.setFirstname("Kla,us");
 		cw.write(p1, nameMapper);
 		cw.close();
-		Assert.assertEquals("encode before writing", "\"Kla,us\",Anderson,Mauler Street 43,4328,New York\n", outfile.toString());
+		Assert.assertEquals("encode before writing", "\"Kla,us\",Anderson,Mauler Street 43,4328,New York\n", outfile
+				.toString());
 	}
 
 	@Test
 	public void testWriteProcessor() throws Exception {
-		final StringBuilder sb = new StringBuilder();
-		cw.write(p1, nameMapper, processors, sb);
+		cw.write(p1, nameMapper, processors);
 		cw.close();
 		Assert.assertEquals("processor write", "Klaus,Anderson,Mauler Street 43,4328,New York\n", outfile.toString());
 	}

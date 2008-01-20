@@ -46,19 +46,10 @@ public class CsvMapWriter extends AbstractCsvWriter implements ICsvMapWriter {
 	 * {@inheritDoc}
 	 */
 	public void write(final Map<String, ? extends Object> source, final String[] nameMapping,
-			final CellProcessor[] processor, final StringBuilder errorLog) throws IOException, SuperCSVException {
+			final CellProcessor[] processor) throws IOException, SuperCSVException {
 		tmpDst.clear();
 		// only write if we are not failing
-		if(Util.processStringList(tmpDst, Util.map2List(source, nameMapping), processor, getLineNumber(), errorLog)) {
-			super.write(tmpDst.toArray());
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void write(final Map<String, ? extends Object> source, final String[] nameMapping,
-			final CellProcessor[] processor) throws IOException, SuperCSVException {
-		this.write(source, nameMapping, processor, null);
+		Util.processStringList(tmpDst, Util.map2List(source, nameMapping), processor, getLineNumber());
+		super.write(tmpDst.toArray());
 	}
 }

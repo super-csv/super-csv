@@ -29,7 +29,9 @@ public class CsvListReader extends AbstractCsvReader implements ICsvListReader {
 	 * {@inheritDoc}
 	 */
 	public List<String> read() throws IOException {
-		if(tokenizer.readStringList(super.line)) return super.line;
+		if(tokenizer.readStringList(super.line)) {
+			return super.line;
+		}
 		return null;
 	}
 
@@ -39,13 +41,13 @@ public class CsvListReader extends AbstractCsvReader implements ICsvListReader {
 	public List<String> read(final CellProcessor[] processors) throws IOException {
 		if(tokenizer.readStringList(super.line)) {
 			final List<? super Object> tmpLine = new ArrayList<Object>();
-			if(Util.processStringList(tmpLine, super.line, processors, getLineNumber(), null)) {
-				final List<String> result = new ArrayList<String>();
-				for(final Object i : tmpLine) {
-					result.add(i.toString());
-				}
-				return result;
+			Util.processStringList(tmpLine, super.line, processors, getLineNumber());
+			final List<String> result = new ArrayList<String>();
+			for(final Object i : tmpLine) {
+				result.add(i.toString());
 			}
+			return result;
+
 		}
 		return null;
 	}

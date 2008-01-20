@@ -13,16 +13,16 @@ import org.supercsv.util.CSVContext;
  * @author Kasper B. Graversen
  */
 public class DMinMax extends CellProcessorAdaptor {
-	public static final double MAXD = Double.MAX_VALUE;
-	public static final double MIND = Double.MIN_VALUE;
-	public static final double MAXS = Short.MAX_VALUE;
-	public static final double MINS = Short.MIN_VALUE;
-	public static final double MAXC = Character.MAX_VALUE;
-	public static final double MINC = Character.MIN_VALUE;
-	public static final double MAX8bit = 255;
-	public static final double MIN8bit = -128;
+	public static final double	MAXD	= Double.MAX_VALUE;
+	public static final double	MIND	= Double.MIN_VALUE;
+	public static final double	MAXS	= Short.MAX_VALUE;
+	public static final double	MINS	= Short.MIN_VALUE;
+	public static final double	MAXC	= Character.MAX_VALUE;
+	public static final double	MINC	= Character.MIN_VALUE;
+	public static final double	MAX8bit	= 255;
+	public static final double	MIN8bit	= -128;
 
-	protected double min, max;
+	protected double			min, max;
 
 	public DMinMax(final double min, final double max) {
 		super();
@@ -40,19 +40,24 @@ public class DMinMax extends CellProcessorAdaptor {
 	@Override
 	public Object execute(final Object value, final CSVContext context) throws NumberFormatException {
 		final Double result;
-		if(value instanceof Double)
+		if(value instanceof Double) {
 			result = (Double) value;
-		else
+		}
+		else {
 			result = Double.parseDouble(value.toString());
+		}
 
-		if(!(result >= min && result <= max))
-			throw new SuperCSVException("Entry \"" + value + "\" on line " + context.lineNumber + " column " + context.columnNumber + " is not within the numerical range " + min + "-" + max);
-
+		if(!(result >= min && result <= max)) {
+			throw new SuperCSVException("Entry \"" + value + "\" on line " + context.lineNumber + " column "
+					+ context.columnNumber + " is not within the numerical range " + min + "-" + max, context);
+		}
 		return next.execute(result, context);
 	}
 
 	private void init(final double min, final double max) {
-		if(max < min) throw new SuperCSVException("max < min in the arguments " + min + " " + max);
+		if(max < min) {
+			throw new SuperCSVException("max < min in the arguments " + min + " " + max);
+		}
 
 		this.min = min;
 		this.max = max;

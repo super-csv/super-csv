@@ -18,7 +18,7 @@ import org.supercsv.util.CSVContext;
  * @author Kasper B. Graversen
  */
 public class RequireSubStr extends CellProcessorAdaptor implements StringCellProcessor {
-	String[] requiredSubStrings;
+	String[]	requiredSubStrings;
 
 	public RequireSubStr(final List<String> requiredSubStrings, final CellProcessor next) {
 		this(requiredSubStrings.toArray(new String[0]), next);
@@ -58,8 +58,10 @@ public class RequireSubStr extends CellProcessorAdaptor implements StringCellPro
 				break;
 			}
 		}
-		if(found == false)
-			throw new SuperCSVException("Entry \"" + value + "\" on line " + context.lineNumber + " column " + context.columnNumber + " doesn't contain any of the required substrings");
+		if(found == false) {
+			throw new SuperCSVException("Entry \"" + value + "\" on line " + context.lineNumber + " column "
+					+ context.columnNumber + " doesn't contain any of the required substrings", context);
+		}
 
 		return next.execute(value, context);
 	}

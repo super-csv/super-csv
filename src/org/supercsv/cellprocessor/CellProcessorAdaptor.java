@@ -13,17 +13,21 @@ import org.supercsv.util.CSVContext;
  */
 public abstract class CellProcessorAdaptor implements CellProcessor {
 	/** the next reference for the chain */
-	protected CellProcessor next = null; // must be untyped as it must hold any kind of type
+	protected CellProcessor	next	= null; // must be untyped as it must hold any kind of type
 
 	/** This constructor MUST ONLY be used by the class <tt>NullObjectPattern</tt> */
 	protected CellProcessorAdaptor() {
 		super();
-		if(!(this instanceof NullObjectPattern)) next = NullObjectPattern.INSTANCE;
+		if(!(this instanceof NullObjectPattern)) {
+			next = NullObjectPattern.INSTANCE;
+		}
 	}
 
 	public CellProcessorAdaptor(final CellProcessor next) {
 		super();
-		if(next == null) throw new SuperCSVException("argument was null");
+		if(next == null) {
+			throw new SuperCSVException("argument was null");
+		}
 
 		this.next = next;
 	}

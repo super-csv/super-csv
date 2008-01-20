@@ -40,12 +40,12 @@ public class CsvListWriter extends AbstractCsvWriter implements ICsvListWriter {
 
 		// convert source to List<String>
 		final List<String> source = new ArrayList<String>();
-		for(int i = 0; i < content.size(); i++)
+		for(int i = 0; i < content.size(); i++) {
 			source.add(content.get(i).toString());
+		}
 
-		if(Util.processStringList(destination, source, processors, super.getLineNumber(), null)) // only write if we
-			// are not failing
-			write(destination);
+		Util.processStringList(destination, source, processors, super.getLineNumber());
+		write(destination);
 	}
 
 	/**

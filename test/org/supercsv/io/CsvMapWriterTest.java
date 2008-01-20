@@ -71,17 +71,14 @@ public class CsvMapWriterTest {
 
 	@Test
 	public void writeWithProcessors() throws IOException {
-		final StringBuilder sb = new StringBuilder();
-		cw.write(m, new String[] { "a", "b", "c" }, new CellProcessor[] { new Trim(2), null, null }, sb);
+		cw.write(m, new String[] { "a", "b", "c" }, new CellProcessor[] { new Trim(2), null, null });
 		cw.close();
-		Assert.assertEquals("no errors", "", sb.toString());
 		Assert.assertEquals("written content", "he,world,1\n", outfile.toString());
 	}
 
 	@Test(expected = SuperCSVException.class)
 	public void writeWithProcessors_fail() throws IOException {
-		final StringBuilder sb = new StringBuilder();
-		cw.write(m, new String[] { "a", "b", "c" }, new CellProcessor[] { null }, sb);
+		cw.write(m, new String[] { "a", "b", "c" }, new CellProcessor[] { null });
 		cw.close();
 	}
 }

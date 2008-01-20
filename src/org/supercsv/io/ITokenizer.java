@@ -10,7 +10,7 @@ import org.supercsv.exception.SuperCSVException;
  * 
  * @author Kasper B. Graversen
  */
-interface ITokenizer {
+public interface ITokenizer {
 
 	/**
 	 * Close the underlying stream
@@ -18,9 +18,9 @@ interface ITokenizer {
 	 * @throws IOException
 	 *             when raised by operating on the underlying stream
 	 */
-	public void close() throws IOException;
+	void close() throws IOException;
 
-	public int getLineNumber();
+	int getLineNumber();
 
 	/**
 	 * Read a csv line into the list result (can span multiple lines in the file) The result list is cleared as the
@@ -30,7 +30,10 @@ interface ITokenizer {
 	 *            the result of the operation
 	 * @return true if something was read. and false if EOF
 	 * @throws IOException
+	 *             when an io-error occurs
+	 * @throws SuperCSVException
+	 *             on errors in parsing the input
 	 * @since 1.0
 	 */
-	public boolean readStringList(List<String> result) throws IOException, SuperCSVException;
+	boolean readStringList(List<String> result) throws IOException, SuperCSVException;
 }

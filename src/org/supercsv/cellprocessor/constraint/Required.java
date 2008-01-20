@@ -69,7 +69,7 @@ public class Required extends CellProcessorAdaptor implements BoolCellProcessor,
 
 			throw new SuperCSVException("Entry \"" + value + "\" on line " + context.lineNumber + " column "
 					+ context.columnNumber + " has hashcode " + value.hashCode()
-					+ " which is not one of the required hash codes: " + sb.toString());
+					+ " which is not one of the required hash codes: " + sb.toString(), context);
 		}
 
 		return next.execute(value, context);

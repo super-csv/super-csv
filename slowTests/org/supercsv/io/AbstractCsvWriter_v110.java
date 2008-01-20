@@ -15,6 +15,7 @@ import java.util.List;
 
 import org.supercsv.exception.SuperCSVException;
 import org.supercsv.prefs.CsvPreference;
+import org.supercsv.util.CSVContext;
 
 /**
  * @author Kasper B. Graversen
@@ -117,7 +118,8 @@ public abstract class AbstractCsvWriter_v110 implements ICsvWriter {
 		int i = 0;
 		switch(content.length) {
 			case 0:
-				throw new SuperCSVException("There is no content to write for line " + getLineNumber());
+				throw new SuperCSVException("There is no content to write for line " + getLineNumber(), new CSVContext(
+						lineNo, 0));
 
 			case 1: // just write last element after switch
 				break;

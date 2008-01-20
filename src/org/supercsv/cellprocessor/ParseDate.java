@@ -23,7 +23,7 @@ import org.supercsv.util.CSVContext;
  * @author Kasper B. Graversen
  */
 public class ParseDate extends CellProcessorAdaptor {
-	DateFormat formatter;
+	DateFormat	formatter;
 
 	public ParseDate(final String format) {
 		super();
@@ -45,7 +45,7 @@ public class ParseDate extends CellProcessorAdaptor {
 			return next.execute(result, context);
 		}
 		catch(final ParseException e) {
-			throw new SuperCSVException("Problems parsing '" + value + "' as a date", e);
+			throw new SuperCSVException("Problems parsing '" + value + "' as a date", context, e);
 		}
 	}
 }

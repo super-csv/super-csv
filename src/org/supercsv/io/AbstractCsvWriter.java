@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.supercsv.exception.SuperCSVException;
 import org.supercsv.prefs.CsvPreference;
+import org.supercsv.util.CSVContext;
 
 /**
  * The writer class capable of writing arrays, maps,... to a CSV file. Notice that the cell processors can also be
@@ -134,7 +135,7 @@ public abstract class AbstractCsvWriter implements ICsvWriter {
 			write(strarr);
 		}
 		catch(NullPointerException e) {
-			throw new RuntimeException("Object at possition " + i + " is null.", e);
+			throw new SuperCSVException("Object at possition " + i + " is null.", new CSVContext(getLineNumber(), i), e);
 		}
 	}
 
@@ -145,7 +146,8 @@ public abstract class AbstractCsvWriter implements ICsvWriter {
 		int i = 0;
 		switch(content.length) {
 			case 0:
-				throw new SuperCSVException("There is no content to write for line " + getLineNumber());
+				throw new SuperCSVException("There is no content to write for line " + getLineNumber(), new CSVContext(
+						getLineNumber(), 0));
 
 			case 1: // just write last element after switch
 				break;
