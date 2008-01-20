@@ -40,13 +40,18 @@ public class LMinMax extends CellProcessorAdaptor {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Object execute(final Object value, final CSVContext context) throws NumberFormatException {
+	public Object execute(final Object value, final CSVContext context) throws SuperCSVException {
 		final Long result;
 		if(value instanceof Long) {
 			result = (Long) value;
 		}
 		else {
-			result = Long.parseLong(value.toString());
+			try {
+				result = Long.parseLong(value.toString());
+			}
+			catch(NumberFormatException e) {
+				throw new SuperCSVException("Parsing error", context, e);
+			}
 		}
 
 		if(!(result >= min && result <= max)) {
