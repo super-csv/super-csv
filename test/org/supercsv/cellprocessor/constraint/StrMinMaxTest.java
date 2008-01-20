@@ -14,9 +14,9 @@ import org.supercsv.util.CSVContext;
  * @author Kasper B. Graversen
  */
 public class StrMinMaxTest {
-	static final int MINVAL = 2, MAXVAL = 10;
-	StrMinMax cp;
-	CellProcessor ccp;
+	static final int	MINVAL	= 2, MAXVAL = 10;
+	StrMinMax			cp;
+	CellProcessor		ccp;
 
 	@Test(expected = SuperCSVException.class)
 	public void invalidInputTest() throws Exception {

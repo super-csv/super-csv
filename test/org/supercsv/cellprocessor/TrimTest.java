@@ -9,13 +9,14 @@ import org.supercsv.mock.ComparerCellProcessor;
 import org.supercsv.util.CSVContext;
 
 public class TrimTest {
-	CellProcessorAdaptor cp = new Trim(3);
+	CellProcessorAdaptor	cp	= new Trim(3);
 
 	@Test
 	public void chainTest() throws Exception {
 		final ComparerCellProcessor cpp = new ComparerCellProcessor("foo");
 		org.junit.Assert.assertEquals("trim and chain", true, new Trim(3, cpp).execute("fooo", new CSVContext(0, 0)));
-		org.junit.Assert.assertEquals("trim and chain", true, new Trim(3, "", cpp).execute("fooo", new CSVContext(0, 0)));
+		org.junit.Assert.assertEquals("trim and chain", true, new Trim(3, "", cpp)
+				.execute("fooo", new CSVContext(0, 0)));
 	}
 
 	@Test(expected = SuperCSVException.class)

@@ -17,24 +17,27 @@ import org.supercsv.exception.SuperCSVException;
 import org.supercsv.prefs.CsvPreference;
 
 public class CsvMapReaderTest {
-	final static CellProcessor[] PROCESSORS = new CellProcessor[] { null, null, null, new Optional(new ParseInt()), new Optional() };
-	final static CellProcessor[] PROCESSORS_PARTIAL = new CellProcessor[] { new Trim(3), null, null, null, new Optional() };
-	final static CellProcessor[] PROCESSORS_EMPTY = new CellProcessor[] { null, null, null, null, null };
-	CsvMapReader inFile = null;
-	final String[] nameMapper = { "firstname", "lastname", "street", "zip", "town" };
-	final String[] nameMapperPartial = { "firstname", null, null, null, "town" };
-	final String[] invalidNameMapperPartial = { "firstname", null, null, null, "firstname" };
+	final static CellProcessor[]	PROCESSORS					= new CellProcessor[] { null, null, null,
+		new Optional(new ParseInt()), new Optional()			};
+	final static CellProcessor[]	PROCESSORS_PARTIAL			= new CellProcessor[] { new Trim(3), null, null, null,
+		new Optional()											};
+	final static CellProcessor[]	PROCESSORS_EMPTY			= new CellProcessor[] { null, null, null, null, null };
+	CsvMapReader					inFile						= null;
+	final String[]					nameMapper					= { "firstname", "lastname", "street", "zip", "town" };
+	final String[]					nameMapperPartial			= { "firstname", null, null, null, "town" };
+	final String[]					invalidNameMapperPartial	= { "firstname", null, null, null, "firstname" };
 
 	/**
 	 * @throws java.lang.Exception
 	 */
 	@Before
 	public void setUp() throws Exception {
-		final String str = "Klaus,     Anderson,   Mauler Street 43,   4328,           New York\n" + "Moby,      Duck,       Sesam str,              ,         \n"; // missing
-																																									// parts
-																																									// of
-																																									// the
-																																									// address
+		final String str = "Klaus,     Anderson,   Mauler Street 43,   4328,           New York\n"
+				+ "Moby,      Duck,       Sesam str,              ,         \n"; // missing
+		// parts
+		// of
+		// the
+		// address
 		inFile = new CsvMapReader(new StringReader(str), new CsvPreference('"', ',', "\n"));
 	}
 
@@ -65,7 +68,8 @@ public class CsvMapReaderTest {
 	 */
 	@Test
 	public void testEmptyLastLineWebExmaple() throws IOException {
-		final StringReader file = new StringReader("name, birthdate,  phone,     town\r\n" + "Bil,  30/05-1975, 5551684,   Nottingham\r\n" + "Kira, 01/04-2001, 5556621,   Sheffield\r\n");
+		final StringReader file = new StringReader("name, birthdate,  phone,     town\r\n"
+				+ "Bil,  30/05-1975, 5551684,   Nottingham\r\n" + "Kira, 01/04-2001, 5556621,   Sheffield\r\n");
 
 		final ICsvMapReader mapReader = new CsvMapReader(file, CsvPreference.EXCEL_PREFERENCE);
 		Map<String, ? super Object> map;
@@ -74,7 +78,8 @@ public class CsvMapReaderTest {
 		// read the header to fetch column names (which are used as keys for the map)
 		final String[] header = mapReader.getCSVHeader(true);
 
-		while((map = mapReader.read(header, new CellProcessor[] { null, new ParseDate("dd/MM-yyyy"), new ParseLong(), null })) != null)
+		while((map = mapReader.read(header, new CellProcessor[] { null, new ParseDate("dd/MM-yyyy"), new ParseLong(),
+			null })) != null)
 			secondLastRead = map;
 		Assert.assertEquals("last read phone", 5556621L, secondLastRead.get("phone"));
 	}

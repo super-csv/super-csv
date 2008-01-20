@@ -14,9 +14,9 @@ import org.supercsv.prefs.CsvPreference;
  * @author Kasper B. Graversen
  */
 public class AbstractCsvReaderTest {
-	StringReader r;
-	CsvListReader csvr;
-	CsvPreference prefs;
+	StringReader	r;
+	CsvListReader	csvr;
+	CsvPreference	prefs;
 
 	/** testing general functionality */
 	@Test

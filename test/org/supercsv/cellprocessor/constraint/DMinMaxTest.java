@@ -9,10 +9,10 @@ import org.supercsv.mock.ComparerCellProcessor;
 import org.supercsv.util.CSVContext;
 
 public class DMinMaxTest {
-	private static final int MIN = 0;
-	private static final int MAX = 200;
-	public static final double IN_RANGE = 7.7;
-	public static final double OUTSIDE_RANGE = 777.7;
+	private static final int	MIN				= 0;
+	private static final int	MAX				= 200;
+	public static final double	IN_RANGE		= 7.7;
+	public static final double	OUTSIDE_RANGE	= 777.7;
 
 	@Test(expected = SuperCSVException.class)
 	public void should_fail_on_out_of_range_input() {
@@ -21,7 +21,8 @@ public class DMinMaxTest {
 
 	@Test
 	public void should_have_chaining_working() {
-		assertThat((Boolean) new DMinMax(MIN, MAX, new ComparerCellProcessor(IN_RANGE)).execute(IN_RANGE, new CSVContext(0, 0)), is(true));
+		assertThat((Boolean) new DMinMax(MIN, MAX, new ComparerCellProcessor(IN_RANGE)).execute(IN_RANGE,
+				new CSVContext(0, 0)), is(true));
 	}
 
 	@Test(expected = SuperCSVException.class)

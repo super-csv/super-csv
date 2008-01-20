@@ -13,8 +13,8 @@ import org.supercsv.io.ICsvMapWriter;
 import org.supercsv.prefs.CsvPreference;
 
 public class WriteWebExampleTest {
-	StringWriter outFile;
-	ICsvMapWriter writer;
+	StringWriter	outFile;
+	ICsvMapWriter	writer;
 
 	@Before
 	public void setUp() {

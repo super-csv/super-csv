@@ -2,8 +2,8 @@ package org.supercsv.mock;
 
 /** bean class used for the bean reader and writer tests */
 public class PersonBean extends SuperBean {
-	String password, street, town;
-	int zip;
+	String	password, street, town;
+	int		zip;
 
 	public PersonBean() {
 		super();

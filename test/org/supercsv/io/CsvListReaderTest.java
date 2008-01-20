@@ -16,7 +16,7 @@ import org.supercsv.prefs.CsvPreference;
  * @author Kasper B. Graversen
  */
 public class CsvListReaderTest {
-	CsvListReader inFile = null;
+	CsvListReader	inFile	= null;
 
 	@Before
 	public void setUp() throws Exception {

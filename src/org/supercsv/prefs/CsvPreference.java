@@ -9,31 +9,31 @@ public class CsvPreference {
 	/**
 	 * Ready to use configuration. This one should cover 99% of all usages of the package
 	 */
-	public static final CsvPreference STANDARD_PREFERENCE = new CsvPreference('"', ',', "\r\n");
+	public static final CsvPreference	STANDARD_PREFERENCE				= new CsvPreference('"', ',', "\r\n");
 
 	/**
 	 * Ready to use configuration for reading Windows Excel exported CSV files.
 	 */
-	public static final CsvPreference EXCEL_PREFERENCE = new CsvPreference('"', ',', "\n");
+	public static final CsvPreference	EXCEL_PREFERENCE				= new CsvPreference('"', ',', "\n");
 
 	/**
 	 * Ready to use configuration for north european excel CSV files (columns are separated by ";" instead of ",")
 	 */
-	public static final CsvPreference EXCEL_NORTH_EUROPE_PREFERENCE = new CsvPreference('"', ';', "\n");
+	public static final CsvPreference	EXCEL_NORTH_EUROPE_PREFERENCE	= new CsvPreference('"', ';', "\n");
 
 	/**
 	 * Ready to use configuration. Reading and making sure no data is accidently parsed as comments
 	 */
-	public static final CsvPreference NO_COMMENT_PREFERENCE = new CsvPreference('"', ',', "\n");
+	public static final CsvPreference	NO_COMMENT_PREFERENCE			= new CsvPreference('"', ',', "\n");
 
-	protected char quoteChar;
+	protected char						quoteChar;
 
-	protected int delimiterChar;
+	protected int						delimiterChar;
 
 	/**
 	 * Only used when writing. Recommended "\n" or for mac "\r" or if special sequences are needed such as "<EOL>\n"
 	 */
-	protected String endOfLineSymbols;
+	protected String					endOfLineSymbols;
 
 	/**
 	 * Set the preference for readers and writers

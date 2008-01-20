@@ -15,8 +15,8 @@ public class ParseLongTest {
 	/**
 	 * 
 	 */
-	private static final CSVContext CSVCONTEXT = new CSVContext(0, 0);
-	CellProcessor cp, ccp;
+	private static final CSVContext	CSVCONTEXT	= new CSVContext(0, 0);
+	CellProcessor					cp, ccp;
 
 	@Test(expected = SuperCSVException.class)
 	public void invalid_input() {

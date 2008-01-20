@@ -10,7 +10,7 @@ import org.supercsv.util.CSVContext;
  * @author Kasper B. Graversen
  */
 public class ParseCharTest {
-	CSVContext context;
+	CSVContext	context;
 
 	@Before
 	public void setUp() throws Exception {

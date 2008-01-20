@@ -38,6 +38,7 @@ public interface ICsvMapReader extends ICsvReader {
 	 *             in case one of the cell processors fail processing *
 	 * @since 1.0
 	 */
-	public Map<String, ? super Object> read(String[] nameMapping, CellProcessor[] processors) throws IOException, SuperCSVException;
+	public Map<String, ? super Object> read(String[] nameMapping, CellProcessor[] processors) throws IOException,
+			SuperCSVException;
 
 }

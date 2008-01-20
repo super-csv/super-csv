@@ -16,14 +16,16 @@ import java.util.Random;
  * @author Kasper B. Graversen generate random content
  */
 public class TestDataCreators {
-	static Random r = new Random();
+	static Random	r	= new Random();
 	static {
 		r.setSeed(System.currentTimeMillis());
 	}
 
 	public static String createAnonymousLine_num_str_str_num_date() {
-		final String s = "" + number(100000) + ", " + string(7) + ", " + string(10) + ", " + number(200) + ", " + date() + "\n";
-		if(r.nextInt() % 30 == 0) return "\"" + s + "\"";
+		final String s = "" + number(100000) + ", " + string(7) + ", " + string(10) + ", " + number(200) + ", "
+				+ date() + "\n";
+		if(r.nextInt() % 30 == 0)
+			return "\"" + s + "\"";
 		return s;
 	}
 
@@ -50,7 +52,8 @@ public class TestDataCreators {
 			else
 				sb.append(Character.toChars(65 + r.nextInt(25)));
 		}
-		if(r.nextInt() % 30 == 0) return "\"" + sb.toString() + "\""; // some times make it a "" string
+		if(r.nextInt() % 30 == 0)
+			return "\"" + sb.toString() + "\""; // some times make it a "" string
 		return sb.toString();
 	}
 }

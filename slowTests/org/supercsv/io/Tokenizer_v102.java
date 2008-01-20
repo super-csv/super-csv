@@ -13,10 +13,10 @@ import org.supercsv.prefs.CsvPreference;
  * @author Kasper B. Graversen
  */
 public class Tokenizer_v102 implements ITokenizer {
-	CsvPreference preferences;
-	LineNumberReader lnr;
+	CsvPreference		preferences;
+	LineNumberReader	lnr;
 
-	StringBuilder sb = null;
+	StringBuilder		sb	= null;
 
 	public Tokenizer_v102(final Reader stream, final CsvPreference preference) {
 		this.preferences = preference;
@@ -58,8 +58,10 @@ public class Tokenizer_v102 implements ITokenizer {
 		// read non-empty lines only
 		do {
 			line = lnr.readLine();
-			if(line == null) return false; // EOF
-		} while(line.length() == 0); // skip zero len lines
+			if(line == null)
+				return false; // EOF
+		}
+		while(line.length() == 0); // skip zero len lines
 
 		// start parsing
 		line = line + "\n"; // add a newline to determine end of line (making
@@ -153,7 +155,10 @@ public class Tokenizer_v102 implements ITokenizer {
 						// -1 as it will be incremented to 0 at the end of
 						// the switch)
 						line = lnr.readLine();
-						if(line == null) throw new IOException("File ended unexpectedly while reading a quoted cell starting on line: " + linenoQuoteState);
+						if(line == null)
+							throw new IOException(
+									"File ended unexpectedly while reading a quoted cell starting on line: "
+											+ linenoQuoteState);
 						line = line + '\n'; // add \n to make parsing easy
 						break; // read more
 					}

@@ -6,8 +6,8 @@ package org.supercsv.util;
  * @author Kasper B. Graversen
  */
 public class CSVContext {
-	public int lineNumber;
-	public int columnNumber;
+	public int	lineNumber;
+	public int	columnNumber;
 
 	public CSVContext() {
 	}

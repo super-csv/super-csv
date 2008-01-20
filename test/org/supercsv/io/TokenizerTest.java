@@ -13,8 +13,8 @@ import org.junit.Test;
 import org.supercsv.prefs.CsvPreference;
 
 public class TokenizerTest {
-	Tokenizer tokenizer;
-	List<String> result;
+	Tokenizer		tokenizer;
+	List<String>	result;
 
 	@Test
 	public void headerFile_emptyValue() throws Exception {

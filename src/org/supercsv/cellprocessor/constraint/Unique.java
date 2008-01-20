@@ -14,8 +14,8 @@ import org.supercsv.util.CSVContext;
  * @author Kasper B. Graversen
  */
 public class Unique extends CellProcessorAdaptor {
-	final static Object tokenForMap = new Object();
-	protected HashMap<Integer, Object> uniqueMap = new HashMap<Integer, Object>();
+	final static Object					tokenForMap	= new Object();
+	protected HashMap<Integer, Object>	uniqueMap	= new HashMap<Integer, Object>();
 
 	public Unique() {
 		super();
@@ -36,7 +36,8 @@ public class Unique extends CellProcessorAdaptor {
 	public Object execute(final Object value, final CSVContext context) throws SuperCSVException {
 		// check for uniqueness
 		final int hash = value.hashCode();
-		if(uniqueMap.containsKey(hash)) throw new SuperCSVException("Duplicate entry \"" + value + "\" found!");
+		if(uniqueMap.containsKey(hash))
+			throw new SuperCSVException("Duplicate entry \"" + value + "\" found!");
 
 		// if not found add it
 		uniqueMap.put(hash, tokenForMap);

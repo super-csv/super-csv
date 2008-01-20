@@ -12,7 +12,7 @@ import org.supercsv.util.CSVContext;
  * @author Kasper B. Graversen
  */
 public class ParseBoolTest {
-	CellProcessor cp, ccp;
+	CellProcessor	cp, ccp;
 
 	@Before
 	public void setUp() throws Exception {

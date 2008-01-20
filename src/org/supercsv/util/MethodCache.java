@@ -13,12 +13,12 @@ public class MethodCache {
 	/**
 	 * A map containing mapping "classname -> HashMap". The inner HashMap is a "methodname->Method" mapping
 	 */
-	HashMap<String, HashMap<String, Method>> setCache = new HashMap<String, HashMap<String, Method>>();
+	HashMap<String, HashMap<String, Method>>	setCache	= new HashMap<String, HashMap<String, Method>>();
 
 	/**
 	 * A map containing mapping "classname -> HashMap". The inner HashMap is a "methodname->Method" mapping
 	 */
-	HashMap<String, HashMap<String, Method>> getCache = new HashMap<String, HashMap<String, Method>>();
+	HashMap<String, HashMap<String, Method>>	getCache	= new HashMap<String, HashMap<String, Method>>();
 
 	public void flushCaches() {
 		setCache.clear();
@@ -34,7 +34,8 @@ public class MethodCache {
 	 * using either get or set cache lookup a method. This approach saves a subString(), concatenations and
 	 * toUpperCase() since now the variable name uniquely identify either get or set method access
 	 */
-	Method getMethod(final HashMap<String, HashMap<String, Method>> cache, final Object destinationObject, final String methodPrefix, final String variableName) {
+	Method getMethod(final HashMap<String, HashMap<String, Method>> cache, final Object destinationObject,
+			final String methodPrefix, final String variableName) {
 		final String className = destinationObject.getClass().getName();
 		HashMap<String, Method> methodCache = cache.get(className);
 		if(methodCache == null) {
@@ -60,9 +61,10 @@ public class MethodCache {
 		// find method by traversal of the object
 		for(final Method meth : destinationObject.getClass().getMethods()) {
 			if(meth.getName().equals(methodName))
-			// System.out.println("found method " + meth.toString());
+				// System.out.println("found method " + meth.toString());
 				return meth;
 		}
-		throw new SuperCSVException("Can't find method '" + methodName + "' in class '" + destinationObject.getClass().getName() + "'");
+		throw new SuperCSVException("Can't find method '" + methodName + "' in class '"
+				+ destinationObject.getClass().getName() + "'");
 	}
 }

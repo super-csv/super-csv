@@ -27,9 +27,9 @@ import org.supercsv.prefs.CsvPreference;
  */
 public class ReadingSpeedTest extends AbstractSpeedTest {
 	public static final class RealBean {
-		String name1, name2;
-		long no, phone;
-		Date date;
+		String	name1, name2;
+		long	no, phone;
+		Date	date;
 
 		public Date getDate() {
 			return date;
@@ -73,7 +73,7 @@ public class ReadingSpeedTest extends AbstractSpeedTest {
 	}
 
 	public static final class StringsBean {
-		String no, name1, name2, phone, date;
+		String	no, name1, name2, phone, date;
 
 		public String getDate() {
 			return date;

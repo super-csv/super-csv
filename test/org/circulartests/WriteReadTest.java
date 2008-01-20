@@ -37,7 +37,8 @@ public class WriteReadTest {
 
 		// read data
 		// System.out.println("read text:\n----------\n" + writtenData);
-		final String[] readFileData = new CsvListReader(new StringReader(writtenData), CsvPreference.EXCEL_PREFERENCE).read().toArray(new String[0]);
+		final String[] readFileData = new CsvListReader(new StringReader(writtenData), CsvPreference.EXCEL_PREFERENCE)
+				.read().toArray(new String[0]);
 
 		// data must be the same
 		Assert.assertEquals(columnsToWrite, readFileData);

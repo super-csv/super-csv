@@ -12,8 +12,8 @@ import org.supercsv.util.CSVContext;
  * @author Kasper B. Graversen
  */
 public class LMinMaxTest {
-	LMinMax cp;
-	CellProcessor ccp;
+	LMinMax			cp;
+	CellProcessor	ccp;
 
 	@Test(expected = SuperCSVException.class)
 	public void invalidmaxInputTest() throws Exception {
@@ -52,6 +52,7 @@ public class LMinMaxTest {
 	public void validInputTest() throws Exception {
 		Assert.assertEquals("min boundary as text", 0L, cp.execute("0", new CSVContext(0, 0)));
 		Assert.assertEquals("min boundary as number", 0L, cp.execute(0, new CSVContext(0, 0)));
-		Assert.assertEquals("max boundary as number", (long) LMinMax.MAXC, cp.execute(LMinMax.MAXC, new CSVContext(0, 0)));
+		Assert.assertEquals("max boundary as number", (long) LMinMax.MAXC, cp.execute(LMinMax.MAXC,
+				new CSVContext(0, 0)));
 	}
 }

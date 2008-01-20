@@ -19,7 +19,7 @@ import org.supercsv.util.CSVContext;
 /**
  * This processor returns a specified default value, should the value given be a null. This is handy when writing
  * partially filled beans, maps and arrays, as for each column, a default value can be specified.
- *
+ * 
  * @since 1.20
  * @author Kasper B. Graversen
  */
@@ -31,7 +31,7 @@ public class ConvertNullTo extends CellProcessorAdaptor implements DateCellProce
 	 * To have the string <tt>""</tt> return when a null is encountered, use this class as <code>
 	 * new ConvertNullTo("\"\"");
 	 * </code>
-	 *
+	 * 
 	 * @param returnValue
 	 *            the value to return in case the input is <tt>null</tt>.
 	 */
@@ -49,7 +49,7 @@ public class ConvertNullTo extends CellProcessorAdaptor implements DateCellProce
 	 * processors such as <code>
 	 * new ConvertNullTo("\"\"", new Trim(3));
 	 * </code>
-	 *
+	 * 
 	 * @param returnValue
 	 *            the value to return in case the input is <tt>null</tt>.
 	 * @param next

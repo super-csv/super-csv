@@ -20,7 +20,7 @@ import org.supercsv.util.CSVContext;
  * @author Kasper B. Graversen
  */
 public class RequireSubStrTest {
-	private static final CSVContext CSVCONTEXT = new CSVContext(0, 0);
+	private static final CSVContext	CSVCONTEXT	= new CSVContext(0, 0);
 
 	@Test
 	public void constructors_should_hande_valid_input() {
@@ -32,10 +32,12 @@ public class RequireSubStrTest {
 			final java.util.List<String> strl = new ArrayList<String>();
 			strl.add("a");
 			strl.add("b");
-			Assert.assertEquals(true, new RequireSubStr(strl, new ComparerCellProcessor("abba")).execute("abba", CSVCONTEXT));
+			Assert.assertEquals(true, new RequireSubStr(strl, new ComparerCellProcessor("abba")).execute("abba",
+					CSVCONTEXT));
 		}
 		// constructor 3
-		Assert.assertEquals(true, new RequireSubStr("abba", new ComparerCellProcessor("abba")).execute("abba", CSVCONTEXT));
+		Assert.assertEquals(true, new RequireSubStr("abba", new ComparerCellProcessor("abba")).execute("abba",
+				CSVCONTEXT));
 
 	}
 

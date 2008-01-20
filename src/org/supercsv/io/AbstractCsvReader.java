@@ -16,13 +16,13 @@ import org.supercsv.prefs.CsvPreference;
 public abstract class AbstractCsvReader implements ICsvReader {
 
 	/** A reference to the last read line */
-	protected List<String> line;
+	protected List<String>	line;
 
 	/** the tokenizer */
-	protected ITokenizer tokenizer;
+	protected ITokenizer	tokenizer;
 
 	/** the preferences */
-	protected CsvPreference preferences;
+	protected CsvPreference	preferences;
 
 	public AbstractCsvReader() {
 		line = new ArrayList<String>();
@@ -51,10 +51,12 @@ public abstract class AbstractCsvReader implements ICsvReader {
 	 * @since 1.0
 	 */
 	public String[] getCSVHeader(final boolean firstLineCheck) throws IOException {
-		if(firstLineCheck && tokenizer.getLineNumber() != 0) throw new SuperCSVException("CSV header can only be fetched as the first read operation on a source!");
+		if(firstLineCheck && tokenizer.getLineNumber() != 0)
+			throw new SuperCSVException("CSV header can only be fetched as the first read operation on a source!");
 		final List<String> tmp = new ArrayList<String>();
 		String[] res = null;
-		if(tokenizer.readStringList(tmp)) res = tmp.toArray(new String[0]);
+		if(tokenizer.readStringList(tmp))
+			res = tmp.toArray(new String[0]);
 		return res;
 	}
 

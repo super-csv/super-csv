@@ -13,17 +13,20 @@ import org.supercsv.mock.PersonBean;
 import org.supercsv.prefs.CsvPreference;
 
 public class CsvBeanReaderTest {
-	static final String fileWithHeader = "firstname, password, street, zip, town\n" + "Klaus,     Anderson,   Mauler Street 43,   4328,           New York\n";
-	CsvBeanReader inFile = null;
-	String[] nameMapper = { "firstname", "password", "street", "zip", "town" };
-	String[] partialNameMapper = { "firstname", "password", "street", null, null };
+	static final String		fileWithHeader		= "firstname, password, street, zip, town\n"
+														+ "Klaus,     Anderson,   Mauler Street 43,   4328,           New York\n";
+	CsvBeanReader			inFile				= null;
+	String[]				nameMapper			= { "firstname", "password", "street", "zip", "town" };
+	String[]				partialNameMapper	= { "firstname", "password", "street", null, null };
 
-	final CellProcessor[] processors = new CellProcessor[] { null, null, null, new Optional(new ParseInt()), null };
+	final CellProcessor[]	processors			= new CellProcessor[] { null, null, null, new Optional(new ParseInt()),
+		null									};
 
 	@Before
 	public void setUp() throws Exception {
 
-		final String fileWithoutHeader = "Klaus,     Anderson,   Mauler Street 43,   4328,           New York\n" + "Moby,      Duck,       Sesam str,              ,         \n"; // missing
+		final String fileWithoutHeader = "Klaus,     Anderson,   Mauler Street 43,   4328,           New York\n"
+				+ "Moby,      Duck,       Sesam str,              ,         \n"; // missing
 		// parts
 		// of
 		// the

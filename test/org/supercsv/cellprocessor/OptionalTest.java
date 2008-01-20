@@ -12,7 +12,7 @@ import org.supercsv.util.CSVContext;
  * @author Kasper B. Graversen
  */
 public class OptionalTest extends TestCase {
-	CellProcessor cp, ccp;
+	CellProcessor	cp, ccp;
 
 	@Override
 	@Before
@@ -24,11 +24,14 @@ public class OptionalTest extends TestCase {
 	public void testChaining() throws Exception {
 		ccp = new Optional(new ParseLong()); // chain processors
 		Assert.assertEquals("chained optional value", 17L, ccp.execute("17", new CSVContext(0, 0)));
-		Assert.assertEquals("chained optional empty value-the long conversion should not fail (not take place)", null, ccp.execute("", new CSVContext(0, 0)));
+		Assert.assertEquals("chained optional empty value-the long conversion should not fail (not take place)", null,
+				ccp.execute("", new CSVContext(0, 0)));
 
 		ccp = new Optional(new ParseLong());
 		Assert.assertEquals("chained optional value", 17L, ccp.execute("17", new CSVContext(0, 0)));
-		Assert.assertEquals("new retval chained optional empty value-the long conversion should not fail (not take place)", null, ccp.execute("", new CSVContext(0, 0)));
+		Assert.assertEquals(
+				"new retval chained optional empty value-the long conversion should not fail (not take place)", null,
+				ccp.execute("", new CSVContext(0, 0)));
 	}
 
 	@Test

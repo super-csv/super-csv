@@ -12,8 +12,9 @@ import org.supercsv.util.CSVContext;
  * @author Kasper B. Graversen This is a mock-object to ensure that the outer processor remembers to call its chained
  *         processor
  */
-public class ComparerCellProcessor extends CellProcessorAdaptor implements DoubleCellProcessor, BoolCellProcessor, DateCellProcessor, LongCellProcessor, StringCellProcessor {
-	Object expectedValue;
+public class ComparerCellProcessor extends CellProcessorAdaptor implements DoubleCellProcessor, BoolCellProcessor,
+		DateCellProcessor, LongCellProcessor, StringCellProcessor {
+	Object	expectedValue;
 
 	public ComparerCellProcessor(final Object expectedValue) {
 		super();
@@ -26,7 +27,8 @@ public class ComparerCellProcessor extends CellProcessorAdaptor implements Doubl
 	@Override
 	public Object execute(final Object value, final CSVContext context) {
 		final boolean res = value.equals(expectedValue);
-		if(res == false) throw new RuntimeException("expected '" + expectedValue + "' got '" + value + "'");
+		if(res == false)
+			throw new RuntimeException("expected '" + expectedValue + "' got '" + value + "'");
 		return true;
 	}
 }

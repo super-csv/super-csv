@@ -12,12 +12,12 @@ import org.supercsv.util.CSVContext;
  * @author Kasper B. Graversen
  */
 public class ParseDoubleTest {
-	private static final CSVContext CSVCONTEXT = new CSVContext(0, 0);
-	private static final double VAL2 = -43.0;
-	private static final String VAL2STR = "-43.0";
-	private static final double VAL1 = 17.3;
-	private static final String VAL1_STR_ = "17.3";
-	CellProcessor cp, ccp;
+	private static final CSVContext	CSVCONTEXT	= new CSVContext(0, 0);
+	private static final double		VAL2		= -43.0;
+	private static final String		VAL2STR		= "-43.0";
+	private static final double		VAL1		= 17.3;
+	private static final String		VAL1_STR_	= "17.3";
+	CellProcessor					cp, ccp;
 
 	@Test(expected = SuperCSVException.class)
 	public void invalid_input() {

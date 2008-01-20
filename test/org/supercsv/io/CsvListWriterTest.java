@@ -17,9 +17,9 @@ import org.supercsv.prefs.CsvPreference;
  * @author Kasper B. Graversen
  */
 public class CsvListWriterTest {
-	CsvPreference prefs;
-	CsvListWriter cw;
-	StringWriter writer;
+	CsvPreference	prefs;
+	CsvListWriter	cw;
+	StringWriter	writer;
 
 	@Before
 	public void setUp() throws Exception {
@@ -38,7 +38,8 @@ public class CsvListWriterTest {
 		cw.write(new String[] { "hel", "lo", "wor", "ld" });
 		cw.write(new String[] { "I'm\na", "Berliner\nso high\nso, what", "3", "4" });
 		cw.close(); // flush before compare
-		Assert.assertEquals("write N Col Inkl Delimiter And Newline", "hel,lo,wor,ld\n\"I'm\na\",\"Berliner\nso high\nso, what\",3,4\n", writer.toString());
+		Assert.assertEquals("write N Col Inkl Delimiter And Newline",
+				"hel,lo,wor,ld\n\"I'm\na\",\"Berliner\nso high\nso, what\",3,4\n", writer.toString());
 	}
 
 	@Test

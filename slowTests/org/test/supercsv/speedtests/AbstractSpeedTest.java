@@ -22,14 +22,16 @@ import org.supercsv.cellprocessor.ift.CellProcessor;
  * @author Kasper B. Graversen
  */
 public class AbstractSpeedTest implements SpeedTestConstants {
-	public static final int LINES_IN_TEST_FILE = 250000;
-	static final String[] header = new String[] { "no", "name1", "name2", "phone", "date" };
-	static final CellProcessor[] processors = new CellProcessor[] { new ParseLong(), null, null, new ParseLong(), new ParseDate("dd/MM/yy") };
+	public static final int			LINES_IN_TEST_FILE	= 250000;
+	static final String[]			header				= new String[] { "no", "name1", "name2", "phone", "date" };
+	static final CellProcessor[]	processors			= new CellProcessor[] { new ParseLong(), null, null,
+		new ParseLong(), new ParseDate("dd/MM/yy")		};
 
 	@BeforeClass
 	public static void createTestFile() throws Exception {
 		// only generate a test file if it doesn't exist
-		if(new File(TEST_FILE).exists()) return;
+		if(new File(TEST_FILE).exists())
+			return;
 		final Writer w = new BufferedWriter(new FileWriter(TEST_FILE));
 		for(int i = 0; i < LINES_IN_TEST_FILE; i++)
 			w.write(TestDataCreators.createAnonymousLine_num_str_str_num_date());
@@ -44,6 +46,7 @@ public class AbstractSpeedTest implements SpeedTestConstants {
 	// f.delete();
 	// }
 	protected String makeTableLine(final String msg, final long baseTime, final long runTime) {
-		return String.format("<tr><td>%s</td><td>%4.2f%%</td><td>%4.2f</td></tr>", msg, (100.0 * runTime) / baseTime, runTime / (TEST_RUNS * 1000.0));
+		return String.format("<tr><td>%s</td><td>%4.2f%%</td><td>%4.2f</td></tr>", msg, (100.0 * runTime) / baseTime,
+				runTime / (TEST_RUNS * 1000.0));
 	}
 }
