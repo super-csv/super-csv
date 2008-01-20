@@ -1,5 +1,7 @@
 package org.supercsv.io;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.StringReader;
 
 import org.junit.Assert;
@@ -11,6 +13,7 @@ import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.exception.SuperCSVException;
 import org.supercsv.mock.PersonBean;
 import org.supercsv.prefs.CsvPreference;
+import org.supercsv.util.TestInterface;
 
 public class CsvBeanReaderTest {
 	static final String		fileWithHeader		= "firstname, password, street, zip, town\n"
@@ -62,7 +65,6 @@ public class CsvBeanReaderTest {
 	@Test
 	public void testSimplestRead() throws Exception {
 		PersonBean res;
-		// final StringBuilder errorLog = new StringBuilder();
 		res = inFile.read(PersonBean.class, nameMapper, processors); // read line and check the values
 		Assert.assertEquals("read elem ", "Klaus", res.getFirstname());
 		Assert.assertEquals("read elem ", "Anderson", res.getPassword());
@@ -80,5 +82,21 @@ public class CsvBeanReaderTest {
 
 		// no line 3
 		Assert.assertNull(inFile.read(PersonBean.class, partialNameMapper, processors));
+	}
+
+	@Test
+	public void should_read_interface_type() throws Exception {
+		// use interface type
+		TestInterface res;
+		String[] header = { "name" };
+		// create reader
+		inFile = new CsvBeanReader(new StringReader("Thomas\nHood\n"), new CsvPreference('"', ',', "\n"));
+
+		// read into the interface proxy
+		res = inFile.read(TestInterface.class, header);
+		assertEquals("Thomas", res.getName());
+		res = inFile.read(TestInterface.class, header);
+		assertEquals("Hood", res.getName());
+
 	}
 }

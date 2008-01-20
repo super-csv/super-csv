@@ -10,6 +10,7 @@ import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.exception.SuperCSVException;
 import org.supercsv.exception.SuperCSVReflectionException;
 import org.supercsv.prefs.CsvPreference;
+import org.supercsv.util.BeanInterfaceProxy;
 import org.supercsv.util.MethodCache;
 import org.supercsv.util.Util;
 
@@ -36,7 +37,11 @@ public class CsvBeanReader extends AbstractCsvReader implements ICsvBeanReader {
 	}
 
 	/**
+	 * Creates an object of the type or if it is an interface, create a proxy instance implementing the interface type.
+	 * 
 	 * @param clazz
+	 *            the type to instantiate. If the type is a class type, an instance can be created straight away. If the
+	 *            type is an interface type, a proxy is created on the fly which acts as an implementation.
 	 * @param nameMapping
 	 * @return A filled object
 	 * @throws InstantiationException
@@ -45,8 +50,14 @@ public class CsvBeanReader extends AbstractCsvReader implements ICsvBeanReader {
 	 */
 	<T> T fillObject(final Class<T> clazz, final String[] nameMapping) throws SuperCSVReflectionException {
 		try {
-			final T resultBean = clazz.newInstance();
-
+			// create a proxy instance if an interface type is provided
+			final T resultBean;
+			if(clazz.isInterface()) {
+				resultBean = (T) new BeanInterfaceProxy().createProxy(clazz);
+			}
+			else {
+				resultBean = clazz.newInstance();
+			}
 			// map results into an object by traversing the list of nameMapping and for each non-null,
 			// map that name to an entry in the lineResult
 			// map results to the setter methods
@@ -80,7 +91,8 @@ public class CsvBeanReader extends AbstractCsvReader implements ICsvBeanReader {
 	/**
 	 * {@inheritDoc}
 	 */
-	public <T> T read(final Class<T> clazz, final String[] nameMapping) throws IOException, SuperCSVReflectionException {
+	public <T> T read(final Class<T> clazz, final String... nameMapping) throws IOException,
+			SuperCSVReflectionException {
 		if(tokenizer.readStringList(super.line)) {
 			lineResult.clear();
 			lineResult.addAll(super.line);
