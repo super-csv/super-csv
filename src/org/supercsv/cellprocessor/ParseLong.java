@@ -23,13 +23,18 @@ public class ParseLong extends CellProcessorAdaptor {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Object execute(final Object value, final CSVContext context) throws NumberFormatException {
+	public Object execute(final Object value, final CSVContext context) throws SuperCSVException {
 		final Long result;
 		if(value instanceof Long) {
 			result = (Long) value;
 		}
 		else if(value instanceof String) {
-			result = Long.parseLong((String) value);
+			try {
+				result = Long.parseLong((String) value);
+			}
+			catch(NumberFormatException e) {
+				throw new SuperCSVException("Parser error", context, e);
+			}
 		}
 		else {
 			throw new SuperCSVException(

@@ -23,13 +23,18 @@ public class ParseInt extends CellProcessorAdaptor {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Object execute(final Object value, final CSVContext context) throws NumberFormatException {
+	public Object execute(final Object value, final CSVContext context) throws SuperCSVException {
 		final Integer result;
 		if(value instanceof Integer) {
 			result = (Integer) value;
 		}
 		else if(value instanceof String) {
-			result = new Integer((String) value);
+			try {
+				result = new Integer((String) value);
+			}
+			catch(NumberFormatException e) {
+				throw new SuperCSVException("Parser error", context, e);
+			}
 		}
 		else {
 			throw new SuperCSVException("Can't convert \"" + value
