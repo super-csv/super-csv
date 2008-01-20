@@ -44,7 +44,12 @@ public class DMinMax extends CellProcessorAdaptor {
 			result = (Double) value;
 		}
 		else {
-			result = Double.parseDouble(value.toString());
+			try {
+				result = Double.parseDouble(value.toString());
+			}
+			catch(NumberFormatException e) {
+				throw new SuperCSVException("Parser error", context, e);
+			}
 		}
 
 		if(!(result >= min && result <= max)) {
