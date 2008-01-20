@@ -1,9 +1,9 @@
 package org.supercsv.io;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 
 import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.exception.SuperCSVReflectionException;
 
 /**
  * Supertype for all writers writing using beans
@@ -20,8 +20,7 @@ public interface ICsvBeanWriter extends ICsvWriter {
 	 *            defines the fields of the class that must be written. null values are not allowed *
 	 * @since 1.0
 	 */
-	public void write(Object source, String[] nameMapping) throws IOException, IllegalAccessException,
-			InvocationTargetException;
+	public void write(Object source, String[] nameMapping) throws IOException, SuperCSVReflectionException;
 
 	/**
 	 * Write an object
@@ -35,6 +34,6 @@ public interface ICsvBeanWriter extends ICsvWriter {
 	 * @since 1.29
 	 */
 	public void write(Object source, String[] nameMapping, CellProcessor[] processor) throws IOException,
-			IllegalAccessException, InvocationTargetException;
+			SuperCSVReflectionException;
 
 }

@@ -3,7 +3,7 @@ package org.supercsv.util;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 
-import org.supercsv.exception.SuperCSVException;
+import org.supercsv.exception.SuperCSVReflectionException;
 
 /**
  * This class cache's method lookup. Hence first time it introspects the instance's class, while subsequent method
@@ -60,11 +60,12 @@ public class MethodCache {
 
 		// find method by traversal of the object
 		for(final Method meth : destinationObject.getClass().getMethods()) {
-			if(meth.getName().equals(methodName))
+			if(meth.getName().equals(methodName)) {
 				// System.out.println("found method " + meth.toString());
 				return meth;
+			}
 		}
-		throw new SuperCSVException("Can't find method '" + methodName + "' in class '"
+		throw new SuperCSVReflectionException("Can't find method '" + methodName + "' in class '"
 				+ destinationObject.getClass().getName() + "'");
 	}
 }

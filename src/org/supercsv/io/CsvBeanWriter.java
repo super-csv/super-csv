@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.exception.SuperCSVReflectionException;
 import org.supercsv.prefs.CsvPreference;
 import org.supercsv.util.MethodCache;
 import org.supercsv.util.Util;
@@ -48,22 +49,29 @@ public class CsvBeanWriter extends AbstractCsvWriter implements ICsvBeanWriter {
 	 * @throws IllegalAccessException
 	 * @throws InvocationTargetException
 	 */
-	protected void fillListFromObject(final Object source, final String[] nameMapping) throws IllegalAccessException,
-			InvocationTargetException {
-		result.clear(); // object re-use
+	protected void fillListFromObject(final Object source, final String[] nameMapping)
+			throws SuperCSVReflectionException {
+		try {
+			result.clear(); // object re-use
 
-		// map results from an object by traversing the list of nameMapping and
-		// for
-		for(final String methodName : nameMapping) {
-			result.add(cache.getGetMethod(source, methodName).invoke(source));
+			// map results from an object by traversing the list of nameMapping and
+			// for
+			for(final String methodName : nameMapping) {
+				result.add(cache.getGetMethod(source, methodName).invoke(source));
+			}
+		}
+		catch(IllegalAccessException e) {
+			throw new SuperCSVReflectionException("Error accessing object " + source, e);
+		}
+		catch(InvocationTargetException e) {
+			throw new SuperCSVReflectionException("Error accessing object " + source, e);
 		}
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public void write(final Object source, final String[] nameMapping) throws IOException, IllegalAccessException,
-			InvocationTargetException {
+	public void write(final Object source, final String[] nameMapping) throws IOException, SuperCSVReflectionException {
 		fillListFromObject(source, nameMapping);
 		super.write(result);
 	}
@@ -72,7 +80,7 @@ public class CsvBeanWriter extends AbstractCsvWriter implements ICsvBeanWriter {
 	 * {@inheritDoc}
 	 */
 	public void write(final Object source, final String[] nameMapping, final CellProcessor[] processor)
-			throws IOException, IllegalAccessException, InvocationTargetException {
+			throws IOException, SuperCSVReflectionException {
 		fillListFromObject(source, nameMapping);
 		final List<? super Object> processedRes = new ArrayList<Object>();
 
