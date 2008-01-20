@@ -23,6 +23,11 @@ public abstract class CellProcessorAdaptor implements CellProcessor {
 		}
 	}
 
+	/**
+	 * General constructor for all processors to call to get them properly registered
+	 * 
+	 * @param next
+	 */
 	public CellProcessorAdaptor(final CellProcessor next) {
 		super();
 		if(next == null) {
