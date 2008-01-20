@@ -23,13 +23,18 @@ public class ParseDouble extends CellProcessorAdaptor {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Object execute(final Object value, final CSVContext context) throws NumberFormatException {
+	public Object execute(final Object value, final CSVContext context) throws SuperCSVException {
 		final Double result;
 		if(value instanceof Double) {
 			result = (Double) value;
 		}
 		else if(value instanceof String) {
-			result = new Double((String) value);
+			try {
+				result = new Double((String) value);
+			}
+			catch(NumberFormatException e) {
+				throw new SuperCSVException("Parser error", context, e);
+			}
 		}
 		else {
 			throw new SuperCSVException("Can't convert \"" + value
