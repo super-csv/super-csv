@@ -30,7 +30,7 @@ public class CsvMapReader extends AbstractCsvReader implements ICsvMapReader {
 	/**
 	 * {@inheritDoc}
 	 */
-	public Map<String, String> read(final String[] nameMapping) throws IOException {
+	public Map<String, String> read(final String... nameMapping) throws IOException {
 		final Map<String, String> destination = new HashMap<String, String>();
 		super.line.clear();
 		// read the line, if result, convert it to a map

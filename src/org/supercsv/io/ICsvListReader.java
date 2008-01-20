@@ -31,5 +31,5 @@ public interface ICsvListReader extends ICsvReader {
 	 * @throws IOException
 	 * @since 1.0
 	 */
-	public List<String> read(CellProcessor[] processors) throws IOException;
+	public List<String> read(CellProcessor... processors) throws IOException;
 }

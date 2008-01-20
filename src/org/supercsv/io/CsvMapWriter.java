@@ -38,7 +38,7 @@ public class CsvMapWriter extends AbstractCsvWriter implements ICsvMapWriter {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void write(final Map<String, ? extends Object> values, final String[] nameMapping) throws IOException {
+	public void write(final Map<String, ? extends Object> values, final String... nameMapping) throws IOException {
 		super.write(Util.stringMap(values, nameMapping));
 	}
 

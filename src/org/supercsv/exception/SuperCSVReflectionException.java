@@ -12,6 +12,11 @@ package org.supercsv.exception;
  */
 public class SuperCSVReflectionException extends SuperCSVException {
 
+	/**
+	 * 
+	 */
+	private static final long	serialVersionUID	= 1L;
+
 	public SuperCSVReflectionException(final String msg, Throwable t) {
 		super(msg, null, t);
 	}

@@ -50,17 +50,17 @@ public class CsvEscapeSpeedTest {
 			super.write(content);
 		}
 
-		public void write(final List<? extends Object> content, final CellProcessor[] processors) throws IOException {
+		public void write(final List<? extends Object> content, final CellProcessor... processors) throws IOException {
 			throw new RuntimeException("not yet implemented");
 		}
 
 		@Override
-		public void write(final Object[] content) throws IOException {
+		public void write(final Object... content) throws IOException {
 			super.write(content);
 		}
 
 		@Override
-		public void write(final String[] content) throws IOException {
+		public void write(final String... content) throws IOException {
 			super.write(content);
 		}
 	}

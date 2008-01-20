@@ -34,7 +34,7 @@ public interface ICsvListWriter extends ICsvWriter {
 	 * 
 	 * @since 1.0
 	 */
-	void write(Object[] content) throws IOException, SuperCSVException;
+	void write(Object... content) throws IOException, SuperCSVException;
 
 	/**
 	 * Plain writing a list of strings If the array is empty, an exception will be thrown to signal a possible error in
@@ -42,6 +42,6 @@ public interface ICsvListWriter extends ICsvWriter {
 	 * 
 	 * @since 1.0
 	 */
-	void write(String[] content) throws IOException, SuperCSVException;
+	void write(String... content) throws IOException, SuperCSVException;
 
 }

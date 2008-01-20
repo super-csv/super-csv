@@ -60,7 +60,7 @@ public class CsvListWriter extends AbstractCsvWriter implements ICsvListWriter {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void write(final Object[] content) throws IOException {
+	public void write(final Object... content) throws IOException {
 		super.write(content);
 	}
 
@@ -68,7 +68,7 @@ public class CsvListWriter extends AbstractCsvWriter implements ICsvListWriter {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void write(final String[] content) throws IOException {
+	public void write(final String... content) throws IOException {
 		super.write(content);
 	}
 }

@@ -21,7 +21,7 @@ public interface ICsvMapReader extends ICsvReader {
 	 * @return a map of [string,string] since no processing of the data is taking place *
 	 * @since 1.0
 	 */
-	public Map<String, String> read(String[] nameMapping) throws IOException;
+	public Map<String, String> read(String... nameMapping) throws IOException;
 
 	/**
 	 * Read a line into a map of any type converting the strings to types

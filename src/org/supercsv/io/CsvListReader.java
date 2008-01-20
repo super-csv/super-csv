@@ -38,7 +38,7 @@ public class CsvListReader extends AbstractCsvReader implements ICsvListReader {
 	/**
 	 * {@inheritDoc}
 	 */
-	public List<String> read(final CellProcessor[] processors) throws IOException {
+	public List<String> read(final CellProcessor... processors) throws IOException {
 		if(tokenizer.readStringList(super.line)) {
 			final List<? super Object> tmpLine = new ArrayList<Object>();
 			Util.processStringList(tmpLine, super.line, processors, getLineNumber());

@@ -24,7 +24,7 @@ public interface ICsvBeanReader extends ICsvReader {
 	 * @return an object or null if EOF *
 	 * @since 1.0
 	 */
-	public <T> T read(Class<T> clazz, String[] nameMapping) throws IOException, SuperCSVReflectionException;
+	public <T> T read(Class<T> clazz, String... nameMapping) throws IOException, SuperCSVReflectionException;
 
 	/**
 	 * Read a line of a csv file and populate a bean with the data. Before population the data is processed by cell
@@ -39,6 +39,6 @@ public interface ICsvBeanReader extends ICsvReader {
 	 * @return an object or null if EOF
 	 * @since 1.0
 	 */
-	public <T> T read(Class<T> clazz, String[] nameMapping, CellProcessor[] processors) throws IOException,
+	public <T> T read(Class<T> clazz, String[] nameMapping, CellProcessor... processors) throws IOException,
 			SuperCSVReflectionException, SuperCSVException;
 }

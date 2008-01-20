@@ -71,7 +71,7 @@ public class CsvBeanWriter extends AbstractCsvWriter implements ICsvBeanWriter {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void write(final Object source, final String[] nameMapping) throws IOException, SuperCSVReflectionException {
+	public void write(final Object source, final String... nameMapping) throws IOException, SuperCSVReflectionException {
 		fillListFromObject(source, nameMapping);
 		super.write(result);
 	}

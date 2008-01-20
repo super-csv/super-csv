@@ -124,7 +124,7 @@ public abstract class AbstractCsvWriter implements ICsvWriter {
 		write(content.toArray());
 	}
 
-	protected void write(final Object[] content) throws IOException {
+	protected void write(final Object... content) throws IOException {
 		// convert object array to strings and write them
 		final String[] strarr = new String[content.length];
 		int i = 0;
@@ -139,7 +139,7 @@ public abstract class AbstractCsvWriter implements ICsvWriter {
 		}
 	}
 
-	protected void write(final String[] content) throws IOException {
+	protected void write(final String... content) throws IOException {
 		lineNo++;
 
 		final int delimiter = preference.getDelimiterChar();

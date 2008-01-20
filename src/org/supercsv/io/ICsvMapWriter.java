@@ -23,7 +23,7 @@ public interface ICsvMapWriter extends ICsvWriter {
 	 *            want to write.
 	 * @since 1.0
 	 */
-	void write(Map<String, ? extends Object> values, String[] nameMapping) throws IOException;
+	void write(Map<String, ? extends Object> values, String... nameMapping) throws IOException;
 
 	/**
 	 * Write a line from a map converting processing the values before writing

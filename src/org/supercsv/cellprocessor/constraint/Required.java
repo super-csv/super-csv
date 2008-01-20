@@ -38,7 +38,7 @@ public class Required extends CellProcessorAdaptor implements BoolCellProcessor,
 		addValues(requiredHashcodes);
 	}
 
-	protected void addValues(final int[] requiredHashcodes) throws SuperCSVException {
+	protected void addValues(final int... requiredHashcodes) throws SuperCSVException {
 		for(final int hash : requiredHashcodes) {
 			if(requireds.containsKey(hash)) {
 				throw new SuperCSVException("Cannot accept two identical hash codes");
