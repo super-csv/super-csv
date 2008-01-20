@@ -24,7 +24,7 @@ public class ParseChar extends CellProcessorAdaptor {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Object execute(final Object value, final CSVContext context) throws NumberFormatException {
+	public Object execute(final Object value, final CSVContext context) {
 		final Character result;
 		if(value instanceof Character) {
 			result = (Character) value;
