@@ -27,10 +27,15 @@ public class ParseBigDecimal extends CellProcessorAdaptor {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Object execute(final Object value, final CSVContext context) throws NumberFormatException {
+	public Object execute(final Object value, final CSVContext context) throws SuperCSVException {
 		final BigDecimal result;
 		if(value instanceof String) {
-			result = new BigDecimal((String) value);
+			try {
+				result = new BigDecimal((String) value);
+			}
+			catch(Exception e) {
+				throw new SuperCSVException("Parser error", context, e);
+			}
 		}
 		else {
 			throw new SuperCSVException("Can't convert \"" + value
