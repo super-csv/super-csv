@@ -11,6 +11,8 @@ package org.test.supercsv.speedtests;
 import java.util.Random;
 
 /**
+ * helper class to create random csv test files
+ * 
  * @author Kasper B. Graversen generate random content
  */
 public class Creators {
@@ -22,8 +24,9 @@ public class Creators {
 	public static String createAnonymousLine() {
 		String s = "" + number(100000) + ", " + string(7) + ", " + string(10) + ", " + number(200) + ", " + date()
 				+ "\n";
-		if(r.nextInt() % 30 == 0)
+		if(r.nextInt() % 30 == 0) {
 			return "\"" + s + "\"";
+		}
 		return s;
 	}
 
@@ -45,13 +48,16 @@ public class Creators {
 		final int len = 1 + r.nextInt(maxLengh);
 		final StringBuffer sb = new StringBuffer();
 		for(int i = 0; i < len; i++) {
-			if(r.nextInt() % 6 == 0) // sometimes its a space
+			if(r.nextInt() % 6 == 0) {
 				sb.append(' ');
-			else
+			}
+			else {
 				sb.append(Character.toChars(65 + r.nextInt(25)));
+			}
 		}
-		if(r.nextInt() % 30 == 0)
+		if(r.nextInt() % 30 == 0) {
 			return "\"" + sb.toString() + "\""; // some times make it a "" string
+		}
 		return sb.toString();
 	}
 }

@@ -3,13 +3,13 @@ package org.supercsv.io;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.supercsv.exception.SuperCSVException;
 import org.supercsv.prefs.CsvPreference;
 
 public class TokenizerTest {
@@ -117,7 +117,7 @@ public class TokenizerTest {
 		assertThat(result.get(0), is("k"));
 	}
 
-	@Test(expected = IOException.class)
+	@Test(expected = SuperCSVException.class)
 	public void inputOneRow_value_missing_end_quote() throws Exception {
 		final String input = "\"missing";
 		tokenizer = new Tokenizer(new StringReader(input), CsvPreference.EXCEL_PREFERENCE);

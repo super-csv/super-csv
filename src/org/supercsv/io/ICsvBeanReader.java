@@ -14,10 +14,11 @@ import org.supercsv.exception.SuperCSVReflectionException;
 public interface ICsvBeanReader extends ICsvReader {
 
 	/**
-	 * Read a line and populate an instance of the specified type. Since no processing of any fields
+	 * Read a line and populate an instance of the specified type. Since no processing of any fields *
 	 * 
 	 * @param clazz
-	 *            a class reference to the class to instantiate and populate
+	 *            the type to instantiate. If the type is a class type, an instance can be created straight away. If the
+	 *            type is an interface type, a proxy is created on the fly which acts as an implementation.
 	 * @param nameMapping
 	 *            an array describing the property name of the line read. The position of the property array corresponds
 	 *            to the column in the csv file. null denote the column in the csv file is ignored.
@@ -30,6 +31,9 @@ public interface ICsvBeanReader extends ICsvReader {
 	 * Read a line of a csv file and populate a bean with the data. Before population the data is processed by cell
 	 * processors.
 	 * 
+	 * @param clazz
+	 *            the type to instantiate. If the type is a class type, an instance can be created straight away. If the
+	 *            type is an interface type, a proxy is created on the fly which acts as an implementation.
 	 * @param nameMapping
 	 *            an array describing the property name of the line read. The position of the property array corresponds
 	 *            to the column in the csv file. null denote the column in the csv file.

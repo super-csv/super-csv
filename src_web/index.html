@@ -11,7 +11,7 @@
 <td valign="top" width="70%" bgcolor="#FFFFFF">
 
 <div id="header">Super CSV</div>
-<div style="text-align: center;">by Kasper B. Graversen, 2006-2007<p>
+<div style="text-align: center;">by Kasper B. Graversen, 2006-2008<p>
 %menuBlock
 </div>
 <div id="content">
@@ -30,13 +30,14 @@ Super Csv offers the following features not found together in other CSV packages
 <ul>
 <li>The ability to read/write <b>POJO beans</b>, Maps and String lists.</li>
 <li><b>Automatic "CSV encoding"</b> of output on a per need basis. Thus when you write special characters such as <tt>,</tt> or <tt>"</tt> Super CSV ensure the content is properly escaped (according to <a href="csvSpecification.html">my CSV specification</a>).
-<li>The ability to <b>easily convert</b> input/output to integers, dates, trimming strings, etc...</li>
+<li>The ability to <b>easily convert</b> input/output to integers, dates, big decimals, trimming strings, etc...</li>
 <li>The ability to easily <b>verify data</b> conforms to some specification, such as number ranges, string sizes, uniqueness and even optional columns.</li>
 <li>The ability to read/write data from <b>anywhere</b> in <b>any encoding</b>. As long as you provide a <tt>Reader</tt> or a <tt>Writer</tt>.
 <li>Support for Windows, MAC and Linux line breaks.</li>
 <li>Configurable separation character, space character and end of line character (for writing files to different platforms)</li>
 <li>Operates on streams rather than filenames, enabling you to read/write CSV files e.g. over a network connection.</li>
-<li>Supporting partial reading and writing of objects, maps and arrays.</li>
+<li>Supporting <b>partial reading and writing</b> of objects, maps and arrays with easy setting of default values.</li>
+<li>Supporting <b>on-the-fly generation</b> of bean interfaces when using the <tt>BeanReader</tt></li>
 </ul>
 
 When combined, these features enables you to express clear and robust code for handling CSV files.
@@ -61,8 +62,9 @@ filenames as arguments rather than <tt>Reader</tt> and <tt>Writer</tt> objects. 
 If you do not agree that Super CSV is the <b>best, fastest and most programmer friendly free CSV package for Java</b>, please tell me why, and I'll attempt to rectify your problems!
 <p>
 For version information and downloads <a href="downloads.html">go to the download page</a>
-
-
+<P>
+See also another interesting project: <b>the Spiffy framework</b> at <a href="http://spiffyframework.sourceforge.org">http://spiffyframework.sourceforge.org</a>
+<p>
 
 
 <p>

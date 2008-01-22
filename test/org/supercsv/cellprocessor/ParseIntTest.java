@@ -41,12 +41,12 @@ public class ParseIntTest {
 		Assert.assertEquals("convert possitive int", true, ccp.execute(VAL1_STR, CSVCONTEXT));
 	}
 
-	@Test(expected = NumberFormatException.class)
+	@Test(expected = SuperCSVException.class)
 	public void testEmptyInput() throws Exception {
 		cp.execute("", CSVCONTEXT);
 	}
 
-	@Test(expected = NumberFormatException.class)
+	@Test(expected = SuperCSVException.class)
 	public void testInValidInput() throws Exception {
 		Assert.assertEquals(cp.execute("hello", CSVCONTEXT), "");
 	}

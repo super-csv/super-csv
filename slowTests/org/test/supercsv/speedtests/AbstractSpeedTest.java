@@ -21,7 +21,7 @@ import org.supercsv.cellprocessor.ift.CellProcessor;
 /**
  * @author Kasper B. Graversen
  */
-public class AbstractSpeedTest implements SpeedTestConstants {
+public abstract class AbstractSpeedTest implements SpeedTestConstants {
 	public static final int			LINES_IN_TEST_FILE	= 250000;
 	static final String[]			header				= new String[] { "no", "name1", "name2", "phone", "date" };
 	static final CellProcessor[]	processors			= new CellProcessor[] { new ParseLong(), null, null,
@@ -30,11 +30,13 @@ public class AbstractSpeedTest implements SpeedTestConstants {
 	@BeforeClass
 	public static void createTestFile() throws Exception {
 		// only generate a test file if it doesn't exist
-		if(new File(TEST_FILE).exists())
+		if(new File(TEST_FILE).exists()) {
 			return;
+		}
 		final Writer w = new BufferedWriter(new FileWriter(TEST_FILE));
-		for(int i = 0; i < LINES_IN_TEST_FILE; i++)
+		for(int i = 0; i < LINES_IN_TEST_FILE; i++) {
 			w.write(TestDataCreators.createAnonymousLine_num_str_str_num_date());
+		}
 		w.close();
 
 	}

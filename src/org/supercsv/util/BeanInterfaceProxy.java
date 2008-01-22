@@ -8,20 +8,23 @@ import java.util.HashMap;
 import org.supercsv.exception.SuperCSVReflectionException;
 
 /**
- * This Interface Proxy creates bean instances based on an interface. This allows you given an interface for a bean (but
- * no implementation), to on-the-fly generate a bean implementation of yoru bean interface. This instance you can then
- * use for fetching and storing state.
+ * This is part of the internal implementation of SuperCSV.
+ * <p>
+ * This class creates bean instances based on an interface. This allows you given an interface for a bean (but no
+ * implementation), to on-the-fly generate a bean implementation. This instance you can then use for fetching and
+ * storing state. It assumes all get methods starts with "get" and all set methods start with "set" and takes only 1
+ * argument.
  * 
- * @author Kasper B. Graversen, (c) 2007
+ * @author Kasper B. Graversen, (c) 2008
  */
 public class BeanInterfaceProxy implements InvocationHandler {
-	HashMap<String, Object>	beanState	= new HashMap<String, Object>();
+	private final HashMap<String, Object>	beanState	= new HashMap<String, Object>();
 
 	/**
 	 * Creates a proxy object which implements a given bean interface. This proxy object will act as an implementation
 	 * of the interface, hence just a data container
 	 * 
-	 * @param interface
+	 * @param anInterface
 	 *            Interface for which to create a proxy
 	 * @return the proxy implementation
 	 */

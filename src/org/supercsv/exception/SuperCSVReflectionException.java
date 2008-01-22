@@ -8,6 +8,7 @@ package org.supercsv.exception;
  * NoSuchMethodException</tt>
  * <p>
  * 
+ * @since 1.30
  * @author Kasper B. Graversen, (c) 2007
  */
 public class SuperCSVReflectionException extends SuperCSVException {

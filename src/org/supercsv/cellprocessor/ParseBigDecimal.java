@@ -11,6 +11,7 @@ import org.supercsv.util.CSVContext;
  * <tt>new BigDecimal(0.1)</tt> yields unpredictable results, while <tt>new BidDecimal("0.1")</tt> yields
  * predictable results.
  * 
+ * @since 1.30
  * @author Kasper B. Graversen
  */
 public class ParseBigDecimal extends CellProcessorAdaptor {

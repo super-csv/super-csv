@@ -37,12 +37,12 @@ public class ParseBigDecimalTest {
 		Assert.assertEquals("convert possitive ", true, ccp.execute(VAL1_STR_, CSVCONTEXT));
 	}
 
-	@Test(expected = NumberFormatException.class)
+	@Test(expected = SuperCSVException.class)
 	public void testEmptyInput() throws Exception {
 		cp.execute("", CSVCONTEXT);
 	}
 
-	@Test(expected = NumberFormatException.class)
+	@Test(expected = SuperCSVException.class)
 	public void testInValidInput() throws Exception {
 		Assert.assertEquals(cp.execute("hello", CSVCONTEXT), "");
 	}

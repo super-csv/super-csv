@@ -23,7 +23,20 @@
 <table cellspacing="8">
 <tr><th>Version</th><th>Changes</th></tr>
 
-Super CSV is Available at http://supercsv.sourceforge.net/
+<tr><td valign="top">1.30</td><td>Improved integration and convenience, 01/2008.
+<ul>
+<li> BeanReader now accepts interface types to read into. The reader will create an implementation on-the-fly of the interface
+and use this.
+</li><li> the ITokenizer interface has become public, making 3rd party extensions better integrated. 
+</li><li> The exception class now contains the file context in which it was thrown. And generally, all places exceptions are 
+thrown have been cleaned up, streamlined and now passes the file context upon an exception.
+</li><li> An overloaded read() has been removed entirely
+</li><li> Added the following new cell processors: ParseBigDecimal 
+</li><li> A new exception SuperCSVReflectionException replaces annoying Java checked exceptions 
+<tt>ClassNotFoundException, IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException</tt>
+</li><li> More methods now use the "..." notation for easy use.</li>
+</ul>
+
 <tr><td valign="top">1.20</td><td>Improved processors and partial writing, 11/2007.
 <ul>
 <li>Added the ConvertNullTo cell processor which enables better support for writing partial objects, maps and lists.</li>

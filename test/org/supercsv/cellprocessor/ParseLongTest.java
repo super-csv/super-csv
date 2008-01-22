@@ -35,12 +35,12 @@ public class ParseLongTest {
 		Assert.assertEquals("chained convert possitive long", true, ccp.execute("17", CSVCONTEXT));
 	}
 
-	@Test(expected = NumberFormatException.class)
+	@Test(expected = SuperCSVException.class)
 	public void testEmptyInput() throws Exception {
 		cp.execute("", CSVCONTEXT);
 	}
 
-	@Test(expected = NumberFormatException.class)
+	@Test(expected = SuperCSVException.class)
 	public void testInValidInput() throws Exception {
 		Assert.assertEquals("", cp.execute("hello", CSVCONTEXT));
 	}

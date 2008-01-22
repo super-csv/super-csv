@@ -40,12 +40,12 @@ public class ParseDoubleTest {
 		Assert.assertEquals("convert possitive double", true, ccp.execute(VAL1_STR_, CSVCONTEXT));
 	}
 
-	@Test(expected = NumberFormatException.class)
+	@Test(expected = SuperCSVException.class)
 	public void testEmptyInput() throws Exception {
 		cp.execute("", CSVCONTEXT);
 	}
 
-	@Test(expected = NumberFormatException.class)
+	@Test(expected = SuperCSVException.class)
 	public void testInValidInput() throws Exception {
 		Assert.assertEquals(cp.execute("hello", CSVCONTEXT), "");
 	}
