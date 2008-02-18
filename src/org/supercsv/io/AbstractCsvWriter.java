@@ -43,7 +43,6 @@ public abstract class AbstractCsvWriter implements ICsvWriter {
 	 *            an elem of a csv file
 	 * @return an escaped version of the csv elem ready for persisting
 	 */
-
 	protected String escapeString(final String csvElem) {
 		if(csvElem.length() == 0) {
 			return "";
@@ -81,6 +80,7 @@ public abstract class AbstractCsvWriter implements ICsvWriter {
 				else {
 					sb.append(quote);
 					sb.append(quote);
+					needForEscape = true; // TODO review comments above
 				}
 			}
 			else if(c == '\n') {

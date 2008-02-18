@@ -19,6 +19,7 @@ public interface CircularData {
 		"newline\noutside quotes", "\"newline\ninside quotes\"", // newline
 		"normal text", // normal
 		" first char is a space", // spacing
+		"17\" monitor", // single quote in string
 		"" // empty
 														};
 	String[]	expectedReadResultsFromColumnToWrite	= { "\"comma, outside quote\"",
@@ -27,6 +28,7 @@ public interface CircularData {
 		"\"newline\noutside quotes\"", "\"\"\"newline\ninside quotes\"\"\"", // newline
 		"normal text", // normal
 		"\" first char is a space\"", // spacing
+		"\"17\"\" monitor\"", // single quote
 		"" // empty
 														};
 

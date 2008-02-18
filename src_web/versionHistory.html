@@ -23,6 +23,19 @@
 <table cellspacing="8">
 <tr><th>Version</th><th>Changes</th></tr>
 
+<tr><td valign="top">1.31</td><td>Improved integration, 02/2008.
+<ul>
+<li>Changed the encoding of <tt>"</tt> characters. E.g. <tt>17" monitor</tt> becomes <tt>"17"" monitor"</tt>
+</li>
+</ul>
+
+<br>Upgrade notes.<br>
+Just copy over the .jar file and you are done.
+</td></tr>
+<tr><td>&nbsp;</td></tr>
+
+
+
 <tr><td valign="top">1.30</td><td>Improved integration and convenience, 01/2008.
 <ul>
 <li> BeanReader now accepts interface types to read into. The reader will create an implementation on-the-fly of the interface
@@ -36,6 +49,8 @@ thrown have been cleaned up, streamlined and now passes the file context upon an
 <tt>ClassNotFoundException, IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException</tt>
 </li><li> More methods now use the "..." notation for easy use.</li>
 </ul>
+</td></tr>
+<tr><td>&nbsp;</td></tr>
 
 <tr><td valign="top">1.20</td><td>Improved processors and partial writing, 11/2007.
 <ul>
@@ -50,6 +65,7 @@ thrown have been cleaned up, streamlined and now passes the file context upon an
 <li>More documentation on the web</li>
 </ul>
 </td></tr>
+<tr><td>&nbsp;</td></tr>
 
 
 <tr><td valign="top">1.15</td><td>Improved robustness and speed, 10/2007.
@@ -60,6 +76,7 @@ thrown have been cleaned up, streamlined and now passes the file context upon an
 <li>Set up an environment in dir <tt>slow_tests</tt> to enable future development to easily compare efficiency with older versions of the same functionality </li>
 </ul>
 </td></tr>
+<tr><td>&nbsp;</td></tr>
 
 
 <tr><td valign="top">1.10</td><td>Faster and better, 10/2007.
@@ -71,6 +88,7 @@ thrown have been cleaned up, streamlined and now passes the file context upon an
 <li>Added source branch specifically for tokenizer speed testing and comparison. It is now easy to experiment with various tokenizing strategies.</li>
 </ul>
 </td></tr>
+<tr><td>&nbsp;</td></tr>
 
 
 <tr><td valign="top">1.02</td><td>Small bugfixes, 09/2007.
@@ -81,6 +99,7 @@ thrown have been cleaned up, streamlined and now passes the file context upon an
 <li>TABs are not regarded as whitespace anymore</li>
 </ul>
 </td></tr>
+<tr><td>&nbsp;</td></tr>
 
 
 <tr><td valign="top">1.01</td><td>Small bugfixes, 09/2007.
@@ -89,9 +108,9 @@ thrown have been cleaned up, streamlined and now passes the file context upon an
 <li>Jar file is now compiled for JDK 5.</li>
 </ul>
 </td></tr>
+<tr><td>&nbsp;</td></tr>
 
 <tr><td valign="top">1.0</td><td>Initial release</td></tr>
-
 </table>
 <p>
 The download section can be found at <a href="http://sourceforge.net/projects/supercsv">the Super Csv source forge download page</a>
@@ -100,8 +119,8 @@ The download section can be found at <a href="http://sourceforge.net/projects/su
 <h2>Planned future releases</h2>
 
 <ul>
-<li>v1.30 - make Super CSV much more convenient to use. We have quite a few nice ideas! Look forward to this!</li>
-<li>v1.40 - further improve read speed of CSV files. The 1.10 release optimizations convinced us there are more speed gains ahead!</li>
+<li>v1.40 - make Super CSV much more convenient to use. We have quite a few nice ideas! Look forward to this!</li>
+<li>v1.50 - further improve read speed of CSV files. The 1.10 release optimizations convinced us there are more speed gains ahead!</li>
 </ul>
 
 
