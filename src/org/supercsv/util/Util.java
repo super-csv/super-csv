@@ -13,7 +13,16 @@ import org.supercsv.exception.SuperCSVException;
  * @author Kasper B. Graversen
  */
 public abstract class Util {
-
+	
+	/**
+	 * Convert a map to a list
+	 * 
+	 * @param source
+	 *            the map to create a list from
+	 * @param nameMapping
+	 *            the keys of the map whose values will constitute the list
+	 * @return a list
+	 */
 	public static List<? extends Object> map2List(final Map<String, ? extends Object> source, final String[] nameMapping) {
 		final List<? super Object> result = new ArrayList<Object>(nameMapping.length);
 		for(final String element : nameMapping) {
@@ -21,7 +30,7 @@ public abstract class Util {
 		}
 		return result;
 	}
-
+	
 	/**
 	 * A function to convert a list to a map using a namemapper for defining the keys of the map.
 	 * 
@@ -34,31 +43,27 @@ public abstract class Util {
 	 */
 	public static <T> void mapStringList(final Map<String, T> destination, final String[] nameMapper,
 			final List<T> values) {
-		if(nameMapper.length != values.size()) {
-			throw new SuperCSVException(
-					"The namemapper array and the value list must match in size. Number of columns mismatch number of entries for your map.");
-		}
+		if( nameMapper.length != values.size() ) { throw new SuperCSVException(
+				"The namemapper array and the value list must match in size. Number of columns mismatch number of entries for your map."); }
 		destination.clear();
-
+		
 		// map each element of the array
 		for(int i = 0; i < nameMapper.length; i++) {
 			final String key = nameMapper[i];
-
+			
 			// null's in the name mapping means skip column
-			if(key == null) {
+			if( key == null ) {
 				continue;
 			}
-
+			
 			// only perform safe inserts
-			if(destination.containsKey(key)) {
-				throw new SuperCSVException("nameMapper array contains duplicate key \"" + key
-						+ "\" cannot map the list...");
-			}
-
+			if( destination.containsKey(key) ) { throw new SuperCSVException(
+					"nameMapper array contains duplicate key \"" + key + "\" cannot map the list..."); }
+			
 			destination.put(key, values.get(i));
 		}
 	}
-
+	
 	/**
 	 * A function which given a list of strings, process each cell using its corresponding processor-chain from the
 	 * processor array and return the result as an arary Can be extended so the safety check is cached in case the same
@@ -80,32 +85,29 @@ public abstract class Util {
 	 */
 	public static void processStringList(final List<? super Object> destination, final List<? extends Object> source,
 			final CellProcessor[] processors, final int lineNo) throws SuperCSVException {
-		if(source.size() != processors.length) {
-			throw new SuperCSVException(
-					"The value array (size "
-							+ source.size()
-							+ ")  must match the processors array (size "
-							+ processors.length
-							+ ")."
-							+ " You are probably reading a CSV line with a different number of columns than the number of cellprocessors specified...");
-		}
-
+		if( source.size() != processors.length ) { throw new SuperCSVException(
+				"The value array (size "
+						+ source.size()
+						+ ")  must match the processors array (size "
+						+ processors.length
+						+ ")."
+						+ " You are probably reading a CSV line with a different number of columns than the number of cellprocessors specified..."); }
+		
 		destination.clear();
 		final CSVContext context = new CSVContext();
-
+		
 		for(int i = 0; i < source.size(); i++) {
 			// if no processor, just add the string
-			if(processors[i] == null) {
+			if( processors[i] == null ) {
 				destination.add(source.get(i));
-			}
-			else {
+			} else {
 				context.lineNumber = lineNo;
 				context.columnNumber = i;
 				destination.add(processors[i].execute(source.get(i), context)); // add
 			}
 		}
 	}
-
+	
 	/**
 	 * Convert a map to an array of objects
 	 * 
