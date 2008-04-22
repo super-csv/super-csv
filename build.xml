@@ -249,18 +249,21 @@
 			</manifest>
 		</jar>
 
-		<!-- only for internal use
-	 	<copyfile dest="C:\coding\superCsv_jartester\supercsv.jar" src="${distro.dir}/${distro.name}.jar"/>
-	 	-->
 
 		<!-- zip javadoc -->
 		<zip basedir="web/" destfile="${distro.dir}/${distro.name}-${distro.version}-javadoc.zip" includes="javadoc/**/*.*" compress="true">
 		    <zipfileset dir="." includes="LICENSE.txt"/>
 		</zip>
 
-		<!-- zip javadoc+jar -->
+		<!-- zip source -->
+		<zip basedir="." destfile="${distro.dir}/${distro.name}-${distro.version}-source.zip" includes="src/**/*.*,test/**/*.*" compress="true">
+		    <zipfileset dir="." includes="LICENSE.txt"/>
+		</zip>
+		
+		<!-- zip javadoc+source+jar -->
 		<zip basedir="${distro.dir}" destfile="${distro.dir}/${distro.name}-${distro.version}.zip" compress="true" excludes="*.*">
 			<zipfileset dir="${distro.dir}" file="${distro.dir}/${distro.name}-${distro.version}.jar"/>
+			<zipfileset dir="${distro.dir}" file="${distro.dir}/${distro.name}-${distro.version}-source.zip"/>
 			<zipfileset dir="${distro.dir}" file="${distro.dir}/${distro.name}-${distro.version}-javadoc.zip"/>
 			<zipfileset dir="." includes="LICENSE.txt"/>
 		</zip>
@@ -312,7 +315,7 @@
 	<property name="dir.web.src" value="src_web/" />     <!-- source html -->
 	<property name="dir.web.build" value="web/" /> <!-- where the generated html goes -->
 
-	<target name="generateWeb">
+	<target name="generateWeb" description="Generate web pages">
 		<!-- copy files to another dir in order not to mess up the originals -->
 	    <mkdir dir="${dir.web.build}" />
 	    <copy verbose="false" failonerror="true" todir="${dir.web.build}" overwrite="true">
