@@ -20,71 +20,69 @@ import org.supercsv.util.Util;
  * @author Kasper B. Graversen
  */
 public class CsvBeanWriter extends AbstractCsvWriter implements ICsvBeanWriter {
-	/**
-	 * object used for storing intermediate result of a processing of cell processors and before put into maps/objects
-	 * etc..
-	 */
-	protected List<? super Object>	result;
-	protected MethodCache			cache	= new MethodCache();
+/**
+ * object used for storing intermediate result of a processing of cell processors and before put into maps/objects etc..
+ */
+protected List<? super Object> result;
+protected MethodCache cache = new MethodCache();
 
-	/**
-	 * Create a CSV writer. Note that the <tt>writer</tt> provided in the argument will be wrapped in a
-	 * <tt>BufferedWriter</tt> before accessed.
-	 * 
-	 * @param writer
-	 *            Stream to write to
-	 * @param preference
-	 *            defines separation character, end of line character, etc.
-	 */
-	public CsvBeanWriter(final Writer writer, final CsvPreference preference) {
-		super(writer, preference);
-		result = new ArrayList<Object>();
-	}
+/**
+ * Create a CSV writer. Note that the <tt>writer</tt> provided in the argument will be wrapped in a
+ * <tt>BufferedWriter</tt> before accessed.
+ * 
+ * @param writer
+ *            Stream to write to
+ * @param preference
+ *            defines separation character, end of line character, etc.
+ */
+public CsvBeanWriter(final Writer writer, final CsvPreference preference) {
+	super(writer, preference);
+	result = new ArrayList<Object>();
+}
 
-	/**
-	 * populate <tt>result</tt> based on the source
-	 * 
-	 * @param source
-	 * @param nameMapping
-	 * @throws IllegalAccessException
-	 * @throws InvocationTargetException
-	 */
-	protected void fillListFromObject(final Object source, final String[] nameMapping)
-			throws SuperCSVReflectionException {
-		try {
-			result.clear(); // object re-use
-
-			// map results from an object by traversing the list of nameMapping and
-			// for
-			for(final String methodName : nameMapping) {
-				result.add(cache.getGetMethod(source, methodName).invoke(source));
-			}
-		}
-		catch(IllegalAccessException e) {
-			throw new SuperCSVReflectionException("Error accessing object " + source, e);
-		}
-		catch(InvocationTargetException e) {
-			throw new SuperCSVReflectionException("Error accessing object " + source, e);
+/**
+ * populate <tt>result</tt> based on the source
+ * 
+ * @param source
+ * @param nameMapping
+ * @throws IllegalAccessException
+ * @throws InvocationTargetException
+ */
+protected void fillListFromObject(final Object source, final String[] nameMapping) throws SuperCSVReflectionException {
+	try {
+		result.clear(); // object re-use
+		
+		// map results from an object by traversing the list of nameMapping and
+		// for
+		for( final String methodName : nameMapping ) {
+			result.add(cache.getGetMethod(source, methodName).invoke(source));
 		}
 	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void write(final Object source, final String... nameMapping) throws IOException, SuperCSVReflectionException {
-		fillListFromObject(source, nameMapping);
-		super.write(result);
+	catch(final IllegalAccessException e) {
+		throw new SuperCSVReflectionException("Error accessing object " + source, e);
 	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void write(final Object source, final String[] nameMapping, final CellProcessor[] processor)
-			throws IOException, SuperCSVReflectionException {
-		fillListFromObject(source, nameMapping);
-		final List<? super Object> processedRes = new ArrayList<Object>();
-
-		Util.processStringList(processedRes, result, processor, super.getLineNumber());
-		super.write(processedRes);
+	catch(final InvocationTargetException e) {
+		throw new SuperCSVReflectionException("Error accessing object " + source, e);
 	}
+}
+
+/**
+ * {@inheritDoc}
+ */
+public void write(final Object source, final String... nameMapping) throws IOException, SuperCSVReflectionException {
+	fillListFromObject(source, nameMapping);
+	super.write(result);
+}
+
+/**
+ * {@inheritDoc}
+ */
+public void write(final Object source, final String[] nameMapping, final CellProcessor[] processor) throws IOException,
+	SuperCSVReflectionException {
+	fillListFromObject(source, nameMapping);
+	final List<? super Object> processedRes = new ArrayList<Object>();
+	
+	Util.processStringList(processedRes, result, processor, super.getLineNumber());
+	super.write(processedRes);
+}
 }

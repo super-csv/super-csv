@@ -11,37 +11,35 @@ import org.supercsv.util.CSVContext;
  */
 public class ParseInt extends CellProcessorAdaptor {
 
-	public ParseInt() {
-		super();
-	}
+public ParseInt() {
+	super();
+}
 
-	public ParseInt(final LongCellProcessor next) {
-		super(next);
-	}
+public ParseInt(final LongCellProcessor next) {
+	super(next);
+}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Object execute(final Object value, final CSVContext context) throws SuperCSVException {
-		final Integer result;
-		if(value instanceof Integer) {
-			result = (Integer) value;
+/**
+ * {@inheritDoc}
+ */
+@Override
+public Object execute(final Object value, final CSVContext context) throws SuperCSVException {
+	final Integer result;
+	if( value instanceof Integer ) {
+		result = (Integer) value;
+	} else if( value instanceof String ) {
+		try {
+			result = new Integer((String) value);
 		}
-		else if(value instanceof String) {
-			try {
-				result = new Integer((String) value);
-			}
-			catch(NumberFormatException e) {
-				throw new SuperCSVException("Parser error", context, e);
-			}
+		catch(final NumberFormatException e) {
+			throw new SuperCSVException("Parser error", context, e);
 		}
-		else {
-			throw new SuperCSVException("Can't convert \"" + value
-					+ "\" to integer. Input is not of type Integer nor type String but of type "
-					+ value.getClass().getName(), context);
-		}
-
-		return next.execute(result, context);
+	} else {
+		throw new SuperCSVException("Can't convert \"" + value
+			+ "\" to integer. Input is not of type Integer nor type String but of type " + value.getClass().getName(),
+			context);
 	}
+	
+	return next.execute(result, context);
+}
 }

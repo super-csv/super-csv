@@ -19,56 +19,56 @@ import org.supercsv.util.Util;
  */
 public class CsvListWriter extends AbstractCsvWriter implements ICsvListWriter {
 
-	/**
-	 * Create a CSV writer. Note that the <tt>writer</tt> provided in the argument will be wrapped in a
-	 * <tt>BufferedWriter</tt> before accessed.
-	 * 
-	 * @param stream
-	 *            Stream to write to
-	 * @param preference
-	 *            defines separation character, end of line character, etc.
-	 */
-	public CsvListWriter(final Writer stream, final CsvPreference preference) {
-		super(stream, preference);
+/**
+ * Create a CSV writer. Note that the <tt>writer</tt> provided in the argument will be wrapped in a
+ * <tt>BufferedWriter</tt> before accessed.
+ * 
+ * @param stream
+ *            Stream to write to
+ * @param preference
+ *            defines separation character, end of line character, etc.
+ */
+public CsvListWriter(final Writer stream, final CsvPreference preference) {
+	super(stream, preference);
+}
+
+/**
+ * {@inheritDoc}
+ */
+public void write(final List<? extends Object> content, final CellProcessor[] processors) throws IOException {
+	final List<? super Object> destination = new ArrayList<Object>();
+	
+	// convert source to List<String>
+	final List<String> source = new ArrayList<String>();
+	for( int i = 0; i < content.size(); i++ ) {
+		source.add(content.get(i).toString());
 	}
+	
+	Util.processStringList(destination, source, processors, super.getLineNumber());
+	write(destination);
+}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void write(final List<? extends Object> content, final CellProcessor[] processors) throws IOException {
-		final List<? super Object> destination = new ArrayList<Object>();
+/**
+ * {@inheritDoc}
+ */
+@Override
+public void write(final List<?> content) throws IOException {
+	super.write(content);
+}
 
-		// convert source to List<String>
-		final List<String> source = new ArrayList<String>();
-		for(int i = 0; i < content.size(); i++) {
-			source.add(content.get(i).toString());
-		}
+/**
+ * {@inheritDoc}
+ */
+@Override
+public void write(final Object... content) throws IOException {
+	super.write(content);
+}
 
-		Util.processStringList(destination, source, processors, super.getLineNumber());
-		write(destination);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void write(final List<?> content) throws IOException {
-		super.write(content);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void write(final Object... content) throws IOException {
-		super.write(content);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void write(final String... content) throws IOException {
-		super.write(content);
-	}
+/**
+ * {@inheritDoc}
+ */
+@Override
+public void write(final String... content) throws IOException {
+	super.write(content);
+}
 }

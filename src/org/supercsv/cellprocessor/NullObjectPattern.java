@@ -15,20 +15,20 @@ import org.supercsv.util.CSVContext;
  * @author Kasper B. Graversen
  */
 public class NullObjectPattern extends CellProcessorAdaptor implements CellProcessor, DateCellProcessor,
-		DoubleCellProcessor, LongCellProcessor, StringCellProcessor, BoolCellProcessor {
+	DoubleCellProcessor, LongCellProcessor, StringCellProcessor, BoolCellProcessor {
 
-	/** There is no need to create many instances of this class in order to fulfill the null-object pattern. */
-	public final static NullObjectPattern	INSTANCE	= new NullObjectPattern();
+/** There is no need to create many instances of this class in order to fulfill the null-object pattern. */
+public final static NullObjectPattern INSTANCE = new NullObjectPattern();
 
-	NullObjectPattern() {
-		super();
-	}
+NullObjectPattern() {
+	super();
+}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Object execute(final Object value, final CSVContext context) {
-		return value;
-	}
+/**
+ * {@inheritDoc}
+ */
+@Override
+public Object execute(final Object value, final CSVContext context) {
+	return value;
+}
 }

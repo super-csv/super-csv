@@ -1,7 +1,7 @@
 package org.supercsv.util;
 
 public interface TestInterface {
-	String getName();
+String getName();
 
-	void setName(String name);
+void setName(String name);
 }

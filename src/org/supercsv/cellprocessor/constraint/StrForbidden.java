@@ -17,23 +17,23 @@ import org.supercsv.cellprocessor.ift.CellProcessor;
  */
 @Deprecated
 public class StrForbidden extends ForbidSubStr {
-	public StrForbidden(final List<String> forbiddenStrings) {
-		this(forbiddenStrings.toArray(new String[0]));
-	}
+public StrForbidden(final List<String> forbiddenStrings) {
+	this(forbiddenStrings.toArray(new String[0]));
+}
 
-	public StrForbidden(final List<String> forbiddenStrings, final CellProcessor next) {
-		this(forbiddenStrings.toArray(new String[0]), next);
-	}
+public StrForbidden(final List<String> forbiddenStrings, final CellProcessor next) {
+	this(forbiddenStrings.toArray(new String[0]), next);
+}
 
-	public StrForbidden(final String forbiddenString, final CellProcessor next) {
-		this(new String[] { forbiddenString }, next);
-	}
+public StrForbidden(final String... forbiddenStrings) {
+	super(forbiddenStrings);
+}
 
-	public StrForbidden(final String... forbiddenStrings) {
-		super(forbiddenStrings);
-	}
+public StrForbidden(final String forbiddenString, final CellProcessor next) {
+	this(new String[] { forbiddenString }, next);
+}
 
-	public StrForbidden(final String[] forbiddenStrings, final CellProcessor next) {
-		super(forbiddenStrings);
-	}
+public StrForbidden(final String[] forbiddenStrings, final CellProcessor next) {
+	super(forbiddenStrings);
+}
 }

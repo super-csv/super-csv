@@ -13,17 +13,17 @@ package org.supercsv.exception;
  */
 public class SuperCSVReflectionException extends SuperCSVException {
 
-	/**
-	 * 
-	 */
-	private static final long	serialVersionUID	= 1L;
+/**
+ * 
+ */
+private static final long serialVersionUID = 1L;
 
-	public SuperCSVReflectionException(final String msg, Throwable t) {
-		super(msg, null, t);
-	}
+public SuperCSVReflectionException(final String msg) {
+	super(msg);
+}
 
-	public SuperCSVReflectionException(final String msg) {
-		super(msg);
-	}
+public SuperCSVReflectionException(final String msg, final Throwable t) {
+	super(msg, null, t);
+}
 
 }

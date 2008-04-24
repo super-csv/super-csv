@@ -26,21 +26,21 @@ import org.supercsv.prefs.CsvPreference;
  * @author Kasper B. Graversen
  */
 public class WriteReadTest {
-	@Test
-	public void should_handle_all_cases_of_writing_and_reading_special_chars() throws IOException {
-		// write a bunch of data
-		final StringWriter outFile = new StringWriter();
-		final CsvListWriter csvWriter = new CsvListWriter(outFile, CsvPreference.EXCEL_PREFERENCE);
-		csvWriter.write(columnsToWrite);
-		csvWriter.close();
-		final String writtenData = outFile.toString();
-
-		// read data
-		// System.out.println("read text:\n----------\n" + writtenData);
-		final String[] readFileData = new CsvListReader(new StringReader(writtenData), CsvPreference.EXCEL_PREFERENCE)
-				.read().toArray(new String[0]);
-
-		// data must be the same
-		Assert.assertEquals(columnsToWrite, readFileData);
-	}
+@Test
+public void should_handle_all_cases_of_writing_and_reading_special_chars() throws IOException {
+	// write a bunch of data
+	final StringWriter outFile = new StringWriter();
+	final CsvListWriter csvWriter = new CsvListWriter(outFile, CsvPreference.EXCEL_PREFERENCE);
+	csvWriter.write(columnsToWrite);
+	csvWriter.close();
+	final String writtenData = outFile.toString();
+	
+	// read data
+	// System.out.println("read text:\n----------\n" + writtenData);
+	final String[] readFileData = new CsvListReader(new StringReader(writtenData), CsvPreference.EXCEL_PREFERENCE)
+		.read().toArray(new String[0]);
+	
+	// data must be the same
+	Assert.assertEquals(columnsToWrite, readFileData);
+}
 }

@@ -25,47 +25,47 @@ import org.supercsv.prefs.CsvPreference;
  */
 public class AbstractCSVWriterTest {
 
-	/**
-	 * implement abstract class in order to test it
-	 * 
-	 * @author Kasper B. Graversen
-	 */
-	class TestClass extends AbstractCsvWriter {
-		TestClass(final Writer stream, final CsvPreference preference) {
-			super(stream, preference);
-		}
+/**
+ * implement abstract class in order to test it
+ * 
+ * @author Kasper B. Graversen
+ */
+class TestClass extends AbstractCsvWriter {
+TestClass(final Writer stream, final CsvPreference preference) {
+	super(stream, preference);
+}
+}
+
+@Test
+public void should_escape() {
+	final TestClass absWriter = new TestClass(new StringWriter(), CsvPreference.EXCEL_PREFERENCE);
+	
+	assertThat(columnsToWrite.length, is(expectedReadResultsFromColumnToWrite.length));
+	for( int i = 0; i < columnsToWrite.length; i++ ) {
+		Assert.assertEquals(expectedReadResultsFromColumnToWrite[i], absWriter.escapeString(columnsToWrite[i]));
+		// assertThat(absWriter.escapeString(columnsToWrite[i]), is(expectedOutput[i]));
 	}
-
-	@Test
-	public void should_escape() {
-		final TestClass absWriter = new TestClass(new StringWriter(), CsvPreference.EXCEL_PREFERENCE);
-
-		assertThat(columnsToWrite.length, is(expectedReadResultsFromColumnToWrite.length));
-		for(int i = 0; i < columnsToWrite.length; i++) {
-			Assert.assertEquals(expectedReadResultsFromColumnToWrite[i], absWriter.escapeString(columnsToWrite[i]));
-			// assertThat(absWriter.escapeString(columnsToWrite[i]), is(expectedOutput[i]));
-		}
-
-	}
-	// @Test
-	// public void should_escape_comma_outside_quote() throws IOException {
-	// StringWriter out = new StringWriter();
-	// TestClass writer = new TestClass(out, CsvPreference.EXCEL_PREFERENCE);
-	// String[] columnsToWrite = { "comma, outside quote", "\"comma, inside quotes\"", // commas
-	// "\"quote\" outside quotes", "\"quote \"inside\" quotes\"", // quotes
-	// "newline\noutside quotes", "\"newline\ninside quotes\"", // newline
-	// "normal text" // normal
-	// };
-	//
-	// // exercise
-	// writer.write(columnsToWrite);
-	// writer.close();
-	//
-	// // test
-	// Assert.assertEquals("comma \",\" outside quote, \"comma, inside quotes\", " + // commas
-	// "" + // quotes
-	// "" + // newline
-	// "", // normal
-	// out.getBuffer().toString());
-	// }
+	
+}
+// @Test
+// public void should_escape_comma_outside_quote() throws IOException {
+// StringWriter out = new StringWriter();
+// TestClass writer = new TestClass(out, CsvPreference.EXCEL_PREFERENCE);
+// String[] columnsToWrite = { "comma, outside quote", "\"comma, inside quotes\"", // commas
+// "\"quote\" outside quotes", "\"quote \"inside\" quotes\"", // quotes
+// "newline\noutside quotes", "\"newline\ninside quotes\"", // newline
+// "normal text" // normal
+// };
+//
+// // exercise
+// writer.write(columnsToWrite);
+// writer.close();
+//
+// // test
+// Assert.assertEquals("comma \",\" outside quote, \"comma, inside quotes\", " + // commas
+// "" + // quotes
+// "" + // newline
+// "", // normal
+// out.getBuffer().toString());
+// }
 }

@@ -70,6 +70,20 @@ Method getMethod(final TwoDHashMap<String, String, Method> cache, final Object d
 	return method;
 }
 
+public <T> Method getSetMethod(final Object destinationObject, final String variableName, final Class<?> variableType) {
+	Method method = setMethodsCache.get(destinationObject.getClass(), variableType, variableName);
+	if( method == null ) {
+		// we don't know the destination type for the set method, just use whatever we can find
+		if( variableType == null ) {
+			method = inspectClass(destinationObject, "set", variableName, 1);
+		} else {
+			method = inspectClassForSetMethods(destinationObject, variableType, variableName);
+		}
+		setMethodsCache.set(destinationObject.getClass(), variableType, variableName, method);
+	}
+	return method;
+}
+
 /**
  * @param destinationObject
  *            the object on which to call the method
@@ -113,10 +127,10 @@ Method inspectClassForSetMethods(final Object destinationObject, final Class var
 	try {
 		return destinationObject.getClass().getMethod(methodName, variableType);
 	}
-	catch(SecurityException e) {
+	catch(final SecurityException e) {
 		throwException(destinationObject, variableType, methodName, e);
 	}
-	catch(NoSuchMethodException e) {
+	catch(final NoSuchMethodException e) {
 		// retry again due to autoboxing in java we need to try both cases
 		try {
 			if( autoboxingConverter.containsKey(variableType) == false ) {
@@ -124,10 +138,10 @@ Method inspectClassForSetMethods(final Object destinationObject, final Class var
 			}
 			return destinationObject.getClass().getMethod(methodName, autoboxingConverter.get(variableType));
 		}
-		catch(SecurityException e1) {
+		catch(final SecurityException e1) {
 			throwException(destinationObject, variableType, methodName, e1);
 		}
-		catch(NoSuchMethodException e1) {
+		catch(final NoSuchMethodException e1) {
 			throwException(destinationObject, variableType, methodName, e1);
 		}
 	}
@@ -142,25 +156,11 @@ Method inspectClassForSetMethods(final Object destinationObject, final Class var
  * @throws SuperCSVReflectionException
  */
 private void throwException(final Object destinationObject, final Class variableType, final String methodName,
-	Exception e) throws SuperCSVReflectionException {
+	final Exception e) throws SuperCSVReflectionException {
 	e.printStackTrace();
 	throw new SuperCSVReflectionException(String.format("Can't find method '%s(%s)' in class '%s'. "
 		+ "Is the name correctly spelled in the NameMapping? "
 		+ "Have you forgot to convert the data so that a wrong set method is called?", methodName, variableType,
 		destinationObject.getClass().getName()), e);
-}
-
-public <T> Method getSetMethod(Object destinationObject, String variableName, Class<?> variableType) {
-	Method method = setMethodsCache.get(destinationObject.getClass(), variableType, variableName);
-	if( method == null ) {
-		// we don't know the destination type for the set method, just use whatever we can find
-		if( variableType == null ) {
-			method = inspectClass(destinationObject, "set", variableName, 1);
-		} else {
-			method = inspectClassForSetMethods(destinationObject, variableType, variableName);
-		}
-		setMethodsCache.set(destinationObject.getClass(), variableType, variableName, method);
-	}
-	return method;
 }
 }

@@ -7,12 +7,12 @@ import org.supercsv.util.CSVContext;
 public class StrReplace extends CellProcessorAdaptor {
 private String searchText, replaceText;
 
-public StrReplace(String searchText, String replaceText) {
+public StrReplace(final String searchText, final String replaceText) {
 	super();
 	handleArguments(searchText, replaceText);
 }
 
-public StrReplace(String searchText, String replaceText, StringCellProcessor next) {
+public StrReplace(final String searchText, final String replaceText, final StringCellProcessor next) {
 	super(next);
 	handleArguments(searchText, replaceText);
 }
@@ -25,7 +25,7 @@ public Object execute(final Object value, final CSVContext context) throws Super
 	return value.toString().replaceAll(searchText, replaceText);
 }
 
-private void handleArguments(String searchText, String replaceText) throws IllegalArgumentException {
+private void handleArguments(final String searchText, final String replaceText) throws IllegalArgumentException {
 	if( searchText == null ) { throw new SuperCSVException("argument searchText cannot be null"); }
 	if( replaceText == null ) { throw new SuperCSVException("argument replaceText cannot be null"); }
 	if( searchText.equals("") ) { throw new SuperCSVException(

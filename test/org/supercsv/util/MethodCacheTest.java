@@ -62,31 +62,9 @@ public void setI(final int i) {
 private static final int STARTVAL = 42;
 private static final int ENDVAL = 43;
 
-@Test
-public void testGetLookup() throws Exception {
-	MethodCache cache = new MethodCache();
-	
-	final ObjectMock om = new ObjectMock();
-	long time1 = System.nanoTime();
-	Method getMethod = cache.getGetMethod(om, "i");
-	getMethod = cache.getGetMethod(om, "b");
-	getMethod = cache.getGetMethod(om, "a");
-	Assert.assertEquals("object read", STARTVAL, getMethod.invoke(om));
-	time1 = System.nanoTime() - time1;
-	
-	// fetch again to activate the cache
-	long time2 = System.nanoTime();
-	getMethod = cache.getGetMethod(om, "i");
-	getMethod = cache.getGetMethod(om, "b");
-	getMethod = cache.getGetMethod(om, "a");
-	Assert.assertEquals("object read", STARTVAL, getMethod.invoke(om));
-	time2 = System.nanoTime() - time2;
-	Assert.assertTrue("Cache lookup should be faster " + time1 + " > " + time2, time1 > time2);
-}
-
 @Test(expected = SuperCSVException.class)
 public void test_InvalidmethodCall() {
-	MethodCache cache = new MethodCache();
+	final MethodCache cache = new MethodCache();
 	cache.getGetMethod(new ObjectMock(), "bibibabibibaib");
 }
 
@@ -97,7 +75,7 @@ public void test_Make_Hidden_Abstract_ConstructorTested() {
 
 @Test
 public void test_Set_Lookup() throws Exception {
-	MethodCache cache = new MethodCache();
+	final MethodCache cache = new MethodCache();
 	
 	final ObjectMock om = new ObjectMock();
 	
@@ -117,5 +95,27 @@ public void test_Set_Lookup() throws Exception {
 	Assert.assertEquals("object read", ENDVAL + 1, cache.getGetMethod(om, "i").invoke(om));
 	// System.out.println("set t1 " + time1 + " t2 " + time2);
 	Assert.assertTrue("Cache lookup should be faster", time1 > time2);
+}
+
+@Test
+public void testGetLookup() throws Exception {
+	final MethodCache cache = new MethodCache();
+	
+	final ObjectMock om = new ObjectMock();
+	long time1 = System.nanoTime();
+	Method getMethod = cache.getGetMethod(om, "i");
+	getMethod = cache.getGetMethod(om, "b");
+	getMethod = cache.getGetMethod(om, "a");
+	Assert.assertEquals("object read", STARTVAL, getMethod.invoke(om));
+	time1 = System.nanoTime() - time1;
+	
+	// fetch again to activate the cache
+	long time2 = System.nanoTime();
+	getMethod = cache.getGetMethod(om, "i");
+	getMethod = cache.getGetMethod(om, "b");
+	getMethod = cache.getGetMethod(om, "a");
+	Assert.assertEquals("object read", STARTVAL, getMethod.invoke(om));
+	time2 = System.nanoTime() - time2;
+	Assert.assertTrue("Cache lookup should be faster " + time1 + " > " + time2, time1 > time2);
 }
 }

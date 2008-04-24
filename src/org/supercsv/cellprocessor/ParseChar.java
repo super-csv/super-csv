@@ -12,39 +12,36 @@ import org.supercsv.util.CSVContext;
  */
 public class ParseChar extends CellProcessorAdaptor {
 
-	public ParseChar() {
-		super();
-	}
+public ParseChar() {
+	super();
+}
 
-	public ParseChar(final DoubleCellProcessor next) {
-		super(next);
-	}
+public ParseChar(final DoubleCellProcessor next) {
+	super(next);
+}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Object execute(final Object value, final CSVContext context) {
-		final Character result;
-		if(value instanceof Character) {
-			result = (Character) value;
-		}
-		else if(value instanceof String) {
-			final String tmp = (String) value;
-			if(tmp.length() == 1) {
-				result = Character.valueOf(tmp.charAt(0));
-			}
-			else {
-				throw new SuperCSVException("Can't convert \"" + value
-						+ "\" to a char. It must have a length of 1 to be a valid char.", context);
-			}
-		}
-		else {
+/**
+ * {@inheritDoc}
+ */
+@Override
+public Object execute(final Object value, final CSVContext context) {
+	final Character result;
+	if( value instanceof Character ) {
+		result = (Character) value;
+	} else if( value instanceof String ) {
+		final String tmp = (String) value;
+		if( tmp.length() == 1 ) {
+			result = Character.valueOf(tmp.charAt(0));
+		} else {
 			throw new SuperCSVException("Can't convert \"" + value
-					+ "\" to char. Input is not of type Character nor type String, but of type "
-					+ value.getClass().getName(), context);
+				+ "\" to a char. It must have a length of 1 to be a valid char.", context);
 		}
-
-		return next.execute(result, context);
+	} else {
+		throw new SuperCSVException("Can't convert \"" + value
+			+ "\" to char. Input is not of type Character nor type String, but of type " + value.getClass().getName(),
+			context);
 	}
+	
+	return next.execute(result, context);
+}
 }

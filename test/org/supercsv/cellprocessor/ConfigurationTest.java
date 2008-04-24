@@ -12,11 +12,11 @@ import static org.junit.Assert.assertThat;
  */
 public class ConfigurationTest {
 
-	@Test
-	public void getsetTest() {
-		final CsvPreference pref = new CsvPreference('"', ',', "\n");
-		assertThat(pref.getDelimiterChar(), is((int) ','));
-		assertThat(pref.getQuoteChar(), is((int) '"'));
-		assertThat(pref.getEndOfLineSymbols(), is("\n"));
-	}
+@Test
+public void getsetTest() {
+	final CsvPreference pref = new CsvPreference('"', ',', "\n");
+	assertThat(pref.getDelimiterChar(), is((int) ','));
+	assertThat(pref.getQuoteChar(), is((int) '"'));
+	assertThat(pref.getEndOfLineSymbols(), is("\n"));
+}
 }

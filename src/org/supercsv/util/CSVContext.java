@@ -6,15 +6,15 @@ package org.supercsv.util;
  * @author Kasper B. Graversen
  */
 public class CSVContext {
-	public int	lineNumber;
-	public int	columnNumber;
+public int lineNumber;
+public int columnNumber;
 
-	public CSVContext() {
-	}
+public CSVContext() {
+}
 
-	public CSVContext(final int lineNumber, final int columnNumber) {
-		this.lineNumber = lineNumber;
-		this.columnNumber = columnNumber;
-	}
+public CSVContext(final int lineNumber, final int columnNumber) {
+	this.lineNumber = lineNumber;
+	this.columnNumber = columnNumber;
+}
 
 }

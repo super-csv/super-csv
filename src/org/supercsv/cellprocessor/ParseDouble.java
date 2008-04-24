@@ -11,37 +11,35 @@ import org.supercsv.util.CSVContext;
  */
 public class ParseDouble extends CellProcessorAdaptor {
 
-	public ParseDouble() {
-		super();
-	}
+public ParseDouble() {
+	super();
+}
 
-	public ParseDouble(final DoubleCellProcessor next) {
-		super(next);
-	}
+public ParseDouble(final DoubleCellProcessor next) {
+	super(next);
+}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Object execute(final Object value, final CSVContext context) throws SuperCSVException {
-		final Double result;
-		if(value instanceof Double) {
-			result = (Double) value;
+/**
+ * {@inheritDoc}
+ */
+@Override
+public Object execute(final Object value, final CSVContext context) throws SuperCSVException {
+	final Double result;
+	if( value instanceof Double ) {
+		result = (Double) value;
+	} else if( value instanceof String ) {
+		try {
+			result = new Double((String) value);
 		}
-		else if(value instanceof String) {
-			try {
-				result = new Double((String) value);
-			}
-			catch(NumberFormatException e) {
-				throw new SuperCSVException("Parser error", context, e);
-			}
+		catch(final NumberFormatException e) {
+			throw new SuperCSVException("Parser error", context, e);
 		}
-		else {
-			throw new SuperCSVException("Can't convert \"" + value
-					+ "\" to double. Input is not of type Double nor type String, but of type "
-					+ value.getClass().getName(), context);
-		}
-
-		return next.execute(result, context);
+	} else {
+		throw new SuperCSVException("Can't convert \"" + value
+			+ "\" to double. Input is not of type Double nor type String, but of type " + value.getClass().getName(),
+			context);
 	}
+	
+	return next.execute(result, context);
+}
 }

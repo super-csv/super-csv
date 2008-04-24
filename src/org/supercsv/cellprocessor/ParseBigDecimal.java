@@ -16,34 +16,32 @@ import org.supercsv.util.CSVContext;
  */
 public class ParseBigDecimal extends CellProcessorAdaptor {
 
-	public ParseBigDecimal() {
-		super();
-	}
+public ParseBigDecimal() {
+	super();
+}
 
-	public ParseBigDecimal(final CellProcessor next) {
-		super(next);
-	}
+public ParseBigDecimal(final CellProcessor next) {
+	super(next);
+}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Object execute(final Object value, final CSVContext context) throws SuperCSVException {
-		final BigDecimal result;
-		if(value instanceof String) {
-			try {
-				result = new BigDecimal((String) value);
-			}
-			catch(Exception e) {
-				throw new SuperCSVException("Parser error", context, e);
-			}
+/**
+ * {@inheritDoc}
+ */
+@Override
+public Object execute(final Object value, final CSVContext context) throws SuperCSVException {
+	final BigDecimal result;
+	if( value instanceof String ) {
+		try {
+			result = new BigDecimal((String) value);
 		}
-		else {
-			throw new SuperCSVException("Can't convert \"" + value
-					+ "\" to a BigDecimal. Input is not of type String, but of type " + value.getClass().getName(),
-					context);
+		catch(final Exception e) {
+			throw new SuperCSVException("Parser error", context, e);
 		}
-
-		return next.execute(result, context);
+	} else {
+		throw new SuperCSVException("Can't convert \"" + value
+			+ "\" to a BigDecimal. Input is not of type String, but of type " + value.getClass().getName(), context);
 	}
+	
+	return next.execute(result, context);
+}
 }

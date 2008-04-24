@@ -19,37 +19,37 @@ import org.supercsv.util.Util;
  * @author Kasper B. Graversen
  */
 public class CsvMapWriter extends AbstractCsvWriter implements ICsvMapWriter {
-	List<? super Object>	tmpDst	= new ArrayList<Object>();
+List<? super Object> tmpDst = new ArrayList<Object>();
 
-	/**
-	 * Create a CSV writer. Note that the <tt>writer</tt> provided in the argument will be wrapped in a
-	 * <tt>BufferedWriter</tt> before accessed.
-	 * 
-	 * @param stream
-	 *            Stream to write to
-	 * @param preference
-	 *            defines separation character, end of line character, etc.
-	 * @since 1.0
-	 */
-	public CsvMapWriter(final Writer stream, final CsvPreference preference) {
-		super(stream, preference);
-	}
+/**
+ * Create a CSV writer. Note that the <tt>writer</tt> provided in the argument will be wrapped in a
+ * <tt>BufferedWriter</tt> before accessed.
+ * 
+ * @param stream
+ *            Stream to write to
+ * @param preference
+ *            defines separation character, end of line character, etc.
+ * @since 1.0
+ */
+public CsvMapWriter(final Writer stream, final CsvPreference preference) {
+	super(stream, preference);
+}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void write(final Map<String, ? extends Object> values, final String... nameMapping) throws IOException {
-		super.write(Util.stringMap(values, nameMapping));
-	}
+/**
+ * {@inheritDoc}
+ */
+public void write(final Map<String, ? extends Object> values, final String... nameMapping) throws IOException {
+	super.write(Util.stringMap(values, nameMapping));
+}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void write(final Map<String, ? extends Object> source, final String[] nameMapping,
-			final CellProcessor[] processor) throws IOException, SuperCSVException {
-		tmpDst.clear();
-		// only write if we are not failing
-		Util.processStringList(tmpDst, Util.map2List(source, nameMapping), processor, getLineNumber());
-		super.write(tmpDst.toArray());
-	}
+/**
+ * {@inheritDoc}
+ */
+public void write(final Map<String, ? extends Object> source, final String[] nameMapping,
+	final CellProcessor[] processor) throws IOException, SuperCSVException {
+	tmpDst.clear();
+	// only write if we are not failing
+	Util.processStringList(tmpDst, Util.map2List(source, nameMapping), processor, getLineNumber());
+	super.write(tmpDst.toArray());
+}
 }

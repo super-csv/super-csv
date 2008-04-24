@@ -23,29 +23,29 @@ import org.supercsv.util.CSVContext;
  * @author Kasper B. Graversen
  */
 public class ParseDate extends CellProcessorAdaptor {
-	DateFormat	formatter;
+DateFormat formatter;
 
-	public ParseDate(final String format) {
-		super();
-		this.formatter = new SimpleDateFormat(format);
-	}
+public ParseDate(final String format) {
+	super();
+	this.formatter = new SimpleDateFormat(format);
+}
 
-	public ParseDate(final String format, final DateCellProcessor next) {
-		super(next);
-		this.formatter = new SimpleDateFormat(format);
-	}
+public ParseDate(final String format, final DateCellProcessor next) {
+	super(next);
+	this.formatter = new SimpleDateFormat(format);
+}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Object execute(final Object value, final CSVContext context) throws SuperCSVException {
-		try {
-			final Date result = formatter.parse((String) value);
-			return next.execute(result, context);
-		}
-		catch(final ParseException e) {
-			throw new SuperCSVException("Problems parsing '" + value + "' as a date", context, e);
-		}
+/**
+ * {@inheritDoc}
+ */
+@Override
+public Object execute(final Object value, final CSVContext context) throws SuperCSVException {
+	try {
+		final Date result = formatter.parse((String) value);
+		return next.execute(result, context);
 	}
+	catch(final ParseException e) {
+		throw new SuperCSVException("Problems parsing '" + value + "' as a date", context, e);
+	}
+}
 }

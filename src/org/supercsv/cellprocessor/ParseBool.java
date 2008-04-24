@@ -13,37 +13,34 @@ import org.supercsv.util.CSVContext;
  */
 public class ParseBool extends CellProcessorAdaptor {
 
-	public ParseBool() {
-		super();
-	}
+public ParseBool() {
+	super();
+}
 
-	public ParseBool(final BoolCellProcessor next) {
-		super(next);
-	}
+public ParseBool(final BoolCellProcessor next) {
+	super(next);
+}
 
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @throws SuperCSVException
-	 *             when the value is some value that cannot be translated into a boolean value
-	 */
-	@Override
-	public Object execute(final Object value, final CSVContext context) throws SuperCSVException {
-		Boolean result;
-		final String sval = ((String) value).toLowerCase();
-		if(sval.equals("0") || sval.equalsIgnoreCase("false") || sval.equalsIgnoreCase("f")
-				|| sval.equalsIgnoreCase("n")) {
-			result = Boolean.FALSE;
-		}
-		else if(sval.equals("1") || sval.equalsIgnoreCase("true") || sval.equalsIgnoreCase("t")
-				|| sval.equalsIgnoreCase("y")) {
-			result = Boolean.TRUE;
-		}
-		else {
-			throw new SuperCSVException("Cannot parse \"" + value + "\" to a boolean on line " + context.lineNumber
-					+ " column " + context.columnNumber, context);
-		}
-
-		return next.execute(result, context);
+/**
+ * {@inheritDoc}
+ * 
+ * @throws SuperCSVException
+ *             when the value is some value that cannot be translated into a boolean value
+ */
+@Override
+public Object execute(final Object value, final CSVContext context) throws SuperCSVException {
+	Boolean result;
+	final String sval = ((String) value).toLowerCase();
+	if( sval.equals("0") || sval.equalsIgnoreCase("false") || sval.equalsIgnoreCase("f") || sval.equalsIgnoreCase("n") ) {
+		result = Boolean.FALSE;
+	} else if( sval.equals("1") || sval.equalsIgnoreCase("true") || sval.equalsIgnoreCase("t")
+		|| sval.equalsIgnoreCase("y") ) {
+		result = Boolean.TRUE;
+	} else {
+		throw new SuperCSVException("Cannot parse \"" + value + "\" to a boolean on line " + context.lineNumber
+			+ " column " + context.columnNumber, context);
 	}
+	
+	return next.execute(result, context);
+}
 }

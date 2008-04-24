@@ -11,37 +11,35 @@ import org.supercsv.util.CSVContext;
  */
 public class ParseLong extends CellProcessorAdaptor {
 
-	public ParseLong() {
-		super();
-	}
+public ParseLong() {
+	super();
+}
 
-	public ParseLong(final LongCellProcessor next) {
-		super(next);
-	}
+public ParseLong(final LongCellProcessor next) {
+	super(next);
+}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Object execute(final Object value, final CSVContext context) throws SuperCSVException {
-		final Long result;
-		if(value instanceof Long) {
-			result = (Long) value;
+/**
+ * {@inheritDoc}
+ */
+@Override
+public Object execute(final Object value, final CSVContext context) throws SuperCSVException {
+	final Long result;
+	if( value instanceof Long ) {
+		result = (Long) value;
+	} else if( value instanceof String ) {
+		try {
+			result = Long.parseLong((String) value);
 		}
-		else if(value instanceof String) {
-			try {
-				result = Long.parseLong((String) value);
-			}
-			catch(NumberFormatException e) {
-				throw new SuperCSVException("Parser error", context, e);
-			}
+		catch(final NumberFormatException e) {
+			throw new SuperCSVException("Parser error", context, e);
 		}
-		else {
-			throw new SuperCSVException(
-					"Can't convert \"" + value + "\" to long. Input is not of type Long nor type String but of type "
-							+ value.getClass().getName(), context);
-		}
-
-		return next.execute(result, context);
+	} else {
+		throw new SuperCSVException("Can't convert \"" + value
+			+ "\" to long. Input is not of type Long nor type String but of type " + value.getClass().getName(),
+			context);
 	}
+	
+	return next.execute(result, context);
+}
 }

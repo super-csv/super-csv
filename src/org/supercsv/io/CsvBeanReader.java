@@ -80,13 +80,13 @@ public CsvBeanReader(final Reader reader, final CsvPreference preferences) {
 		}
 		return resultBean;
 	}
-	catch(InstantiationException e) {
+	catch(final InstantiationException e) {
 		throw new SuperCSVReflectionException("Error while filling an object", e);
 	}
-	catch(IllegalAccessException e) {
+	catch(final IllegalAccessException e) {
 		throw new SuperCSVReflectionException("Error while filling an object", e);
 	}
-	catch(InvocationTargetException e) {
+	catch(final InvocationTargetException e) {
 		throw new SuperCSVReflectionException("Error while filling an object", e);
 	}
 }

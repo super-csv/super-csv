@@ -10,17 +10,17 @@ import org.supercsv.cellprocessor.ift.CellProcessor;
  * @author Kasper B. Graversen
  */
 public class Optional extends Token {
-	/**
-	 * Upon meeting the empty string in a column, return null
-	 */
-	public Optional() {
-		super("", null);
-	}
+/**
+ * Upon meeting the empty string in a column, return null
+ */
+public Optional() {
+	super("", null);
+}
 
-	/**
-	 * Upon meeting the empty string in a column, return null
-	 */
-	public Optional(final CellProcessor next) {
-		super("", null, next);
-	}
+/**
+ * Upon meeting the empty string in a column, return null
+ */
+public Optional(final CellProcessor next) {
+	super("", null, next);
+}
 }

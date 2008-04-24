@@ -34,6 +34,22 @@ public void setUp() throws Exception {
 }
 
 @Test
+public void should_read_interface_type() throws Exception {
+	// use interface type
+	TestInterface res;
+	final String[] header = { "name" };
+	// create reader
+	inFile = new CsvBeanReader(new StringReader("Thomas\nPeter\n"), new CsvPreference('"', ',', "\n"));
+	
+	// read into the interface proxy
+	res = inFile.read(TestInterface.class, header);
+	assertEquals("Thomas", res.getName());
+	res = inFile.read(TestInterface.class, header);
+	assertEquals("Peter", res.getName());
+	
+}
+
+@Test
 public void testReadOnlyNameMapping() throws Exception {
 	PersonBean res;
 	res = inFile.read(PersonBean.class, partialNameMapper); // read line and check the values
@@ -74,21 +90,5 @@ public void testSimplestRead() throws Exception {
 	
 	// no line 3
 	Assert.assertNull(inFile.read(PersonBean.class, partialNameMapper, processors));
-}
-
-@Test
-public void should_read_interface_type() throws Exception {
-	// use interface type
-	TestInterface res;
-	String[] header = { "name" };
-	// create reader
-	inFile = new CsvBeanReader(new StringReader("Thomas\nPeter\n"), new CsvPreference('"', ',', "\n"));
-	
-	// read into the interface proxy
-	res = inFile.read(TestInterface.class, header);
-	assertEquals("Thomas", res.getName());
-	res = inFile.read(TestInterface.class, header);
-	assertEquals("Peter", res.getName());
-	
 }
 }

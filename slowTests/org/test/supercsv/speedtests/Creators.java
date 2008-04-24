@@ -16,48 +16,44 @@ import java.util.Random;
  * @author Kasper B. Graversen generate random content
  */
 public class Creators {
-	static Random	r	= new Random();
-	static {
-		r.setSeed(System.currentTimeMillis());
-	}
+static Random r = new Random();
+static {
+	r.setSeed(System.currentTimeMillis());
+}
 
-	public static String createAnonymousLine() {
-		String s = "" + number(100000) + ", " + string(7) + ", " + string(10) + ", " + number(200) + ", " + date()
-				+ "\n";
-		if(r.nextInt() % 30 == 0) {
-			return "\"" + s + "\"";
+public static String createAnonymousLine() {
+	final String s = "" + number(100000) + ", " + string(7) + ", " + string(10) + ", " + number(200) + ", " + date()
+		+ "\n";
+	if( r.nextInt() % 30 == 0 ) { return "\"" + s + "\""; }
+	return s;
+}
+
+public static String date() {
+	return "" + (number(11) + 1) + "/" + (number(11) + 1) + "/" + (number(11) + 1);
+}
+
+public static void main(final String[] args) {
+	for( int i = 0; i < 10; i++ ) {
+		System.out.println(createAnonymousLine());
+	}
+}
+
+public static int number(final int max) {
+	return r.nextInt(max);
+}
+
+public static String string(final int maxLengh) {
+	final int len = 1 + r.nextInt(maxLengh);
+	final StringBuffer sb = new StringBuffer();
+	for( int i = 0; i < len; i++ ) {
+		if( r.nextInt() % 6 == 0 ) {
+			sb.append(' ');
+		} else {
+			sb.append(Character.toChars(65 + r.nextInt(25)));
 		}
-		return s;
 	}
-
-	public static String date() {
-		return "" + (number(11) + 1) + "/" + (number(11) + 1) + "/" + (number(11) + 1);
+	if( r.nextInt() % 30 == 0 ) { return "\"" + sb.toString() + "\""; // some times make it a "" string
 	}
-
-	public static void main(final String[] args) {
-		for(int i = 0; i < 10; i++) {
-			System.out.println(createAnonymousLine());
-		}
-	}
-
-	public static int number(final int max) {
-		return r.nextInt(max);
-	}
-
-	public static String string(final int maxLengh) {
-		final int len = 1 + r.nextInt(maxLengh);
-		final StringBuffer sb = new StringBuffer();
-		for(int i = 0; i < len; i++) {
-			if(r.nextInt() % 6 == 0) {
-				sb.append(' ');
-			}
-			else {
-				sb.append(Character.toChars(65 + r.nextInt(25)));
-			}
-		}
-		if(r.nextInt() % 30 == 0) {
-			return "\"" + sb.toString() + "\""; // some times make it a "" string
-		}
-		return sb.toString();
-	}
+	return sb.toString();
+}
 }

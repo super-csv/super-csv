@@ -13,61 +13,57 @@ import org.supercsv.util.CSVContext;
  * @author Kasper B. Graversen
  */
 public class LMinMax extends CellProcessorAdaptor {
-	public static final long	MAXL	= Long.MAX_VALUE;
-	public static final long	MINL	= Long.MIN_VALUE;
-	public static final int		MAX		= Integer.MAX_VALUE;
-	public static final int		MIN		= Integer.MIN_VALUE;
-	public static final short	MAXS	= Short.MAX_VALUE;
-	public static final short	MINS	= Short.MIN_VALUE;
-	public static final int		MAXC	= Character.MAX_VALUE;
-	public static final int		MINC	= Character.MIN_VALUE;
-	public static final int		MAX8bit	= 255;
-	public static final int		MIN8bit	= -128;
+public static final long MAXL = Long.MAX_VALUE;
+public static final long MINL = Long.MIN_VALUE;
+public static final int MAX = Integer.MAX_VALUE;
+public static final int MIN = Integer.MIN_VALUE;
+public static final short MAXS = Short.MAX_VALUE;
+public static final short MINS = Short.MIN_VALUE;
+public static final int MAXC = Character.MAX_VALUE;
+public static final int MINC = Character.MIN_VALUE;
+public static final int MAX8bit = 255;
+public static final int MIN8bit = -128;
 
-	protected long				min, max;
+protected long min, max;
 
-	public LMinMax(final long min, final long max) {
-		super();
-		init(min, max);
-	}
+public LMinMax(final long min, final long max) {
+	super();
+	init(min, max);
+}
 
-	public LMinMax(final long min, final long max, final LongCellProcessor next) {
-		super(next);
-		init(min, max);
-	}
+public LMinMax(final long min, final long max, final LongCellProcessor next) {
+	super(next);
+	init(min, max);
+}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Object execute(final Object value, final CSVContext context) throws SuperCSVException {
-		final Long result;
-		if(value instanceof Long) {
-			result = (Long) value;
+/**
+ * {@inheritDoc}
+ */
+@Override
+public Object execute(final Object value, final CSVContext context) throws SuperCSVException {
+	final Long result;
+	if( value instanceof Long ) {
+		result = (Long) value;
+	} else {
+		try {
+			result = Long.parseLong(value.toString());
 		}
-		else {
-			try {
-				result = Long.parseLong(value.toString());
-			}
-			catch(NumberFormatException e) {
-				throw new SuperCSVException("Parsing error", context, e);
-			}
+		catch(final NumberFormatException e) {
+			throw new SuperCSVException("Parsing error", context, e);
 		}
-
-		if(!(result >= min && result <= max)) {
-			throw new SuperCSVException("Entry \"" + value + "\" on line " + context.lineNumber + " column "
-					+ context.columnNumber + " is not within the numerical range " + min + "-" + max, context);
-		}
-
-		return next.execute(result, context);
 	}
+	
+	if( !(result >= min && result <= max) ) { throw new SuperCSVException("Entry \"" + value + "\" on line "
+		+ context.lineNumber + " column " + context.columnNumber + " is not within the numerical range " + min + "-"
+		+ max, context); }
+	
+	return next.execute(result, context);
+}
 
-	private void init(final long min, final long max) {
-		if(max < min) {
-			throw new SuperCSVException("max < min in the arguments " + min + " " + max);
-		}
-
-		this.min = min;
-		this.max = max;
-	}
+private void init(final long min, final long max) {
+	if( max < min ) { throw new SuperCSVException("max < min in the arguments " + min + " " + max); }
+	
+	this.min = min;
+	this.max = max;
+}
 }

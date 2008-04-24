@@ -15,87 +15,88 @@ import org.supercsv.prefs.CsvPreference;
  */
 public abstract class AbstractCsvReader implements ICsvReader {
 
-	/** A reference to the last read line */
-	protected List<String>	line;
+/** A reference to the last read line */
+protected List<String> line;
 
-	/** the tokenizer */
-	protected ITokenizer	tokenizer;
+/** the tokenizer */
+protected ITokenizer tokenizer;
 
-	/** the preferences */
-	protected CsvPreference	preferences;
+/** the preferences */
+protected CsvPreference preferences;
 
-	public AbstractCsvReader() {
-		line = new ArrayList<String>();
+public AbstractCsvReader() {
+	line = new ArrayList<String>();
+}
+
+/**
+ * {@inheritDoc}
+ */
+public void close() throws IOException {
+	tokenizer.close();
+}
+
+/**
+ * {@inheritDoc}
+ */
+public String get(final int N) throws IOException, IndexOutOfBoundsException {
+	return line.get(N);
+}
+
+/**
+ * A convenience method for reading the header of a csv file as a string array. This array can serve as input when
+ * reading maps or beans.
+ * 
+ * @param firstLineCheck
+ *            check to ensure that this method is only applied to the first line of the CSV file.
+ * @since 1.0
+ */
+public String[] getCSVHeader(final boolean firstLineCheck) throws IOException {
+	if( firstLineCheck && tokenizer.getLineNumber() != 0 ) { throw new SuperCSVException(
+		"CSV header can only be fetched as the first read operation on a source!"); }
+	final List<String> tmp = new ArrayList<String>();
+	String[] res = null;
+	if( tokenizer.readStringList(tmp) ) {
+		res = tmp.toArray(new String[0]);
 	}
+	return res;
+}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void close() throws IOException {
-		tokenizer.close();
-	}
+/**
+ * {@inheritDoc}
+ */
+public int getLineNumber() {
+	return tokenizer.getLineNumber();
+}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public String get(final int N) throws IOException, IndexOutOfBoundsException {
-		return line.get(N);
-	}
+/**
+ * {@inheritDoc}
+ */
+public int length() throws IOException {
+	return line.size();
+}
 
-	/**
-	 * A convenience method for reading the header of a csv file as a string array. This array can serve as input when
-	 * reading maps or beans.
-	 * 
-	 * @param firstLineCheck
-	 *            check to ensure that this method is only applied to the first line of the CSV file.
-	 * @since 1.0
-	 */
-	public String[] getCSVHeader(final boolean firstLineCheck) throws IOException {
-		if(firstLineCheck && tokenizer.getLineNumber() != 0)
-			throw new SuperCSVException("CSV header can only be fetched as the first read operation on a source!");
-		final List<String> tmp = new ArrayList<String>();
-		String[] res = null;
-		if(tokenizer.readStringList(tmp))
-			res = tmp.toArray(new String[0]);
-		return res;
-	}
+/**
+ * Sets the input stream
+ */
+public ICsvReader setInput(final Reader stream) {
+	tokenizer = new Tokenizer(stream, this.preferences);
+	return this;
+}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public int getLineNumber() {
-		return tokenizer.getLineNumber();
-	}
+/**
+ * {@inheritDoc}
+ */
+public ICsvReader setPreferences(final CsvPreference preference) {
+	this.preferences = preference;
+	return this;
+}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public int length() throws IOException {
-		return line.size();
-	}
-
-	/**
-	 * Sets the input stream
-	 */
-	public ICsvReader setInput(final Reader stream) {
-		tokenizer = new Tokenizer(stream, this.preferences);
-		return this;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public ICsvReader setPreferences(final CsvPreference preference) {
-		this.preferences = preference;
-		return this;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public ICsvReader setTokenizer(final ITokenizer tokenizer) {
-		this.tokenizer = tokenizer;
-		return this;
-	}
+/**
+ * {@inheritDoc}
+ */
+public ICsvReader setTokenizer(final ITokenizer tokenizer) {
+	this.tokenizer = tokenizer;
+	return this;
+}
 
 }
