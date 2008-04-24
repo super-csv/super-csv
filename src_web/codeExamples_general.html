@@ -79,7 +79,9 @@ column in the CSV file. If a cell in the array has the value <tt>null</tt>, the 
 Each processor can be <b>nested</b>. This means that processors and constraints can be freely combined in any number as seen below with the
 <tt>new Unique(new StrMinMax())</tt>. This is a very expressive so spend some time dwelling on what you can do with the processors.
 Processors are executed from the outermost to the innermost. In cases of recoverable errors, a processor may choose to exit (optionally
-with some default value), rather than executing its "nested processors".
+with some default value), rather than executing its "nested processors". You can say that while cell processors'
+ constructor is executing from the innermost to the outermost (due to the normal rules in Java on resolving arguments before invoking methods),
+the processors business logic execute from outside to the innermost. 
 <p>
 One definition could be
 

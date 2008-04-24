@@ -52,7 +52,11 @@ existing processors are around 10 lines of code. Let's investigate the implement
 
 All the magic is taking place in the <tt>execute()</tt> method. It really need no further explaining.
 
-
+<p>
+Notice that a processor takes another (possibly chained) processor as an argument. Only if it find its conditions suitable,
+may it call <tt>next()</tt>. Otherwise it has the option to exit with some error or other value. You can say that while cell processors'
+ constructor is executing from the innermost to the outermost (due to the normal rules in Java on resolving arguments before invoking methods),
+the processors business logic execute from outside to the innermost. 
 
 
 
