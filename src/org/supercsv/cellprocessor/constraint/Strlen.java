@@ -1,6 +1,6 @@
 package org.supercsv.cellprocessor.constraint;
 
-import java.util.HashMap;
+import java.util.HashSet;
 
 import org.supercsv.cellprocessor.CellProcessorAdaptor;
 import org.supercsv.cellprocessor.ift.CellProcessor;
@@ -14,10 +14,11 @@ import org.supercsv.util.CSVContext;
  * The length constraints must all be > 0 or an exception is thrown Lookup time is O(1).
  * 
  * @author Kasper B. Graversen
+ *  @author Dominique De Vito
  */
 public class Strlen extends CellProcessorAdaptor implements StringCellProcessor {
-/** Map of all accepted lengths */
-protected HashMap<Integer, Object> requiredLengths = new HashMap<Integer, Object>();
+/** Set of all accepted lengths */
+protected HashSet<Integer>	requiredLengths	= new HashSet<Integer>();
 
 public Strlen(final int... requiredLengths) {
 	super();
@@ -37,7 +38,7 @@ public Strlen(final int[] requiredLengths, final CellProcessor next) {
 protected void addValues(final int... requiredLengths) throws SuperCSVException {
 	for( final int length : requiredLengths ) {
 		if( length < 0 ) { throw new SuperCSVException("Cannot accept length below 0", this); }
-		this.requiredLengths.put(length, null);
+		this.requiredLengths.add(length);
 	}
 }
 
@@ -53,22 +54,29 @@ protected void addValues(final int... requiredLengths) throws SuperCSVException 
 @Override
 public Object execute(final Object value, final CSVContext context) throws SuperCSVException, ClassCastException {
 	if( value == null ) { throw new NullInputException("Input cannot be null", context, this); }
-	final String sval = value.toString(); // cast
-	
+	final String sval = (value == null) ? null : value.toString(); // cast
+	final int slength = (sval == null) ? 0 : sval.length();
+		
+
 	// check for required lengths
-	if( !requiredLengths.containsKey(sval.length()) ) {
-		
-		// create string of required lengths
-		final StringBuilder sb = new StringBuilder();
-		for( final int length : requiredLengths.keySet() ) {
-			sb.append(length + ", ");
-		}
-		sb.deleteCharAt(sb.length() - 2); // delete last comma
-		
-		throw new SuperCSVException("Entry \"" + value + "\" on line " + context.lineNumber + " column "
-			+ context.columnNumber + " is not of any of the required lengths " + sb.toString());
+	if(!requiredLengths.contains(slength)) {
+				throw new SuperCSVException("Entry \"" + value + "\" is not of any of " +
+			"the required lengths " + printRequiredLengths(), context,this);
 	}
 	
 	return next.execute(value, context);
+}
+
+private String printRequiredLengths() {
+	// create string of required lengths
+	final StringBuilder sb = new StringBuilder();
+	String currentSeparator = "";
+	String separator = ", ";
+	for(final int length : requiredLengths) {
+		sb.append(currentSeparator);
+		sb.append(length);
+		currentSeparator = separator;
+	}
+	return sb.toString();
 }
 }
