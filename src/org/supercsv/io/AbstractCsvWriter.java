@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
 
+import org.supercsv.exception.NullInputException;
 import org.supercsv.exception.SuperCSVException;
 import org.supercsv.prefs.CsvPreference;
 import org.supercsv.util.CSVContext;
@@ -127,7 +128,7 @@ protected void write(final Object... content) throws IOException {
 		write(strarr);
 	}
 	catch(final NullPointerException e) {
-		throw new SuperCSVException("Object at possition " + i + " is null.", new CSVContext(getLineNumber(), i), e);
+		throw new NullInputException("Object at possition " + i + " is null.", new CSVContext(getLineNumber(), i), e);
 	}
 }
 
