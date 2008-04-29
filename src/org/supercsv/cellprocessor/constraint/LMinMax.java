@@ -2,6 +2,7 @@ package org.supercsv.cellprocessor.constraint;
 
 import org.supercsv.cellprocessor.CellProcessorAdaptor;
 import org.supercsv.cellprocessor.ift.LongCellProcessor;
+import org.supercsv.exception.NullInputException;
 import org.supercsv.exception.SuperCSVException;
 import org.supercsv.util.CSVContext;
 
@@ -41,6 +42,7 @@ public LMinMax(final long min, final long max, final LongCellProcessor next) {
  */
 @Override
 public Object execute(final Object value, final CSVContext context) throws SuperCSVException {
+	if( value == null ) { throw new NullInputException("Input cannot be null", context, this); }
 	final Long result;
 	if( value instanceof Long ) {
 		result = (Long) value;
@@ -49,19 +51,19 @@ public Object execute(final Object value, final CSVContext context) throws Super
 			result = Long.parseLong(value.toString());
 		}
 		catch(final NumberFormatException e) {
-			throw new SuperCSVException("Parsing error", context, e);
+			throw new SuperCSVException("Parsing error", context, this, e);
 		}
 	}
 	
 	if( !(result >= min && result <= max) ) { throw new SuperCSVException("Entry \"" + value + "\" on line "
 		+ context.lineNumber + " column " + context.columnNumber + " is not within the numerical range " + min + "-"
-		+ max, context); }
+		+ max, context, this); }
 	
 	return next.execute(result, context);
 }
 
 private void init(final long min, final long max) {
-	if( max < min ) { throw new SuperCSVException("max < min in the arguments " + min + " " + max); }
+	if( max < min ) { throw new SuperCSVException("max < min in the arguments " + min + " " + max, this); }
 	
 	this.min = min;
 	this.max = max;

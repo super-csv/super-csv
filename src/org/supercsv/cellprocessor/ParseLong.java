@@ -1,6 +1,7 @@
 package org.supercsv.cellprocessor;
 
 import org.supercsv.cellprocessor.ift.LongCellProcessor;
+import org.supercsv.exception.NullInputException;
 import org.supercsv.exception.SuperCSVException;
 import org.supercsv.util.CSVContext;
 
@@ -24,6 +25,7 @@ public ParseLong(final LongCellProcessor next) {
  */
 @Override
 public Object execute(final Object value, final CSVContext context) throws SuperCSVException {
+	if( value == null ) { throw new NullInputException("Input cannot be null", context, this); }
 	final Long result;
 	if( value instanceof Long ) {
 		result = (Long) value;
@@ -37,7 +39,7 @@ public Object execute(final Object value, final CSVContext context) throws Super
 	} else {
 		throw new SuperCSVException("Can't convert \"" + value
 			+ "\" to long. Input is not of type Long nor type String but of type " + value.getClass().getName(),
-			context);
+			context, this);
 	}
 	
 	return next.execute(result, context);

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import org.supercsv.cellprocessor.CellProcessorAdaptor;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
+import org.supercsv.exception.NullInputException;
 import org.supercsv.exception.SuperCSVException;
 import org.supercsv.util.CSVContext;
 
@@ -35,7 +36,7 @@ public Strlen(final int[] requiredLengths, final CellProcessor next) {
 /** Ensure we only memorize valid lengths */
 protected void addValues(final int... requiredLengths) throws SuperCSVException {
 	for( final int length : requiredLengths ) {
-		if( length < 0 ) { throw new SuperCSVException("Cannot accept length below 0"); }
+		if( length < 0 ) { throw new SuperCSVException("Cannot accept length below 0", this); }
 		this.requiredLengths.put(length, null);
 	}
 }
@@ -51,6 +52,7 @@ protected void addValues(final int... requiredLengths) throws SuperCSVException 
  */
 @Override
 public Object execute(final Object value, final CSVContext context) throws SuperCSVException, ClassCastException {
+	if( value == null ) { throw new NullInputException("Input cannot be null", context, this); }
 	final String sval = value.toString(); // cast
 	
 	// check for required lengths

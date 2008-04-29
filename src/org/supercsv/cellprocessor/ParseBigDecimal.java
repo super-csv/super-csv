@@ -3,6 +3,7 @@ package org.supercsv.cellprocessor;
 import java.math.BigDecimal;
 
 import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.exception.NullInputException;
 import org.supercsv.exception.SuperCSVException;
 import org.supercsv.util.CSVContext;
 
@@ -29,6 +30,7 @@ public ParseBigDecimal(final CellProcessor next) {
  */
 @Override
 public Object execute(final Object value, final CSVContext context) throws SuperCSVException {
+	if( value == null ) { throw new NullInputException("Input cannot be null", context, this); }
 	final BigDecimal result;
 	if( value instanceof String ) {
 		try {
@@ -39,7 +41,8 @@ public Object execute(final Object value, final CSVContext context) throws Super
 		}
 	} else {
 		throw new SuperCSVException("Can't convert \"" + value
-			+ "\" to a BigDecimal. Input is not of type String, but of type " + value.getClass().getName(), context);
+			+ "\" to a BigDecimal. Input is not of type String, but of type " + value.getClass().getName(), context,
+			this);
 	}
 	
 	return next.execute(result, context);

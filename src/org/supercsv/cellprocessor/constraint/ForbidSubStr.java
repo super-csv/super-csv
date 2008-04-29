@@ -8,6 +8,7 @@ import java.util.List;
 import org.supercsv.cellprocessor.CellProcessorAdaptor;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
+import org.supercsv.exception.NullInputException;
 import org.supercsv.exception.SuperCSVException;
 import org.supercsv.util.CSVContext;
 
@@ -55,6 +56,7 @@ public ForbidSubStr(final String[] forbiddenSubStrings, final CellProcessor next
  */
 @Override
 public Object execute(final Object value, final CSVContext context) throws SuperCSVException, ClassCastException {
+	if( value == null ) { throw new NullInputException("Input cannot be null", context, this); }
 	final String sval = value.toString(); // cast
 	
 	// check for forbidden strings

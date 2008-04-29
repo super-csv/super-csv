@@ -37,7 +37,7 @@ public Unique(final CellProcessor next) {
 public Object execute(final Object value, final CSVContext context) throws SuperCSVException {
 	// check for uniqueness
 	final int hash = value.hashCode();
-	if( uniqueMap.containsKey(hash) ) { throw new SuperCSVException("Duplicate entry \"" + value + "\" found!"); }
+	if( uniqueMap.containsKey(hash) ) { throw new SuperCSVException("Duplicate entry \"" + value + "\" found!", this); }
 	
 	// if not found add it
 	uniqueMap.put(hash, tokenForMap);

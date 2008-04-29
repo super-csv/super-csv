@@ -1,6 +1,7 @@
 package org.supercsv.cellprocessor;
 
 import org.supercsv.cellprocessor.ift.DoubleCellProcessor;
+import org.supercsv.exception.NullInputException;
 import org.supercsv.exception.SuperCSVException;
 import org.supercsv.util.CSVContext;
 
@@ -25,6 +26,7 @@ public ParseChar(final DoubleCellProcessor next) {
  */
 @Override
 public Object execute(final Object value, final CSVContext context) {
+	if( value == null ) { throw new NullInputException("Input cannot be null", context, this); }
 	final Character result;
 	if( value instanceof Character ) {
 		result = (Character) value;
@@ -34,12 +36,12 @@ public Object execute(final Object value, final CSVContext context) {
 			result = Character.valueOf(tmp.charAt(0));
 		} else {
 			throw new SuperCSVException("Can't convert \"" + value
-				+ "\" to a char. It must have a length of 1 to be a valid char.", context);
+				+ "\" to a char. It must have a length of 1 to be a valid char.", context, this);
 		}
 	} else {
 		throw new SuperCSVException("Can't convert \"" + value
 			+ "\" to char. Input is not of type Character nor type String, but of type " + value.getClass().getName(),
-			context);
+			context, this);
 	}
 	
 	return next.execute(result, context);

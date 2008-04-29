@@ -1,6 +1,7 @@
 package org.supercsv.cellprocessor;
 
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
+import org.supercsv.exception.NullInputException;
 import org.supercsv.exception.SuperCSVException;
 import org.supercsv.util.CSVContext;
 
@@ -51,6 +52,7 @@ public Trim(final int maxSize, final StringCellProcessor next) {
  */
 @Override
 public Object execute(final Object value, final CSVContext context) {
+	if( value == null ) { throw new NullInputException("Input cannot be null", context, this); }
 	final String sval = value.toString(); // cast
 	
 	String result;

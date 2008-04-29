@@ -1,6 +1,7 @@
 package org.supercsv.cellprocessor;
 
 import org.supercsv.cellprocessor.ift.BoolCellProcessor;
+import org.supercsv.exception.NullInputException;
 import org.supercsv.exception.SuperCSVException;
 import org.supercsv.util.CSVContext;
 
@@ -29,6 +30,7 @@ public ParseBool(final BoolCellProcessor next) {
  */
 @Override
 public Object execute(final Object value, final CSVContext context) throws SuperCSVException {
+	if( value == null ) { throw new NullInputException("Input cannot be null", context, this); }
 	Boolean result;
 	final String sval = ((String) value).toLowerCase();
 	if( sval.equals("0") || sval.equalsIgnoreCase("false") || sval.equalsIgnoreCase("f") || sval.equalsIgnoreCase("n") ) {
@@ -38,7 +40,7 @@ public Object execute(final Object value, final CSVContext context) throws Super
 		result = Boolean.TRUE;
 	} else {
 		throw new SuperCSVException("Cannot parse \"" + value + "\" to a boolean on line " + context.lineNumber
-			+ " column " + context.columnNumber, context);
+			+ " column " + context.columnNumber, context, this);
 	}
 	
 	return next.execute(result, context);

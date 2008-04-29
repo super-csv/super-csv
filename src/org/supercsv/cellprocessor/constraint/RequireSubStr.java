@@ -8,6 +8,7 @@ import java.util.List;
 import org.supercsv.cellprocessor.CellProcessorAdaptor;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
+import org.supercsv.exception.NullInputException;
 import org.supercsv.exception.SuperCSVException;
 import org.supercsv.util.CSVContext;
 
@@ -49,6 +50,7 @@ public RequireSubStr(final String[] requiredSubStrings, final CellProcessor next
  */
 @Override
 public Object execute(final Object value, final CSVContext context) throws SuperCSVException, ClassCastException {
+	if( value == null ) { throw new NullInputException("Input cannot be null", context, this); }
 	final String sval = value.toString(); // cast
 	
 	boolean found = false;
@@ -59,7 +61,7 @@ public Object execute(final Object value, final CSVContext context) throws Super
 		}
 	}
 	if( found == false ) { throw new SuperCSVException("Entry \"" + value + "\" on line " + context.lineNumber
-		+ " column " + context.columnNumber + " doesn't contain any of the required substrings", context); }
+		+ " column " + context.columnNumber + " doesn't contain any of the required substrings", context, this); }
 	
 	return next.execute(value, context);
 }
