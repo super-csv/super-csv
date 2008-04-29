@@ -8,6 +8,14 @@ import org.supercsv.util.CSVContext;
 public class StrReplace extends CellProcessorAdaptor {
 private String searchText, replaceText;
 
+/**
+ * String relpace
+ * 
+ * @param searchText
+ *            text to search for
+ * @param replaceText
+ *            tetx to replace with
+ */
 public StrReplace(final String searchText, final String replaceText) {
 	super();
 	handleArguments(searchText, replaceText);
