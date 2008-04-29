@@ -84,23 +84,24 @@ public static <T> void mapStringList(final Map<String, T> destination, final Str
  */
 public static void processStringList(final List<? super Object> destination, final List<? extends Object> source,
 	final CellProcessor[] processors, final int lineNo) throws SuperCSVException {
-	if( source.size() != processors.length ) { throw new SuperCSVException(
+	final CSVContext context = new CSVContext();
+	context.lineNumber = lineNo;
+	if( source.size() != processors.length ) { 
+		throw new SuperCSVException(
 		"The value array (size "
 			+ source.size()
 			+ ")  must match the processors array (size "
 			+ processors.length
 			+ ")."
-			+ " You are probably reading a CSV line with a different number of columns than the number of cellprocessors specified..."); }
+			+ " You are probably reading a CSV line with a different number of columns than the number of cellprocessors specified...", context); }
 	
 	destination.clear();
-	final CSVContext context = new CSVContext();
 	
 	for( int i = 0; i < source.size(); i++ ) {
 		// if no processor, just add the string
 		if( processors[i] == null ) {
 			destination.add(source.get(i));
 		} else {
-			context.lineNumber = lineNo;
 			context.columnNumber = i;
 			destination.add(processors[i].execute(source.get(i), context)); // add
 		}
