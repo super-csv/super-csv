@@ -11,7 +11,7 @@ import org.supercsv.util.CSVContext;
  * the default accepted strings.
  * 
  * @author Kasper B. Graversen
- * @author Dominique De Vito
+ * @author Dominique De Vito (ddv36a78@yahoo.fr)
  * @since 1.0
  */
 public class ParseBool extends CellProcessorAdaptor {
