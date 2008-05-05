@@ -15,13 +15,13 @@ import org.supercsv.util.CSVContext;
  * 
  * @author Dominique De Vito (ddv36a78@yahoo.fr)
  */
-public class NotNullOrEmpty extends CellProcessorAdaptor implements StringCellProcessor {
+public class StrNotNullOrEmpty extends CellProcessorAdaptor implements StringCellProcessor {
 
-public NotNullOrEmpty() {
+public StrNotNullOrEmpty() {
 	super();
 }
 
-public NotNullOrEmpty(final CellProcessor next) {
+public StrNotNullOrEmpty(final CellProcessor next) {
 	super(next);
 }
  
