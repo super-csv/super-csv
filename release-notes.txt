@@ -1,6 +1,5 @@
-
-* version 1.50
---------------
+version 1.50-BETA
+-----------------
 
 * Added the following cell processors
 -- StrReplace - for string manipulation
