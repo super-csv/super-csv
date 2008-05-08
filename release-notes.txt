@@ -34,5 +34,5 @@
 Upgrade notes:
 --------------
 * If you are using the Unique processor confirm the new logic is acceptable, otherwise switch to using UniqueHashCode
-* All deprecated classes should have counter-part classes to replace with
+* Move away from deprecated classes. All deprecated classes should have counter-part classes to replace with
 * Notice that e.g. NullInputException is thrown rather than NullPointerException when reading/writing
