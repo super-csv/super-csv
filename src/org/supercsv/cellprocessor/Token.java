@@ -70,7 +70,7 @@ public Token(final Object token, final Object returnValue, final CellProcessor n
  */
 @Override
 public Object execute(final Object value, final CSVContext context) {
-	if( value == null ) { throw new NullInputException("Input cannot be null", context, this); }
+	if( value == null ) { throw new NullInputException("Input cannot be null on line " + context.lineNumber + " at column " + context.columnNumber, context, this); }
 	if( value.equals(token) ) { return returnValue; }
 	
 	return next.execute(value, context);

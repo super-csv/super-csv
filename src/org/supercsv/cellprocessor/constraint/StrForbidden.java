@@ -8,9 +8,11 @@ import java.util.List;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 
 /**
+ * Use {@link ForbidSubStr} instead (its a better name)
+ * <p>
  * Convert to string and ensure the input string is not present (even as a substring) in a set of specified strings.
  * Such constraint may be handy when reading/writting e.g. filenames and wanting to ensure no filename contains e.g.
- * ":", "/", ... Use forbidSubstring instead (its a better name)
+ * ":", "/", ...
  * 
  * @deprecated
  * @author Kasper B. Graversen

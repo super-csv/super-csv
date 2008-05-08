@@ -14,7 +14,7 @@ import org.supercsv.exception.SuperCSVException;
 import org.supercsv.util.CSVContext;
 
 /**
- * Deprecated due to bad naming. Use {@link RequiredHashCode} instead
+ * Deprecated due to bad naming. Use {@link RequireHashCode} instead
  * 
  * @author Kasper B. Graversen
  */
@@ -56,7 +56,7 @@ protected void addValues(final int... requiredHashcodes) throws SuperCSVExceptio
  */
 @Override
 public Object execute(final Object value, final CSVContext context) throws SuperCSVException, ClassCastException {
-	if( value == null ) { throw new NullInputException("Input cannot be null", context, this); }
+	if( value == null ) { throw new NullInputException("Input cannot be null on line " + context.lineNumber + " at column " + context.columnNumber, context, this); }
 	// check for required hash
 	if( !requiredHashCodes.contains(value.hashCode()) ) {
 		// create string of required hash'es for error msg

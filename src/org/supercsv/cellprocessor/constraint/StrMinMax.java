@@ -38,7 +38,7 @@ public StrMinMax(final long min, final long max, final CellProcessor next) {
  */
 @Override
 public Object execute(final Object value, final CSVContext context) throws NumberFormatException {
-	if( value == null ) { throw new NullInputException("Input cannot be null", context, this); }
+	if( value == null ) { throw new NullInputException("Input cannot be null on line " + context.lineNumber + " at column " + context.columnNumber, context, this); }
 	final String sval = value.toString(); // cast
 	if( sval.length() < min || sval.length() > max ) { throw new SuperCSVException("Entry \"" + value + "\" on line "
 		+ context.lineNumber + " column " + context.columnNumber + " is not within the string sizes " + min + " - "

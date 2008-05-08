@@ -49,4 +49,22 @@ public List<String> read(final CellProcessor... processors) throws IOException {
 	}
 	return null;
 }
+
+/**
+ * {@inheritDoc}
+ */
+public boolean read(List<? super Object> list, CellProcessor... processors) throws IOException {
+	return read(list, 0, processors);
+}
+
+/**
+ * {@inheritDoc}
+ */
+public boolean read(List<? super Object> list, int offset, CellProcessor... processors) throws IOException {
+	if( tokenizer.readStringList(super.line) ) {
+		Util.processStringList(list, offset, super.line, processors, getLineNumber());
+		return true;
+	}
+	return false;
+}
 }

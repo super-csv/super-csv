@@ -53,7 +53,7 @@ protected void addValues(final int... requiredLengths) throws SuperCSVException 
  */
 @Override
 public Object execute(final Object value, final CSVContext context) throws SuperCSVException, ClassCastException {
-	if( value == null ) { throw new NullInputException("Input cannot be null", context, this); }
+	if( value == null ) { throw new NullInputException("Input cannot be null on line " + context.lineNumber + " at column " + context.columnNumber, context, this); }
 	final String sval = (value == null) ? null : value.toString(); // cast
 	final int slength = (sval == null) ? 0 : sval.length();
 		

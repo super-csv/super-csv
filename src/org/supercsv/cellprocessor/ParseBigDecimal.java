@@ -30,7 +30,7 @@ public ParseBigDecimal(final CellProcessor next) {
  */
 @Override
 public Object execute(final Object value, final CSVContext context) throws SuperCSVException {
-	if( value == null ) { throw new NullInputException("Input cannot be null", context, this); }
+	if( value == null ) { throw new NullInputException("Input cannot be null on line " + context.lineNumber + " at column " + context.columnNumber, context, this); }
 	final BigDecimal result;
 	if( value instanceof String ) {
 		try {
