@@ -1,0 +1,33 @@
+
+* version 1.50
+--------------
+
+* Added the following cell processors
+-- StrReplace - for string manipulation
+-- StrRegExReplace - for string manipulation
+-- HashMapper - to map encountered values with other objects/values
+-- NotNull - to ensure non-null values for columns
+-- StrNotNullOrEmpty - to ensure non-null or empty values for columns
+
+* Deprecated the following cell processors
+-- "Required", re-implemented as "RequiredHashCode"
+
+* Unique has been renamed to UniqueHashCode
+* A new processor named Unique has been implemented
+-- The Unique processor is now based on equals() identity and not anymore on hashCode() identity. Previous definition based on hashCode() has been renamed into UniqueHashCode.
+
+* BeanReader and BeanWriter now supports method overloading of get/set methods.
+
+* Attempt at only throwing SuperCSVException's from the processors
+
+* Added the following exceptions
+-- ClassCastException
+-- NullInputException : this exception is raised now for unexpected 'null' input value for processor. Numerous processors have been modified to use that exception class.
+
+* better handling of lines without the expected number of columns
+-- The raised exception is now associated with a valid CSVContext object (previously, this object was 'null')
+
+* Added two new read methods on the CsvListReader
+
+
+
