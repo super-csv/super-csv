@@ -12,8 +12,10 @@ import org.supercsv.exception.SuperCSVException;
 import org.supercsv.util.CSVContext;
 
 /**
- * Convert a string to a date using the <code>SimpleDateFormat</code> class. examples of arguments to the
- * cellprocessor are:
+ * Convert a string to a date using the {@link SimpleDateFormat} class. If you want to convert from a Date to a String,
+ * use the {@link FmtDate} processor.
+ * <p>
+ * examples of arguments to the cellprocessor are:
  * <p>
  * <code>"MM/dd/yy"</code> to parse dase such as "01/29/02" <br>
  * <code>"dd-MMM-yy"</code> to parse dates such as "29-Jan-02" <br>
