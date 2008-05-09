@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.supercsv.cellprocessor.ift.DateCellProcessor;
+import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.exception.NullInputException;
 import org.supercsv.exception.SuperCSVException;
 import org.supercsv.util.CSVContext;
@@ -21,7 +22,7 @@ import org.supercsv.util.CSVContext;
  * 
  * @author Kasper B. Graversen
  */
-public class ParseDate extends CellProcessorAdaptor {
+public class ParseDate extends CellProcessorAdaptor implements StringCellProcessor {
 DateFormat formatter;
 
 public ParseDate(final String format) {
@@ -39,7 +40,8 @@ public ParseDate(final String format, final DateCellProcessor next) {
  */
 @Override
 public Object execute(final Object value, final CSVContext context) throws SuperCSVException {
-	if( value == null ) { throw new NullInputException("Input cannot be null on line " + context.lineNumber + " at column " + context.columnNumber, context, this); }
+	if( value == null ) { throw new NullInputException("Input cannot be null on line " + context.lineNumber
+		+ " at column " + context.columnNumber, context, this); }
 	try {
 		final Date result = formatter.parse((String) value);
 		return next.execute(result, context);
