@@ -17,21 +17,21 @@ version 1.50-BETA
 
 * BeanReader and BeanWriter now supports method overloading of get/set methods.
 
-* Attempt at only throwing SuperCSVException's from the processors
+* Cell processors now only throw SuperCSVException 
 
 * Added the following exceptions
--- ClassCastException
--- NullInputException : this exception is raised now for unexpected 'null' input value for processor. Numerous processors have been modified to use that exception class.
+-- ClassCastInputCSVException
+-- NullInputException: this exception is raised now for unexpected 'null' input value for processor. Numerous processors have been modified to use that exception class.
 
 * better handling of lines without the expected number of columns
 -- The raised exception is now associated with a valid CSVContext object (previously, this object was 'null')
-
-* Added two new read methods on the CsvListReader
 
 
 
 Upgrade notes:
 --------------
 * If you are using the Unique processor confirm the new logic is acceptable, otherwise switch to using UniqueHashCode
+
 * Move away from deprecated classes. All deprecated classes should have counter-part classes to replace with
+
 * Notice that e.g. NullInputException is thrown rather than NullPointerException when reading/writing
