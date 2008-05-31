@@ -35,13 +35,21 @@ public class FmtNumber extends CellProcessorAdaptor implements DoubleCellProcess
 protected DecimalFormat formatter;
 
 public FmtNumber(final String format) {
-	super();
-	this.formatter = new DecimalFormat(format);
+	this(new DecimalFormat(format));
 }
 
 public FmtNumber(final String format, final StringCellProcessor next) {
+	this(new DecimalFormat(format),next);
+}
+
+public FmtNumber(final DecimalFormat formatter) {
+	super();
+	this.formatter = formatter;
+}
+
+public FmtNumber(final DecimalFormat formatter, final StringCellProcessor next) {
 	super(next);
-	this.formatter = new DecimalFormat(format);
+	this.formatter = formatter;
 }
 
 /**
