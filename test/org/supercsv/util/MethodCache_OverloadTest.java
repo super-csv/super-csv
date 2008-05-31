@@ -16,6 +16,7 @@ public class MethodCache_OverloadTest {
 /** we use objects of this class as access test */
 static class ObjectMock {
 int i = STARTVAL;
+long l = STARTVAL;
 Integer integer = new Integer(STARTVAL);
 String s = "" + STARTVAL;
 
@@ -42,10 +43,20 @@ public void setVal(final int i) {
 public void setVal(final String s) {
 	this.s = s;
 }
+
+public Long getL() {
+	return l;
+}
+
+public void setL(Long l) {
+	this.l = l;
+}
+
 }
 
 private static final int STARTVAL = 42;
 private static final int ENDVAL = 43;
+private static final long ENDVAL_L = 43L;
 
 @Test
 public void test_Set_Lookup_int_objectType() throws Exception {
@@ -61,10 +72,22 @@ public void test_Set_Lookup_int_objectType() throws Exception {
 public void test_Set_Lookup_int_simpleType() throws Exception {
 	final MethodCache cache = new MethodCache();
 	final ObjectMock om = new ObjectMock();
+	assertEquals(STARTVAL, om.getInteger().intValue());
 	
 	final Method setMethod = cache.getSetMethod(om, "val", int.class);
 	setMethod.invoke(om, ENDVAL);
 	assertEquals(ENDVAL, om.getI());
+}
+
+@Test
+public void test_Set_Lookup_long_simpleType() throws Exception {
+	final MethodCache cache = new MethodCache();
+	final ObjectMock om = new ObjectMock();
+	assertEquals(STARTVAL, om.getL().intValue());
+	
+	final Method setMethod = cache.getSetMethod(om, "l", long.class);
+	setMethod.invoke(om, ENDVAL_L);
+	assertEquals(ENDVAL_L, om.getL().longValue());
 }
 
 @Test
