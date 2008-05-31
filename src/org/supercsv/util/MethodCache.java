@@ -3,6 +3,7 @@ package org.supercsv.util;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 
+import org.supercsv.exception.SuperCSVException;
 import org.supercsv.exception.SuperCSVReflectionException;
 
 import spiffy.core.util.HashMapBuilder;
@@ -76,7 +77,8 @@ public <T> Method getSetMethod(final Object destinationObject, final String vari
 		// we don't know the destination type for the set method, just use whatever we can find
 		if( variableType == null ) {
 			method = inspectClass(destinationObject, "set", variableName, 1);
-		} else {
+		}
+		else {
 			method = inspectClassForSetMethods(destinationObject, variableType, variableName);
 		}
 		setMethodsCache.set(destinationObject.getClass(), variableType, variableName, method);
@@ -145,7 +147,7 @@ Method inspectClassForSetMethods(final Object destinationObject, final Class var
 			throwException(destinationObject, variableType, methodName, e1);
 		}
 	}
-	return null; // just here to satisfy java...
+	throw new SuperCSVException("This can never happen...");
 }
 
 /**
