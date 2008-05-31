@@ -42,8 +42,10 @@ public static List<? extends Object> map2List(final Map<String, ? extends Object
  *            A list of values TODO: see if using an iterator for the values is more efficient
  */
 public static <T> void mapStringList(final Map<String, T> destination, final String[] nameMapper, final List<T> values) {
-	if( nameMapper.length != values.size() ) { throw new SuperCSVException(
-		"The namemapper array and the value list must match in size. Number of columns mismatch number of entries for your map."); }
+	if( nameMapper.length != values.size() ) {
+		throw new SuperCSVException(
+			"The namemapper array and the value list must match in size. Number of columns mismatch number of entries for your map.");
+	}
 	destination.clear();
 	
 	// map each element of the array
@@ -56,8 +58,10 @@ public static <T> void mapStringList(final Map<String, T> destination, final Str
 		}
 		
 		// only perform safe inserts
-		if( destination.containsKey(key) ) { throw new SuperCSVException("nameMapper array contains duplicate key \""
-			+ key + "\" cannot map the list..."); }
+		if( destination.containsKey(key) ) {
+			throw new SuperCSVException("nameMapper array contains duplicate key \"" + key
+				+ "\" cannot map the list...");
+		}
 		
 		destination.put(key, values.get(i));
 	}
@@ -84,22 +88,25 @@ public static <T> void mapStringList(final Map<String, T> destination, final Str
  */
 public static void processStringList(final List<? super Object> destination, final List<? extends Object> source,
 	final CellProcessor[] processors, final int lineNo) throws SuperCSVException {
-	if( source.size() != processors.length ) { throw new SuperCSVException(
-		"The value array (size "
-			+ source.size()
-			+ ")  must match the processors array (size "
-			+ processors.length
-			+ ")."
-			+ " You are probably reading a CSV line with a different number of columns than the number of cellprocessors specified..."); }
+	if( source.size() != processors.length ) {
+		throw new SuperCSVException(
+			"The value array (size "
+				+ source.size()
+				+ ")  must match the processors array (size "
+				+ processors.length
+				+ ")."
+				+ " You are probably reading a CSV line with a different number of columns than the number of cellprocessors specified...");
+	}
 	
 	destination.clear();
 	final CSVContext context = new CSVContext();
-	
+	context.lineSource = source;
 	for( int i = 0; i < source.size(); i++ ) {
 		// if no processor, just add the string
 		if( processors[i] == null ) {
 			destination.add(source.get(i));
-		} else {
+		}
+		else {
 			context.lineNumber = lineNo;
 			context.columnNumber = i;
 			destination.add(processors[i].execute(source.get(i), context)); // add
