@@ -19,10 +19,16 @@ public class MethodCache {
  * defines a lookup between classes and what class signature they may match due to the autoboxing feature in java
  */
 private final HashMap<Class, Class> autoboxingConverter = new HashMapBuilder<Class, Class>()//
+	.add(long.class, Long.class)//
+	.add(Long.class, long.class)//
 	.add(int.class, Integer.class)//
 	.add(Integer.class, int.class)//
 	.add(char.class, Character.class)//
 	.add(Character.class, char.class)//
+	.add(byte.class, Byte.class)//
+	.add(Byte.class, byte.class)//
+	.add(short.class, Short.class)//
+	.add(Short.class, short.class)//
 	.build();
 
 /**
