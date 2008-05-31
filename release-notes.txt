@@ -26,7 +26,7 @@ version 1.50-BETA
 * better handling of lines without the expected number of columns
 -- The raised exception is now associated with a valid CSVContext object (previously, this object was 'null')
 
-
+* Better error messages, more context information in the exception and available to the programmer
 
 Upgrade notes:
 --------------
