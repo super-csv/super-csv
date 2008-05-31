@@ -32,34 +32,4 @@ public List<String> read() throws IOException;
  * @since 1.0
  */
 public List<String> read(CellProcessor... processors) throws IOException;
-
-/**
- * Reading a line into a array.
- * 
- * @param list
- *            container in which the read line is stored
- * @param processors
- *            An array of processors that processes each entry. <code>null</code> entries denotes no processing for
- *            that cell
- * @return false if end-of-file or true in the other case
- * @throws IOException
- * @since 1.50
- */
-public boolean read(List<? super Object> list, CellProcessor... processors) throws IOException;
-
-/**
- * Reading a line into a array.
- * 
- * @param list
- *            container in which the read line is stored
- * @param offset
- *            the offset in the container of the first value to store.
- * @param processors
- *            An array of processors that processes each entry. <code>null</code> entries denotes no processing for
- *            that cell
- * @return false if end-of-file or true in the other case
- * @throws IOException
- * @since 1.50
- */
-public boolean read(List<? super Object> list, int offset, CellProcessor... processors) throws IOException;
 }

@@ -11,7 +11,6 @@ import org.supercsv.exception.SuperCSVException;
  * A utility class for various list/map operations. May be of use to the public as well as to BestCSV
  * 
  * @author Kasper B. Graversen
- * @author Dominique De Vito 
  */
 public abstract class Util {
 
@@ -66,15 +65,15 @@ public static <T> void mapStringList(final Map<String, T> destination, final Str
 
 /**
  * A function which given a list of strings, process each cell using its corresponding processor-chain from the
- * processor array and return the result as an array Can be extended so the safety check is cached in case the same two
+ * processor array and return the result as an arary Can be extended so the safety check is cached in case the same two
  * arrays are used on several requests
  * 
  * @param destination
- *            This list is populated with the result from reading a line
+ *            This list is emptied and then populated with the result from reading a line
  * @param source
- *            Is an array of Strings/null's representing the source elements
+ *            Is an array of Strings/null's representing the soure elements
  * @param processors
- *            an array of CellProcessors/null's enabling custom processing of each cell value specified in the cellValue
+ *            an array of CellProcessors/null's enabling custom processing of each cellvalue specified in the cellValue
  *            array. The number of non-null entries in the cellValues array must match the number of processors/null
  *            given.
  * @param lineNo
@@ -85,51 +84,25 @@ public static <T> void mapStringList(final Map<String, T> destination, final Str
  */
 public static void processStringList(final List<? super Object> destination, final List<? extends Object> source,
 	final CellProcessor[] processors, final int lineNo) throws SuperCSVException {
-	processStringList(destination, 0, source, processors, lineNo);
-}
-
-
-/**
- * A function which given a list of strings, process each cell using its corresponding processor-chain from the
- * processor array and return the result as an array Can be extended so the safety check is cached in case the same two
- * arrays are used on several requests
- * 
- * @param destination
- *            This list is populated with the result from reading a line
- * @param offset
- *            The offset in the <tt>destination</tt> list of the first value to store.
- * @param source
- *            Is an array of Strings/null's representing the source elements
- * @param processors
- *            an array of CellProcessors/null's enabling custom processing of each cell value specified in the cellValue
- *            array. The number of non-null entries in the cellValues array must match the number of processors/null
- *            given.
- * @param lineNo
- *            the line number of the CSV source the processing is taking place on
- * @param errorLog
- *            a builder of error messages. In case of an exception, this builder is populated with a message. All cells
- *            are attempted processed even in case one cell throws an exception.
- */
-public static void processStringList(final List<? super Object> destination, int offset, final List<? extends Object> source,
-	final CellProcessor[] processors, final int lineNo) throws SuperCSVException {
-	final CSVContext context = new CSVContext();
-	context.lineNumber = lineNo;
-	if( source.size() != processors.length ) { 
-		throw new SuperCSVException(
+	if( source.size() != processors.length ) { throw new SuperCSVException(
 		"The value array (size "
 			+ source.size()
 			+ ")  must match the processors array (size "
 			+ processors.length
 			+ ")."
-			+ " You are probably reading a CSV line with a different number of columns than the number of cellprocessors specified...", context); }
+			+ " You are probably reading a CSV line with a different number of columns than the number of cellprocessors specified..."); }
+	
+	destination.clear();
+	final CSVContext context = new CSVContext();
 	
 	for( int i = 0; i < source.size(); i++ ) {
 		// if no processor, just add the string
 		if( processors[i] == null ) {
-			destination.set(offset + i, source.get(i));
+			destination.add(source.get(i));
 		} else {
+			context.lineNumber = lineNo;
 			context.columnNumber = i;
-			destination.set(offset + i, processors[i].execute(source.get(i), context)); // add
+			destination.add(processors[i].execute(source.get(i), context)); // add
 		}
 	}
 }
