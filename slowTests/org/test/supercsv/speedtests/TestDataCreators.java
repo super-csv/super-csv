@@ -11,9 +11,11 @@ package org.test.supercsv.speedtests;
 import java.util.Random;
 
 /**
- * creator methods to create random data for test data file
+ * creator methods to create random data for test data file.
+ * <p>
+ * look at the {@link AbstractSpeedTest} to see how to run this..
  * 
- * @author Kasper B. Graversen generate random content
+ * @author Kasper B. Graversen
  */
 public class TestDataCreators {
 static Random r = new Random();
@@ -24,19 +26,12 @@ static {
 public static String createAnonymousLine_num_str_str_num_date() {
 	final String s = "" + number(100000) + ", " + string(7) + ", " + string(10) + ", " + number(200) + ", " + date()
 		+ "\n";
-	if( r.nextInt() % 30 == 0 ) { return "\"" + s + "\""; }
 	return s;
 }
 
 public static String date() {
 	return "" + (number(11) + 1) + "/" + (number(11) + 1) + "/" + (number(11) + 1);
 }
-
-// public static void main(final String[] args) {
-// for(int i = 0; i < 10; i++) {
-// System.out.println(createAnonymousLine());
-// }
-// }
 
 public static int number(final int max) {
 	return r.nextInt(max);
@@ -48,11 +43,13 @@ public static String string(final int maxLengh) {
 	for( int i = 0; i < len; i++ ) {
 		if( r.nextInt() % 6 == 0 ) {
 			sb.append(' ');
-		} else {
+		}
+		else {
 			sb.append(Character.toChars(65 + r.nextInt(25)));
 		}
 	}
-	if( r.nextInt() % 30 == 0 ) { return "\"" + sb.toString() + "\""; // some times make it a "" string
+	if( r.nextInt() % 30 == 0 ) {
+		return "\"" + sb.toString() + "\""; // some times make it a "" string
 	}
 	return sb.toString();
 }
