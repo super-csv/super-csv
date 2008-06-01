@@ -1,7 +1,7 @@
 package org.supercsv.cellprocessor;
 
 import org.supercsv.cellprocessor.ift.CellProcessor;
-import org.supercsv.exception.SuperCSVException;
+import org.supercsv.exception.NullInputException;
 import org.supercsv.util.CSVContext;
 
 /**
@@ -30,7 +30,7 @@ protected CellProcessorAdaptor() {
  */
 public CellProcessorAdaptor(final CellProcessor next) {
 	super();
-	if( next == null ) { throw new SuperCSVException("argument was null"); }
+	if( next == null ) { throw new NullInputException("argument was null", this); }
 	
 	this.next = next;
 }

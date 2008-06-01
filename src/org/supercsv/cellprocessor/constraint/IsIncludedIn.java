@@ -1,6 +1,7 @@
 package org.supercsv.cellprocessor.constraint;
 
 import java.util.HashSet;
+import java.util.Set;
 
 import org.supercsv.cellprocessor.CellProcessorAdaptor;
 import org.supercsv.cellprocessor.ift.BoolCellProcessor;
@@ -14,37 +15,48 @@ import org.supercsv.exception.SuperCSVException;
 import org.supercsv.util.CSVContext;
 
 /**
- * Deprecated due to bad naming. Use {@link RequireHashCode} instead
+ * This processor enforces the input value to belong to a specific set of given values.
+ * <p>
  * 
- * @author Kasper B. Graversen
+ * @since 1.50
+ * @author Dominique De Vito
  */
-@Deprecated
-public class Required extends CellProcessorAdaptor implements BoolCellProcessor, DateCellProcessor,
+public class IsIncludedIn extends CellProcessorAdaptor implements BoolCellProcessor, DateCellProcessor,
 	DoubleCellProcessor, LongCellProcessor, StringCellProcessor {
-protected HashSet<Integer> requiredHashCodes = new HashSet<Integer>();
+protected Set<Object> possibleValues;
 
-public Required(final int... requiredHashcodes) {
+public IsIncludedIn(final HashSet<Object> possibleValues) {
 	super();
-	addValues(requiredHashcodes);
+	this.possibleValues = possibleValues;
 }
 
-public Required(final int requiredHashcode, final CellProcessor next) {
-	this(new int[] { requiredHashcode }, next);
-}
-
-public Required(final int[] requiredHashcodes, final CellProcessor next) {
+public IsIncludedIn(final HashSet<Object> possibleValues, final CellProcessor next) {
 	super(next);
-	addValues(requiredHashcodes);
+	this.possibleValues = possibleValues;
 }
 
-protected void addValues(final int... requiredHashcodes) throws SuperCSVException {
-	for( final int hash : requiredHashcodes ) {
-		if( requiredHashCodes.contains(hash) ) { throw new SuperCSVException("Cannot accept two identical hash codes",
-			this); }
-		requiredHashCodes.add(hash);
+public IsIncludedIn(final Object[] possibleValues) {
+	super();
+	this.possibleValues = createSet(possibleValues);
+}
+
+public IsIncludedIn(final Object[] possibleValues, final CellProcessor next) {
+	super(next);
+	this.possibleValues = createSet(possibleValues);
+}
+ 
+private static Set<Object> createSet(Object[] arr) {
+	int nb = (arr == null) ? 0 : arr.length;
+	if (nb == 0) {
+		return new HashSet<Object>();
+	} else {
+		HashSet<Object> set = new HashSet<Object>((4 * nb / 3) + 1);
+		for( int i = 0; i < arr.length; i++ ) {
+			set.add(arr[i]);
+		}
+		return set;
 	}
 }
-
 /**
  * {@inheritDoc}
  * 
@@ -58,17 +70,10 @@ protected void addValues(final int... requiredHashcodes) throws SuperCSVExceptio
 public Object execute(final Object value, final CSVContext context) throws SuperCSVException, ClassCastException {
 	if( value == null ) { throw new NullInputException("Input cannot be null on line " + context.lineNumber + " at column " + context.columnNumber, context, this); }
 	// check for required hash
-	if( !requiredHashCodes.contains(value.hashCode()) ) {
-		// create string of required hash'es for error msg
-		final StringBuilder sb = new StringBuilder();
-		for( final int hash : requiredHashCodes ) {
-			sb.append(hash + ", ");
-		}
-		sb.deleteCharAt(sb.length() - 1); // delete last comma
+	if( !possibleValues.contains(value) ) {
 		
 		throw new SuperCSVException("Entry \"" + value + "\" on line " + context.lineNumber + " column "
-			+ context.columnNumber + " has hashcode " + value.hashCode()
-			+ " which is not one of the required hash codes: " + sb.toString(), context, this);
+			+ context.columnNumber + " is accepted as a possible value", context, this);
 	}
 	
 	return next.execute(value, context);

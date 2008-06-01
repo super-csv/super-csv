@@ -2,6 +2,7 @@ package org.supercsv.cellprocessor.constraint;
 
 import org.supercsv.cellprocessor.CellProcessorAdaptor;
 import org.supercsv.cellprocessor.ift.DoubleCellProcessor;
+import org.supercsv.exception.NullInputException;
 import org.supercsv.exception.SuperCSVException;
 import org.supercsv.util.CSVContext;
 
@@ -39,6 +40,8 @@ public DMinMax(final double min, final double max, final DoubleCellProcessor nex
  */
 @Override
 public Object execute(final Object value, final CSVContext context) throws SuperCSVException {
+	if( value == null ) { throw new NullInputException("Input cannot be null on line " + context.lineNumber + " at column " + context.columnNumber, context, this); }
+	
 	final Double result;
 	if( value instanceof Double ) {
 		result = (Double) value;
@@ -47,7 +50,7 @@ public Object execute(final Object value, final CSVContext context) throws Super
 			result = Double.parseDouble(value.toString());
 		}
 		catch(final NumberFormatException e) {
-			throw new SuperCSVException("Parser error", context, e);
+			throw new SuperCSVException("Parser error", context, this, e);
 		}
 	}
 	
@@ -58,7 +61,7 @@ public Object execute(final Object value, final CSVContext context) throws Super
 }
 
 private void init(final double min, final double max) {
-	if( max < min ) { throw new SuperCSVException("max < min in the arguments " + min + " " + max); }
+	if( max < min ) { throw new SuperCSVException("max < min in the arguments " + min + " " + max, this); }
 	
 	this.min = min;
 	this.max = max;

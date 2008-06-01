@@ -9,6 +9,7 @@ import org.supercsv.util.CSVContext;
  * 
  * @since 1.50
  * @author Kasper B. Graversen, (c) 2007
+ * @author Dominique de Vito
  */
 public class NullInputException extends SuperCSVException {
 private static final long serialVersionUID = 1L;

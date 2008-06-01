@@ -3,6 +3,7 @@ package org.supercsv.cellprocessor.constraint;
 import org.supercsv.cellprocessor.CellProcessorAdaptor;
 import org.supercsv.cellprocessor.NullObjectPattern;
 import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.exception.NullInputException;
 import org.supercsv.exception.SuperCSVException;
 import org.supercsv.util.CSVContext;
 
@@ -19,7 +20,7 @@ protected long min, max;
 public StrMinMax(final long min, final long max) {
 	super(NullObjectPattern.INSTANCE);
 	if( max < min ) { throw new SuperCSVException("max < min in the arguments " + min + " " + max); }
-	if( min < 0 ) { throw new SuperCSVException("min length must be >= 0, is " + min); }
+	if( min < 0 ) { throw new SuperCSVException("min length must be >= 0, is " + min, this); }
 	
 	this.min = min;
 	this.max = max;
@@ -27,7 +28,7 @@ public StrMinMax(final long min, final long max) {
 
 public StrMinMax(final long min, final long max, final CellProcessor next) {
 	super(next);
-	if( max < min ) { throw new SuperCSVException("max < min in the arguments " + min + " " + max); }
+	if( max < min ) { throw new SuperCSVException("max < min in the arguments " + min + " " + max, this); }
 	this.min = min;
 	this.max = max;
 }
@@ -37,6 +38,7 @@ public StrMinMax(final long min, final long max, final CellProcessor next) {
  */
 @Override
 public Object execute(final Object value, final CSVContext context) throws NumberFormatException {
+	if( value == null ) { throw new NullInputException("Input cannot be null on line " + context.lineNumber + " at column " + context.columnNumber, context, this); }
 	final String sval = value.toString(); // cast
 	if( sval.length() < min || sval.length() > max ) { throw new SuperCSVException("Entry \"" + value + "\" on line "
 		+ context.lineNumber + " column " + context.columnNumber + " is not within the string sizes " + min + " - "

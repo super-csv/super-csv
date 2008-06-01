@@ -14,14 +14,18 @@ import org.supercsv.cellprocessor.ift.DateCellProcessor;
 import org.supercsv.cellprocessor.ift.DoubleCellProcessor;
 import org.supercsv.cellprocessor.ift.LongCellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
+import org.supercsv.exception.NullInputException;
 import org.supercsv.util.CSVContext;
 
 /**
  * This processor is used in the situations you want to be able to check for the presence of a meta data or "special
  * token". Such a token could be the string "[empty]" which could denote that a column is different from the empty
- * string "". It can be used in conjunction with a ParseLong() processor, since the token would be discovered before the
- * parser attempt so parse the token as a number. Comparison between column value and the <tt>token</tt> is based on
- * the object's <tt>equals()</tt> method.
+ * string "".
+ * <p>
+ * It can be used in conjunction with a ParseLong() processor, since the token would be discovered before the parser
+ * attempt so parse the token as a number.
+ * <p>
+ * Comparison between column value and the <tt>token</tt> is based on the object's <tt>equals()</tt> method.
  * 
  * @since 1.02
  * @author Kasper B. Graversen
@@ -66,6 +70,7 @@ public Token(final Object token, final Object returnValue, final CellProcessor n
  */
 @Override
 public Object execute(final Object value, final CSVContext context) {
+	if( value == null ) { throw new NullInputException("Input cannot be null on line " + context.lineNumber + " at column " + context.columnNumber, context, this); }
 	if( value.equals(token) ) { return returnValue; }
 	
 	return next.execute(value, context);

@@ -12,19 +12,19 @@ import org.supercsv.util.CSVContext;
 /**
  * String replacer.
  * @author Kasper B. Graversen
- * @author Dominique De Vito (ddv36a78@yahoo.fr)
+ * @author Dominique De Vito 
  */
 public class StrReplace extends CellProcessorAdaptor implements BoolCellProcessor,
 DateCellProcessor, DoubleCellProcessor, LongCellProcessor, StringCellProcessor {
 private String searchText, replaceText;
 
 /**
- * String replace
+ * String relpace
  * 
  * @param searchText
  *            text to search for
  * @param replaceText
- *            text to replace with
+ *            tetx to replace with
  */
 public StrReplace(final String searchText, final String replaceText) {
 	super();
@@ -40,7 +40,7 @@ public StrReplace(final String searchText, final String replaceText, final Strin
  * {@inheritDoc}
  */
 @Override
-public Object execute(final Object value, final CSVContext context) {
+public Object execute(final Object value, final CSVContext context) throws SuperCSVException {
 	if (value == null) {
 		throw new NullInputException("Input cannot be null", context, this); 
 	}

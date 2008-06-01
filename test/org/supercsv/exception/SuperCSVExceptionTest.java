@@ -18,7 +18,7 @@ public void get_should_work() {
 @Test
 public void set_should_work() {
 	final CSVContext context = new CSVContext(1, 2);
-	final SuperCSVException ex = new SuperCSVException("msg", null);
+	final SuperCSVException ex = new SuperCSVException("msg");
 	ex.setCsvContext(context);
 	assertEquals(context, ex.getCsvContext());
 }

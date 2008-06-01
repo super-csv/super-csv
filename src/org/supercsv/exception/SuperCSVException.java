@@ -21,7 +21,7 @@ public SuperCSVException(final String msg, final CSVContext context) {
 }
 
 public SuperCSVException(final String msg, final CSVContext context, final Throwable t) {
-	super(msg, t);
+	super(t.getMessage() + "\n" + msg, t);
 	this.csvContext = context;
 }
 
@@ -37,7 +37,7 @@ public SuperCSVException(final String msg, final CSVContext context, final CellP
 }
 
 public SuperCSVException(final String msg, final CSVContext context, final CellProcessor processor, final Throwable t) {
-	super(msg, t);
+	super(t.getMessage() + "\n" + msg, t);
 	this.csvContext = context;
 	this.offendingProcessor = processor;
 }
@@ -66,4 +66,8 @@ public CellProcessor getOffendingProcessor() {
 	return offendingProcessor;
 }
 
+@Override
+public String toString() {
+	return getMessage() + " " + csvContext.toString() + " offending processor " + offendingProcessor;
+}
 }

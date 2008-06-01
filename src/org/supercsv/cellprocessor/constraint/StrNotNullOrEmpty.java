@@ -9,11 +9,17 @@ import org.supercsv.exception.SuperCSVException;
 import org.supercsv.util.CSVContext;
 
 /**
- * This processor checks if the input is 'null' or an empty string, 
- * and raises an exception in that case or does nothing
- * in the other case.
+ * This processor checks if the input is 'null' or an empty string, and raises an exception in that case. In all other
+ * cases, the next processor in the chain is invoked.
+ * <p>
+ * You should only use this processor, when a column must be non-null, but you do not need to apply any other processor
+ * to the column.
+ * <P>
+ * If you apply other processors to the column, you can safely omit this processor as all other processors should do a
+ * null-check on its input.
  * 
- * @author Dominique De Vito (ddv36a78@yahoo.fr)
+ * @since 1.50
+ * @author Dominique De Vito
  */
 public class StrNotNullOrEmpty extends CellProcessorAdaptor implements StringCellProcessor {
 
@@ -24,7 +30,7 @@ public StrNotNullOrEmpty() {
 public StrNotNullOrEmpty(final CellProcessor next) {
 	super(next);
 }
- 
+
 /**
  * {@inheritDoc}
  * 
@@ -34,14 +40,11 @@ public StrNotNullOrEmpty(final CellProcessor next) {
  */
 @Override
 public Object execute(final Object value, final CSVContext context) {
-	if( value == null ) {
-		throw new NullInputException("Input cannot be null", context, this);
-	}
-	if (value instanceof String) {
+	if( value == null ) { throw new NullInputException("Input cannot be null on line " + context.lineNumber
+		+ " at column " + context.columnNumber, context, this); }
+	if( value instanceof String ) {
 		String svalue = (String) value;
-		if (svalue.length() == 0) {
-			throw new SuperCSVException("unexpected empty string", context);
-		}
+		if( svalue.length() == 0 ) { throw new SuperCSVException("unexpected empty string", context); }
 	} else {
 		throw new ClassCastInputCSVException(value, String.class, context);
 	}
