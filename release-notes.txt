@@ -7,6 +7,8 @@ version 1.50-BETA
 -- HashMapper - to map encountered values with other objects/values
 -- NotNull - to ensure non-null values for columns
 -- StrNotNullOrEmpty - to ensure non-null or empty values for columns
+-- FmtBoot - format as a string any Boolean value
+-- IsIncludedIn - to ensure input value belongs to a specific set of given values
 
 * Deprecated the following cell processors
 -- "Required", re-implemented as "RequiredHashCode"
