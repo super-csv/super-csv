@@ -59,7 +59,8 @@ public boolean readStringList(final List<String> result) throws IOException {
 	// read non-empty lines only
 	do {
 		line = lnr.readLine();
-		if( line == null ) { return false; // EOF
+		if( line == null ) {
+			return false; // EOF
 		}
 	}
 	while( line.length() == 0 ); // skip zero len lines
@@ -92,47 +93,57 @@ public boolean readStringList(final List<String> result) throws IOException {
 				sb.delete(0, sb.length()); // reset the stringbuilder
 				potentialSpaces = 0;
 				break; // read more
-			} else if( c == ' ' ) { // trim starting spaces (trailing spaces
-				// are removed using the String.trim()
-				if( sb.length() > 0 ) {
-					// first on the line
-					potentialSpaces++;
+			}
+			else
+				if( c == ' ' ) { // trim starting spaces (trailing spaces
+					// are removed using the String.trim()
+					if( sb.length() > 0 ) {
+						// first on the line
+						potentialSpaces++;
+					}
+					break; // read more
 				}
-				break; // read more
-			} else if( c == '\n' ) {
-				// save token
-				result.add(sb.toString());
-				sb = null;
-				potentialSpaces = 0;
-				return true; // we've read a line
-			} else if( c == quote && sb.length() == 0 ) { // quote first on line cannot be escaped
-				state = PARSERSTATE.QUOTESCOPE;
-				// update variable in order to do debug statements
-				linenoQuoteState = getLineNumber();
-				break; // read more
-			} else if( c == quote && line.charAt(p + 1) == quote && sb.length() > 0 ) {
-				// an escaped quote - can not happen as first character
-				addSpaces(sb, potentialSpaces);
-				potentialSpaces = 0;
-				sb.append(c); // add and skip the first quote
-				// (end of switch will skip the next quote)
-				p++;
-				break; // read more
-			} else if( c == quote && line.charAt(p + 1) != quote ) { // a single quote, change state and don't
-				// append
-				state = PARSERSTATE.QUOTESCOPE;
-				// update variable in order to do debug statements
-				linenoQuoteState = getLineNumber();
-				addSpaces(sb, potentialSpaces);
-				potentialSpaces = 0;
-				break; // read more
-			}
-
-			else { // if just a normal character
-				addSpaces(sb, potentialSpaces);
-				potentialSpaces = 0;
-				sb.append(c); // add the char
-			}
+				else
+					if( c == '\n' ) {
+						// save token
+						result.add(sb.toString());
+						sb = null;
+						potentialSpaces = 0;
+						return true; // we've read a line
+					}
+					else
+						if( c == quote && sb.length() == 0 ) { // quote first on line cannot be escaped
+							state = PARSERSTATE.QUOTESCOPE;
+							// update variable in order to do debug statements
+							linenoQuoteState = getLineNumber();
+							break; // read more
+						}
+						else
+							if( c == quote && line.charAt(p + 1) == quote && sb.length() > 0 ) {
+								// an escaped quote - can not happen as first character
+								addSpaces(sb, potentialSpaces);
+								potentialSpaces = 0;
+								sb.append(c); // add and skip the first quote
+								// (end of switch will skip the next quote)
+								p++;
+								break; // read more
+							}
+							else
+								if( c == quote && line.charAt(p + 1) != quote ) { // a single quote, change state and don't
+									// append
+									state = PARSERSTATE.QUOTESCOPE;
+									// update variable in order to do debug statements
+									linenoQuoteState = getLineNumber();
+									addSpaces(sb, potentialSpaces);
+									potentialSpaces = 0;
+									break; // read more
+								}
+								
+								else { // if just a normal character
+									addSpaces(sb, potentialSpaces);
+									potentialSpaces = 0;
+									sb.append(c); // add the char
+								}
 			break;
 		
 		// for each situation above, repeat now in the quote scope
@@ -143,33 +154,44 @@ public boolean readStringList(final List<String> result) throws IOException {
 				// delimiter does not count as delimiter in quote scope
 				sb.append(c);
 				break; // read more
-			} else if( c == '\n' ) { // newline does not count as newline in
-				// quote scope
-				sb.append('\n');
-				// parse the next line of the file
-				p = -1; // reset delta to point to start of new line (set to
-				// -1 as it will be incremented to 0 at the end of
-				// the switch)
-				line = lnr.readLine();
-				if( line == null ) { throw new IOException(
-					"File ended unexpectedly while reading a quoted cell starting on line: " + linenoQuoteState); }
-				line = line + '\n'; // add \n to make parsing easy
-				break; // read more
-			} else if( c == quote && line.charAt(p + 1) == quote ) {
-				// an escaped quote,
-				sb.append(c); // add and skip the first quote (end of
-				// switch will skip the next quote
-				p++;
-				break; // read more
-			} else if( line.charAt(p) == quote && line.charAt(p + 1) != quote ) {
-				// a single quote, only change state
-				state = PARSERSTATE.NORMAL;
-				break; // read more
-			} else { // if just a normal character
-				sb.append(c); // add the char
-				// System.out.println("Adding char '" + c + "'");
 			}
+			else
+				if( c == '\n' ) { // newline does not count as newline in
+					// quote scope
+					sb.append('\n');
+					// parse the next line of the file
+					p = -1; // reset delta to point to start of new line (set to
+					// -1 as it will be incremented to 0 at the end of
+					// the switch)
+					line = lnr.readLine();
+					if( line == null ) {
+						throw new IOException("File ended unexpectedly while reading a quoted cell starting on line: "
+							+ linenoQuoteState);
+					}
+					line = line + '\n'; // add \n to make parsing easy
+					break; // read more
+				}
+				else
+					if( c == quote && line.charAt(p + 1) == quote ) {
+						// an escaped quote,
+						sb.append(c); // add and skip the first quote (end of
+						// switch will skip the next quote
+						p++;
+						break; // read more
+					}
+					else
+						if( line.charAt(p) == quote && line.charAt(p + 1) != quote ) {
+							// a single quote, only change state
+							state = PARSERSTATE.NORMAL;
+							break; // read more
+						}
+						else { // if just a normal character
+							sb.append(c); // add the char
+							// System.out.println("Adding char '" + c + "'");
+						}
 			break;
+		default:
+			throw new RuntimeException("this can never happen!");
 		} // switch
 		
 		p++; // read next char of the line
