@@ -121,15 +121,13 @@ protected void write(final Object... content) throws IOException {
 	// convert object array to strings and write them
 	final String[] strarr = new String[content.length];
 	int i = 0;
-	try {
-		for( final Object o : content ) {
-			strarr[i++] = o.toString();
-		}
-		write(strarr);
+	for( final Object o : content ) {
+		if( o == null ) { 
+			throw new NullInputException("Object at position " + i + " is null", new CSVContext(
+				getLineNumber(), i), (Throwable) null); }
+		strarr[i++] = o.toString();
 	}
-	catch(final NullPointerException e) {
-		throw new NullInputException("Object at possition " + i + " is null.", new CSVContext(getLineNumber(), i), e);
-	}
+	write(strarr);
 }
 
 protected void write(final String... content) throws IOException {
