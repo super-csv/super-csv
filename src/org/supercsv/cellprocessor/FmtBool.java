@@ -8,8 +8,8 @@ import org.supercsv.exception.SuperCSVException;
 import org.supercsv.util.CSVContext;
 
 /**
- * Converts a boolean into a formatted string. If you want to convert from a
- * String to a Date, use the {@link ParseBool} processor.
+ * Converts a boolean into a formatted string. If you want to convert from a String to a boolean, use the
+ * {@link ParseBool} processor.
  * <p>
  * 
  * @since 1.50
@@ -17,8 +17,8 @@ import org.supercsv.util.CSVContext;
  */
 public class FmtBool extends CellProcessorAdaptor implements BoolCellProcessor {
 
-private String trueValue;
-private String falseValue;
+private final String trueValue;
+private final String falseValue;
 
 public FmtBool(final String trueValue, final String falseValue) {
 	super();
@@ -37,11 +37,14 @@ public FmtBool(final String trueValue, final String falseValue, final StringCell
  */
 @Override
 public Object execute(final Object value, final CSVContext context) throws SuperCSVException {
-	if( value == null ) { throw new NullInputException("Input cannot be null on line " + context.lineNumber
-		+ " column " + context.columnNumber, context, this); }
-	if( !(value instanceof Boolean) ) { throw new ClassCastInputCSVException("the value '" + value
-		+ "' is not of type Boolean", context); }
-	String result = ((Boolean)value).booleanValue() ? trueValue : falseValue;
+	if( value == null ) {
+		throw new NullInputException("Input cannot be null on line " + context.lineNumber + " column "
+			+ context.columnNumber, context, this);
+	}
+	if( !(value instanceof Boolean) ) {
+		throw new ClassCastInputCSVException("the value '" + value + "' is not of type Boolean", context);
+	}
+	String result = ((Boolean) value).booleanValue() ? trueValue : falseValue;
 	return next.execute(result, context);
 }
 }
