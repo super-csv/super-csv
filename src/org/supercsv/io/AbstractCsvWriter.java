@@ -23,7 +23,7 @@ BufferedWriter outStream;
 int lineNo;
 CsvPreference preference;
 
-public AbstractCsvWriter(final Writer stream, final CsvPreference preference) {
+protected AbstractCsvWriter(final Writer stream, final CsvPreference preference) {
 	setPreferences(preference);
 	outStream = new BufferedWriter(stream);
 	lineNo = 1;
@@ -45,7 +45,9 @@ public void close() throws IOException {
  * @return an escaped version of the csv elem ready for persisting
  */
 protected String escapeString(final String csvElem) {
-	if( csvElem.length() == 0 ) { return ""; }
+	if( csvElem.length() == 0 ) {
+		return "";
+	}
 	
 	sb.delete(0, sb.length()); // reusing builder object
 	
@@ -68,28 +70,36 @@ protected String escapeString(final String csvElem) {
 		if( c == delimiter ) {
 			needForEscape = true;
 			sb.append(c);
-		} else if( c == quote ) {
-			// if its the first character, escape it and set need for space
-			if( i == 0 ) {
-				sb.append(quote);
-				sb.append(quote);
-				needForEscape = true;
-			} else {
-				sb.append(quote);
-				sb.append(quote);
-				needForEscape = true; // TODO review comments above
-			}
-		} else if( c == '\n' ) {
-			needForEscape = true;
-			sb.append(EOLSymbols);
-		} else {
-			sb.append(c);
 		}
+		else
+			if( c == quote ) {
+				// if its the first character, escape it and set need for space
+				if( i == 0 ) {
+					sb.append(quote);
+					sb.append(quote);
+					needForEscape = true;
+				}
+				else {
+					sb.append(quote);
+					sb.append(quote);
+					needForEscape = true; // TODO review comments above
+				}
+			}
+			else
+				if( c == '\n' ) {
+					needForEscape = true;
+					sb.append(EOLSymbols);
+				}
+				else {
+					sb.append(c);
+				}
 	}
 	
 	// if element contains a newline (mac,windows or linux), escape the
 	// whole with a surrounding quotes
-	if( needForEscape ) { return quote + sb.toString() + quote; }
+	if( needForEscape ) {
+		return quote + sb.toString() + quote;
+	}
 	
 	return sb.toString();
 	
@@ -122,9 +132,10 @@ protected void write(final Object... content) throws IOException {
 	final String[] strarr = new String[content.length];
 	int i = 0;
 	for( final Object o : content ) {
-		if( o == null ) { 
-			throw new NullInputException("Object at position " + i + " is null", new CSVContext(
-				getLineNumber(), i), (Throwable) null); }
+		if( o == null ) {
+			throw new NullInputException("Object at position " + i + " is null", new CSVContext(getLineNumber(), i),
+				(Throwable) null);
+		}
 		strarr[i++] = o.toString();
 	}
 	write(strarr);
