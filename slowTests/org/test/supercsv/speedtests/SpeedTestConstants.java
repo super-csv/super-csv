@@ -13,7 +13,7 @@ package org.test.supercsv.speedtests;
  */
 public interface SpeedTestConstants {
 
-public static final String TEST_FILE = "supercsv.speedtest.testfile.csv";
-public static final int TEST_RUNS = 5;
+String TEST_FILE = "supercsv.speedtest.testfile.csv";
+int TEST_RUNS = 1;
 
 }
