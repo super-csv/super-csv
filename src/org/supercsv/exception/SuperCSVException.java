@@ -68,6 +68,6 @@ public CellProcessor getOffendingProcessor() {
 
 @Override
 public String toString() {
-	return getMessage() + " " + csvContext.toString() + " offending processor " + offendingProcessor;
+	return String.format("%s context: %s offending processor: %s", getMessage(), csvContext, offendingProcessor);
 }
 }
