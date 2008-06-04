@@ -24,7 +24,7 @@ protected ITokenizer tokenizer;
 /** the preferences */
 protected CsvPreference preferences;
 
-public AbstractCsvReader() {
+protected AbstractCsvReader() {
 	line = new ArrayList<String>();
 }
 
@@ -51,8 +51,9 @@ public String get(final int N) throws IOException, IndexOutOfBoundsException {
  * @since 1.0
  */
 public String[] getCSVHeader(final boolean firstLineCheck) throws IOException {
-	if( firstLineCheck && tokenizer.getLineNumber() != 0 ) { throw new SuperCSVException(
-		"CSV header can only be fetched as the first read operation on a source!"); }
+	if( firstLineCheck && tokenizer.getLineNumber() != 0 ) {
+		throw new SuperCSVException("CSV header can only be fetched as the first read operation on a source!");
+	}
 	final List<String> tmp = new ArrayList<String>();
 	String[] res = null;
 	if( tokenizer.readStringList(tmp) ) {
