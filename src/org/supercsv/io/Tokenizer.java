@@ -26,7 +26,7 @@ public Tokenizer(final Reader stream, final CsvPreference preference) {
 	sb = new StringBuilder(500);
 }
 
-private void addSpaces(final StringBuilder sb, final int spaces) {
+private static void addSpaces(final StringBuilder sb, final int spaces) {
 	for( int i = 0; i < spaces; i++ ) {
 		sb.append(" ");
 	}
@@ -68,7 +68,7 @@ public boolean readStringList(final List<String> result) throws IOException {
 	while( line.length() == 0 ); // skip zero len lines
 	
 	// start parsing
-	line = line + "\n"; // add a newline to determine end of line (making
+	line += "\n"; // add a newline to determine end of line (making
 	// parsing easier)
 	
 	sb.delete(0, sb.length()); // reset the stringbuilder
@@ -168,7 +168,7 @@ public boolean readStringList(final List<String> result) throws IOException {
 						"File ended unexpectedly while reading a quoted cell starting on line: " + linenoQuoteState,
 						new CSVContext(linenoQuoteState, 0));
 				}
-				line = line + '\n'; // add \n to make parsing easy
+				line += '\n'; // add \n to make parsing easy
 				break; // read more
 			}
 			else
