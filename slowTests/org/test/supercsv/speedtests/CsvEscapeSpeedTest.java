@@ -40,7 +40,7 @@ public class CsvEscapeSpeedTest {
  * 
  * @author Kasper B. Graversen
  */
-class ListWriter_v110 extends AbstractCsvWriter_v110 implements ICsvListWriter {
+static class ListWriter_v110 extends AbstractCsvWriter_v110 implements ICsvListWriter {
 public ListWriter_v110(final Writer writer, final CsvPreference prefs) {
 	super(writer, prefs);
 }
