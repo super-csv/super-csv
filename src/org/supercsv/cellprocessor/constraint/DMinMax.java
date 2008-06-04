@@ -20,8 +20,10 @@ public static final double MAXS = Short.MAX_VALUE;
 public static final double MINS = Short.MIN_VALUE;
 public static final double MAXC = Character.MAX_VALUE;
 public static final double MINC = Character.MIN_VALUE;
-public static final double MAX8bit = 255;
-public static final double MIN8bit = -128;
+/** 255 */
+public static final int MAX8bit = 255;
+/** -128 */
+public static final int MIN8bit = -128;
 
 protected double min, max;
 
@@ -40,12 +42,16 @@ public DMinMax(final double min, final double max, final DoubleCellProcessor nex
  */
 @Override
 public Object execute(final Object value, final CSVContext context) throws SuperCSVException {
-	if( value == null ) { throw new NullInputException("Input cannot be null on line " + context.lineNumber + " at column " + context.columnNumber, context, this); }
+	if( value == null ) {
+		throw new NullInputException("Input cannot be null on line " + context.lineNumber + " at column "
+			+ context.columnNumber, context, this);
+	}
 	
 	final Double result;
 	if( value instanceof Double ) {
 		result = (Double) value;
-	} else {
+	}
+	else {
 		try {
 			result = Double.parseDouble(value.toString());
 		}
@@ -54,14 +60,17 @@ public Object execute(final Object value, final CSVContext context) throws Super
 		}
 	}
 	
-	if( !(result >= min && result <= max) ) { throw new SuperCSVException("Entry \"" + value + "\" on line "
-		+ context.lineNumber + " column " + context.columnNumber + " is not within the numerical range " + min + "-"
-		+ max, context); }
+	if( !(result >= min && result <= max) ) {
+		throw new SuperCSVException("Entry \"" + value + "\" on line " + context.lineNumber + " column "
+			+ context.columnNumber + " is not within the numerical range " + min + "-" + max, context, this);
+	}
 	return next.execute(result, context);
 }
 
 private void init(final double min, final double max) {
-	if( max < min ) { throw new SuperCSVException("max < min in the arguments " + min + " " + max, this); }
+	if( max < min ) {
+		throw new SuperCSVException("max < min in the arguments " + min + " " + max, this);
+	}
 	
 	this.min = min;
 	this.max = max;
