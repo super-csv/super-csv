@@ -82,7 +82,7 @@ public <T> Method getSetMethod(final Object destinationObject, final String vari
 	if( method == null ) {
 		// we don't know the destination type for the set method, just use whatever we can find
 		if( variableType == null ) {
-			method = inspectClass(destinationObject, "set", variableName, 1);
+			method = findSetMethodWithNonPrimitiveParameter(destinationObject, variableName);
 		}
 		else {
 			method = inspectClassForSetMethods(destinationObject, variableType, variableName);
@@ -111,7 +111,23 @@ private Method inspectClass(final Object destinationObject, final String methodP
 	for( final Method meth : destinationObject.getClass().getMethods() ) {
 		if( meth.getName().equals(methodName) //
 			&& meth.getParameterTypes().length == requiredNumberOfArgs ) {
-			// System.out.println("found method " + meth.toString());
+			System.out.println("found method " + meth.toString());
+			return meth;
+		}
+	}
+	throw new SuperCSVReflectionException(String.format(//
+		"Can't find method '%s' in class '%s'", methodName, destinationObject.getClass().getName()));
+}
+
+private Method findSetMethodWithNonPrimitiveParameter(final Object destinationObject, final String variableName) {
+	final String methodName = "set" + variableName.substring(0, 1).toUpperCase() + variableName.substring(1);
+	
+	// find method by traversal of the object
+	for( final Method meth : destinationObject.getClass().getMethods() ) {
+		if( meth.getName().equals(methodName) //
+			&& meth.getParameterTypes().length == 1 //
+			&& meth.getParameterTypes()[0].isPrimitive() == false ) {
+			System.out.println("found method " + meth.toString());
 			return meth;
 		}
 	}
