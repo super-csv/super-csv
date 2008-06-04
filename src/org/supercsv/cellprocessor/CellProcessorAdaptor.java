@@ -28,9 +28,11 @@ protected CellProcessorAdaptor() {
  * 
  * @param next
  */
-public CellProcessorAdaptor(final CellProcessor next) {
+protected CellProcessorAdaptor(final CellProcessor next) {
 	super();
-	if( next == null ) { throw new NullInputException("argument was null", this); }
+	if( next == null ) {
+		throw new NullInputException("argument was null", this);
+	}
 	
 	this.next = next;
 }
