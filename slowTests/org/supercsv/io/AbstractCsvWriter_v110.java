@@ -21,11 +21,11 @@ import org.supercsv.util.CSVContext;
  * @author Kasper B. Graversen
  */
 public abstract class AbstractCsvWriter_v110 implements ICsvWriter {
-BufferedWriter outStream;
+BufferedWriter outStream = null;
 int lineNo;
 CsvPreference preference;
 
-public AbstractCsvWriter_v110(final Writer stream, final CsvPreference preference) {
+protected AbstractCsvWriter_v110(final Writer stream, final CsvPreference preference) {
 	setPreferences(preference);
 	outStream = new BufferedWriter(stream);
 	lineNo = 1;
@@ -64,7 +64,8 @@ private String escapeString(final String csvElem) {
 			sb.append(quote);
 			sb.append(c); // if is delimiter found, escape it by quotes
 			sb.append(quote);
-		} else {
+		}
+		else {
 			sb.append(c);
 		}
 	}
