@@ -65,29 +65,6 @@ So if your application is running slow, I dare say that it is unlikely due to us
 
 
 
-<h2>Overall usage explained</h2>
-When using Super Csv you have to make five decisions
-<ol>
-<li>Will I read or write? Depending on choice use a reader or a writer</li>
-
-<li>What data structure will I read/write the data into/from.
-For example when reading, reading into a  bean use <a href="javadoc/org/supercsv/io/CsvBeanReader.html">CSVBeanReader</a>,
-read into a map use <a href="javadoc/org/supercsv/io/CsvMapReader.html">CSVMapReader</a>
-or a String list use <a href="javadoc/org/supercsv/io/ICsvListReader.html">CSVListReader</a></li>
-
-<li>If reading into maps or beans, either define a list of column names or utilize an existing header from the CSV file (if any).
-Use <tt>getCSVHeader()</tt> to easily retrieve the header</li>
-
-<li>Decide on what conversions and constraints you want for each column.
-See <a href="javadoc/org/supercsv/cellprocessor/package-summary.html">processors</a>
-and <a href="javadoc/org/supercsv/cellprocessor/constraint/package-summary.html">constraints</a>.</li>
-
-<li>Specify preferences for separation character, newline character, etc. See <a href="http://supercsv.sourceforge.net/javadoc/org/supercsv/prefs/CsvPreference.html">preferences</a>.</ul>
-</ol>
-
-
-
-
 
 
 %googleAddsBottom
