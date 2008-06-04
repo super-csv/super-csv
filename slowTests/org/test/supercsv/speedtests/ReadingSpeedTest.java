@@ -167,10 +167,10 @@ private void readNative(final BufferedReader r) throws Exception {
 
 @Test
 public void readSpeedTest() throws Exception {
-	final long[] times = { 0, 0, 0, 0, 0, 0 };
+	final long[] times = new long[20];
 	for( int i = 0; i < TEST_RUNS; i++ ) {
 		int testNo = 0;
-		System.out.println(i);
+		System.out.println("readSpeedTest() " + i);
 		long t;
 		t = System.currentTimeMillis();
 		readNative(new BufferedReader(new FileReader(TEST_FILE)));
