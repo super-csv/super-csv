@@ -32,8 +32,8 @@ import org.supercsv.util.CSVContext;
  */
 public class Token extends CellProcessorAdaptor implements DateCellProcessor, DoubleCellProcessor, LongCellProcessor,
 	StringCellProcessor, BoolCellProcessor {
-Object returnValue = "";
-Object token = "";
+final Object returnValue;
+final Object token;
 
 /**
  * Constructor To have the string <tt>"[empty]"</tt> represent the empty amount -1 you could use this class as <code>
@@ -70,8 +70,13 @@ public Token(final Object token, final Object returnValue, final CellProcessor n
  */
 @Override
 public Object execute(final Object value, final CSVContext context) {
-	if( value == null ) { throw new NullInputException("Input cannot be null on line " + context.lineNumber + " at column " + context.columnNumber, context, this); }
-	if( value.equals(token) ) { return returnValue; }
+	if( value == null ) {
+		throw new NullInputException("Input cannot be null on line " + context.lineNumber + " at column "
+			+ context.columnNumber, context, this);
+	}
+	if( value.equals(token) ) {
+		return returnValue;
+	}
 	
 	return next.execute(value, context);
 }
