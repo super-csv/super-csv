@@ -5,10 +5,6 @@ public class PersonBean extends SuperBean {
 String password, street, town;
 int zip;
 
-public PersonBean() {
-	super();
-}
-
 public String getPassword() {
 	return password;
 }

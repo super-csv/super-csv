@@ -6,6 +6,7 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.supercsv.TestConstants;
 import org.supercsv.cellprocessor.CellProcessorAdaptor;
 import org.supercsv.cellprocessor.ParseBool;
 import org.supercsv.exception.SuperCSVException;
@@ -17,7 +18,7 @@ import org.supercsv.util.CSVContext;
  */
 @Deprecated
 public class StrForbiddenTest {
-private static final CSVContext CSVCONTEXT = new CSVContext(0, 0);
+private static final CSVContext CSVCONTEXT = TestConstants.ANONYMOUS_CSVCONTEXT;
 CellProcessorAdaptor cp1 = null;
 CellProcessorAdaptor cp2 = null;
 

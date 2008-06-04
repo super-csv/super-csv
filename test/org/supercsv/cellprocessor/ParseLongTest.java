@@ -3,6 +3,7 @@ package org.supercsv.cellprocessor;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.supercsv.TestConstants;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.exception.SuperCSVException;
 import org.supercsv.mock.ComparerCellProcessor;
@@ -15,8 +16,8 @@ public class ParseLongTest {
 /**
  * 
  */
-private static final CSVContext CSVCONTEXT = new CSVContext(0, 0);
-CellProcessor cp, ccp;
+private static final CSVContext CSVCONTEXT = TestConstants.ANONYMOUS_CSVCONTEXT;
+CellProcessor cp = null, ccp = null;
 
 @Test(expected = SuperCSVException.class)
 public void invalid_input() {

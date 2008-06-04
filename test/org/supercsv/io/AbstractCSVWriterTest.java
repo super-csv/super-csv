@@ -30,7 +30,7 @@ public class AbstractCSVWriterTest {
  * 
  * @author Kasper B. Graversen
  */
-class TestClass extends AbstractCsvWriter {
+static class TestClass extends AbstractCsvWriter {
 TestClass(final Writer stream, final CsvPreference preference) {
 	super(stream, preference);
 }

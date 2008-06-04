@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.supercsv.TestConstants;
 import org.supercsv.exception.SuperCSVException;
 import org.supercsv.mock.ComparerCellProcessor;
 import org.supercsv.util.CSVContext;
@@ -20,7 +21,7 @@ import org.supercsv.util.CSVContext;
  * @author Kasper B. Graversen
  */
 public class RequireSubStrTest {
-private static final CSVContext CSVCONTEXT = new CSVContext(0, 0);
+private static final CSVContext CSVCONTEXT = TestConstants.ANONYMOUS_CSVCONTEXT;
 
 @Test
 public void constructors_should_hande_valid_input() {

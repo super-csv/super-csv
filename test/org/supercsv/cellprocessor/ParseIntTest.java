@@ -3,6 +3,7 @@ package org.supercsv.cellprocessor;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.supercsv.TestConstants;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.exception.SuperCSVException;
 import org.supercsv.mock.ComparerCellProcessor;
@@ -12,13 +13,10 @@ import org.supercsv.util.CSVContext;
  * @author Kasper B. Graversen
  */
 public class ParseIntTest {
-/**
- * 
- */
-private static final CSVContext CSVCONTEXT = new CSVContext(0, 0);
-final static int VAL1 = 17;
-final static String VAL1_STR = "17";
-CellProcessor cp, ccp;
+private static final CSVContext CSVCONTEXT = TestConstants.ANONYMOUS_CSVCONTEXT;
+static final int VAL1 = 17;
+static final String VAL1_STR = "17";
+CellProcessor cp = null, ccp = null;
 
 @Test(expected = SuperCSVException.class)
 public void invalid_input() {

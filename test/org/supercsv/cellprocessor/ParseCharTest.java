@@ -10,6 +10,8 @@ import org.supercsv.util.CSVContext;
  * @author Kasper B. Graversen
  */
 public class ParseCharTest {
+public static final String VALID_CHAR_AS_STRING = "C";
+public static final char VALID_CHAR = 'C';
 CSVContext context;
 
 @Before
@@ -19,21 +21,21 @@ public void setUp() throws Exception {
 
 @Test(expected = SuperCSVException.class)
 public void should_handle_long_strings_as_invalid() {
-	Assert.assertEquals('C', new ParseChar().execute("CC", context));
+	new ParseChar().execute("CC", context);
 }
 
 @Test(expected = SuperCSVException.class)
 public void should_only_accept_strings_and_char() {
-	Assert.assertEquals('C', new ParseChar().execute(12, context));
+	new ParseChar().execute(12, context);
 }
 
 @Test
 public void test_valid_input_char() {
-	Assert.assertEquals('C', new ParseChar().execute('C', context));
+	Assert.assertEquals(VALID_CHAR, new ParseChar().execute(VALID_CHAR, context));
 }
 
 @Test
 public void test_valid_input_string() {
-	Assert.assertEquals('C', new ParseChar().execute("C", context));
+	Assert.assertEquals(VALID_CHAR, new ParseChar().execute(VALID_CHAR_AS_STRING, context));
 }
 }

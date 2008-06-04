@@ -115,8 +115,8 @@ public void test_Set_Lookup_string() throws Exception {
 }
 
 @Test
-// if the return value of a cell is null, still find a method to invoke on
 public void test_Set_Lookup_string_null() throws Exception {
+	// if the return value of a cell is null, the cache must still be able to find a method to invoke on
 	final MethodCache cache = new MethodCache();
 	final ObjectMock om = new ObjectMock();
 	assertEquals("confirm start val", "" + STARTVAL, om.getS());

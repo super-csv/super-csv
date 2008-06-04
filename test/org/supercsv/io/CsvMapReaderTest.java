@@ -17,10 +17,10 @@ import org.supercsv.exception.SuperCSVException;
 import org.supercsv.prefs.CsvPreference;
 
 public class CsvMapReaderTest {
-final static CellProcessor[] PROCESSORS = new CellProcessor[] { null, null, null, new Optional(new ParseInt()),
+static final CellProcessor[] PROCESSORS = new CellProcessor[] { null, null, null, new Optional(new ParseInt()),
 	new Optional() };
-final static CellProcessor[] PROCESSORS_PARTIAL = new CellProcessor[] { new Trim(3), null, null, null, new Optional() };
-final static CellProcessor[] PROCESSORS_EMPTY = new CellProcessor[] { null, null, null, null, null };
+static final CellProcessor[] PROCESSORS_PARTIAL = new CellProcessor[] { new Trim(3), null, null, null, new Optional() };
+static final CellProcessor[] PROCESSORS_EMPTY = new CellProcessor[] { null, null, null, null, null };
 CsvMapReader inFile = null;
 final String[] nameMapper = { "firstname", "lastname", "street", "zip", "town" };
 final String[] nameMapperPartial = { "firstname", null, null, null, "town" };

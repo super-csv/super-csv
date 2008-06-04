@@ -8,7 +8,7 @@ import org.supercsv.exception.SuperCSVException;
 
 public class MethodCacheTest {
 /** stupid subclass to shut up emma */
-protected final static class Ignore extends Util {
+protected static final class Ignore extends Util {
 public Ignore() {
 	super();
 }

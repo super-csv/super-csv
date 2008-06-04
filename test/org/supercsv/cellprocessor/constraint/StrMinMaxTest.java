@@ -4,23 +4,25 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.supercsv.TestConstants;
 import org.supercsv.cellprocessor.Optional;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.exception.SuperCSVException;
 import org.supercsv.mock.ComparerCellProcessor;
-import org.supercsv.util.CSVContext;
 
 /**
  * @author Kasper B. Graversen
  */
 public class StrMinMaxTest {
 static final int MINVAL = 2, MAXVAL = 10;
-StrMinMax cp;
-CellProcessor ccp;
+StrMinMax cp = null;
+CellProcessor ccp = null;
 
 @Test(expected = SuperCSVException.class)
 public void invalidInputTest() throws Exception {
-	assertEquals("test length", "", cp.execute("helphelphelphelphelp", new CSVContext(0, 0))); // too long input
+	assertEquals("test length", "", cp.execute("helphelphelphelphelp", TestConstants.ANONYMOUS_CSVCONTEXT)); // too
+	// long
+	// input
 }
 
 @Test(expected = SuperCSVException.class)
@@ -41,7 +43,7 @@ public void setUp() throws Exception {
 @Test
 public void testCastValueAndChaining() throws Exception {
 	ccp = new StrMinMax(MINVAL, MAXVAL, new ComparerCellProcessor("17"));
-	assertEquals("number changed to string", true, ccp.execute(17, new CSVContext(0, 0))); // convert
+	assertEquals("number changed to string", true, ccp.execute(17, TestConstants.ANONYMOUS_CSVCONTEXT)); // convert
 	// number
 	// 17
 	// to a
@@ -61,6 +63,6 @@ public void testValidInput() throws Exception {
 @Test
 public void validChainingTest() throws Exception {
 	ccp = new StrMinMax(MINVAL, MAXVAL, new Optional());
-	assertEquals("test chaining and ", "17", ccp.execute("17", new CSVContext(0, 0)));
+	assertEquals("test chaining and ", "17", ccp.execute("17", TestConstants.ANONYMOUS_CSVCONTEXT));
 }
 }
