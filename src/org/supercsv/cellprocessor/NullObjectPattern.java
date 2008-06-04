@@ -18,7 +18,7 @@ public class NullObjectPattern extends CellProcessorAdaptor implements CellProce
 	DoubleCellProcessor, LongCellProcessor, StringCellProcessor, BoolCellProcessor {
 
 /** There is no need to create many instances of this class in order to fulfill the null-object pattern. */
-public final static NullObjectPattern INSTANCE = new NullObjectPattern();
+public static final NullObjectPattern INSTANCE = new NullObjectPattern();
 
 NullObjectPattern() {
 	super();
