@@ -37,24 +37,32 @@ public int hashCode() {
 
 @Override
 public boolean equals(Object obj) {
-	if( this == obj )
+	if( this == obj ) {
 		return true;
-	if( obj == null )
+	}
+	if( obj == null ) {
 		return false;
-	if( getClass() != obj.getClass() )
+	}
+	if( getClass() != obj.getClass() ) {
 		return false;
+	}
 	final CSVContext other = (CSVContext) obj;
-	if( columnNumber != other.columnNumber )
+	if( columnNumber != other.columnNumber ) {
 		return false;
-	if( lineNumber != other.lineNumber )
+	}
+	if( lineNumber != other.lineNumber ) {
 		return false;
+	}
 	if( lineSource == null ) {
-		if( other.lineSource != null )
+		if( other.lineSource != null ) {
 			return false;
-	} else if( !lineSource.equals(other.lineSource) )
-		return false;
+		}
+	}
+	else
+		if( !lineSource.equals(other.lineSource) ) {
+			return false;
+		}
 	return true;
 }
-
 
 }
