@@ -25,16 +25,18 @@ import org.supercsv.util.CSVContext;
  * @author Kasper B. Graversen
  */
 public class ParseDate extends CellProcessorAdaptor implements StringCellProcessor {
-DateFormat formatter;
+protected final DateFormat formatter;
 
 public ParseDate(final String format) {
 	super();
 	this.formatter = new SimpleDateFormat(format);
+	formatter.setLenient(false);
 }
 
 public ParseDate(final String format, final DateCellProcessor next) {
 	super(next);
 	this.formatter = new SimpleDateFormat(format);
+	formatter.setLenient(false);
 }
 
 /**
@@ -42,8 +44,10 @@ public ParseDate(final String format, final DateCellProcessor next) {
  */
 @Override
 public Object execute(final Object value, final CSVContext context) throws SuperCSVException {
-	if( value == null ) { throw new NullInputException("Input cannot be null on line " + context.lineNumber
-		+ " at column " + context.columnNumber, context, this); }
+	if( value == null ) {
+		throw new NullInputException("Input cannot be null on line " + context.lineNumber + " at column "
+			+ context.columnNumber, context, this);
+	}
 	try {
 		final Date result = formatter.parse((String) value);
 		return next.execute(result, context);
