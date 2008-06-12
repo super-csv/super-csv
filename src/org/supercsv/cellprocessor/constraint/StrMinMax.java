@@ -3,6 +3,7 @@ package org.supercsv.cellprocessor.constraint;
 import org.supercsv.cellprocessor.CellProcessorAdaptor;
 import org.supercsv.cellprocessor.NullObjectPattern;
 import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.exception.NullInputException;
 import org.supercsv.exception.SuperCSVException;
 import org.supercsv.util.CSVContext;
@@ -14,7 +15,7 @@ import org.supercsv.util.CSVContext;
  * 
  * @author Kasper B. Graversen
  */
-public class StrMinMax extends CellProcessorAdaptor {
+public class StrMinMax extends CellProcessorAdaptor implements StringCellProcessor {
 protected long min, max;
 
 public StrMinMax(final long min, final long max) {
