@@ -44,9 +44,9 @@ public Object execute(final Object value, final CSVContext context) {
 		+ " at column " + context.columnNumber, context, this); }
 	if( value instanceof String ) {
 		String svalue = (String) value;
-		if( svalue.length() == 0 ) { throw new SuperCSVException("unexpected empty string", context); }
+		if( svalue.length() == 0 ) { throw new SuperCSVException("unexpected empty string", context, this); }
 	} else {
-		throw new ClassCastInputCSVException(value, String.class, context);
+		throw new ClassCastInputCSVException(value, String.class, context, this);
 	}
 	
 	return next.execute(value, context);

@@ -2,6 +2,7 @@ package org.supercsv.exception;
 
 import java.io.Serializable;
 
+import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.util.CSVContext;
 
 /**
@@ -25,8 +26,8 @@ public ClassCastInputCSVException(String msg) {
 	super(msg);
 }
 
-public ClassCastInputCSVException(Object receivedValue, Class expectedClass, CSVContext context) {
-	super(getDefaultMessage(receivedValue, expectedClass), context);
+public ClassCastInputCSVException(Object receivedValue, Class expectedClass, CSVContext context, CellProcessor processor) {
+	super(getDefaultMessage(receivedValue, expectedClass), context, processor);
 }
 
 private static String getDefaultMessage(Object receivedValue, Class expectedClass) {

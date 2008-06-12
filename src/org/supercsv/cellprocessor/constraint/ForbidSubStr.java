@@ -63,7 +63,7 @@ public Object execute(final Object value, final CSVContext context) throws Super
 	for( final String forbidden : forbiddenSubStrings ) {
 		if( sval.indexOf(forbidden) != -1 ) { throw new SuperCSVException("Entry \"" + value + "\" on line "
 			+ context.lineNumber + " column " + context.columnNumber + " contains the forbidden char \"" + forbidden
-			+ "\"", context); }
+			+ "\"", context, this); }
 	}
 	
 	return next.execute(value, context);

@@ -20,7 +20,7 @@ protected long min, max;
 
 public StrMinMax(final long min, final long max) {
 	super(NullObjectPattern.INSTANCE);
-	if( max < min ) { throw new SuperCSVException("max < min in the arguments " + min + " " + max); }
+	if( max < min ) { throw new SuperCSVException("max < min in the arguments " + min + " " + max, this); }
 	if( min < 0 ) { throw new SuperCSVException("min length must be >= 0, is " + min, this); }
 	
 	this.min = min;
@@ -43,7 +43,7 @@ public Object execute(final Object value, final CSVContext context) throws Numbe
 	final String sval = value.toString(); // cast
 	if( sval.length() < min || sval.length() > max ) { throw new SuperCSVException("Entry \"" + value + "\" on line "
 		+ context.lineNumber + " column " + context.columnNumber + " is not within the string sizes " + min + " - "
-		+ max, context); }
+		+ max, context, this); }
 	
 	return next.execute(sval, context);
 }
