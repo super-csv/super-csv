@@ -61,7 +61,7 @@ public Object execute(final Object value, final CSVContext context) throws Super
 		+ " column " + context.columnNumber, context, this); }
 	
 	if( !(value instanceof Number) ) { throw new ClassCastInputCSVException("the value '" + value
-		+ "' is not of type Number", context); }
+		+ "' is not of type Number", context, this); }
 	
 	final String result = formatter.format(value);
 	return next.execute(result, context);

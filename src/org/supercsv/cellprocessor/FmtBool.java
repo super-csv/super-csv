@@ -42,7 +42,7 @@ public Object execute(final Object value, final CSVContext context) throws Super
 			+ context.columnNumber, context, this);
 	}
 	if( !(value instanceof Boolean) ) {
-		throw new ClassCastInputCSVException("the value '" + value + "' is not of type Boolean", context);
+		throw new ClassCastInputCSVException("the value '" + value + "' is not of type Boolean", context, this);
 	}
 	String result = ((Boolean) value).booleanValue() ? trueValue : falseValue;
 	return next.execute(result, context);

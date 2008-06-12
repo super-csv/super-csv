@@ -49,7 +49,7 @@ public Object execute(final Object value, final CSVContext context) throws Super
 	if( value == null ) { throw new NullInputException("Input cannot be null on line " + context.lineNumber
 		+ " column " + context.columnNumber, context, this); }
 	if( !(value instanceof Date) ) { throw new ClassCastInputCSVException("the value '" + value
-		+ "' is not of type Date", context); }
+		+ "' is not of type Date", context, this); }
 	final String result = formatter.format((Date) value);
 	return next.execute(result, context);
 }

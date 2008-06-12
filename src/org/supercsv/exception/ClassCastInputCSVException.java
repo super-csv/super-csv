@@ -22,6 +22,10 @@ public ClassCastInputCSVException(String msg, CSVContext context) {
 	super(msg, context);
 }
 
+public ClassCastInputCSVException(String msg, CSVContext context, CellProcessor processor) {
+	super(msg, context, processor);
+}
+
 public ClassCastInputCSVException(String msg) {
 	super(msg);
 }
