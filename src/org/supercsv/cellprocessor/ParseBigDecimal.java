@@ -60,7 +60,7 @@ public Object execute(final Object value, final CSVContext context) throws Super
             }
         }
 		catch(final Exception e) {
-			throw new SuperCSVException("Parser error", context, e);
+			throw new SuperCSVException("Parser error", context, this, e);
 		}
 	} else {
 		throw new SuperCSVException("Can't convert \"" + value
