@@ -14,6 +14,7 @@ import org.supercsv.util.CSVContext;
  */
 public class FmtBoolTest {
 
+private static final CSVContext CTXT = new CSVContext(0, 0);
 private static final String TRUE_VALUE = "y";
 private static final String FALSE_VALUE = "n";
 
@@ -28,22 +29,36 @@ public void setUp() throws Exception {
 public void testChaining() throws Exception {
 	ccp = new FmtBool(TRUE_VALUE, FALSE_VALUE, new ComparerCellProcessor(TRUE_VALUE)); // chain
 	// processors
-	Assert.assertEquals("make boolean", true, ccp.execute(Boolean.TRUE, new CSVContext(0, 0)));
+	Assert.assertEquals("make boolean", true, ccp.execute(Boolean.TRUE, CTXT));
 	
 	ccp = new FmtBool(TRUE_VALUE, FALSE_VALUE, new ComparerCellProcessor(FALSE_VALUE)); // chain
 	// processors
-	Assert.assertEquals("make boolean", true, ccp.execute(Boolean.FALSE, new CSVContext(0, 0)));
+	Assert.assertEquals("make boolean", true, ccp.execute(Boolean.FALSE, CTXT));
+	
+}
+
+@Test
+public void testGoAndBack() throws Exception { 
+	ccp = new FmtBool(TRUE_VALUE, FALSE_VALUE, new ParseBool(TRUE_VALUE, FALSE_VALUE)); // chain
+	// processors
+	Assert.assertEquals("go and back", true, Boolean.TRUE.equals(ccp.execute(Boolean.TRUE, CTXT)));
+	Assert.assertEquals("go and back", true, Boolean.FALSE.equals(ccp.execute(Boolean.FALSE, CTXT)));
+
+	ccp = new ParseBool(TRUE_VALUE, FALSE_VALUE, new FmtBool(TRUE_VALUE, FALSE_VALUE)); // chain
+	// processors
+	Assert.assertEquals("go and back", true, TRUE_VALUE.equals(ccp.execute(TRUE_VALUE, CTXT)));
+	Assert.assertEquals("go and back", true, FALSE_VALUE.equals(ccp.execute(FALSE_VALUE, CTXT)));
 	
 }
 
 @Test(expected = SuperCSVException.class)
 public void testEmptyInput() throws Exception {
-	cp.execute(null, new CSVContext(0, 0));
+	cp.execute(null, CTXT);
 }
 
 @Test(expected = ClassCastInputCSVException.class)
 public void testInvalidInput() throws Exception {
-	cp.execute("text-not-a-boolean", new CSVContext(0, 0));
+	cp.execute("text-not-a-boolean", CTXT);
 }
 
 
