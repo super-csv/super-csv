@@ -82,9 +82,6 @@ public static <T> void mapStringList(final Map<String, T> destination, final Str
  *            given.
  * @param lineNo
  *            the line number of the CSV source the processing is taking place on
- * @param errorLog
- *            a builder of error messages. In case of an exception, this builder is populated with a message. All cells
- *            are attempted processed even in case one cell throws an exception.
  */
 public static void processStringList(final List<? super Object> destination, final List<? extends Object> source,
 	final CellProcessor[] processors, final int lineNo) throws SuperCSVException {
@@ -92,14 +89,10 @@ public static void processStringList(final List<? super Object> destination, fin
 	context.lineSource = source;
 	context.lineNumber = lineNo;
 	if( source.size() != processors.length ) {
-		throw new SuperCSVException(
-			"The value array (size "
-				+ source.size()
-				+ ")  must match the processors array (size "
-				+ processors.length
-				+ ")."
-				+ " You are probably reading a CSV line with a different number of columns" +
-						" than the number of cellprocessors specified...", context);
+		throw new SuperCSVException("The value array (size " + source.size()
+			+ ")  must match the processors array (size " + processors.length + ")."
+			+ " You are probably reading a CSV line with a different number of columns"
+			+ " than the number of cellprocessors specified...", context);
 	}
 	
 	destination.clear();
