@@ -3,6 +3,7 @@ package org.supercsv.cellprocessor;
 import java.math.BigDecimal;
 
 import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.exception.NullInputException;
 import org.supercsv.exception.SuperCSVException;
 import org.supercsv.util.CSVContext;
@@ -15,7 +16,7 @@ import org.supercsv.util.CSVContext;
  * @since 1.30
  * @author Kasper B. Graversen
  */
-public class ParseBigDecimal extends CellProcessorAdaptor {
+public class ParseBigDecimal extends CellProcessorAdaptor implements StringCellProcessor {
 
 public ParseBigDecimal() {
 	super();

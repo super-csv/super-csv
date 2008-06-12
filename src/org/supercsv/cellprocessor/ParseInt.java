@@ -1,6 +1,7 @@
 package org.supercsv.cellprocessor;
 
 import org.supercsv.cellprocessor.ift.LongCellProcessor;
+import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.exception.NullInputException;
 import org.supercsv.exception.SuperCSVException;
 import org.supercsv.util.CSVContext;
@@ -10,7 +11,7 @@ import org.supercsv.util.CSVContext;
  * 
  * @author Kasper B. Graversen
  */
-public class ParseInt extends CellProcessorAdaptor {
+public class ParseInt extends CellProcessorAdaptor  implements StringCellProcessor {
 
 public ParseInt() {
 	super();
