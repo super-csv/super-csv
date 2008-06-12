@@ -1,4 +1,4 @@
-#Thu Apr 24 20:25:32 GMT 2008
+#Thu May 29 22:21:33 GMT 2008
 eclipse.preferences.version=1
 org.eclipse.jdt.core.compiler.codegen.inlineJsrBytecode=enabled
 org.eclipse.jdt.core.compiler.codegen.targetPlatform=1.5
@@ -66,10 +66,10 @@ org.eclipse.jdt.core.formatter.comment.indent_root_tags=true
 org.eclipse.jdt.core.formatter.comment.insert_new_line_before_root_tags=insert
 org.eclipse.jdt.core.formatter.comment.insert_new_line_for_parameter=insert
 org.eclipse.jdt.core.formatter.comment.line_length=120
-org.eclipse.jdt.core.formatter.compact_else_if=true
+org.eclipse.jdt.core.formatter.compact_else_if=false
 org.eclipse.jdt.core.formatter.continuation_indentation=1
 org.eclipse.jdt.core.formatter.continuation_indentation_for_array_initializer=2
-org.eclipse.jdt.core.formatter.format_guardian_clause_on_one_line=true
+org.eclipse.jdt.core.formatter.format_guardian_clause_on_one_line=false
 org.eclipse.jdt.core.formatter.indent_body_declarations_compare_to_annotation_declaration_header=true
 org.eclipse.jdt.core.formatter.indent_body_declarations_compare_to_enum_constant_header=true
 org.eclipse.jdt.core.formatter.indent_body_declarations_compare_to_enum_declaration_header=true
@@ -86,7 +86,7 @@ org.eclipse.jdt.core.formatter.insert_new_line_after_opening_brace_in_array_init
 org.eclipse.jdt.core.formatter.insert_new_line_at_end_of_file_if_missing=insert
 org.eclipse.jdt.core.formatter.insert_new_line_before_catch_in_try_statement=insert
 org.eclipse.jdt.core.formatter.insert_new_line_before_closing_brace_in_array_initializer=do not insert
-org.eclipse.jdt.core.formatter.insert_new_line_before_else_in_if_statement=do not insert
+org.eclipse.jdt.core.formatter.insert_new_line_before_else_in_if_statement=insert
 org.eclipse.jdt.core.formatter.insert_new_line_before_finally_in_try_statement=insert
 org.eclipse.jdt.core.formatter.insert_new_line_before_while_in_do_statement=insert
 org.eclipse.jdt.core.formatter.insert_new_line_in_empty_annotation_declaration=do not insert
@@ -250,7 +250,7 @@ org.eclipse.jdt.core.formatter.insert_space_between_empty_parens_in_constructor_
 org.eclipse.jdt.core.formatter.insert_space_between_empty_parens_in_enum_constant=do not insert
 org.eclipse.jdt.core.formatter.insert_space_between_empty_parens_in_method_declaration=do not insert
 org.eclipse.jdt.core.formatter.insert_space_between_empty_parens_in_method_invocation=do not insert
-org.eclipse.jdt.core.formatter.keep_else_statement_on_same_line=true
+org.eclipse.jdt.core.formatter.keep_else_statement_on_same_line=false
 org.eclipse.jdt.core.formatter.keep_empty_array_initializer_on_one_line=false
 org.eclipse.jdt.core.formatter.keep_imple_if_on_one_line=false
 org.eclipse.jdt.core.formatter.keep_then_statement_on_same_line=false
