@@ -18,6 +18,13 @@ public class StrRegExReplace extends CellProcessorAdaptor implements StringCellP
 private final Pattern regexPattern;
 private final String replacement;
 
+public StrRegExReplace(final String regex, final String replacement) {
+	super();
+	if( regex == null ) { throw new NullInputException("Regex cannot be null", this); }
+	this.regexPattern = Pattern.compile(regex);
+	this.replacement = replacement;
+}
+
 public StrRegExReplace(final String regex, final String replacement, final BoolCellProcessor next) {
 	super(next);
 	if( regex == null ) { throw new NullInputException("Regex cannot be null", this); }
