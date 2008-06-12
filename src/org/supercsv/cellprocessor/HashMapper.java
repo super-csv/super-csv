@@ -1,6 +1,6 @@
 package org.supercsv.cellprocessor;
 
-import java.util.HashMap;
+import java.util.Map;
 
 import org.supercsv.cellprocessor.ift.BoolCellProcessor;
 import org.supercsv.cellprocessor.ift.DateCellProcessor;
@@ -20,14 +20,14 @@ import org.supercsv.util.CSVContext;
 public class HashMapper extends CellProcessorAdaptor implements BoolCellProcessor, DateCellProcessor,
 	DoubleCellProcessor, LongCellProcessor, StringCellProcessor {
 
-private final HashMap<Object, Object> mapping;
+private final Map<Object, Object> mapping;
 private final Object defaultValue;
 
-public HashMapper(final HashMap<Object, Object> mapping, final BoolCellProcessor next) {
+public HashMapper(final Map<Object, Object> mapping, final BoolCellProcessor next) {
 	this(mapping, null, next);
 }
 
-public HashMapper(final HashMap<Object, Object> mapping, final Object defaultValue, final BoolCellProcessor next) {
+public HashMapper(final Map<Object, Object> mapping, final Object defaultValue, final BoolCellProcessor next) {
 	super(next);
 	this.mapping = mapping;
 	this.defaultValue = defaultValue;
