@@ -25,12 +25,12 @@ public class IsIncludedIn extends CellProcessorAdaptor implements BoolCellProces
 	DoubleCellProcessor, LongCellProcessor, StringCellProcessor {
 protected Set<Object> possibleValues;
 
-public IsIncludedIn(final HashSet<Object> possibleValues) {
+public IsIncludedIn(final Set<Object> possibleValues) {
 	super();
 	this.possibleValues = possibleValues;
 }
 
-public IsIncludedIn(final HashSet<Object> possibleValues, final CellProcessor next) {
+public IsIncludedIn(final Set<Object> possibleValues, final CellProcessor next) {
 	super(next);
 	this.possibleValues = possibleValues;
 }
