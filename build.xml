@@ -2,7 +2,7 @@
 	<!-- The general idea is to copy the files needed to a temp directory and compile in this one.
 	 	This way we can easily select the files of interest, instrument code as needed, etc. -->
 	<property name="distro.name" value="SuperCSV" />
-	<property name="distro.version" value="1.31" />
+	<property name="distro.version" value="1.50beta" />
 	<property name="distro.dir" value="distro" />
 
 	<property name="dir.src" value="src/" />
@@ -249,6 +249,24 @@
 			</manifest>
 		</jar>
 
+		<!-- make jar with src -->
+		<jar destfile="${distro.dir}/${distro.name}-with_src-${distro.version}.jar"
+			basedir="${dir.build}"
+			includes="**/*.class"
+			update="true"
+			duplicate="fail"
+		>
+			<fileset dir="${dir.src}" >
+			    <include name="**/*.java"/>
+			</fileset>
+
+			<manifest>
+				<attribute name="Built-By" value="Kasper B. Graversen"/>
+				<attribute name="Implementation-Version"  value="${distro.version}-build${build.number}"/>
+				<attribute name="Built-Date" value="${TODAY}"/>
+			</manifest>
+		</jar>
+
 
 		<!-- zip javadoc -->
 		<zip basedir="web/" destfile="${distro.dir}/${distro.name}-${distro.version}-javadoc.zip" includes="javadoc/**/*.*" compress="true">
@@ -264,6 +282,7 @@
 		<zip basedir="${distro.dir}" destfile="${distro.dir}/${distro.name}-${distro.version}.zip" compress="true" excludes="*.*">
 			<zipfileset dir="${distro.dir}" file="${distro.dir}/${distro.name}-${distro.version}.jar"/>
 			<zipfileset dir="${distro.dir}" file="${distro.dir}/${distro.name}-${distro.version}-source.zip"/>
+			<zipfileset dir="${distro.dir}" file="${distro.dir}/${distro.name}-with_src-${distro.version}.jar"/>
 			<zipfileset dir="${distro.dir}" file="${distro.dir}/${distro.name}-${distro.version}-javadoc.zip"/>
 			<zipfileset dir="." includes="LICENSE.txt"/>
 		</zip>
@@ -277,6 +296,8 @@
 	<target name="-post_clean">
 		<delete file="${distro.dir}/${distro.name}-${distro.version}-javadoc.zip" failonerror="true" />
 		<delete file="${distro.dir}/${distro.name}-${distro.version}.jar" failonerror="true"/>
+		<delete file="${distro.dir}/${distro.name}-${distro.version}-source.zip" failonerror="true"/>
+		<delete file="${distro.dir}/${distro.name}-with_src-${distro.version}.jar" failonerror="true"/>
 		<delete dir="${dir.build}"/>
 		<delete dir="${dir.tmp_src}"/>
 	</target>
