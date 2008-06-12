@@ -18,7 +18,7 @@ String trimPostfix = "";
 /** Trim strings to ensure a maximum size */
 public Trim(final int maxSize) {
 	super(NullObjectPattern.INSTANCE);
-	if( maxSize < 1 ) { throw new SuperCSVException("argument maxSize must be > 0"); }
+	if( maxSize < 1 ) { throw new SuperCSVException("argument maxSize must be > 0", this); }
 	this.maxSize = maxSize;
 }
 
