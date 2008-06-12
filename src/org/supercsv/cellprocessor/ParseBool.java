@@ -1,6 +1,7 @@
 package org.supercsv.cellprocessor;
 
 import org.supercsv.cellprocessor.ift.BoolCellProcessor;
+import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.exception.NullInputException;
 import org.supercsv.exception.SuperCSVException;
 import org.supercsv.util.CSVContext;
@@ -13,7 +14,7 @@ import org.supercsv.util.CSVContext;
  * @author Dominique De Vito
  * @since 1.0
  */
-public class ParseBool extends CellProcessorAdaptor {
+public class ParseBool extends CellProcessorAdaptor implements StringCellProcessor {
 
 private static String[] DEFAULT_TRUE_VALUES = new String[] { "1", "true", "t", "y" };
 
@@ -30,10 +31,22 @@ public ParseBool(final BoolCellProcessor next) {
 	this(DEFAULT_TRUE_VALUES, DEFAULT_FALSE_VALUES, next);
 }
 
+public ParseBool(final String trueValue, final String falseValue) {
+	super();
+	this.trueValues = new String[] { trueValue };
+	this.falseValues = new String[] { falseValue };
+}
+
 public ParseBool(final String[] trueValues, final String[] falseValues) {
 	super();
 	this.trueValues = trueValues;
 	this.falseValues = falseValues;
+}
+
+public ParseBool(final String trueValue, final String falseValue, final BoolCellProcessor next) {
+	super(next);
+	this.trueValues = new String[] { trueValue };
+	this.falseValues = new String[] { falseValue };
 }
 
 public ParseBool(final String[] trueValues, final String[] falseValues, final BoolCellProcessor next) {
