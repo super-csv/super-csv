@@ -60,7 +60,7 @@ public static <T> void mapStringList(final Map<String, T> destination, final Str
 		// only perform safe inserts
 		if( destination.containsKey(key) ) {
 			throw new SuperCSVException("nameMapper array contains duplicate key \"" + key
-				+ "\" cannot map the list...");
+				+ "\" cannot map the list");
 		}
 		
 		destination.put(key, values.get(i));
@@ -90,9 +90,9 @@ public static void processStringList(final List<? super Object> destination, fin
 	context.lineNumber = lineNo;
 	if( source.size() != processors.length ) {
 		throw new SuperCSVException("The value array (size " + source.size()
-			+ ")  must match the processors array (size " + processors.length + ")."
+			+ ")  must match the processors array (size " + processors.length + "):"
 			+ " You are probably reading a CSV line with a different number of columns"
-			+ " than the number of cellprocessors specified...", context);
+			+ " than the number of cellprocessors specified", context);
 	}
 	
 	destination.clear();

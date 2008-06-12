@@ -169,7 +169,7 @@ Method inspectClassForSetMethods(final Object destinationObject, final Class var
 			throwException(destinationObject, variableType, methodName, e1);
 		}
 	}
-	throw new SuperCSVException("This can never happen...");
+	throw new SuperCSVException("This can never happen!");
 }
 
 /**
