@@ -23,6 +23,18 @@ public class HashMapper extends CellProcessorAdaptor implements BoolCellProcesso
 private final Map<Object, Object> mapping;
 private final Object defaultValue;
 
+public HashMapper(final Map<Object, Object> mapping) {
+	super();
+	this.mapping = mapping;
+	this.defaultValue = null;
+}
+
+public HashMapper(final Map<Object, Object> mapping, final Object defaultValue) {
+	super();
+	this.mapping = mapping;
+	this.defaultValue = defaultValue;
+}
+
 public HashMapper(final Map<Object, Object> mapping, final BoolCellProcessor next) {
 	this(mapping, null, next);
 }
