@@ -1,6 +1,7 @@
 package org.supercsv.cellprocessor;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormatSymbols;
 
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
@@ -18,12 +19,24 @@ import org.supercsv.util.CSVContext;
  */
 public class ParseBigDecimal extends CellProcessorAdaptor implements StringCellProcessor {
 
+private DecimalFormatSymbols symbols;
+
 public ParseBigDecimal() {
-	super();
+    this((DecimalFormatSymbols)null);
+}
+
+public ParseBigDecimal(DecimalFormatSymbols symbols) {
+    super();
+    this.symbols = symbols;
 }
 
 public ParseBigDecimal(final CellProcessor next) {
-	super(next);
+    this(null,next);
+}
+
+public ParseBigDecimal(DecimalFormatSymbols symbols, final CellProcessor next) {
+    super(next);
+    this.symbols = symbols;
 }
 
 /**
@@ -35,8 +48,17 @@ public Object execute(final Object value, final CSVContext context) throws Super
 	final BigDecimal result;
 	if( value instanceof String ) {
 		try {
-			result = new BigDecimal((String) value);
-		}
+            if (symbols == null) {
+                result = new BigDecimal((String) value);
+            } else {
+                if (symbols.getDecimalSeparator() != '.') {
+                    String s = (String) value;
+                    result = new BigDecimal(s.replace(symbols.getDecimalSeparator(), '.'));
+                } else {
+                    result = new BigDecimal((String) value);
+                }
+            }
+        }
 		catch(final Exception e) {
 			throw new SuperCSVException("Parser error", context, e);
 		}
