@@ -73,7 +73,7 @@ public Object execute(final Object value, final CSVContext context) throws Super
 	if( !possibleValues.contains(value) ) {
 		
 		throw new SuperCSVException("Entry \"" + value + "\" on line " + context.lineNumber + " column "
-			+ context.columnNumber + " is accepted as a possible value", context, this);
+			+ context.columnNumber + " is not accepted as a possible value", context, this);
 	}
 	
 	return next.execute(value, context);
