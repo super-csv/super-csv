@@ -279,12 +279,15 @@
 		</zip>
 		
 		<!-- zip javadoc+source+jar -->
+		<echo message="dir"/>
+		<echo message="${distro.dir}"/>
 		<zip basedir="${distro.dir}" destfile="${distro.dir}/${distro.name}-${distro.version}.zip" compress="true" excludes="*.*">
 			<zipfileset dir="${distro.dir}" file="${distro.dir}/${distro.name}-${distro.version}.jar"/>
 			<zipfileset dir="${distro.dir}" file="${distro.dir}/${distro.name}-${distro.version}-source.zip"/>
 			<zipfileset dir="${distro.dir}" file="${distro.dir}/${distro.name}-with_src-${distro.version}.jar"/>
 			<zipfileset dir="${distro.dir}" file="${distro.dir}/${distro.name}-${distro.version}-javadoc.zip"/>
 			<zipfileset dir="." includes="LICENSE.txt"/>
+			<zipfileset dir="${dir.lib}" includes="spiffy-with_source-all-0.05.jar" />
 		</zip>
 
 		<antcall target="-post_clean" />
