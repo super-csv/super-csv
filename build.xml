@@ -287,6 +287,7 @@
 			<zipfileset dir="${distro.dir}" file="${distro.dir}/${distro.name}-with_src-${distro.version}.jar"/>
 			<zipfileset dir="${distro.dir}" file="${distro.dir}/${distro.name}-${distro.version}-javadoc.zip"/>
 			<zipfileset dir="." includes="LICENSE.txt"/>
+			<zipfileset dir="." includes="release-notes.txt"/>
 			<zipfileset dir="${dir.lib}" includes="spiffy-with_source-all-0.05.jar" />
 		</zip>
 
