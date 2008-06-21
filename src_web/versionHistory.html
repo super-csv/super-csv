@@ -23,14 +23,56 @@
 <table cellspacing="8">
 <tr><th>Version</th><th>Changes</th></tr>
 
-<tr><td valign="top">1.31</td><td>Improved integration, 02/2008.
+
+<tr><td valign="top">1.50 Beta</td><td>Improved processors, 06/2008.
+<br>
+* Added the following cell processors
 <ul>
-<li>Changed the encoding of <tt>"</tt> characters. E.g. <tt>17" monitor</tt> becomes <tt>"17"" monitor"</tt>
+<li> StrReplace - for string manipulation</li>
+<li> StrRegExReplace - for string manipulation</li>
+<li> HashMapper - to map encountered values with other objects/values
+</li>
+<li> NotNull - to ensure non-null values for columns
+</li>
+<li> StrNotNullOrEmpty - to ensure non-null or empty values for columns
+</li>
+<li> FmtBoot - format as a string any Boolean value
+</li>
+<li> IsIncludedIn - to ensure input value belongs to a specific set of given values
+</li>
+</ul> 
+
+* Deprecated the following cell processors
+<ul>
+<li> "Required", re-implemented as "RequiredHashCode"
 </li>
 </ul>
 
+* Unique has been renamed to UniqueHashCode<br>
+
+* A new processor named Unique has been implemented
+<ul>
+<li> The Unique processor is now based on equals() identity and not anymore on hashCode() identity. Previous definition based on hashCode() has been renamed into UniqueHashCode.
+</ul>
+
+* BeanReader and BeanWriter now supports method overloading of get/set methods.
+<br>
+* Cell processors now only throw SuperCSVException 
+<br>
+* Added the following exceptions
+<ul>
+<li> ClassCastInputCSVException</li>
+<li> NullInputException: this exception is raised now for unexpected 'null' input value for processor. Numerous processors have been modified to use that exception class.</li>
+</ul>
+
+* better handling of lines without the expected number of columns
+<ul><li> The raised exception is now associated with a valid CSVContext object (previously, this object was 'null')</li>
+</ul>
+
+* Better error messages, more context information in the exception and available to the programmer
+
 <br>Upgrade notes.<br>
-Just copy over the .jar file and you are done.
+Just copy over the .jar file and notice the deprecated classes...
 </td></tr>
 <tr><td>&nbsp;</td></tr>
 
