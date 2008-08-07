@@ -11,11 +11,12 @@ import org.supercsv.util.CSVContext;
 
 /**
  * String replacer.
+ * 
  * @author Kasper B. Graversen
- * @author Dominique De Vito 
+ * @author Dominique De Vito
  */
-public class StrReplace extends CellProcessorAdaptor implements BoolCellProcessor,
-DateCellProcessor, DoubleCellProcessor, LongCellProcessor, StringCellProcessor {
+public class StrReplace extends CellProcessorAdaptor implements BoolCellProcessor, DateCellProcessor,
+	DoubleCellProcessor, LongCellProcessor, StringCellProcessor {
 private String searchText, replaceText;
 
 /**
@@ -41,17 +42,23 @@ public StrReplace(final String searchText, final String replaceText, final Strin
  */
 @Override
 public Object execute(final Object value, final CSVContext context) throws SuperCSVException {
-	if (value == null) {
-		throw new NullInputException("Input cannot be null", context, this); 
+	if( value == null ) {
+		throw new NullInputException("Input cannot be null", context, this);
 	}
-	return value.toString().replaceAll(searchText, replaceText);
+	String result = value.toString().replaceAll(searchText, replaceText);
+	return next.execute(result, context);
 }
 
 private void handleArguments(final String searchText, final String replaceText) throws IllegalArgumentException {
-	if( searchText == null ) { throw new NullInputException("searchtext cannot be null", this); }
-	if( replaceText == null ) { throw new NullInputException("replacettext cannot be null", this); }
-	if( searchText.equals("") ) { throw new SuperCSVException(
-		"argument searchText cannot be \"\" as this has no effect", this); }
+	if( searchText == null ) {
+		throw new NullInputException("searchtext cannot be null", this);
+	}
+	if( replaceText == null ) {
+		throw new NullInputException("replacettext cannot be null", this);
+	}
+	if( searchText.equals("") ) {
+		throw new SuperCSVException("argument searchText cannot be \"\" as this has no effect", this);
+	}
 	this.searchText = searchText;
 	this.replaceText = replaceText;
 }
