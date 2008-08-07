@@ -111,7 +111,7 @@ private Method inspectClass(final Object destinationObject, final String methodP
 	for( final Method meth : destinationObject.getClass().getMethods() ) {
 		if( meth.getName().equals(methodName) //
 			&& meth.getParameterTypes().length == requiredNumberOfArgs ) {
-			System.out.println("found method " + meth.toString());
+			//System.out.println("found method " + meth.toString());
 			return meth;
 		}
 	}
@@ -127,7 +127,7 @@ private Method findSetMethodWithNonPrimitiveParameter(final Object destinationOb
 		if( meth.getName().equals(methodName) //
 			&& meth.getParameterTypes().length == 1 //
 			&& meth.getParameterTypes()[0].isPrimitive() == false ) {
-			System.out.println("found method " + meth.toString());
+			//System.out.println("found method " + meth.toString());
 			return meth;
 		}
 	}
