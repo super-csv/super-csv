@@ -1,5 +1,9 @@
-version 1.50-BETA
------------------
+For more version information see                   http://supercsv.sourceforge.net/versionHistory.html
+
+For more information about the distribution see     http://supercsv.sourceforge.net/distribution.html
+
+version 1.50
+------------
 
 * Added the following cell processors
 -- StrReplace - for string manipulation
@@ -19,7 +23,7 @@ version 1.50-BETA
 
 * BeanReader and BeanWriter now supports method overloading of get/set methods.
 
-* Cell processors now only throw SuperCSVException 
+* Cell processors now only throw SuperCSVException
 
 * Added the following exceptions
 -- ClassCastInputCSVException
@@ -30,8 +34,8 @@ version 1.50-BETA
 
 * Better error messages, more context information in the exception and available to the programmer
 
-Upgrade notes from v1.3:
-------------------------
+Upgrading from v1.3:
+--------------------
 * If you are using the Unique processor confirm the new logic is acceptable, otherwise switch to using UniqueHashCode
 
 * Move away from deprecated classes. All deprecated classes should have counter-part classes to replace with
