@@ -29,6 +29,12 @@ private final HashMap<Class, Class> autoboxingConverter = new HashMapBuilder<Cla
 	.add(Byte.class, byte.class)//
 	.add(short.class, Short.class)//
 	.add(Short.class, short.class)//
+	.add(boolean.class, Boolean.class)//
+	.add(Boolean.class, boolean.class)//
+	.add(double.class, Double.class)//
+	.add(Double.class, double.class)//
+	.add(float.class, Float.class)//
+	.add(Float.class, float.class)//
 	.build();
 
 /**
@@ -111,7 +117,7 @@ private Method inspectClass(final Object destinationObject, final String methodP
 	for( final Method meth : destinationObject.getClass().getMethods() ) {
 		if( meth.getName().equals(methodName) //
 			&& meth.getParameterTypes().length == requiredNumberOfArgs ) {
-			//System.out.println("found method " + meth.toString());
+			// System.out.println("found method " + meth.toString());
 			return meth;
 		}
 	}
@@ -127,7 +133,7 @@ private Method findSetMethodWithNonPrimitiveParameter(final Object destinationOb
 		if( meth.getName().equals(methodName) //
 			&& meth.getParameterTypes().length == 1 //
 			&& meth.getParameterTypes()[0].isPrimitive() == false ) {
-			//System.out.println("found method " + meth.toString());
+			// System.out.println("found method " + meth.toString());
 			return meth;
 		}
 	}
