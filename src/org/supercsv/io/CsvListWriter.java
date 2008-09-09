@@ -11,9 +11,9 @@ import org.supercsv.util.Util;
 
 /**
  * The writer class capable of writing arrays and lists to a CSV file. Notice that the cell processors can also be
- * utilized when writing (using the <code>org.bestcsv.util</code>). They can help ensure that only numbers are
- * written in numeric columns, that numbers are unique or the output does not contain certain characters or exceed
- * specified string lengths.
+ * utilized when writing (using the <code>org.bestcsv.util</code>). They can help ensure that only numbers are written
+ * in numeric columns, that numbers are unique or the output does not contain certain characters or exceed specified
+ * string lengths.
  * 
  * @author Kasper B. Graversen
  */
@@ -41,7 +41,8 @@ public void write(final List<? extends Object> content, final CellProcessor[] pr
 	// convert source to List<String>
 	final List<String> source = new ArrayList<String>();
 	for( int i = 0; i < content.size(); i++ ) {
-		source.add(content.get(i).toString());
+		Object value = content.get(i);
+		source.add(value == null ? null : value.toString());
 	}
 	
 	Util.processStringList(destination, source, processors, super.getLineNumber());

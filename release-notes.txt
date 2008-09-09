@@ -2,8 +2,12 @@ For more version information see                   http://supercsv.sourceforge.n
 
 For more information about the distribution see     http://supercsv.sourceforge.net/distribution.html
 
-version 1.50
-------------
+version 1.51 + 1.52
+-------------------
+Small bug fixes.
+
+version 1.50 
+-------------
 
 * Added the following cell processors
 -- StrReplace - for string manipulation

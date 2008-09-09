@@ -2,7 +2,7 @@
 	<!-- The general idea is to copy the files needed to a temp directory and compile in this one.
 	 	This way we can easily select the files of interest, instrument code as needed, etc. -->
 	<property name="distro.name" value="SuperCSV" />
-	<property name="distro.version" value="1.51" />
+	<property name="distro.version" value="1.52" />
 	<property name="distro.dir" value="distro" />
 
 	<property name="dir.src" value="src/" />
@@ -256,7 +256,7 @@
 			update="true"
 			duplicate="fail"
 		>
-			<fileset dir="${dir.src}" >
+			<fileset dir="${dir.src}" > 
 			    <include name="**/*.java"/>
 			</fileset>
 

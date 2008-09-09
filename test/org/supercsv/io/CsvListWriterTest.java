@@ -8,6 +8,7 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.supercsv.cellprocessor.ConvertNullTo;
 import org.supercsv.cellprocessor.Trim;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.exception.SuperCSVException;
@@ -95,6 +96,16 @@ public void writeTwoColList() throws IOException {
 	l.clear();
 	cw.close(); // flush before compare
 	Assert.assertEquals("two column writes ", "hello,world\nIm,aBerliner\n", writer.toString());
+}
+
+@Test
+public void writeNullEntryAndConvertIt() throws IOException {
+	final List<String> l = new ArrayList<String>();
+	l.add("hello");
+	l.add(null);
+	cw.write(l, new CellProcessor[] { null, new ConvertNullTo("null value") });
+	cw.close();
+	Assert.assertEquals("hello,null value\n", writer.toString());
 }
 
 @Test(expected = SuperCSVException.class)
