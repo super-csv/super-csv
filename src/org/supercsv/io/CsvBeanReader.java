@@ -54,7 +54,8 @@ public CsvBeanReader(final Reader reader, final CsvPreference preferences) {
 		final T resultBean;
 		if( clazz.isInterface() ) {
 			resultBean = (T) new BeanInterfaceProxy().createProxy(clazz);
-		} else {
+		}
+		else {
 			resultBean = clazz.newInstance();
 		}
 		// map results into an object by traversing the list of nameMapping and for each non-null,
@@ -62,7 +63,7 @@ public CsvBeanReader(final Reader reader, final CsvPreference preferences) {
 		// map results to the setter methods
 		for( int i = 0; i < nameMapping.length; i++ ) {
 			// don't call a set-method in the bean, if there is no result to store
-			if( nameMapping[i] == null ) {
+			if( nameMapping[i] == null || lineResult.get(i) == null ) {
 				continue;
 			}
 			try {
