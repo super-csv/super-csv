@@ -71,7 +71,7 @@ public boolean readStringList(final List<String> result) throws IOException {
 	line += "\n"; // add a newline to determine end of line (making
 	// parsing easier)
 	
-	sb.delete(0, sb.length()); // reset the stringbuilder
+	sb.setLength(0); // reset the stringbuilder
 	
 	// proccess the line (and maybe more lines of the file)
 	int p = 0; // the pos of the cursor on the line
@@ -94,7 +94,7 @@ public boolean readStringList(final List<String> result) throws IOException {
 			
 			if( c == delim ) {
 				result.add(sb.toString()); // save token
-				sb.delete(0, sb.length()); // reset the stringbuilder
+				sb.setLength(0); // reset the stringbuilder
 				potentialSpaces = 0;
 				break; // read more
 			}
