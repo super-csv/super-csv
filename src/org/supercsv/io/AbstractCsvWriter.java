@@ -131,7 +131,17 @@ public ICsvWriter setPreferences(final CsvPreference preference) {
  * The actual write to stream
  */
 protected void write(final List<? extends Object> content) throws IOException {
-	write(content.toArray());
+	// convert object array to strings and write them
+	final String[] strarr = new String[content.size()];
+	int i = 0;
+	for( final Object o : content ) {
+		if( o == null ) {
+			throw new NullInputException("Object at position " + i + " is null", new CSVContext(getLineNumber(), i),
+				(Throwable) null);
+		}
+		strarr[i++] = o.toString();
+	}
+	write(strarr);
 }
 
 protected void write(final Object... content) throws IOException {
