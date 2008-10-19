@@ -38,6 +38,13 @@ public void close() throws IOException {
 }
 
 /**
+ * {@inheritDoc}
+ */
+public void flush() throws IOException {
+	outStream.flush();
+}
+
+/**
  * Make a string ready for writing by escaping various characters as specified by the CSV format
  * 
  * @param csvElem

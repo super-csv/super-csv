@@ -3,6 +3,7 @@ package org.supercsv.io;
 import java.io.IOException;
 
 import org.supercsv.prefs.CsvPreference;
+import org.supercsv.exception.SuperCSVException;
 
 /**
  * Super Type for all csv writers.
@@ -16,6 +17,13 @@ public interface ICsvWriter {
  * @since 1.0
  */
 void close() throws IOException;
+
+/**
+ * Flush the CSV lines to their intended destination,
+ * while flushing the underlined stream.
+ * @since 1.53
+ */
+public void flush() throws IOException, SuperCSVException;
 
 /**
  * return the number of lines written so far. The first line is 1 *
