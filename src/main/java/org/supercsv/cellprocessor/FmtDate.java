@@ -1,6 +1,5 @@
 package org.supercsv.cellprocessor;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -26,19 +25,20 @@ import org.supercsv.util.CSVContext;
  * 
  * @since 1.50
  * @author Dominique De Vito
+ * @author James Bassett
  */
 public class FmtDate extends CellProcessorAdaptor implements DateCellProcessor {
+
+	protected String dateFormat;
 	
-	protected DateFormat formatter;
-	
-	public FmtDate(final String format) {
+	public FmtDate(final String dateFormat) {
 		super();
-		this.formatter = new SimpleDateFormat(format);
+		this.dateFormat = dateFormat;
 	}
 	
-	public FmtDate(final String format, final StringCellProcessor next) {
+	public FmtDate(final String dateFormat, final StringCellProcessor next) {
 		super(next);
-		this.formatter = new SimpleDateFormat(format);
+		this.dateFormat = dateFormat;
 	}
 	
 	/**
@@ -53,6 +53,8 @@ public class FmtDate extends CellProcessorAdaptor implements DateCellProcessor {
 		if( !(value instanceof Date) ) {
 			throw new ClassCastInputCSVException("the value '" + value + "' is not of type Date", context, this);
 		}
+		
+		SimpleDateFormat formatter = new SimpleDateFormat(dateFormat);
 		final String result = formatter.format((Date) value);
 		return next.execute(result, context);
 	}

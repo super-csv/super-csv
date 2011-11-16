@@ -29,27 +29,20 @@ import org.supercsv.util.CSVContext;
  * 
  * @since 1.50
  * @author Kasper B. Graversen
+ * @author James Bassett
  */
 public class FmtNumber extends CellProcessorAdaptor implements DoubleCellProcessor, LongCellProcessor {
 	
-	protected DecimalFormat formatter;
+	protected String decimalFormat;
 	
-	public FmtNumber(final String format) {
-		this(new DecimalFormat(format));
-	}
-	
-	public FmtNumber(final String format, final StringCellProcessor next) {
-		this(new DecimalFormat(format), next);
-	}
-	
-	public FmtNumber(final DecimalFormat formatter) {
+	public FmtNumber(final String decimalFormat) {
 		super();
-		this.formatter = formatter;
+		this.decimalFormat = decimalFormat;
 	}
 	
-	public FmtNumber(final DecimalFormat formatter, final StringCellProcessor next) {
+	public FmtNumber(final String decimalFormat, final StringCellProcessor next) {
 		super(next);
-		this.formatter = formatter;
+		this.decimalFormat = decimalFormat;
 	}
 	
 	/**
@@ -66,6 +59,7 @@ public class FmtNumber extends CellProcessorAdaptor implements DoubleCellProcess
 			throw new ClassCastInputCSVException("the value '" + value + "' is not of type Number", context, this);
 		}
 		
+		DecimalFormat formatter = new DecimalFormat(decimalFormat);
 		final String result = formatter.format(value);
 		return next.execute(result, context);
 	}

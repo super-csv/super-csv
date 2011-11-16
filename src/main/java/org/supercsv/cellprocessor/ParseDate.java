@@ -23,21 +23,23 @@ import org.supercsv.util.CSVContext;
  * Or even <code>"E, dd MMM yyyy HH:mm:ss Z"</code> To parse "Tue, 29 Jan 2002 22:14:02 -0500"
  * 
  * @author Kasper B. Graversen
+ * @author James Bassett
  */
 public class ParseDate extends CellProcessorAdaptor implements StringCellProcessor {
 	
-	protected final DateFormat formatter;
+	protected final String dateFormat;
+	protected final boolean lenient;
 	
-	public ParseDate(final String format) {
+	public ParseDate(final String dateFormat) {
 		super();
-		this.formatter = new SimpleDateFormat(format);
-		formatter.setLenient(false);
+		this.dateFormat = dateFormat;
+		this.lenient = false;
 	}
 	
-	public ParseDate(final String format, final DateCellProcessor next) {
+	public ParseDate(final String dateFormat, final DateCellProcessor next) {
 		super(next);
-		this.formatter = new SimpleDateFormat(format);
-		formatter.setLenient(false);
+		this.dateFormat = dateFormat;
+		this.lenient = false;
 	}
 	
 	/**
@@ -50,6 +52,8 @@ public class ParseDate extends CellProcessorAdaptor implements StringCellProcess
 				+ context.columnNumber, context, this);
 		}
 		try {
+			SimpleDateFormat formatter = new SimpleDateFormat(dateFormat);
+			formatter.setLenient(lenient);
 			final Date result = formatter.parse((String) value);
 			return next.execute(result, context);
 		}
