@@ -6,9 +6,9 @@ import java.util.HashMap;
 import org.supercsv.exception.SuperCSVException;
 import org.supercsv.exception.SuperCSVReflectionException;
 
-import spiffy.core.util.HashMapBuilder;
-import spiffy.core.util.ThreeDHashMap;
-import spiffy.core.util.TwoDHashMap;
+import org.supercsv.util.HashMapBuilder;
+import org.supercsv.util.ThreeDHashMap;
+import org.supercsv.util.TwoDHashMap;
 
 /**
  * This class cache's method lookup. Hence first time it introspects the instance's class, while subsequent method
