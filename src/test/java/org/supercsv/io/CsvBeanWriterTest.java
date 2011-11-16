@@ -15,6 +15,7 @@ import org.supercsv.prefs.CsvPreference;
 
 public class CsvBeanWriterTest {
 	
+	private static final String EXPECTED_NORMAL_OUTPUT = "Klaus,Anderson,Mauler Street 43,4328,New York\n";
 	CsvBeanWriter cw = null;
 	String[] nameMapper = { "firstname", "password", "street", "zip", "town" };
 	final CellProcessor[] processors = new CellProcessor[] { new Strlen(5), null, null, new Optional(new ParseInt()),
@@ -50,7 +51,17 @@ public class CsvBeanWriterTest {
 	public void testWrite() throws Exception {
 		cw.write(p1, nameMapper);
 		cw.close();
-		Assert.assertEquals("simple write", "Klaus,Anderson,Mauler Street 43,4328,New York\n", outfile.toString());
+		Assert.assertEquals("simple write", EXPECTED_NORMAL_OUTPUT, outfile.toString());
+	}
+	
+	@Test
+	public void testWriteWithFlush() throws Exception {
+		cw.write(p1, nameMapper);
+		cw.flush();
+		Assert.assertEquals("simple write", EXPECTED_NORMAL_OUTPUT, outfile.toString());
+		cw.write(p1, nameMapper);
+		cw.close();
+		Assert.assertEquals("simple write", EXPECTED_NORMAL_OUTPUT + EXPECTED_NORMAL_OUTPUT, outfile.toString());
 	}
 	
 	@Test
@@ -66,6 +77,6 @@ public class CsvBeanWriterTest {
 	public void testWriteProcessor() throws Exception {
 		cw.write(p1, nameMapper, processors);
 		cw.close();
-		Assert.assertEquals("processor write", "Klaus,Anderson,Mauler Street 43,4328,New York\n", outfile.toString());
+		Assert.assertEquals("processor write", EXPECTED_NORMAL_OUTPUT, outfile.toString());
 	}
 }

@@ -29,17 +29,10 @@ public abstract class AbstractCsvWriter implements ICsvWriter {
 		lineNo = 1;
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
 	public void close() throws IOException {
-		outStream.flush();
 		outStream.close();
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
 	public void flush() throws IOException {
 		outStream.flush();
 	}

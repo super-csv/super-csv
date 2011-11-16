@@ -28,9 +28,6 @@ public abstract class AbstractCsvReader implements ICsvReader {
 		line = new ArrayList<String>();
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
 	public void close() throws IOException {
 		tokenizer.close();
 	}

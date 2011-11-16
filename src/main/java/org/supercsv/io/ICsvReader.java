@@ -1,5 +1,6 @@
 package org.supercsv.io;
 
+import java.io.Closeable;
 import java.io.IOException;
 
 import org.supercsv.prefs.CsvPreference;
@@ -9,10 +10,7 @@ import org.supercsv.prefs.CsvPreference;
  * 
  * @author Kasper B. Graversen
  */
-interface ICsvReader {
-	
-	/** close the stream */
-	public void close() throws IOException;
+interface ICsvReader extends Closeable {
 	
 	/**
 	 * Get column N of the current line This is useful for parsing e.g. first column and react by reading the line on

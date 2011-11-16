@@ -32,9 +32,6 @@ public class Tokenizer implements ITokenizer {
 		}
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
 	public void close() throws IOException {
 		lnr.close();
 	}

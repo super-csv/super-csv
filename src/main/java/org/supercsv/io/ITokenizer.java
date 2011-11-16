@@ -1,5 +1,6 @@
 package org.supercsv.io;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.util.List;
 
@@ -10,15 +11,7 @@ import org.supercsv.exception.SuperCSVException;
  * 
  * @author Kasper B. Graversen
  */
-public interface ITokenizer {
-	
-	/**
-	 * Close the underlying stream
-	 * 
-	 * @throws IOException
-	 *             when raised by operating on the underlying stream
-	 */
-	void close() throws IOException;
+public interface ITokenizer extends Closeable {
 	
 	int getLineNumber();
 	
