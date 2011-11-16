@@ -11,8 +11,11 @@ import org.supercsv.exception.SuperCSVException;
 import org.supercsv.util.CSVContext;
 
 /**
- * Converts a double into a formatted string using the {@link DecimalFormat} class. This is useful, when you need to
- * show numbers with a specific number of digits.
+ * Converts a double into a formatted string using the {@link DecimalFormat} class and the default locale. This is
+ * useful, when you need to show numbers with a specific number of digits.
+ * <p>
+ * Please be aware that the constructors that use <tt>DecimalFormat</tt> are not thread-safe, so it is generally better
+ * to use the constructors that accept a date format String.
  * <p>
  * In the format string, the following characters are defined as : <br>
  * 
@@ -35,6 +38,8 @@ public class FmtNumber extends CellProcessorAdaptor implements DoubleCellProcess
 	
 	protected String decimalFormat;
 	
+	protected DecimalFormat formatter; // not thread-safe
+	
 	public FmtNumber(final String decimalFormat) {
 		super();
 		this.decimalFormat = decimalFormat;
@@ -43,6 +48,16 @@ public class FmtNumber extends CellProcessorAdaptor implements DoubleCellProcess
 	public FmtNumber(final String decimalFormat, final StringCellProcessor next) {
 		super(next);
 		this.decimalFormat = decimalFormat;
+	}
+	
+	public FmtNumber(final DecimalFormat formatter) {
+		super();
+		this.formatter = formatter;
+	}
+	
+	public FmtNumber(final DecimalFormat formatter, final StringCellProcessor next) {
+		super(next);
+		this.formatter = formatter;
 	}
 	
 	/**
@@ -59,8 +74,9 @@ public class FmtNumber extends CellProcessorAdaptor implements DoubleCellProcess
 			throw new ClassCastInputCSVException("the value '" + value + "' is not of type Number", context, this);
 		}
 		
-		DecimalFormat formatter = new DecimalFormat(decimalFormat);
-		final String result = formatter.format(value);
+		// create a new DecimalFormat if one is not supplied
+		DecimalFormat decimalformatter = (formatter == null) ? new DecimalFormat(decimalFormat) : formatter;
+		final String result = decimalformatter.format(value);
 		return next.execute(result, context);
 	}
 }

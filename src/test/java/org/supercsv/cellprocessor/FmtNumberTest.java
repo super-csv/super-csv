@@ -1,5 +1,7 @@
 package org.supercsv.cellprocessor;
 
+import java.text.DecimalFormat;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,19 +13,22 @@ import org.supercsv.mock.ComparerCellProcessor;
 
 /**
  * @author Kasper B. Graversen
+ * @author James Bassett
  */
 public class FmtNumberTest {
-	CellProcessor cp = null, ccp = null;
+	CellProcessor cp = null, cp2 = null, ccp = null;
 	
 	@Before
 	public void setUp() throws Exception {
 		cp = new FmtNumber("00.00");
+		cp2 = new FmtNumber(new DecimalFormat("00.00"));
 	}
 	
 	@Test
 	public void testChaining() throws Exception {
-		ccp = new FmtNumber("00.00", new ComparerCellProcessor("12.34")); // chain
-		// processors
+		ccp = new FmtNumber("00.00", new ComparerCellProcessor("12.34"));
+		Assert.assertEquals("make number", true, ccp.execute(12.34, TestConstants.ANONYMOUS_CSVCONTEXT));
+		ccp = new FmtNumber(new DecimalFormat("00.00"), new ComparerCellProcessor("12.34"));
 		Assert.assertEquals("make number", true, ccp.execute(12.34, TestConstants.ANONYMOUS_CSVCONTEXT));
 		
 	}
@@ -45,9 +50,13 @@ public class FmtNumberTest {
 	
 	@Test
 	public void validInputTest() throws Exception {
-		Assert.assertEquals("round up", "12.34", cp.execute(12.339, TestConstants.ANONYMOUS_CSVCONTEXT));
-		Assert.assertEquals("round down", "12.34", cp.execute(12.344, TestConstants.ANONYMOUS_CSVCONTEXT));
-		Assert.assertEquals("round down", "12.34", cp.execute(12.344, TestConstants.ANONYMOUS_CSVCONTEXT));
+		
+		for (CellProcessor c : new CellProcessor[]{cp, cp2}){
+			Assert.assertEquals("round up", "12.34", c.execute(12.339, TestConstants.ANONYMOUS_CSVCONTEXT));
+			Assert.assertEquals("round down", "12.34", c.execute(12.344, TestConstants.ANONYMOUS_CSVCONTEXT));
+			Assert.assertEquals("round down", "12.34", c.execute(12.344, TestConstants.ANONYMOUS_CSVCONTEXT));
+		}
+		
 		Assert.assertEquals("always 2 decimals", "12.10",
 			new FmtNumber("00.00").execute(12.1, TestConstants.ANONYMOUS_CSVCONTEXT));
 		Assert.assertEquals("no decimals", "12",
