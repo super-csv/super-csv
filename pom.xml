@@ -15,7 +15,7 @@
 	<packaging>jar</packaging>
 	<url>http://supercsv.sourceforge.net</url>
 	<description>Super CSV is the next generation CSV reader/writer</description>
-	<version>1.6.0</version>
+	<version>1.6.0-SNAPSHOT</version>
 	<name>Super CSV</name>
 	<inceptionYear>2006</inceptionYear>
 	
@@ -60,6 +60,12 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-eclipse-plugin</artifactId>
 				<version>2.8</version>
+				<configuration>
+					<!-- Use J2SE 1.5 -->
+					<classpathContainers>
+						<classpathContainer>org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5</classpathContainer>
+					</classpathContainers>
+				</configuration>
 			</plugin>
 			
 			<!-- Creates the ant build file -->
@@ -117,6 +123,18 @@
 						</goals>
 					</execution>
 				</executions>
+			</plugin>
+
+			<!-- Creates the distribution jar (source, binary, site) -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.2.1</version>
+				<configuration>
+					<descriptors>
+						<descriptor>src/main/assembly/src.xml</descriptor>
+					</descriptors>
+				</configuration>
 			</plugin>
 
 		</plugins>

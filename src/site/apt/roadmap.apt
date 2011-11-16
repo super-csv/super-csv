@@ -1,0 +1,17 @@
+Road map
+
+  * v1.60 - nested property support is being released soon.
+  
+  * v2.00 - fancy cell processors, completely new configurable readers and writers as an alternative to the existing. should cater for most usages.
+
+Other ideas for the future
+
+  * Comment character support (is anyone using this anyway??)
+  
+  * More cell processors
+  
+  * Batch reading and writing, delaying errors
+  
+  * Internationalization of error messages
+  
+  * (Row ?) processors dealing with more than one column (to deal, for example, with composite keys)

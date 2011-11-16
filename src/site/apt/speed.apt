@@ -1,0 +1,52 @@
+Speed of Super CSV
+
+  Speed is a relative thing, depending on the underlying hardware, the current load of the system etc. 
+  We compare SuperCSV's speed relative to reading a file line by line and doing a <<<split(",")>>> on each line. 
+  While this comparison is not completely sound as a simple split does not encompass the complexities of CSV parsing 
+  it indicates the overhead of CSV processing.
+
+* Reading speed
+
+*-------------------+-----------------+-------------------------+
+|| Method           || Relative speed || Average execution time |
+*-------------------+-----------------+-------------------------+
+| split()           | 100.00%         | 0,37                    |
+*-------------------+-----------------+-------------------------+
+| ListReader        | 338.92%         | 1,24                    |
+*-------------------+-----------------+-------------------------+
+| MapReader         | 424.24%         | 1,55                    |
+*-------------------+-----------------+-------------------------+
+| BeanReader        | 481.00%         | 1,76                    |
+*-------------------+-----------------+-------------------------+
+| BeanReader (full) | 1003.66%        | 3,68                    |
+*-------------------+-----------------+-------------------------+
+
+  The test implementation can be found in class <<<ReadingSpeedTest.java>>> in the source folder. 
+  The test generate a CSV file consisting of 250.000 lines each with 6 columns of random size representing 
+  numbers, names and dates. 
+  The generated file is approximately 7.6 MB.
+  The file is then read 5 times for each reading strategy used. 
+  The tests were conducted a slow 1800 Dell with 500 MB ram (of which 472 were in use upon testing).
+
+  The conclusion of the tests are that Super CSV is only 3-5 times slower than a native read with a simple (insufficient) processing of data.
+  Processing 1/4 of a million lines takes less than 2 seconds (the BeanReader). 
+  The two seconds encompasses reading the file, parsing the lines, instantiating a bean instance
+  and populate the fields (as strings) using the bean's set-methods.  
+  The last row in the table (BeanReader full) is special as on top of reading lines, creating objects and populating fields, 
+  it also converts two columns on each line into Long's and one column into a Date.
+
+  Putting these figures into perspective, I once was hired to fix a business application that spent 16 hours processing 
+  a CSV file of around 50.000 lines.
+  So if your application is running slow, I dare say that it is unlikely due to using Super CSV!
+
+* Writing speed
+
+  Figures are in milli seconds, and denote the time taking to process 200.000 lines of data (each line consisting of 7 columns).
+
+*----------+------------+------------------+---------------+
+||         || avg. time || std. error mean || % difference |
+*----------+------------+------------------+---------------+
+| v1.10    | 747.0      | 16.0             | 0.0%          |
+*----------+------------+------------------+---------------+
+| v1.14    | 558.8      | 8.0              | 74.0%         |
+*----------+------------+------------------+---------------+

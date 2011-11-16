@@ -1,0 +1,32 @@
+Writing your own CellProcessors
+
+  You can easily extend Super CSV if you need to. Just implement the interface <<<CellProcessor>>> and you are set. Most of the
+  existing processors are around 10 lines of code. Let's investigate the implementations by looking at a cell processor which reads
+  a column and converts it into a <<<Long>>> object. The cell processors are built around the "null object" and
+  "chain of responsibility" patterns, hence all the infrastructure is set up outside the processors.
+
++------------------------------------------------------------------------------------------------------+
+public class ParseLong extends CellProcessorAdaptor {
+    /** important to invoke super */
+    public ParseLong() {
+        super();
+    }
+
+    /** important to invoke super */
+    public ParseLong(final LongCellProcessor next) {
+        super(next);
+    }
+    /** simplify conversion of column to Long */
+    public Object execute(final Object value, final CSVContext context) throws NumberFormatException {
+        final Long result = Long.parseLong((String) value);
+        return next.execute(result, context);
+    }
+}
++------------------------------------------------------------------------------------------------------+
+
+  All the magic is taking place in the <<<execute()>>> method. It really need no further explaining.
+
+  Notice that a processor takes another (possibly chained) processor as an argument. Only if it find its conditions suitable,
+  may it call <<<next()>>>. Otherwise it has the option to exit with some error or other value. You can say that while the cell processors'
+  constructors are executing from the innermost to the outermost (due to the normal rules in Java on resolving arguments before invoking methods),
+  the processors business logic execute from outside to the innermost.

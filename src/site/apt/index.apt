@@ -1,0 +1,49 @@
+Motivation
+
+  The main motivation for Super CSV is to be the <<best, fastest and most programmer-friendly free CSV package for Java>>.
+  Super CSV's unique features set a new standard for CSV packages. Super CSV is designed around solid Object-oriented principles,
+  making it easier to write and maintain.
+
+  If you are unsure about what the CSV format is, please read my {{{./csv_specification.html}CSV format specification}} which covers my understanding of the concept.
+
+  Super CSV offers the following features not found together in other CSV packages
+
+    * The ability to read/write <<POJO beans>>, Maps and String lists.
+    
+    * <<Automatic "CSV encoding">> of output on a per need basis. Thus when you write special characters such as <<<,>>> or <<<">>> Super CSV ensures the content is properly escaped (according to my {{{./csv_specification.html} CSV specification}}).
+    
+    * The ability to <<easily convert>> input/output to Integers, Dates, BigDecimals, trimming strings, etc.
+    
+    * The ability to easily <<verify data>> conforms to constraints, such as number ranges, string sizes, uniqueness and even optional columns.
+    
+    * The ability to read/write data from <<anywhere>> in <<any encoding>>. As long as you provide a <<<Reader>>> or a <<<Writer>>>.
+    
+    * Support for Windows, MAC and Linux line breaks.
+    
+    * Configurable separation character, space character and end of line character (for writing files to different platforms)
+    
+    * Operates on streams rather than filenames, enabling you to read/write CSV files e.g. over a network connection.
+    
+    * Supporting <<partial reading and writing>> of objects, maps and arrays with easy setting of default values.
+    
+    * Supporting <<on-the-fly generation implementations>> of bean interfaces when using the <<<CsvBeanReader>>>
+
+  When combined, these features enables you to express clear and robust code for handling CSV files.
+
+  My years in industry dealing with  CSV files (among other things ;-), has enabled me to identify a number of limitations with existing CSV packages.
+  These limitations led me to write Super CSV.
+  My main critisism of existing CSV packages is that reading and writing takes outset in operating on lists of strings.
+  What you really needed is the ability to operate on a range of different types of objects. 
+  Moreover, often you need to restrict input/output data such as minimum and maximum sizes, or numeric ranges. 
+  Or maybe you are reading image names, and want to ensure you do not read names contain the characters ":", " ", "/", "^", "%".
+  
+  Super CSV deals with all these and many other issues. 
+  And should you have a constraint not readily expressible in the package, new cell processors can easily be constructed. 
+  Furthermore, you don't want to "CSV encode" strings you write. Should they happen to contain characters that needs escaping, then the CSV package should take care of this automatically!
+
+  The underlying implementation of Super CSV has been written in an extendible fashion, hence new readers/writers and cell processors can easily be supported.
+  The IoC (Inversion of Control) implementation pattern has been enforced, eradicating long-lived mistakes such as using
+  filenames as arguments rather than <<<Reader>>> and <<<Writer>>> objects. Design patterns such as "Chain of responsibility" and the
+  "Null object pattern" can also be found in the code. Feel free to have a look!
+  
+  <Kasper>

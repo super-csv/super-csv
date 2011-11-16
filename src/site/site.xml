@@ -1,0 +1,26 @@
+<project name="Super CSV">
+    <skin>
+        <groupId>com.googlecode.fluido-skin</groupId>
+        <artifactId>fluido-skin</artifactId>
+        <version>1.3</version>
+    </skin>
+    <body>
+        <menu name="About Super CSV">
+            <item name="Motivation" href="index.html"/>
+            <item name="CSV specification" href="csv_specification.html"/>
+            <item name="Release notes" href="release_notes.html"/>
+            <item name="Roadmap" href="roadmap.html"/>
+            <item name="Speed" href="speed.html"/>
+            <item name="License" href="license.html"/>
+            <item name="Downloading" href="downloading.html"/>
+            <item name="Getting started" href="getting_started.html"/>
+        </menu>
+        <menu name="Examples">
+            <item name="Reading CSV files" href="examples_reading.html"/>
+            <item name="Writing CSV files" href="examples_writing.html"/>
+            <item name="New CellProcessors" href="examples_new_cell_processor.html"/>
+            <item name="Partial reading/writing" href="examples_partial_reading_writing.html"/>
+        </menu>
+        <menu ref="reports"/>
+    </body>
+</project>

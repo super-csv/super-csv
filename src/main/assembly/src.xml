@@ -1,0 +1,36 @@
+<assembly>
+  <id>src</id>
+  <includeBaseDirectory>true</includeBaseDirectory>
+  <includeSiteDirectory>true</includeSiteDirectory>
+  <formats>
+    <format>zip</format>
+  </formats>
+  <fileSets>
+    <fileSet>
+      <directory>src</directory>
+    </fileSet>
+  </fileSets>
+  <files>
+    <file>
+      <source>release-notes.txt</source>
+    </file>
+    <file>
+      <source>LICENSE.txt</source>
+    </file>
+    <file>
+      <source>pom.xml</source>
+    </file>    
+    <file>
+      <source>target/${project.artifactId}-${project.version}.jar</source>
+      <outputDirectory>dist</outputDirectory>
+    </file>    
+    <file>
+      <source>target/${project.artifactId}-${project.version}-javadoc.jar</source>
+      <outputDirectory>dist</outputDirectory>
+    </file>    
+    <file>
+      <source>target/${project.artifactId}-${project.version}-sources.jar</source>
+      <outputDirectory>dist</outputDirectory>
+    </file>    
+  </files> 
+</assembly>

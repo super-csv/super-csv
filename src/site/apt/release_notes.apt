@@ -1,0 +1,102 @@
+Release Notes
+
+* 1.52
+
+  <09/2008>
+
+  Bug Fixes
+
+    * Bug in CsvListWriter on null inputs
+  
+* 1.51
+
+  <08/2008>
+
+  New Features
+
+    * Improved processors. Extended auto boxing types to include boolean, float and double.
+  
+* 1.50
+
+  <08/2008>
+
+  Bug Fixes
+
+    * Minor bug fixes
+    
+  New Features
+
+    * Improved processors.
+
+* 1.50 Beta
+
+  <06/2008>
+
+  Added the following cell processors
+  
+    * <<<Equals>>> - test if all values are equals alone, or equals to a given constant
+    
+    * <<<FmtBool>>> - format as a string any Boolean value
+    
+    * <<<HashMapper>>> - to map encountered values with other objects/values
+    
+    * <<<IsIncludedIn>>> - to ensure input value belongs to a specific set of given values
+    
+    * <<<NotNull>>> - to ensure non-null values for columns
+    
+    * <<<ParseBigDecimal>>> - parse a string to get a big decimal
+    
+    * <<<StrNotNullOrEmpty>>> - to ensure non-null or empty values for columns
+    
+    * <<<StrReplace>>> - for string manipulation
+    
+    * <<<StrRegExReplace>>> - for string manipulation
+
+  Deprecated the following cell processors
+  
+    * <<<Required>>>, re-implemented as <<<RequiredHashCode>>>
+
+  A new processor named <<<Unique>>> (based on <<<equals()>>>) has been created - the old definition based on hashCode() has been renamed to <<<UniqueHashCode>>>.
+
+  BeanReader and BeanWriter now supports method overloading of get/set methods.
+
+  Cell processors now only throw <<<SuperCSVException>>>
+
+  Added the following exceptions
+  
+    * ClassCastInputCSVException
+    * NullInputException: this exception is raised now for unexpected 'null' input value for processor. 
+      Numerous processors have been modified to use that exception class.
+
+  Better handling of lines without the expected number of columns
+  
+    * The raised exception is now associated with a valid CSVContext object (previously, this object was 'null')
+    
+  Better error messages, more context information in the exception and available to the programmer
+
+  Upgrade notes
+  
+    * Just copy over the .jar file and notice the deprecated classes...
+
+
+* 1.30
+
+  <01/2008>
+
+  Improved integration and convenience
+  
+    * BeanReader now accepts interface types to read into. The reader will create an implementation on-the-fly of the interface and use this.
+    
+    * The ITokenizer interface has become public, making 3rd party extensions better integrated.
+     
+    *  The exception class now contains the file context in which it was thrown. And generally, all places exceptions are 
+       thrown have been cleaned up, streamlined and now passes the file context upon an exception.
+       
+    *  An overloaded read() has been removed entirely
+    
+    * Added the following new cell processors: ParseBigDecimal
+    
+    * A new exception SuperCSVReflectionException replaces annoying Java checked exceptions 
+      <<<ClassNotFoundException, IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException>>>
+      
+    * More methods now use the var-args ("...") notation for easy use.

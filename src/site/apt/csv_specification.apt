@@ -1,0 +1,32 @@
+CSV Specification
+
+  The following is the CSV format specification that is used by Super CSV.
+  
+  First, a formal EBNF (extended Bachus-Naur Form) grammar where "," denotes the separation character. See {{{http://en.wikipedia.org/wiki/Backus-Naur_form}Wikipedia/BNF}} and {{{http://en.wikipedia.org/wiki/Extended_Backus-Naur_form}Wikipedia/EBNF}} for further information on (E)BNF. 
+
+-----------------------------------------------------------------------------------
+file         ::= [ header ] { line }
+header       ::= [ { entry separator } entry ] newline
+line         ::= [ { entry separator } entry ] newline
+entry        ::= character+ | { character* " separator " } | " entry newline entry "
+newline      ::= \n
+separator    ::= ,
+character    ::= a|b|..|A|B|..|0|1|..
+escapedQuote ::= ""
+-----------------------------------------------------------------------------------
+
+  Or more informally..
+   
+    * Entities are separated by new line characters 
+    
+    * Entries of an entity are separated by a separation character, often a comma (",") excluding the the last element of a line
+     
+    * An entry may contain the separation character - in which case that character is enclosed in quotes
+     
+    * An entry may contain newlines - in which case the whole entry is enclosed in quotation marks
+     
+    * The first line of the file may contain the header descriptions for the columns of the file, and may be ignored (or as in the case of Super CSV be utilized when reading data into maps or beans).
+     
+    * Any white-spaces at the start of a line, just after the separation character, just before a separation character, or just before a newline character are ignored.
+     
+    * An escaped quote is two consecutive quote characters. The only exception to this rule is when the first character in a cell is a quote it always denotes a quote for the form <<<" entry newline entry ">>>. Hence the entry "" (double quote in a cell) denotes the empty string, whereas the input """" denotes the string " 

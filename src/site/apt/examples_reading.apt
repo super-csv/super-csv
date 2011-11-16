@@ -1,0 +1,179 @@
+Reading a CSV file using its header
+
+  To read lines from a file into an object, assume you have the bean class <<<UserBean>>>
+
++----------------------------------------------------------------------------+
+public class UserBean {
+    String username, password, street, town;
+    int zip;
+
+    public String getPassword() { return password; }
+    public String getStreet() { return street; }
+    public String getTown() { return town; }
+    public String getUsername() { return username; }
+    public int getZip() { return zip; }
+    public void setPassword(String password) { this.password = password; }
+    public void setStreet(String street) { this.street = street; }
+    public void setTown(String town) { this.town = town; }
+    public void setUsername(String username) { this.username = username; }
+    public void setZip(int zip) { this.zip = zip; }
+}
++----------------------------------------------------------------------------+
+
+  and that you have a CSV file with a header. Let's assume the following content
+
++----------------------------------------------------------------------------+
+username, password,   date,        zip,  town
+Klaus,    qwexyKiks,  17/1/2007,   1111, New York
+Oufu,     bobilop,    10/10/2007,  4555, New York
++----------------------------------------------------------------------------+
+
+  You can then create an instance of the <<<UserBean>>> and populate it with values from the second line of the file with the following code
+
++----------------------------------------------------------------------------+
+class ReadingObjects {
+  public static void main(String[] args) throws Exception{
+    ICsvBeanReader inFile = new CsvBeanReader(new FileReader("foo.csv"), CsvPreference.EXCEL_PREFERENCE);
+    try {
+      final String[] header = inFile.getCSVHeader(true);
+      UserBean user;
+      while( (user = inFile.read(UserBean.class, header, processors)) != null) {
+        System.out.println(user.getZip());
+      }
+    } finally {
+      inFile.close();
+    }
+  }
+}
++----------------------------------------------------------------------------+
+
+  What is left to define is the <<<processors>>>. Despite their condensed form, cell processors capture quite expressive semantics.
+  Each position in the <<<CellProcessor>>> array corresponds to a column in the CSV file. 
+  If a cell in the array has the value <<<null>>>, the column will be read but not processed.
+  Each processor can be <<nested>>. 
+  This means that processors and constraints can be freely combined in any number as seen below, e.g. <<<new Unique(new StrMinMax())>>>. 
+  This is a very expressive so spend some time dwelling on what you can do with the processors.
+  
+  Processors are executed from the outermost to the innermost. In cases of recoverable errors, a processor may choose to exit (optionally
+  with some default value), rather than executing its "nested processors". 
+  You can say that while the cell processors' constructors are executing from the innermost to the outermost (due to the normal rules in Java on resolving arguments before invoking methods),
+  the processors business logic executes from the outermost to the innermost. 
+
+  One definition could be
+
++----------------------------------------------------------------------------+
+final CellProcessor[] processors = new CellProcessor[] {
+    new Unique(new StrMinMax(5, 20)),
+    new StrMinMax(8, 35),
+    new ParseDate("dd/MM/yyyy"),
+    new Optional(new ParseInt()),
+    null
+};
++----------------------------------------------------------------------------+
+
+  The above definition captures the following semantics:
+
+    * Read column 1 as a <<<String>>> and first insure that values in this column are all unique. Then ensure each value has a length between 5-20.
+    
+    * Read column 2 as a <<<String>>> and ensure each value has a length between 8-35.
+    
+    * Read column 3 as a <<<Date>>> of the format day/month/year.
+    
+    * Read column 4 as an <<<Integer>>>. But only do so if something is actually defined in the column.
+    
+    * Read column 5 as is (a <<<String>>>). Don't process or constrain its values.
+
+  Notice how Super Csv utilizes the fact that the file had a header. 
+  If your files are without headers, you can easily create the missing information by means of a string array such as
+
++----------------------------------------------------------------------------+
+final String[] header = new String[] { "username", "password", "date", "zip", "town"};
++----------------------------------------------------------------------------+
+
+  If we want to omit a column when reading/writing, simply set the header array element to <<<null>>>. 
+  This is somewhat analogous to setting a processor array element to <<<null>>> which disables processing of that column.
+
+  The full code looks as follows
+
++----------------------------------------------------------------------------+
+import java.io.FileReader;
+import java.io.IOException;
+
+import java.util.Date;
+
+import org.supercsv.cellprocessor.Optional;
+import org.supercsv.cellprocessor.ParseDate;
+import org.supercsv.cellprocessor.ParseInt;
+import org.supercsv.cellprocessor.constraint.StrMinMax;
+import org.supercsv.cellprocessor.constraint.Unique;
+import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.io.CsvBeanReader;
+import org.supercsv.io.ICsvBeanReader;
+import org.supercsv.prefs.CsvPreference;
+
+class ReadingObjects {
+    static final CellProcessor[] userProcessors = new CellProcessor[] {
+        new Unique(new StrMinMax(5, 20)),
+        new StrMinMax(8, 35),
+        new ParseDate("dd/MM/yyyy"),
+        new Optional(new ParseInt()),
+        null
+    };
+
+    public static void main(String[] args) throws Exception {
+        ICsvBeanReader inFile = new CsvBeanReader(new FileReader("foo.csv"), CsvPreference.EXCEL_PREFERENCE);
+        try {
+          final String[] header = inFile.getCSVHeader(true);
+          UserBean user;
+          while( (user = inFile.read(UserBean.class, header, userProcessors)) != null) {
+            System.out.println(user.getZip());
+          }
+        } finally {
+          inFile.close();
+        }
+   }
+}
+
+public class UserBean {
+    String username, password, town;
+    Date date;
+    int zip;
+
+    public Date getDate() {
+        return date;
+    }
+    public String getPassword() {
+        return password;
+    }
+    public String getTown() {
+        return town;
+    }
+    public String getUsername() {
+        return username;
+    }
+    public int getZip() {
+        return zip;
+    }
+    public void setDate(final Date date) {
+        this.date = date;
+    }
+    public void setPassword(final String password) {
+        this.password = password;
+    }
+
+    public void setTown(final String town) {
+        this.town = town;
+    }
+    public void setUsername(final String username) {
+        this.username = username;
+    }
+    public void setZip(final int zip) {
+        this.zip = zip;
+    }
+}
++----------------------------------------------------------------------------+
+
+Reading a file with an unknown number of columns
+
+  When you are in the situation that you know nothing about the structure of the file at compile time, the only option you have is to read
+  each line of the file as a list of Strings. You accomplish this using the <<<CsvListReader.read()>>> method.

@@ -1,0 +1,45 @@
+Writing a CSV file with a header
+
+  Writing a file is as easy as reading one. You decide on the column format and start writing. 
+  You can still enjoy the cell processor functionality, however, you will most likely only use the constraint <<<CellProcessors>>>. 
+  All values are written to the output stream using the <<<toString()>>> method on each object, 
+  thus reducing the need for the cell processors that convert data.
+  
+  <<Notice that data is automatically "CSV encoded">>. This means that when you write the string <<<Hello, world>>>, the actual data
+  written will be <<<"Hello, world">>> as the comma must be escaped since you are only writing one column of data. 
+  Similarly, the string <<<"Hello" world>>> becomes <<<"""Hello"" world">>>. 
+  In other words, <<you can safely leave it up to Super CSV to properly write your data>>.
+
++------------------------------------------------------------------------------------------------+
+import java.util.HashMap;
+import org.supercsv.io.*;
+import org.supercsv.prefs.CsvPreference;
+
+class WritingMaps {
+  main(String[] args) throws Exception {
+    ICsvMapWriter writer = new CsvMapWriter(new FileWriter(...), CsvPreference.EXCEL_PREFERENCE);
+    try {
+      final String[] header = new String[] { "name", "city", "zip" };
+      // set up some data to write
+      final HashMap<String, ? super Object> data1 = new HashMap<String, Object>();
+      data1.put(header[0], "Karl");
+      data1.put(header[1], "Tent city");
+      data1.put(header[2], 5565);
+      final HashMap<String, ? super Object> data2 = new HashMap<String, Object>();
+      data2.put(header[0], "Banjo");
+      data2.put(header[1], "River side");
+      data2.put(header[2], 5551);
+      // the actual writing
+      writer.writeHeader(header);
+      writer.write(data1, header);
+      writer.write(data2, header);
+    } finally {
+      writer.close();
+    }
+  }
+}
++------------------------------------------------------------------------------------------------+
+
+  Notice that even though we are writing numbers, we do not need any cell processors, as the number's <<<toString()>>> method is called
+  prior to writing. We could have added a cell processor to ensure that the numbers were above a certain threshold, and the string
+  lengths were > 0 if we wanted.

@@ -1,0 +1,24 @@
+Downloading Super CSV
+
+  If you are using Maven, simply copy the following dependency into your pom.xml file.
+  
++-------------------------------------+
+<dependency>
+    <groupId>net.sf.supercsv</groupId>
+    <artifactId>super-csv</artifactId>
+    <version>1.6.0</version>
+</dependency>
++-------------------------------------+
+
+  Otherwise you can download the distribution zip file from {{{http://sourceforge.net/projects/supercsv/files/v1-branch/v1.52/}Sourceforge}}, 
+  which contains:
+
+*-----------------------------+---------------------------------------------------------------------+
+|| File                       || Description                                                        |  
+*-----------------------------+---------------------------------------------------------------------+
+| super-csv-x.x.x.jar         | Version x.x.x of Super CSV (compiled classes only)                  |
+*-----------------------------+---------------------------------------------------------------------+
+| super-csv-x.x.x-sources.jar | The source code                                                     |
+*-----------------------------+---------------------------------------------------------------------+
+| super-csv-x.x.x-javadoc.jar | The Javadoc documentation. Can be integrated with your favourite IDE|
+*-----------------------------+---------------------------------------------------------------------+
