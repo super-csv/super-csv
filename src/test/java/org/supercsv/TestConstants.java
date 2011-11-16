@@ -2,10 +2,11 @@ package org.supercsv;
 
 import java.util.Date;
 
+import org.junit.Ignore;
 import org.supercsv.util.CSVContext;
-
 import org.supercsv.util.DateHelper;
 
+@Ignore
 public class TestConstants {
 	
 	public static final int VALUE_1_AS_INT = 1;
