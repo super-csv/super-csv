@@ -14,20 +14,22 @@ import org.supercsv.util.CSVContext;
  */
 public class ComparerCellProcessor extends CellProcessorAdaptor implements DoubleCellProcessor, BoolCellProcessor,
 	DateCellProcessor, LongCellProcessor, StringCellProcessor {
-Object expectedValue;
-
-public ComparerCellProcessor(final Object expectedValue) {
-	super();
-	this.expectedValue = expectedValue;
-}
-
-/**
- * {@inheritDoc}
- */
-@Override
-public Object execute(final Object value, final CSVContext context) {
-	final boolean res = value.equals(expectedValue);
-	if( res == false ) { throw new RuntimeException("expected '" + expectedValue + "' got '" + value + "'"); }
-	return true;
-}
+	Object expectedValue;
+	
+	public ComparerCellProcessor(final Object expectedValue) {
+		super();
+		this.expectedValue = expectedValue;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Object execute(final Object value, final CSVContext context) {
+		final boolean res = value.equals(expectedValue);
+		if( res == false ) {
+			throw new RuntimeException("expected '" + expectedValue + "' got '" + value + "'");
+		}
+		return true;
+	}
 }

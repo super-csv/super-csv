@@ -17,16 +17,16 @@ import java.io.Writer;
  * @author Kasper B. Graversen
  */
 public class NullWriter extends Writer {
-@Override
-public void close() throws IOException {
-}
-
-@Override
-public void flush() throws IOException {
-}
-
-@Override
-public void write(final char[] arg0, final int arg1, final int arg2) throws IOException {
-}
-
+	@Override
+	public void close() throws IOException {
+	}
+	
+	@Override
+	public void flush() throws IOException {
+	}
+	
+	@Override
+	public void write(final char[] arg0, final int arg1, final int arg2) throws IOException {
+	}
+	
 }

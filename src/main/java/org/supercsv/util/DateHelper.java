@@ -6,7 +6,6 @@ import java.util.Date;
 /**
  * Helper methods for creating and manipulating Dates, Calendars etc..
  * 
- * @since 0.2
  * @author Kasper B. Graversen, (c) 2007
  */
 public class DateHelper {
@@ -50,7 +49,7 @@ public class DateHelper {
 	 * @since 0.02
 	 */
 	public static Date date(final int year, final int month, final int dayOfMonth, final int hour, final int minute,
-			final int second) {
+		final int second) {
 		final Calendar cal = Calendar.getInstance();
 		cal.setLenient(false);
 		cal.set(year, month - 1, dayOfMonth, hour, minute, second);

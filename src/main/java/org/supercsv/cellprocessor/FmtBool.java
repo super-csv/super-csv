@@ -16,35 +16,35 @@ import org.supercsv.util.CSVContext;
  * @author Dominique De Vito
  */
 public class FmtBool extends CellProcessorAdaptor implements BoolCellProcessor {
-
-private final String trueValue;
-private final String falseValue;
-
-public FmtBool(final String trueValue, final String falseValue) {
-	super();
-	this.trueValue = trueValue;
-	this.falseValue = falseValue;
-}
-
-public FmtBool(final String trueValue, final String falseValue, final StringCellProcessor next) {
-	super(next);
-	this.trueValue = trueValue;
-	this.falseValue = falseValue;
-}
-
-/**
- * {@inheritDoc}
- */
-@Override
-public Object execute(final Object value, final CSVContext context) throws SuperCSVException {
-	if( value == null ) {
-		throw new NullInputException("Input cannot be null on line " + context.lineNumber + " column "
-			+ context.columnNumber, context, this);
+	
+	private final String trueValue;
+	private final String falseValue;
+	
+	public FmtBool(final String trueValue, final String falseValue) {
+		super();
+		this.trueValue = trueValue;
+		this.falseValue = falseValue;
 	}
-	if( !(value instanceof Boolean) ) {
-		throw new ClassCastInputCSVException("the value '" + value + "' is not of type Boolean", context, this);
+	
+	public FmtBool(final String trueValue, final String falseValue, final StringCellProcessor next) {
+		super(next);
+		this.trueValue = trueValue;
+		this.falseValue = falseValue;
 	}
-	String result = ((Boolean) value).booleanValue() ? trueValue : falseValue;
-	return next.execute(result, context);
-}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Object execute(final Object value, final CSVContext context) throws SuperCSVException {
+		if( value == null ) {
+			throw new NullInputException("Input cannot be null on line " + context.lineNumber + " column "
+				+ context.columnNumber, context, this);
+		}
+		if( !(value instanceof Boolean) ) {
+			throw new ClassCastInputCSVException("the value '" + value + "' is not of type Boolean", context, this);
+		}
+		String result = ((Boolean) value).booleanValue() ? trueValue : falseValue;
+		return next.execute(result, context);
+	}
 }

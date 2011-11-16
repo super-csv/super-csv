@@ -28,29 +28,32 @@ import org.supercsv.util.CSVContext;
  * @author Dominique De Vito
  */
 public class FmtDate extends CellProcessorAdaptor implements DateCellProcessor {
-
-protected DateFormat formatter;
-
-public FmtDate(final String format) {
-	super();
-	this.formatter = new SimpleDateFormat(format);
-}
-
-public FmtDate(final String format, final StringCellProcessor next) {
-	super(next);
-	this.formatter = new SimpleDateFormat(format);
-}
-
-/**
- * {@inheritDoc}
- */
-@Override
-public Object execute(final Object value, final CSVContext context) throws SuperCSVException {
-	if( value == null ) { throw new NullInputException("Input cannot be null on line " + context.lineNumber
-		+ " column " + context.columnNumber, context, this); }
-	if( !(value instanceof Date) ) { throw new ClassCastInputCSVException("the value '" + value
-		+ "' is not of type Date", context, this); }
-	final String result = formatter.format((Date) value);
-	return next.execute(result, context);
-}
+	
+	protected DateFormat formatter;
+	
+	public FmtDate(final String format) {
+		super();
+		this.formatter = new SimpleDateFormat(format);
+	}
+	
+	public FmtDate(final String format, final StringCellProcessor next) {
+		super(next);
+		this.formatter = new SimpleDateFormat(format);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Object execute(final Object value, final CSVContext context) throws SuperCSVException {
+		if( value == null ) {
+			throw new NullInputException("Input cannot be null on line " + context.lineNumber + " column "
+				+ context.columnNumber, context, this);
+		}
+		if( !(value instanceof Date) ) {
+			throw new ClassCastInputCSVException("the value '" + value + "' is not of type Date", context, this);
+		}
+		final String result = formatter.format((Date) value);
+		return next.execute(result, context);
+	}
 }

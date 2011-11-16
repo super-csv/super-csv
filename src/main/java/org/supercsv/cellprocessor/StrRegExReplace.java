@@ -15,38 +15,46 @@ import org.supercsv.util.CSVContext;
  * @since 1.50
  */
 public class StrRegExReplace extends CellProcessorAdaptor implements StringCellProcessor {
-
-private final Pattern regexPattern;
-private final String replacement;
-
-public StrRegExReplace(final String regex, final String replacement) {
-	super();
-	handleArguments(regex, replacement); 
-	this.regexPattern = Pattern.compile(regex);
-	this.replacement = replacement;
-}
-
-public StrRegExReplace(final String regex, final String replacement, final BoolCellProcessor next) {
-	super(next);
-	handleArguments(regex, replacement); 
-	this.regexPattern = Pattern.compile(regex);
-	this.replacement = replacement;
-}
-
-private void handleArguments(final String regex, final String replacement)  {
-	if( regex == null ) { throw new NullInputException("the regular expression cannot be null", this); }
-	if( replacement == null ) { throw new NullInputException("the replacement string cannot be null", this); }
-	if( regex.equals("") ) { throw new SuperCSVException(
-		"the regular expression  cannot be \"\" as this has no effect", this); }
-}
-/**
- * {@inheritDoc}
- */
-@Override
-public Object execute(final Object value, final CSVContext context) {
-	if( value == null ) { throw new NullInputException("Input cannot be null on line " + context.lineNumber
-		+ " at column " + context.columnNumber, context, this); }
-	String result = regexPattern.matcher((String) value).replaceAll(replacement);
-	return next.execute(result, context);
-}
+	
+	private final Pattern regexPattern;
+	private final String replacement;
+	
+	public StrRegExReplace(final String regex, final String replacement) {
+		super();
+		handleArguments(regex, replacement);
+		this.regexPattern = Pattern.compile(regex);
+		this.replacement = replacement;
+	}
+	
+	public StrRegExReplace(final String regex, final String replacement, final BoolCellProcessor next) {
+		super(next);
+		handleArguments(regex, replacement);
+		this.regexPattern = Pattern.compile(regex);
+		this.replacement = replacement;
+	}
+	
+	private void handleArguments(final String regex, final String replacement) {
+		if( regex == null ) {
+			throw new NullInputException("the regular expression cannot be null", this);
+		}
+		if( replacement == null ) {
+			throw new NullInputException("the replacement string cannot be null", this);
+		}
+		if( regex.equals("") ) {
+			throw new SuperCSVException("the regular expression  cannot be \"\" as this has no effect", this);
+		}
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Object execute(final Object value, final CSVContext context) {
+		if( value == null ) {
+			throw new NullInputException("Input cannot be null on line " + context.lineNumber + " at column "
+				+ context.columnNumber, context, this);
+		}
+		String result = regexPattern.matcher((String) value).replaceAll(replacement);
+		return next.execute(result, context);
+	}
 }

@@ -16,17 +16,17 @@ import org.supercsv.cellprocessor.ift.CellProcessor;
  * @author Kasper B. Graversen
  */
 public class RequireHashCode extends Required {
-
-public RequireHashCode(final int... requiredHashcodes) {
-	super(requiredHashcodes);
-}
-
-public RequireHashCode(final int requiredHashcode, final CellProcessor next) {
-	this(new int[] { requiredHashcode }, next);
-}
-
-public RequireHashCode(final int[] requiredHashcodes, final CellProcessor next) {
-	super(requiredHashcodes, next);
-}
-
+	
+	public RequireHashCode(final int... requiredHashcodes) {
+		super(requiredHashcodes);
+	}
+	
+	public RequireHashCode(final int requiredHashcode, final CellProcessor next) {
+		this(new int[] { requiredHashcode }, next);
+	}
+	
+	public RequireHashCode(final int[] requiredHashcodes, final CellProcessor next) {
+		super(requiredHashcodes, next);
+	}
+	
 }

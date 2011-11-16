@@ -12,14 +12,14 @@ package org.supercsv.mock;
  * @author Kasper B. Graversen
  */
 public class SuperBean {
-String firstname;
-
-public String getFirstname() {
-	return firstname;
-}
-
-public void setFirstname(final String firstname) {
-	this.firstname = firstname;
-}
-
+	String firstname;
+	
+	public String getFirstname() {
+		return firstname;
+	}
+	
+	public void setFirstname(final String firstname) {
+		this.firstname = firstname;
+	}
+	
 }
