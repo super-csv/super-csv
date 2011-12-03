@@ -24,7 +24,6 @@ public class ComparerCellProcessor extends CellProcessorAdaptor implements Doubl
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public Object execute(final Object value, final CSVContext context) {
 		final boolean res = value.equals(expectedValue);
 		if( res == false ) {

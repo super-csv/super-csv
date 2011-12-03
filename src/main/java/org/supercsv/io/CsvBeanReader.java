@@ -3,6 +3,7 @@ package org.supercsv.io;
 import java.io.IOException;
 import java.io.Reader;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,21 +16,27 @@ import org.supercsv.util.MethodCache;
 import org.supercsv.util.Util;
 
 /**
- * This class reads a line from a csv file, instantiates a bean and populate its fields.
+ * This class reads a CSV file by instantiating a bean for every row and mapping each column to a field on the bean
+ * (using the supplied name mapping).
  * 
  * @author Kasper B. Graversen
  */
 public class CsvBeanReader extends AbstractCsvReader implements ICsvBeanReader {
-	/**
-	 * object used for storing intermediate result of a processing of cell processors and before put into maps/objects
-	 * etc.. due to the typing, we cannot use super.line
-	 */
+	
+	/** temporary storage of processed columns to be mapped to the bean */
 	protected List<? super Object> lineResult = new ArrayList<Object>();
+	
+	/** cache of methods for mapping from columns to fields */
 	protected MethodCache cache = new MethodCache();
 	
 	/**
-	 * Create a csv reader with a specific preference. Note that the <tt>reader</tt> provided in the argument will be
-	 * wrapped in a <tt>BufferedReader</tt> before accessed.
+	 * Constructs a new <tt>CsvBeanReader</tt> with the supplied Reader and CSV preferences. Note that the
+	 * <tt>reader</tt> will be wrapped in a <tt>BufferedReader</tt> before accessed.
+	 * 
+	 * @param reader
+	 *            the reader
+	 * @param preferences
+	 *            the CSV preferences
 	 */
 	public CsvBeanReader(final Reader reader, final CsvPreference preferences) {
 		setPreferences(preferences);
@@ -37,40 +44,38 @@ public class CsvBeanReader extends AbstractCsvReader implements ICsvBeanReader {
 	}
 	
 	/**
-	 * Creates an object of the type or if it is an interface, create a proxy instance implementing the interface type.
+	 * Instantiates the bean (or creates a proxy if it's an interface), and maps the processed columns to the fields of
+	 * the bean.
 	 * 
 	 * @param clazz
-	 *            the type to instantiate. If the type is a class type, an instance can be created straight away. If the
-	 *            type is an interface type, a proxy is created on the fly which acts as an implementation.
+	 *            the bean class to instantiate (a proxy will be created if an interface is supplied), using the default
+	 *            (no argument) constructor
 	 * @param nameMapping
+	 *            the name mappings
 	 * @return A filled object
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 * @throws InvocationTargetException
+	 * @throws SuperCSVReflectionException
 	 */
-	<T> T fillObject(final Class<T> clazz, final String[] nameMapping) throws SuperCSVReflectionException {
+	private <T> T populateBean(final Class<T> clazz, final String[] nameMapping) throws SuperCSVReflectionException {
 		try {
-			// create a proxy instance if an interface type is provided
+			// instantiate the bean or proxy
 			final T resultBean;
 			if( clazz.isInterface() ) {
-				resultBean = (T) new BeanInterfaceProxy().createProxy(clazz);
+				resultBean = new BeanInterfaceProxy().createProxy(clazz);
 			} else {
 				resultBean = clazz.newInstance();
 			}
-			// map results into an object by traversing the list of nameMapping and for each non-null,
-			// map that name to an entry in the lineResult
-			// map results to the setter methods
+			
+			// map each column to its associated field on the bean
 			for( int i = 0; i < nameMapping.length; i++ ) {
-				// don't call a set-method in the bean, if there is no result to store
+				
+				// don't call a set-method in the bean if there is no name mapping for the column or no result to store
 				if( nameMapping[i] == null || lineResult.get(i) == null ) {
 					continue;
 				}
+				
 				try {
-					// System.out.println(String.format("mapping[i]= %s, lR[%d] = %s val '%s'", nameMapping[i], i,
-					// lineResult
-					// .get(i).getClass(), lineResult.get(i)));
-					cache.getSetMethod(resultBean, nameMapping[i], lineResult.get(i).getClass())//
-						.invoke(resultBean, lineResult.get(i));
+					Method setMethod = cache.getSetMethod(resultBean, nameMapping[i], lineResult.get(i).getClass());
+					setMethod.invoke(resultBean, lineResult.get(i));
 				}
 				catch(final IllegalArgumentException e) {
 					throw new SuperCSVException("Method set" + nameMapping[i].substring(0, 1).toUpperCase()
@@ -81,13 +86,13 @@ public class CsvBeanReader extends AbstractCsvReader implements ICsvBeanReader {
 			return resultBean;
 		}
 		catch(final InstantiationException e) {
-			throw new SuperCSVReflectionException("Error while filling an object", e);
+			throw new SuperCSVReflectionException("Error while populating bean", e);
 		}
 		catch(final IllegalAccessException e) {
-			throw new SuperCSVReflectionException("Error while filling an object", e);
+			throw new SuperCSVReflectionException("Error while populating bean", e);
 		}
 		catch(final InvocationTargetException e) {
-			throw new SuperCSVReflectionException("Error while filling an object", e);
+			throw new SuperCSVReflectionException("Error while populating bean", e);
 		}
 	}
 	
@@ -99,7 +104,7 @@ public class CsvBeanReader extends AbstractCsvReader implements ICsvBeanReader {
 		if( tokenizer.readStringList(super.line) ) {
 			lineResult.clear();
 			lineResult.addAll(super.line);
-			return fillObject(clazz, nameMapping);
+			return populateBean(clazz, nameMapping);
 		}
 		return null; // EOF
 	}
@@ -107,11 +112,12 @@ public class CsvBeanReader extends AbstractCsvReader implements ICsvBeanReader {
 	/**
 	 * {@inheritDoc}
 	 */
-	public <T> T read(final Class<T> clazz, final String[] nameMapping, final CellProcessor[] processors)
+	public <T> T read(final Class<T> clazz, final String[] nameMapping, final CellProcessor... processors)
 		throws IOException, SuperCSVReflectionException, SuperCSVException {
 		if( tokenizer.readStringList(super.line) ) {
+			// execute the processors then populate the bean
 			Util.processStringList(lineResult, super.line, processors, tokenizer.getLineNumber());
-			return fillObject(clazz, nameMapping);
+			return populateBean(clazz, nameMapping);
 		}
 		return null; // EOF
 	}

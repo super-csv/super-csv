@@ -17,7 +17,7 @@ public class CsvPreference {
 	public static final CsvPreference EXCEL_PREFERENCE = new CsvPreference('"', ',', "\n");
 	
 	/**
-	 * Ready to use configuration for north european excel CSV files (columns are separated by ";" instead of ",")
+	 * Ready to use configuration for north European excel CSV files (columns are separated by ";" instead of ",")
 	 */
 	public static final CsvPreference EXCEL_NORTH_EUROPE_PREFERENCE = new CsvPreference('"', ';', "\n");
 	
@@ -26,8 +26,14 @@ public class CsvPreference {
 	 */
 	public static final CsvPreference NO_COMMENT_PREFERENCE = new CsvPreference('"', ',', "\n");
 	
+	/**
+	 * The quote character
+	 */
 	protected char quoteChar;
 	
+	/**
+	 * The delimiter character
+	 */
 	protected int delimiterChar;
 	
 	/**
@@ -36,44 +42,80 @@ public class CsvPreference {
 	protected String endOfLineSymbols;
 	
 	/**
-	 * Set the preference for readers and writers
+	 * Constructs a new <tt>CsvPreference</tt> to use when reading or writing (the end of line symbols are only used for
+	 * writing, however).
 	 * 
 	 * @param quoteChar
-	 *            Specifies that matching pairs of this character delimit string constants in this tokenizer.
+	 *            specifies that matching pairs of this character delimit string constants in this tokenizer.
 	 * @param delimiterChar
-	 *            Specifies the character separating each column
+	 *            specifies the character separating each column
 	 * @param endOfLineSymbols
 	 *            one or more symbols terminating the line, e.g. "\n". This parameter only makes sense for writers
 	 */
 	public CsvPreference(final char quoteChar, final int delimiterChar, final String endOfLineSymbols) {
-		// setCommentChar(commentChar);
 		setQuoteChar(quoteChar);
 		setDelimiterChar(delimiterChar);
 		setEndOfLineSymbols(endOfLineSymbols);
 	}
 	
+	/**
+	 * Returns the delimiter character
+	 * 
+	 * @return the delimiter character
+	 */
 	public int getDelimiterChar() {
 		return delimiterChar;
 	}
 	
+	/**
+	 * Returns the end of line symbols
+	 * 
+	 * @return the end of line symbols
+	 */
 	public String getEndOfLineSymbols() {
 		return endOfLineSymbols;
 	}
 	
+	/**
+	 * Returns the quote character
+	 * 
+	 * @return the quote character
+	 */
 	public int getQuoteChar() {
 		return quoteChar;
 	}
 	
+	/**
+	 * Sets the delimiter character
+	 * 
+	 * @param delimiterChar
+	 *            the character to use as a delimiter
+	 * @return the updated preference
+	 */
 	public CsvPreference setDelimiterChar(final int delimiterChar) {
 		this.delimiterChar = delimiterChar;
 		return this;
 	}
 	
+	/**
+	 * Sets the end of line symbols
+	 * 
+	 * @param endOfLineSymbols
+	 *            the end of line symbols
+	 * @return the updated preference
+	 */
 	public CsvPreference setEndOfLineSymbols(final String endOfLineSymbols) {
 		this.endOfLineSymbols = endOfLineSymbols;
 		return this;
 	}
 	
+	/**
+	 * Sets the quote character
+	 * 
+	 * @param quoteChar
+	 *            the quote character
+	 * @return the updated preference
+	 */
 	public CsvPreference setQuoteChar(final char quoteChar) {
 		this.quoteChar = quoteChar;
 		return this;

@@ -1,9 +1,15 @@
 package org.supercsv.io;
 
 /**
+ * An enumeration of parser states.
+ * 
  * @author Kasper B. Graversen
  */
 enum PARSERSTATE {
-	NORMAL, // normal text
-	QUOTESCOPE, // inside quote scope (e.g.: " here "
+	
+	/** normal text */
+	NORMAL,
+
+	/** inside quote scope (e.g. " here ") */
+	QUOTESCOPE,
 }

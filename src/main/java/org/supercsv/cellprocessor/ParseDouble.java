@@ -2,21 +2,30 @@ package org.supercsv.cellprocessor;
 
 import org.supercsv.cellprocessor.ift.DoubleCellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
-import org.supercsv.exception.NullInputException;
 import org.supercsv.exception.SuperCSVException;
 import org.supercsv.util.CSVContext;
 
 /**
- * Convert a string to a double
+ * Converts a String to a Double.
  * 
  * @author Kasper B. Graversen
  */
 public class ParseDouble extends CellProcessorAdaptor implements StringCellProcessor {
 	
+	/**
+	 * Constructs a new <tt>ParseDouble</tt> processor, which converts a String to a Double.
+	 */
 	public ParseDouble() {
 		super();
 	}
 	
+	/**
+	 * Constructs a new <tt>ParseDouble</tt> processor, which converts a String to a Double, then calls the next
+	 * processor in the chain.
+	 * 
+	 * @param next
+	 *            the next processor in the chain
+	 */
 	public ParseDouble(final DoubleCellProcessor next) {
 		super(next);
 	}
@@ -24,12 +33,8 @@ public class ParseDouble extends CellProcessorAdaptor implements StringCellProce
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
-	public Object execute(final Object value, final CSVContext context) throws SuperCSVException {
-		if( value == null ) {
-			throw new NullInputException("Input cannot be null on line " + context.lineNumber + " at column "
-				+ context.columnNumber, context, this);
-		}
+	public Object execute(final Object value, final CSVContext context) {
+		validateInputNotNull(value, context, this);
 		
 		final Double result;
 		if( value instanceof Double ) {

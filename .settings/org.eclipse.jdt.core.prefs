@@ -1,4 +1,4 @@
-#Wed Nov 16 13:09:04 EST 2011
+#Sun Nov 27 17:44:32 EST 2011
 eclipse.preferences.version=1
 org.eclipse.jdt.core.compiler.codegen.inlineJsrBytecode=enabled
 org.eclipse.jdt.core.compiler.codegen.targetPlatform=1.5
@@ -58,7 +58,7 @@ org.eclipse.jdt.core.formatter.brace_position_for_type_declaration=end_of_line
 org.eclipse.jdt.core.formatter.comment.clear_blank_lines_in_block_comment=true
 org.eclipse.jdt.core.formatter.comment.clear_blank_lines_in_javadoc_comment=true
 org.eclipse.jdt.core.formatter.comment.format_block_comments=true
-org.eclipse.jdt.core.formatter.comment.format_header=true
+org.eclipse.jdt.core.formatter.comment.format_header=false
 org.eclipse.jdt.core.formatter.comment.format_html=true
 org.eclipse.jdt.core.formatter.comment.format_javadoc_comments=true
 org.eclipse.jdt.core.formatter.comment.format_line_comments=true

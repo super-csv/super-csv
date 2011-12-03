@@ -7,12 +7,6 @@ import org.junit.Test;
 import org.supercsv.exception.SuperCSVException;
 
 public class MethodCacheTest {
-	/** stupid subclass to shut up emma */
-	protected static final class Ignore extends Util {
-		public Ignore() {
-			super();
-		}
-	}
 	
 	/** we use objects of this class as access test */
 	static class ObjectMock {
@@ -66,11 +60,6 @@ public class MethodCacheTest {
 	public void test_InvalidmethodCall() {
 		final MethodCache cache = new MethodCache();
 		cache.getGetMethod(new ObjectMock(), "bibibabibibaib");
-	}
-	
-	@Test
-	public void test_Make_Hidden_Abstract_ConstructorTested() {
-		new Ignore();
 	}
 	
 	@Test

@@ -8,10 +8,14 @@ import java.util.Date;
  * 
  * @author Kasper B. Graversen, (c) 2007
  */
-public class DateHelper {
+public final class DateHelper {
+
+	// no instantiation
+	private DateHelper(){
+	}
 	
 	/**
-	 * An easy and non-depricated non-lenient way of creating Date objects.
+	 * An easy and non-deprecated non-lenient way of creating Date objects.
 	 * 
 	 * @param year
 	 *            the year, e.g. 2007 is year 2007
@@ -31,7 +35,7 @@ public class DateHelper {
 	}
 	
 	/**
-	 * An easy and non-depricated non-lenient way of creating Date objects.
+	 * An easy and non-deprecated non-lenient way of creating Date objects.
 	 * 
 	 * @param year
 	 *            the year, e.g. 2007 is year 2007

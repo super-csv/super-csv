@@ -13,12 +13,21 @@ import java.util.Set;
  * @author Kasper B. Graversen
  */
 public class TwoDHashMap<K1, K2, V> {
+	
 	private HashMap<K1, HashMap<K2, V>> map = new HashMap<K1, HashMap<K2, V>>();
 	
+	/**
+	 * Constructs a new <tt>TwoDHashMap</tt>.
+	 */
 	public TwoDHashMap() {
-		
 	}
 	
+	/**
+	 * Constructs a new <tt>TwoDHashMap</tt> using the supplied map.
+	 * 
+	 * @param map
+	 *            the map
+	 */
 	public TwoDHashMap(final HashMap<K1, HashMap<K2, V>> map) {
 		this.map = map;
 	}

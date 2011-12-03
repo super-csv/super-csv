@@ -1,6 +1,8 @@
 package org.supercsv.cellprocessor;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -57,6 +59,14 @@ public class ParseBigDecimalTest {
 	public void validInputTest() throws Exception {
 		Assert.assertEquals("convert possitive", VAL1, cp.execute(VAL1_STR_, CSVCONTEXT));
 		Assert.assertEquals("convert negative", VAL2, cp.execute(VAL2STR, CSVCONTEXT));
+	}
+	
+	@Test
+	public void validInputWithDecimalFormatSymbolsTest() throws Exception {
+		String french = "1333,5";
+		BigDecimal expected = new BigDecimal("1333.5");
+		CellProcessor processor = new ParseBigDecimal(new DecimalFormatSymbols(Locale.FRANCE));
+		Assert.assertEquals(expected, processor.execute(french, CSVCONTEXT));
 	}
 	
 }

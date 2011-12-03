@@ -11,41 +11,53 @@ import org.supercsv.prefs.CsvPreference;
 import org.supercsv.util.CSVContext;
 
 /**
- * The writer class capable of writing arrays, maps,... to a CSV file. Notice that the cell processors can also be
- * utilized when writing. E.g. they can help ensure that only numbers are written in numeric columns, that numbers are
- * unique or the output does not contain certain characters or exceed specified string lengths.
+ * Defines the standard behaviour of a CSV writer.
  * 
  * @author Kasper B. Graversen
  */
 public abstract class AbstractCsvWriter implements ICsvWriter {
 	final StringBuilder sb = new StringBuilder();
-	BufferedWriter outStream;
+	BufferedWriter writer;
 	int lineNo;
 	CsvPreference preference;
 	
-	protected AbstractCsvWriter(final Writer stream, final CsvPreference preference) {
+	/**
+	 * Constructs a new <tt>AbstractCsvWriter</tt> with the supplied writer and preferences.
+	 * 
+	 * @param writer
+	 *            the stream to write to
+	 * @param preference
+	 *            the CSV preferences
+	 */
+	protected AbstractCsvWriter(final Writer writer, final CsvPreference preference) {
 		setPreferences(preference);
-		outStream = new BufferedWriter(stream);
+		this.writer = new BufferedWriter(writer);
 		lineNo = 1;
 	}
 	
+	/**
+	 * Closes the underlying writer, flushing it first.
+	 */
 	public void close() throws IOException {
-		outStream.close();
+		writer.close();
 	}
 	
+	/**
+	 * Flushes the underlying writer.
+	 */
 	public void flush() throws IOException {
-		outStream.flush();
+		writer.flush();
 	}
 	
 	/**
 	 * Make a string ready for writing by escaping various characters as specified by the CSV format
 	 * 
-	 * @param csvElem
-	 *            an elem of a csv file
-	 * @return an escaped version of the csv elem ready for persisting
+	 * @param csvElement
+	 *            an element of a CSV file
+	 * @return an escaped version of the element ready for persisting
 	 */
-	protected String escapeString(final String csvElem) {
-		if( csvElem.length() == 0 ) {
+	protected String escapeString(final String csvElement) {
+		if( csvElement.length() == 0 ) {
 			return "";
 		}
 		
@@ -54,18 +66,18 @@ public abstract class AbstractCsvWriter implements ICsvWriter {
 		final int delimiter = preference.getDelimiterChar();
 		final char quote = (char) preference.getQuoteChar();
 		final char whiteSpace = ' ';
-		final String EOLSymbols = preference.getEndOfLineSymbols();
+		final String eolSymbols = preference.getEndOfLineSymbols();
 		
 		boolean needForEscape = false; // if newline or start with space
-		if( csvElem.charAt(0) == whiteSpace ) {
+		if( csvElement.charAt(0) == whiteSpace ) {
 			needForEscape = true;
 		}
 		
 		char c;
-		final int lastPos = csvElem.length() - 1;
+		final int lastPos = csvElement.length() - 1;
 		for( int i = 0; i <= lastPos; i++ ) {
 			
-			c = csvElem.charAt(i);
+			c = csvElement.charAt(i);
 			
 			if( c == delimiter ) {
 				needForEscape = true;
@@ -83,7 +95,7 @@ public abstract class AbstractCsvWriter implements ICsvWriter {
 				}
 			} else if( c == '\n' ) {
 				needForEscape = true;
-				sb.append(EOLSymbols);
+				sb.append(eolSymbols);
 			} else {
 				sb.append(c);
 			}
@@ -115,7 +127,11 @@ public abstract class AbstractCsvWriter implements ICsvWriter {
 	}
 	
 	/**
-	 * The actual write to stream
+	 * Writes the List of content.
+	 * 
+	 * @param content
+	 *            the content to write
+	 * @throws IOException
 	 */
 	protected void write(final List<? extends Object> content) throws IOException {
 		// convert object array to strings and write them
@@ -131,6 +147,13 @@ public abstract class AbstractCsvWriter implements ICsvWriter {
 		write(strarr);
 	}
 	
+	/**
+	 * Writes one or more Objects.
+	 * 
+	 * @param content
+	 *            the content to write
+	 * @throws IOException
+	 */
 	protected void write(final Object... content) throws IOException {
 		// convert object array to strings and write them
 		final String[] strarr = new String[content.length];
@@ -145,6 +168,13 @@ public abstract class AbstractCsvWriter implements ICsvWriter {
 		write(strarr);
 	}
 	
+	/**
+	 * Writes one or more Strings.
+	 * 
+	 * @param content
+	 *            the content to write
+	 * @throws IOException
+	 */
 	protected void write(final String... content) throws IOException {
 		lineNo++;
 		
@@ -161,15 +191,15 @@ public abstract class AbstractCsvWriter implements ICsvWriter {
 			default:
 				// write first 0..N-1 elems
 				for( ; i < content.length - 1; i++ ) {
-					outStream.write(escapeString(content[i]));
-					outStream.write(delimiter);
+					writer.write(escapeString(content[i]));
+					writer.write(delimiter);
 				}
 				break;
 		}
 		
 		// write last elem (without delimiter) and the EOL
-		outStream.write(escapeString(content[i]));
-		outStream.write(preference.getEndOfLineSymbols());
+		writer.write(escapeString(content[i]));
+		writer.write(preference.getEndOfLineSymbols());
 		return;
 	}
 	

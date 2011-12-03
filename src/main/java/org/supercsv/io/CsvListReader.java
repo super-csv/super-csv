@@ -10,15 +10,21 @@ import org.supercsv.prefs.CsvPreference;
 import org.supercsv.util.Util;
 
 /**
- * A simple reader, reading a line from a CSV file into a <code>List</code>. This low-level approach to CSV-reading
+ * A simple reader, reading a line from a CSV file into a <tt>List</tt>. This low-level approach to CSV-reading
  * should be considered a last resort when the more elaborate schemes do not fit your purpose.
  * 
  * @author Kasper B. Graversen
  */
 public class CsvListReader extends AbstractCsvReader implements ICsvListReader {
+	
 	/**
-	 * Create a csv reader with a specific preference. Note that the <tt>reader</tt> provided in the argument will be
-	 * wrapped in a <tt>BufferedReader</tt> before accessed.
+	 * Constructs a new <tt>CsvListReader</tt> with the supplied Reader and CSV preferences. Note that the
+	 * <tt>reader</tt> will be wrapped in a <tt>BufferedReader</tt> before accessed.
+	 * 
+	 * @param reader
+	 *            the reader
+	 * @param preferences
+	 *            the CSV preferences
 	 */
 	public CsvListReader(final Reader reader, final CsvPreference preferences) {
 		setPreferences(preferences);
@@ -40,10 +46,13 @@ public class CsvListReader extends AbstractCsvReader implements ICsvListReader {
 	 */
 	public List<String> read(final CellProcessor... processors) throws IOException {
 		if( tokenizer.readStringList(super.line) ) {
-			final List<? super Object> tmpLine = new ArrayList<Object>();
-			Util.processStringList(tmpLine, super.line, processors, getLineNumber());
+			// execute the processors
+			final List<? super Object> processedColumns = new ArrayList<Object>();
+			Util.processStringList(processedColumns, super.line, processors, getLineNumber());
+			
+			// call toString() on each object
 			final List<String> result = new ArrayList<String>();
-			for( final Object i : tmpLine ) {
+			for( final Object i : processedColumns ) {
 				result.add(i.toString());
 			}
 			return result;

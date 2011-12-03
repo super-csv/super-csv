@@ -6,8 +6,6 @@ import org.supercsv.cellprocessor.ift.DoubleCellProcessor;
 import org.supercsv.cellprocessor.ift.LongCellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.exception.ClassCastInputCSVException;
-import org.supercsv.exception.NullInputException;
-import org.supercsv.exception.SuperCSVException;
 import org.supercsv.util.CSVContext;
 
 /**
@@ -36,25 +34,59 @@ import org.supercsv.util.CSVContext;
  */
 public class FmtNumber extends CellProcessorAdaptor implements DoubleCellProcessor, LongCellProcessor {
 	
+	/** the decimal format string */
 	protected String decimalFormat;
 	
-	protected DecimalFormat formatter; // not thread-safe
+	/** the decimal format object - not thread safe */
+	protected DecimalFormat formatter;
 	
+	/**
+	 * Constructs a new <tt>FmtNumber</tt> processor, which converts a double into a formatted string using the supplied
+	 * decimal format String. This constructor is thread-safe.
+	 * 
+	 * @param decimalFormat
+	 *            the decimal format String (see {@link DecimalFormat})
+	 */
 	public FmtNumber(final String decimalFormat) {
 		super();
 		this.decimalFormat = decimalFormat;
 	}
 	
+	/**
+	 * Constructs a new <tt>FmtNumber</tt> processor, which converts a double into a formatted string using the supplied
+	 * decimal format String, then calls the next processor in the chain. This constructor is thread-safe.
+	 * 
+	 * @param decimalFormat
+	 *            the decimal format String (see {@link DecimalFormat})
+	 * @param next
+	 *            the next processor in the chain
+	 */
 	public FmtNumber(final String decimalFormat, final StringCellProcessor next) {
 		super(next);
 		this.decimalFormat = decimalFormat;
 	}
 	
+	/**
+	 * Constructs a new <tt>FmtNumber</tt> processor, which converts a double into a formatted string using the supplied
+	 * decimal format. This constructor is not thread-safe.
+	 * 
+	 * @param formatter
+	 *            the DecimalFormat
+	 */
 	public FmtNumber(final DecimalFormat formatter) {
 		super();
 		this.formatter = formatter;
 	}
 	
+	/**
+	 * Constructs a new <tt>FmtNumber</tt> processor, which converts a double into a formatted string using the supplied
+	 * decimal format, then calls the next processor in the chain. This constructor is not thread-safe.
+	 * 
+	 * @param formatter
+	 *            the DecimalFormat
+	 * @param next
+	 *            the next processor in the chain
+	 */
 	public FmtNumber(final DecimalFormat formatter, final StringCellProcessor next) {
 		super(next);
 		this.formatter = formatter;
@@ -63,12 +95,8 @@ public class FmtNumber extends CellProcessorAdaptor implements DoubleCellProcess
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
-	public Object execute(final Object value, final CSVContext context) throws SuperCSVException {
-		if( value == null ) {
-			throw new NullInputException("Input cannot be null on line " + context.lineNumber + " column "
-				+ context.columnNumber, context, this);
-		}
+	public Object execute(final Object value, final CSVContext context) {
+		validateInputNotNull(value, context, this);
 		
 		if( !(value instanceof Number) ) {
 			throw new ClassCastInputCSVException("the value '" + value + "' is not of type Number", context, this);

@@ -12,15 +12,20 @@ import org.supercsv.prefs.CsvPreference;
 import org.supercsv.util.Util;
 
 /**
- * Map readers are capable of reading CSV files and populate map instances of a multiple types.
+ * CsvMapReaders read each CSV line into a Map with the column name as the key, and the input value as the value.
  * 
  * @author Kasper B. Graversen
  */
 public class CsvMapReader extends AbstractCsvReader implements ICsvMapReader {
 	
 	/**
-	 * Create a csv reader with a specific preference. Note that the <tt>reader</tt> provided in the argument will be
-	 * wrapped in a <tt>BufferedReader</tt> before accessed.
+	 * Constructs a new <tt>CsvMapReader</tt> with the supplied Reader and CSV preferences. Note that the
+	 * <tt>reader</tt> will be wrapped in a <tt>BufferedReader</tt> before accessed.
+	 * 
+	 * @param reader
+	 *            the reader
+	 * @param preferences
+	 *            the CSV preferences
 	 */
 	public CsvMapReader(final Reader reader, final CsvPreference preferences) {
 		setPreferences(preferences);
@@ -47,15 +52,12 @@ public class CsvMapReader extends AbstractCsvReader implements ICsvMapReader {
 	 */
 	public Map<String, ? super Object> read(final String[] nameMapping, final CellProcessor[] processors)
 		throws IOException {
-		final Map<String, ? super Object> destination = new HashMap<String, Object>();
+		final Map<String, Object> destination = new HashMap<String, Object>();
 		
-		/**
-		 * object used for storing intermediate result of a processing of cell processors and before put into
-		 * maps/objects etc..
-		 */
-		final List<? super Object> lineResult = new ArrayList<Object>();
+		// temporary storage of processed column before writing to the map
+		final List<Object> lineResult = new ArrayList<Object>();
 		
-		if( tokenizer.readStringList(super.line) == false ) {
+		if( !tokenizer.readStringList(super.line) ) {
 			return null;
 		}
 		

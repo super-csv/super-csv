@@ -12,10 +12,12 @@ import org.supercsv.util.CSVContext;
  */
 public abstract class CellProcessorAdaptor implements CellProcessor {
 	
-	/** the next reference for the chain */
+	/** the next processor in the chain */
 	protected CellProcessor next = null; // must be untyped as it must hold any kind of type
 	
-	/** This constructor MUST ONLY be used by the class <tt>NullObjectPattern</tt> */
+	/**
+	 * Constructor used by CellProcessors to indicate that they are the last processor in the chain.
+	 */
 	protected CellProcessorAdaptor() {
 		super();
 		if( !(this instanceof NullObjectPattern) ) {
@@ -24,23 +26,38 @@ public abstract class CellProcessorAdaptor implements CellProcessor {
 	}
 	
 	/**
-	 * General constructor for all processors to call to get them properly registered
+	 * Constructor used by CellProcessors that require <tt>CellProcessor</tt> chaining (further processing is
+	 * required).
 	 * 
 	 * @param next
+	 *            the next <tt>CellProcessor</tt> in the chain
 	 */
 	protected CellProcessorAdaptor(final CellProcessor next) {
 		super();
 		if( next == null ) {
-			throw new NullInputException("argument was null", this);
+			throw new NullInputException("next CellProcessor in the chain cannot be null", this);
 		}
 		
 		this.next = next;
 	}
 	
 	/**
-	 * This method is invoked by the framework when the processor needs to process data or check constraints.
+	 * Checks that the input value is not <tt>null</tt>, throwing a <tt>NullInputException</tt> if it is. This method
+	 * should be called by all processors that need to ensure the input is not <tt>null</tt>.
 	 * 
-	 * @since 1.0
+	 * @param value
+	 *            the input value
+	 * @param context
+	 *            the CSV context
+	 * @param processor
+	 *            the processor being executed
+	 * @since 1.6.0
 	 */
-	public abstract Object execute(final Object value, CSVContext context);
+	protected static void validateInputNotNull(final Object value, final CSVContext context, final CellProcessor processor) {
+		if( value == null ) {
+			throw new NullInputException("Input cannot be null on line " + context.lineNumber + " at column "
+				+ context.columnNumber, context, processor);
+		}
+	}
+	
 }

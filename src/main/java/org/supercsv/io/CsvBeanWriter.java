@@ -3,38 +3,39 @@ package org.supercsv.io;
 import java.io.IOException;
 import java.io.Writer;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.exception.NullInputException;
 import org.supercsv.exception.SuperCSVReflectionException;
 import org.supercsv.prefs.CsvPreference;
 import org.supercsv.util.MethodCache;
 import org.supercsv.util.Util;
 
 /**
- * This class capable of writing beans to a CSV file. Notice that the cell processors can also be useful when writing
- * data. For example, they can help ensure that only numbers are written in numeric columns, that numbers are unique or
- * the output does not contain certain characters or exceed specified string lengths.
+ * This class writes a CSV file by mapping each field on the bean to a column in the CSV file (using the supplied name
+ * mapping).
  * 
  * @author Kasper B. Graversen
  */
 public class CsvBeanWriter extends AbstractCsvWriter implements ICsvBeanWriter {
-	/**
-	 * object used for storing intermediate result of a processing of cell processors and before put into maps/objects
-	 * etc..
-	 */
+	
+	/** temporary storage of processed fields to be written */
 	protected List<? super Object> result;
+	
+	/** cache of methods for mapping from fields to columns */
 	protected MethodCache cache = new MethodCache();
 	
 	/**
-	 * Create a CSV writer. Note that the <tt>writer</tt> provided in the argument will be wrapped in a
-	 * <tt>BufferedWriter</tt> before accessed.
+	 * Constructs a new <tt>CsvBeanWriter</tt> with the supplied Writer and CSV preferences. Note that the
+	 * <tt>writer</tt> will be wrapped in a <tt>BufferedWriter</tt> before accessed.
 	 * 
 	 * @param writer
-	 *            Stream to write to
+	 *            the writer
 	 * @param preference
-	 *            defines separation character, end of line character, etc.
+	 *            the CSV preferences
 	 */
 	public CsvBeanWriter(final Writer writer, final CsvPreference preference) {
 		super(writer, preference);
@@ -42,22 +43,29 @@ public class CsvBeanWriter extends AbstractCsvWriter implements ICsvBeanWriter {
 	}
 	
 	/**
-	 * populate <tt>result</tt> based on the source
+	 * Creates a List of Strings from the bean representing the columns to write.
 	 * 
 	 * @param source
+	 *            the bean
 	 * @param nameMapping
-	 * @throws IllegalAccessException
-	 * @throws InvocationTargetException
+	 *            the name mapping
+	 * @throws SuperCSVReflectionException
 	 */
 	protected void fillListFromObject(final Object source, final String[] nameMapping)
 		throws SuperCSVReflectionException {
+		
+		// name mapping is mandatory for bean writing
+		if( nameMapping == null ) {
+			throw new NullInputException(
+				"the nameMapping array can't be null as it's used to map from fields to columns");
+		}
+		
 		try {
 			result.clear(); // object re-use
 			
-			// map results from an object by traversing the list of nameMapping and
-			// for
 			for( final String methodName : nameMapping ) {
-				result.add(cache.getGetMethod(source, methodName).invoke(source));
+				Method getMethod = cache.getGetMethod(source, methodName);
+				result.add(getMethod.invoke(source));
 			}
 		}
 		catch(final IllegalAccessException e) {
@@ -72,19 +80,26 @@ public class CsvBeanWriter extends AbstractCsvWriter implements ICsvBeanWriter {
 	 * {@inheritDoc}
 	 */
 	public void write(final Object source, final String... nameMapping) throws IOException, SuperCSVReflectionException {
+		// fill the list with the values in the bean's fields
 		fillListFromObject(source, nameMapping);
+		
+		// write the list
 		super.write(result);
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 */
-	public void write(final Object source, final String[] nameMapping, final CellProcessor[] processor)
+	public void write(final Object source, final String[] nameMapping, final CellProcessor[] processors)
 		throws IOException, SuperCSVReflectionException {
+		// fill the list with the values in the bean's fields
 		fillListFromObject(source, nameMapping);
-		final List<? super Object> processedRes = new ArrayList<Object>();
 		
-		Util.processStringList(processedRes, result, processor, super.getLineNumber());
-		super.write(processedRes);
+		// execute the processors for each column
+		final List<? super Object> processedColumns = new ArrayList<Object>();
+		Util.processStringList(processedColumns, result, processors, super.getLineNumber());
+		
+		// write the list
+		super.write(processedColumns);
 	}
 }

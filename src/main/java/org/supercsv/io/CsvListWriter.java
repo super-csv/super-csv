@@ -10,26 +10,23 @@ import org.supercsv.prefs.CsvPreference;
 import org.supercsv.util.Util;
 
 /**
- * The writer class capable of writing arrays and lists to a CSV file. Notice that the cell processors can also be
- * utilized when writing (using the <code>org.bestcsv.util</code>). They can help ensure that only numbers are written
- * in numeric columns, that numbers are unique or the output does not contain certain characters or exceed specified
- * string lengths.
+ * This writer class is capable of writing arrays and Lists to a CSV file.
  * 
  * @author Kasper B. Graversen
  */
 public class CsvListWriter extends AbstractCsvWriter implements ICsvListWriter {
 	
 	/**
-	 * Create a CSV writer. Note that the <tt>writer</tt> provided in the argument will be wrapped in a
-	 * <tt>BufferedWriter</tt> before accessed.
+	 * Constructs a new <tt>CsvListWriter</tt> with the supplied Writer and CSV preferences. Note that the
+	 * <tt>reader</tt> will be wrapped in a <tt>BufferedReader</tt> before accessed.
 	 * 
-	 * @param stream
-	 *            Stream to write to
-	 * @param preference
-	 *            defines separation character, end of line character, etc.
+	 * @param writer
+	 *            the writer
+	 * @param preferences
+	 *            the CSV preferences
 	 */
-	public CsvListWriter(final Writer stream, final CsvPreference preference) {
-		super(stream, preference);
+	public CsvListWriter(final Writer writer, final CsvPreference preference) {
+		super(writer, preference);
 	}
 	
 	/**

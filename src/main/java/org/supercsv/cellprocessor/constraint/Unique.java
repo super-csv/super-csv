@@ -18,35 +18,38 @@ import org.supercsv.util.CSVContext;
  * @since 1.50
  * @author Kasper B. Graversen
  * @author Dominique De Vito
+ * @author James Bassett
  */
 public class Unique extends CellProcessorAdaptor {
 	
 	protected HashSet<Object> previousEncounteredElements = new HashSet<Object>();
 	
+	/**
+	 * Constructs a new <tt>Unique</tt> processor, which ensures that all rows in a column are unique.
+	 */
 	public Unique() {
 		super();
 	}
 	
+	/**
+	 * Constructs a new <tt>Unique</tt> processor, which ensures that all rows in a column are unique, then
+	 * calls the next processor in the chain.
+	 * 
+	 * @param next
+	 *            the next processor in the chain
+	 */
 	public Unique(final CellProcessor next) {
 		super(next);
 	}
 	
 	/**
 	 * {@inheritDoc}
-	 * 
-	 * @throws SuperCSVException
-	 *             upon detecting a duplicate entry
-	 * @return the argument value if the value is unique
 	 */
-	@Override
-	public Object execute(final Object value, final CSVContext context) throws SuperCSVException {
-		if( previousEncounteredElements.contains(value) ) {
+	public Object execute(final Object value, final CSVContext context) {
+		if( !previousEncounteredElements.add(value) ) {
 			throw new SuperCSVException("Duplicate entry \"" + value + "\" error", context, this);
-		} else {
-			previousEncounteredElements.add(value);
 		}
 		
-		// chaining
 		return next.execute(value, context);
 	}
 }

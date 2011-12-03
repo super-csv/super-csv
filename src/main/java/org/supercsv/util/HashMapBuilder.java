@@ -20,17 +20,20 @@ import java.util.HashMap;
  * HashMap&lt;String, Integer&gt; map = new HashMapBuilder&lt;String, Integer&gt;().add(&quot;one&quot;, 1).add(&quot;two&quot;, 2).build();
  * </pre>
  * 
- * @author Kasper B. Graversen, (c) 2007-2008
+ * @author Kasper B. Graversen
  */
 public class HashMapBuilder<K, V> {
-	HashMap<K, V> map;
 	
-	public HashMapBuilder() {
-		map = new HashMap<K, V>();
-	}
+	private HashMap<K, V> map = new HashMap<K, V>();
 	
 	/**
-	 * add a key-value pair
+	 * Adds a key-value pair.
+	 * 
+	 * @param key
+	 *            the key
+	 * @param value
+	 *            the value
+	 * @return the updated HashMapBuilder
 	 */
 	public HashMapBuilder<K, V> add(final K key, final V value) {
 		map.put(key, value);
@@ -38,7 +41,9 @@ public class HashMapBuilder<K, V> {
 	}
 	
 	/**
-	 * build the hashmap.
+	 * Builds the hashmap.
+	 * 
+	 * @return the hashmap
 	 */
 	public HashMap<K, V> build() {
 		return map;

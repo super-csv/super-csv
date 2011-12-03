@@ -7,21 +7,21 @@ import java.io.IOException;
 import org.supercsv.prefs.CsvPreference;
 
 /**
- * Super Type for all csv writers.
+ * The interface for CSV writers.
  * 
  * @author Kasper B. Graversen
  */
 public interface ICsvWriter extends Closeable, Flushable {
 	
 	/**
-	 * return the number of lines written so far. The first line is 1 *
+	 * Return the number of lines written so far. The first line is 1.
 	 * 
 	 * @since 1.0
 	 */
 	int getLineNumber();
 	
 	/**
-	 * Determine how the writer writes the destination. *
+	 * Sets the CSV preferences.
 	 * 
 	 * @since 1.0
 	 */
@@ -33,6 +33,7 @@ public interface ICsvWriter extends Closeable, Flushable {
 	 * @throws IOException
 	 *             When in IO exception occur
 	 * @param header
+	 *            one or more header Strings
 	 * @since 1.0
 	 */
 	void writeHeader(String... header) throws IOException;

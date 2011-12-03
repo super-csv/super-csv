@@ -1,33 +1,35 @@
 package org.supercsv.cellprocessor;
 
 import org.supercsv.cellprocessor.ift.BoolCellProcessor;
+import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.cellprocessor.ift.DateCellProcessor;
 import org.supercsv.cellprocessor.ift.DoubleCellProcessor;
-import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.cellprocessor.ift.LongCellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.util.CSVContext;
 
 /**
- * This is an implementation-specific processor and should NOT be used by anyone other than in the implementation of
- * cell processors. It is the implementation of "the null object pattern".
+ * This is an implementation-specific processor and should only be used by the <tt>CellProcessorAdaptor</tt> class. It
+ * is the implementation of "the null object pattern" and is always the last <tt>CellProcessor</tt> in the chain.
  * 
  * @author Kasper B. Graversen
  */
-public class NullObjectPattern extends CellProcessorAdaptor implements CellProcessor, DateCellProcessor,
+public final class NullObjectPattern extends CellProcessorAdaptor implements CellProcessor, DateCellProcessor,
 	DoubleCellProcessor, LongCellProcessor, StringCellProcessor, BoolCellProcessor {
 	
-	/** There is no need to create many instances of this class in order to fulfil the null-object pattern. */
-	public static final NullObjectPattern INSTANCE = new NullObjectPattern();
+	/** The instance of the NullObjectPattern */
+	protected static final NullObjectPattern INSTANCE = new NullObjectPattern();
 	
-	NullObjectPattern() {
+	/*
+	 * This processor must not be instantiated.
+	 */
+	private NullObjectPattern() {
 		super();
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public Object execute(final Object value, final CSVContext context) {
 		return value;
 	}

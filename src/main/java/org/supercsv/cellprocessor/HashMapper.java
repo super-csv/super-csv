@@ -8,11 +8,11 @@ import org.supercsv.cellprocessor.ift.DoubleCellProcessor;
 import org.supercsv.cellprocessor.ift.LongCellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.exception.NullInputException;
-import org.supercsv.exception.SuperCSVException;
 import org.supercsv.util.CSVContext;
 
 /**
- * Translate a value into another one, given some value mapping.
+ * Maps from one object to another, by looking up a <tt>Map</tt> with the input as the key, and returning its
+ * corresponding value.
  * 
  * @since 1.50
  * @author Dominique De Vito
@@ -23,22 +23,64 @@ public class HashMapper extends CellProcessorAdaptor implements BoolCellProcesso
 	private final Map<Object, Object> mapping;
 	private final Object defaultValue;
 	
+	/**
+	 * Constructs a new <tt>HashMapper</tt> processor, which maps from one object to another, by looking up a
+	 * <tt>Map</tt> with the input as the key, and returning its corresponding value. If no mapping is found, then
+	 * <tt>null</tt> is returned.
+	 * 
+	 * @param mapping
+	 *            the Map
+	 */
 	public HashMapper(final Map<Object, Object> mapping) {
 		super();
 		this.mapping = mapping;
 		this.defaultValue = null;
 	}
 	
+	/**
+	 * Constructs a new <tt>HashMapper</tt> processor, which maps from one object to another, by looking up a
+	 * <tt>Map</tt> with the input as the key, and returning its corresponding value. If no mapping is found, then the
+	 * supplied default value is returned.
+	 * 
+	 * @param mapping
+	 *            the Map
+	 * @param defaultValue
+	 *            the value to return if no mapping is found
+	 */
 	public HashMapper(final Map<Object, Object> mapping, final Object defaultValue) {
 		super();
 		this.mapping = mapping;
 		this.defaultValue = defaultValue;
 	}
 	
+	/**
+	 * Constructs a new <tt>HashMapper</tt> processor, which maps from one object to another, by looking up a
+	 * <tt>Map</tt> with the input as the key, and returning its corresponding value. If no mapping is found, then
+	 * <tt>null</tt> is returned. Regardless of whether a mapping is found, the next processor in the chain will be
+	 * called.
+	 * 
+	 * @param mapping
+	 *            the Map
+	 * @param next
+	 *            the next processor in the chain
+	 */
 	public HashMapper(final Map<Object, Object> mapping, final BoolCellProcessor next) {
 		this(mapping, null, next);
 	}
 	
+	/**
+	 * Constructs a new <tt>HashMapper</tt> processor, which maps from one object to another, by looking up a
+	 * <tt>Map</tt> with the input as the key, and returning its corresponding value. If no mapping is found, then the
+	 * supplied default value is returned. Regardless of whether a mapping is found, the next processor in the chain
+	 * will be called.
+	 * 
+	 * @param mapping
+	 *            the Map
+	 * @param defaultValue
+	 *            the value to return if no mapping is found
+	 * @param next
+	 *            the next processor in the chain
+	 */
 	public HashMapper(final Map<Object, Object> mapping, final Object defaultValue, final BoolCellProcessor next) {
 		super(next);
 		this.mapping = mapping;
@@ -51,12 +93,8 @@ public class HashMapper extends CellProcessorAdaptor implements BoolCellProcesso
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
-	public Object execute(final Object value, final CSVContext context) throws SuperCSVException {
-		if( value == null ) {
-			throw new NullInputException("Input cannot be null on line " + context.lineNumber + " at column "
-				+ context.columnNumber, context, this);
-		}
+	public Object execute(final Object value, final CSVContext context) {
+		validateInputNotNull(value, context, this);
 		Object result = mapping.get(value);
 		if( result == null ) {
 			result = defaultValue;

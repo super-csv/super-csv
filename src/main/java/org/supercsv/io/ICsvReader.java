@@ -6,60 +6,64 @@ import java.io.IOException;
 import org.supercsv.prefs.CsvPreference;
 
 /**
- * The parent type for csv-readers. It defines the basic functionality of any readers.
+ * The interface for CSV readers.
  * 
  * @author Kasper B. Graversen
  */
-interface ICsvReader extends Closeable {
+public interface ICsvReader extends Closeable {
 	
 	/**
-	 * Get column N of the current line This is useful for parsing e.g. first column and react by reading the line on
-	 * the basis of that first argument
+	 * Get column N of the current line.
 	 * 
+	 * @param n
+	 *            the column to get
+	 * @return the n'th column
+	 * @throws IOException
+	 * @throws IndexOutOfBoundsException
 	 * @since 1.0
 	 */
-	public String get(int N) throws IOException, IndexOutOfBoundsException;
+	String get(int n) throws IOException, IndexOutOfBoundsException;
 	
 	/**
-	 * This method is used to get an optional header of the csv file and move the file curser to the first row
+	 * This method is used to get an optional header of the CSV file and move the file cursor to the first row
 	 * containing data (the second row from the top) The header can subsequently be used as the <code>nameMapper</code>
-	 * for read operations.
+	 * array for read operations.
 	 * 
 	 * @param firstLineCheck
 	 *            denotes whether a check should be made to ensure only the first line of the file can represent a
 	 *            header
 	 * @throws IOException
-	 *             if an I/O error occurs or if the method is not called as the first read operation on a source. *
+	 *             if an I/O error occurs or if the method is not called as the first read operation on a source.
 	 * @since 1.0
 	 */
-	public String[] getCSVHeader(boolean firstLineCheck) throws IOException;
+	String[] getCSVHeader(boolean firstLineCheck) throws IOException;
 	
 	/**
-	 * gets the current position in the file. The first line of the file is line number 1
+	 * Gets the current position in the file. The first line of the file is line number 1.
 	 * 
 	 * @since 1.0
 	 */
-	public int getLineNumber();
+	int getLineNumber();
 	
 	/**
-	 * returns the length of the current line
+	 * Returns the length of the current line.
 	 * 
 	 * @since 1.0
 	 */
-	public int length() throws IOException;
+	int length() throws IOException;
 	
 	/**
-	 * Determine how the reader reads the input source.
+	 * Sets the CSV preferences.
 	 * 
 	 * @since 1.0
 	 */
-	public ICsvReader setPreferences(CsvPreference preference);
+	ICsvReader setPreferences(CsvPreference preference);
 	
 	/**
-	 * Determine how the reader reads the csv file.
+	 * Sets the tokenizer, responsible for reading the input.
 	 * 
 	 * @since 1.10
 	 */
-	public ICsvReader setTokenizer(ITokenizer tokenizer);
+	ICsvReader setTokenizer(ITokenizer tokenizer);
 	
 }

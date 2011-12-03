@@ -3,18 +3,35 @@ package org.supercsv.util;
 import java.util.List;
 
 /**
- * This object represents the current context of a given CSV file being either read or written.
+ * This object represents the current context of a given CSV file being either read or written to.
  * 
  * @author Kasper B. Graversen
  */
 public class CSVContext {
+	
+	/** the line number */
 	public int lineNumber;
+	
+	/** the column number */
 	public int columnNumber;
+	
+	/** the raw line */
 	public List<? extends Object> lineSource;
 	
+	/**
+	 * Constructs a new (empty) <tt>CSVContext</tt>.
+	 */
 	public CSVContext() {
 	}
 	
+	/**
+	 * Constructs a new <tt>CSVContext</tt>.
+	 * 
+	 * @param lineNumber
+	 *            the current line number
+	 * @param columnNumber
+	 *            the current column number
+	 */
 	public CSVContext(final int lineNumber, final int columnNumber) {
 		this.lineNumber = lineNumber;
 		this.columnNumber = columnNumber;

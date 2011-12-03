@@ -1,6 +1,8 @@
 package org.supercsv.util;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -8,11 +10,16 @@ import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.exception.SuperCSVException;
 
 /**
- * A utility class for various list/map operations. May be of use to the public as well as to BestCSV
+ * Useful utility methods.
  * 
  * @author Kasper B. Graversen
+ * @author James Bassett
  */
-public abstract class Util {
+public final class Util {
+
+	// no instantiation
+	private Util(){
+	}
 	
 	/**
 	 * Convert a map to a list
@@ -70,7 +77,7 @@ public abstract class Util {
 	
 	/**
 	 * A function which given a list of strings, process each cell using its corresponding processor-chain from the
-	 * processor array and return the result as an arary Can be extended so the safety check is cached in case the same
+	 * processor array and return the result as an array. Can be extended so the safety check is cached in case the same
 	 * two arrays are used on several requests
 	 * 
 	 * @param destination
@@ -124,5 +131,20 @@ public abstract class Util {
 			res[i++] = values.get(name);
 		}
 		return res;
+	}
+	
+	/**
+	 * Adds each element in the array to the Collection (null-safe).
+	 * 
+	 * @param <T>
+	 * @param collection
+	 *            the collection
+	 * @param array
+	 *            the array
+	 */
+	public static <T> void addAll(Collection<T> collection, T... array) {
+		if( array != null && collection != null ) {
+			Collections.addAll(collection, array);
+		}
 	}
 }

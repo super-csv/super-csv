@@ -2,21 +2,30 @@ package org.supercsv.cellprocessor;
 
 import org.supercsv.cellprocessor.ift.LongCellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
-import org.supercsv.exception.NullInputException;
 import org.supercsv.exception.SuperCSVException;
 import org.supercsv.util.CSVContext;
 
 /**
- * Convert a string to a long
+ * Converts a String to a Long.
  * 
  * @author Kasper B. Graversen
  */
 public class ParseLong extends CellProcessorAdaptor implements StringCellProcessor {
 	
+	/**
+	 * Constructs a new <tt>ParseLong</tt> processor, which converts a String to a Long.
+	 */
 	public ParseLong() {
 		super();
 	}
 	
+	/**
+	 * Constructs a new <tt>ParseLong</tt> processor, which converts a String to a Long, then calls the next processor
+	 * in the chain.
+	 * 
+	 * @param next
+	 *            the next processor in the chain
+	 */
 	public ParseLong(final LongCellProcessor next) {
 		super(next);
 	}
@@ -24,12 +33,8 @@ public class ParseLong extends CellProcessorAdaptor implements StringCellProcess
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
-	public Object execute(final Object value, final CSVContext context) throws SuperCSVException {
-		if( value == null ) {
-			throw new NullInputException("Input cannot be null on line " + context.lineNumber + " at column "
-				+ context.columnNumber, context, this);
-		}
+	public Object execute(final Object value, final CSVContext context) {
+		validateInputNotNull(value, context, this);
 		final Long result;
 		if( value instanceof Long ) {
 			result = (Long) value;

@@ -33,13 +33,13 @@ public class StrForbiddenTest {
 		// string[], next
 		final String[] forbids = { "error", "thunder", "fatal" };
 		cp2 = new StrForbidden(forbids, new ParseBool());
-		Assert.assertEquals("chain test", "true", cp2.execute("true", CSVCONTEXT));
+		Assert.assertEquals("chain test", Boolean.TRUE, cp2.execute("true", CSVCONTEXT));
 		
 		// List<String>, next
 		final List<String> forbidList = new ArrayList<String>();
 		forbidList.add(forbids[0]);
 		cp2 = new StrForbidden(forbidList, new ParseBool());
-		Assert.assertEquals("chain test", "true", cp2.execute("true", CSVCONTEXT));
+		Assert.assertEquals("chain test", Boolean.TRUE, cp2.execute("true", CSVCONTEXT));
 		
 		// List<String>
 		forbidList.add(forbids[0]);
@@ -48,7 +48,7 @@ public class StrForbiddenTest {
 		
 		// String, next
 		cp2 = new StrForbidden(forbids[0], new ParseBool());
-		Assert.assertEquals("chain test", "true", cp2.execute("true", CSVCONTEXT));
+		Assert.assertEquals("chain test", Boolean.TRUE, cp2.execute("true", CSVCONTEXT));
 		
 	}
 	

@@ -9,7 +9,7 @@ import org.supercsv.exception.SuperCSVException;
 import org.supercsv.prefs.CsvPreference;
 
 /**
- * This is a set of functionality used across the various readers
+ * Defines the standard behaviour of a CSV reader.
  * 
  * @author Kasper B. Graversen
  */
@@ -24,10 +24,16 @@ public abstract class AbstractCsvReader implements ICsvReader {
 	/** the preferences */
 	protected CsvPreference preferences;
 	
+	/**
+	 * Constructs a new <tt>AbstractCsvReader</tt>.
+	 */
 	protected AbstractCsvReader() {
 		line = new ArrayList<String>();
 	}
 	
+	/**
+	 * Closes the underlying tokenizer.
+	 */
 	public void close() throws IOException {
 		tokenizer.close();
 	}
@@ -35,12 +41,12 @@ public abstract class AbstractCsvReader implements ICsvReader {
 	/**
 	 * {@inheritDoc}
 	 */
-	public String get(final int N) throws IOException, IndexOutOfBoundsException {
-		return line.get(N);
+	public String get(final int n) throws IOException, IndexOutOfBoundsException {
+		return line.get(n);
 	}
 	
 	/**
-	 * A convenience method for reading the header of a csv file as a string array. This array can serve as input when
+	 * A convenience method for reading the header of a CSV file as a string array. This array can serve as input when
 	 * reading maps or beans.
 	 * 
 	 * @param firstLineCheck
@@ -54,7 +60,7 @@ public abstract class AbstractCsvReader implements ICsvReader {
 		final List<String> tmp = new ArrayList<String>();
 		String[] res = null;
 		if( tokenizer.readStringList(tmp) ) {
-			res = tmp.toArray(new String[0]);
+			res = tmp.toArray(new String[tmp.size()]);
 		}
 		return res;
 	}
@@ -74,10 +80,14 @@ public abstract class AbstractCsvReader implements ICsvReader {
 	}
 	
 	/**
-	 * Sets the input stream
+	 * Sets the reader to use as input.
+	 * 
+	 * @param reader
+	 *            the reader
+	 * @return the updated CSV reader
 	 */
-	public ICsvReader setInput(final Reader stream) {
-		tokenizer = new Tokenizer(stream, this.preferences);
+	public ICsvReader setInput(final Reader reader) {
+		tokenizer = new Tokenizer(reader, this.preferences);
 		return this;
 	}
 	

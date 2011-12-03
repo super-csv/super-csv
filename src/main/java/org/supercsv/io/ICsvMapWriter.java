@@ -6,14 +6,14 @@ import java.util.Map;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 
 /**
- * This is a supertype for writers writing maps
+ * The interface for writers that write from Maps.
  * 
  * @author Kasper B. Graversen
  */
 public interface ICsvMapWriter extends ICsvWriter {
 	
 	/**
-	 * Write the map into a line of the csv file. Note that the <tt>writer</tt> provided in the argument will be wrapped
+	 * Write the map into a line of the CSV file. Note that the <tt>writer</tt> provided in the argument will be wrapped
 	 * in a <tt>BufferedWriter</tt> before accessed.
 	 * 
 	 * @param values
@@ -26,10 +26,10 @@ public interface ICsvMapWriter extends ICsvWriter {
 	void write(Map<String, ? extends Object> values, String... nameMapping) throws IOException;
 	
 	/**
-	 * Write a line from a map converting processing the values before writing
+	 * Write a line from a map converting processing the values before writing.
 	 * 
 	 * @param source
-	 *            denotes map of values must be saved
+	 *            the map of values
 	 * @param nameMapping
 	 *            defines order of the map's elements that are to be written. You need only to include the names you
 	 *            want to write.

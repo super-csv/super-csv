@@ -7,7 +7,7 @@ import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.exception.SuperCSVException;
 
 /**
- * The supertype for MapReaders. Map readers are capable of reading CSV files and populate map instances.
+ * The interface for MapReaders, which read each CSV line into a Map.
  * 
  * @author Kasper B. Graversen
  */
@@ -21,7 +21,7 @@ public interface ICsvMapReader extends ICsvReader {
 	 * @return a map of [string,string] since no processing of the data is taking place
 	 * @since 1.0
 	 */
-	public Map<String, String> read(String... nameMapping) throws IOException;
+	Map<String, String> read(String... nameMapping) throws IOException;
 	
 	/**
 	 * Read a line into a map of any type converting the strings to types
@@ -38,7 +38,7 @@ public interface ICsvMapReader extends ICsvReader {
 	 *             in case one of the cell processors fail processing
 	 * @since 1.0
 	 */
-	public Map<String, ? super Object> read(String[] nameMapping, CellProcessor[] processors) throws IOException,
+	Map<String, ? super Object> read(String[] nameMapping, CellProcessor[] processors) throws IOException,
 		SuperCSVException;
 	
 }

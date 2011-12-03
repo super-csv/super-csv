@@ -1,23 +1,28 @@
 package org.supercsv.cellprocessor;
 
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
-import org.supercsv.exception.NullInputException;
 import org.supercsv.exception.SuperCSVException;
 import org.supercsv.util.CSVContext;
 
 /**
- * Ensure that Strings or String-representations of objects has a maximum size. If you desire, you can append a string
- * to denote that the data has been trimmed.
+ * Ensure that Strings or String-representations of objects are trimmed to a maximum size. If you desire, you can append
+ * a String to denote that the data has been trimmed (e.g. "...").
  * 
  * @author Kasper B. Graversen
  */
 public class Trim extends CellProcessorAdaptor implements StringCellProcessor {
-	int maxSize;
-	String trimPostfix = "";
 	
-	/** Trim strings to ensure a maximum size */
+	private int maxSize;
+	private String trimPostfix = "";
+	
+	/**
+	 * Constructs a new <tt>Trim</tt> processor, which trims a String to ensure it is no longer than the specified size.
+	 * 
+	 * @param maxSize
+	 *            the maximum size of the String
+	 */
 	public Trim(final int maxSize) {
-		super(NullObjectPattern.INSTANCE);
+		super();
 		if( maxSize < 1 ) {
 			throw new SuperCSVException("argument maxSize must be > 0", this);
 		}
@@ -25,8 +30,13 @@ public class Trim extends CellProcessorAdaptor implements StringCellProcessor {
 	}
 	
 	/**
-	 * Trim strings to ensure a maximum size. If a string is trimmed, it will get the <code>trimPostfix</code> string
-	 * appended (e.g. "..." to show it has been trimmed)
+	 * Constructs a new <tt>Trim</tt> processor, which trims a String to ensure it is no longer than the specified size,
+	 * then appends the <code>trimPostfix</code> String to indicate that the String has been trimmed.
+	 * 
+	 * @param maxSize
+	 *            the maximum size of the String
+	 * @param trimPostfix
+	 *            the String to append if the input is trimmed (e.g. "...")
 	 */
 	public Trim(final int maxSize, final String trimPostfix) {
 		this(maxSize);
@@ -34,37 +44,48 @@ public class Trim extends CellProcessorAdaptor implements StringCellProcessor {
 	}
 	
 	/**
-	 * Trim strings to ensure a maximum size. If a string is trimmed, it will get the <code>trimPostfix</code> string
-	 * appended (e.g. "...")
+	 * Constructs a new <tt>Trim</tt> processor, which trims a String to ensure it is no longer than the specified size,
+	 * then appends the <code>trimPostfix</code> String to indicate that the String has been trimmed and calls the next
+	 * processor in the chain.
+	 * 
+	 * @param maxSize
+	 *            the maximum size of the String
+	 * @param trimPostfix
+	 *            the String to append if the input is trimmed (e.g. "...")
+	 * @param next
+	 *            the next processor in the chain
 	 */
 	public Trim(final int maxSize, final String trimPostfix, final StringCellProcessor next) {
 		this(maxSize, next);
 		this.trimPostfix = trimPostfix;
 	}
 	
-	/** Trim strings to ensure a maximum size */
+	/**
+	 * Constructs a new <tt>Trim</tt> processor, which trims a String to ensure it is no longer than the specified size,
+	 * then calls the next processor in the chain.
+	 * 
+	 * @param maxSize
+	 *            the maximum size of the String
+	 * @param next
+	 *            the next processor in the chain
+	 */
 	public Trim(final int maxSize, final StringCellProcessor next) {
 		super(next);
 		this.maxSize = maxSize;
 	}
 	
 	/**
-	 * @throws SuperCSVException
-	 *             when the value is some value that cannot be translated into a boolean value {@inheritDoc}
+	 * {@inheritDoc}
 	 */
-	@Override
 	public Object execute(final Object value, final CSVContext context) {
-		if( value == null ) {
-			throw new NullInputException("Input cannot be null on line " + context.lineNumber + " at column "
-				+ context.columnNumber, context, this);
-		}
-		final String sval = value.toString(); // cast
+		validateInputNotNull(value, context, this);
+		final String stringValue = value.toString();
 		
 		String result;
-		if( sval.length() <= maxSize ) {
-			result = sval;
+		if( stringValue.length() <= maxSize ) {
+			result = stringValue;
 		} else {
-			result = sval.substring(0, maxSize) + trimPostfix;
+			result = stringValue.substring(0, maxSize) + trimPostfix;
 		}
 		
 		return next.execute(result, context);
