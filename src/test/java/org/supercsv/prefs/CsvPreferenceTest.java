@@ -1,8 +1,9 @@
-package org.supercsv.cellprocessor;
+package org.supercsv.prefs;
 
 import org.junit.Test;
 import org.supercsv.prefs.CsvPreference;
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -10,7 +11,7 @@ import static org.junit.Assert.assertThat;
  * 
  * @author Kasper B. Graversen
  */
-public class ConfigurationTest {
+public class CsvPreferenceTest {
 	
 	@Test
 	public void getsetTest() {

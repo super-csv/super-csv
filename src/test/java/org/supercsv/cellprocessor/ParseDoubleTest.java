@@ -1,60 +1,91 @@
 package org.supercsv.cellprocessor;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.supercsv.TestConstants.ANONYMOUS_CSVCONTEXT;
+
 import org.junit.Before;
 import org.junit.Test;
-import org.supercsv.TestConstants;
 import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.exception.ClassCastInputCSVException;
+import org.supercsv.exception.NullInputException;
 import org.supercsv.exception.SuperCSVException;
-import org.supercsv.mock.ComparerCellProcessor;
-import org.supercsv.util.CSVContext;
+import org.supercsv.mock.IdentityTransform;
 
 /**
+ * Tests the ParseDouble processor.
+ * 
  * @author Kasper B. Graversen
+ * @author James Bassett
  */
 public class ParseDoubleTest {
-	private static final CSVContext CSVCONTEXT = TestConstants.ANONYMOUS_CSVCONTEXT;
-	private static final double VAL2 = -43.0;
-	private static final String VAL2STR = "-43.0";
-	private static final double VAL1 = 17.3;
-	private static final String VAL1_STR_ = "17.3";
-	CellProcessor cp = null, ccp = null;
 	
-	@Test(expected = SuperCSVException.class)
-	public void invalid_input() {
-		Assert.assertEquals(cp.execute('C', CSVCONTEXT), 'C');
-	}
+	private static final double POSITIVE_VAL = 17.3;
+	private static final String POSITIVE_STRING = "17.3";
+	private static final double NEGATIVE_VAL = -43.0;
+	private static final String NEGATIVE_STRING = "-43.0";
 	
+	private CellProcessor processor;
+	private CellProcessor processorChain;
+	
+	/**
+	 * Sets up the processors for the test using all constructor combinations.
+	 */
 	@Before
-	public void setUp() throws Exception {
-		cp = new ParseDouble();
+	public void setUp() {
+		processor = new ParseDouble();
+		processorChain = new ParseDouble(new IdentityTransform());
 	}
 	
+	/**
+	 * Tests unchained/chained execution with valid doubles as input.
+	 */
 	@Test
-	public void shouldHandleInputOfTypeDoubleWithoutExtraConversion() {
-		Assert.assertEquals(VAL1, new ParseDouble(new Optional(new ParseDouble())).execute(VAL1_STR_, CSVCONTEXT));
+	public void testValidDoubles(){
+		// positive values
+		assertEquals(POSITIVE_VAL, processor.execute(POSITIVE_VAL, ANONYMOUS_CSVCONTEXT));
+		assertEquals(POSITIVE_VAL, processorChain.execute(POSITIVE_VAL, ANONYMOUS_CSVCONTEXT));
+		
+		// negative values
+		assertEquals(NEGATIVE_VAL, processor.execute(NEGATIVE_VAL, ANONYMOUS_CSVCONTEXT));
+		assertEquals(NEGATIVE_VAL, processorChain.execute(NEGATIVE_VAL, ANONYMOUS_CSVCONTEXT));
 	}
-	
+
+	/**
+	 * Tests unchained/chained execution with valid double Strings as input.
+	 */
 	@Test
-	public void testChaining() throws Exception {
-		ccp = new ParseDouble(new ComparerCellProcessor(VAL1));
-		Assert.assertEquals("convert possitive double", true, ccp.execute(VAL1_STR_, CSVCONTEXT));
+	public void testValidDoubleStrings(){
+		// positive values
+		assertEquals(POSITIVE_VAL, processor.execute(POSITIVE_STRING, ANONYMOUS_CSVCONTEXT));
+		assertEquals(POSITIVE_VAL, processorChain.execute(POSITIVE_STRING, ANONYMOUS_CSVCONTEXT));
+		
+		// negative values
+		assertEquals(NEGATIVE_VAL, processor.execute(NEGATIVE_STRING, ANONYMOUS_CSVCONTEXT));
+		assertEquals(NEGATIVE_VAL, processorChain.execute(NEGATIVE_STRING, ANONYMOUS_CSVCONTEXT));
 	}
 	
+	/**
+	 * Tests execution with an badly formatted String input (should throw an exception).
+	 */
 	@Test(expected = SuperCSVException.class)
-	public void testEmptyInput() throws Exception {
-		cp.execute("", CSVCONTEXT);
+	public void testWithInvalidFormatString() {
+		processor.execute("123.45s", ANONYMOUS_CSVCONTEXT);
 	}
 	
-	@Test(expected = SuperCSVException.class)
-	public void testInValidInput() throws Exception {
-		Assert.assertEquals(cp.execute("hello", CSVCONTEXT), "");
+	/**
+	 * Tests execution with a non Double input (should throw an exception).
+	 */
+	@Test(expected = ClassCastInputCSVException.class)
+	public void testWithNonDoubleInput() {
+		processor.execute(1, ANONYMOUS_CSVCONTEXT);
 	}
 	
-	@Test
-	public void validInputTest() throws Exception {
-		Assert.assertEquals("convert possitive", VAL1, cp.execute(VAL1_STR_, CSVCONTEXT));
-		Assert.assertEquals("convert negative", VAL2, cp.execute(VAL2STR, CSVCONTEXT));
+	/**
+	 * Tests execution with a null input (should throw an Exception).
+	 */
+	@Test(expected = NullInputException.class)
+	public void testWithNull() {
+		processor.execute(null, ANONYMOUS_CSVCONTEXT);
 	}
 	
 }

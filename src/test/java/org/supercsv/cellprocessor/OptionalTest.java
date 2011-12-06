@@ -1,50 +1,68 @@
 package org.supercsv.cellprocessor;
 
-import junit.framework.Assert;
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.supercsv.TestConstants.ANONYMOUS_CSVCONTEXT;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.supercsv.TestConstants;
 import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.exception.NullInputException;
+import org.supercsv.mock.IdentityTransform;
 
 /**
+ * Tests the Optional processor.
+ * 
  * @author Kasper B. Graversen
+ * @author James Bassett
  */
-public class OptionalTest extends TestCase {
-	CellProcessor cp = null, ccp = null;
+public class OptionalTest {
 	
-	@Override
+	private CellProcessor processor;
+	private CellProcessor processorChain;
+	
+	/**
+	 * Sets up the processors for the test using all constructor combinations.
+	 */
 	@Before
-	public void setUp() throws Exception {
-		cp = new Optional();
+	public void setUp() {
+		processor = new Optional();
+		processorChain = new Optional(new IdentityTransform());
 	}
 	
+	/**
+	 * Tests unchained/chained execution with empty string as input.
+	 */
 	@Test
-	public void testChaining() throws Exception {
-		ccp = new Optional(new ParseLong()); // chain processors
-		Assert.assertEquals("chained optional value", 17L, ccp.execute("17", TestConstants.ANONYMOUS_CSVCONTEXT));
-		Assert.assertEquals("chained optional empty value-the long conversion should not fail (not take place)", null,
-			ccp.execute("", TestConstants.ANONYMOUS_CSVCONTEXT));
-		
-		ccp = new Optional(new ParseLong());
-		Assert.assertEquals("chained optional value", 17L, ccp.execute("17", TestConstants.ANONYMOUS_CSVCONTEXT));
-		Assert.assertEquals(
-			"new retval chained optional empty value-the long conversion should not fail (not take place)", null,
-			ccp.execute("", TestConstants.ANONYMOUS_CSVCONTEXT));
+	public void testEmptyString(){
+		assertNull(processor.execute("", ANONYMOUS_CSVCONTEXT));
+		assertNull(processorChain.execute("", ANONYMOUS_CSVCONTEXT));
 	}
 	
+	/**
+	 * Tests unchained/chained execution with a space as input.
+	 */
 	@Test
-	public void validInputTest() throws Exception {
-		Assert.assertEquals("optional string", "foo", cp.execute("foo", TestConstants.ANONYMOUS_CSVCONTEXT));
-		Assert.assertEquals("optional empty", null, cp.execute("", TestConstants.ANONYMOUS_CSVCONTEXT));
+	public void testSpace(){
+		assertEquals(" ", processor.execute(" ", ANONYMOUS_CSVCONTEXT));
+		assertEquals(" ", processorChain.execute(" ", ANONYMOUS_CSVCONTEXT));
 	}
 	
+	/**
+	 * Tests unchained/chained execution with normal input (not "").
+	 */
 	@Test
-	public void validInputTestNewReturnArg() throws Exception {
-		ccp = new Optional();
-		Assert.assertEquals("optional string new return str", "foo",
-			ccp.execute("foo", TestConstants.ANONYMOUS_CSVCONTEXT));
-		Assert.assertEquals("optional empty new return str", null, ccp.execute("", TestConstants.ANONYMOUS_CSVCONTEXT));
+	public void testNormalInput(){
+		String normal = "normal";
+		assertEquals(normal, processor.execute(normal, ANONYMOUS_CSVCONTEXT));
+		assertEquals(normal, processorChain.execute(normal, ANONYMOUS_CSVCONTEXT));
+	}
+	
+	/**
+	 * Tests execution with a null input (should throw an Exception).
+	 */
+	@Test(expected = NullInputException.class)
+	public void testWithNull() {
+		processor.execute(null, ANONYMOUS_CSVCONTEXT);
 	}
 }

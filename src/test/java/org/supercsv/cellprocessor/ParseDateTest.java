@@ -1,61 +1,93 @@
 package org.supercsv.cellprocessor;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.supercsv.TestConstants.ANONYMOUS_CSVCONTEXT;
+
+import java.util.Date;
+
 import org.junit.Before;
 import org.junit.Test;
-import org.supercsv.TestConstants;
+import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.exception.ClassCastInputCSVException;
+import org.supercsv.exception.NullInputException;
 import org.supercsv.exception.SuperCSVException;
-import org.supercsv.mock.ComparerCellProcessor;
+import org.supercsv.mock.IdentityTransform;
+import org.supercsv.util.DateHelper;
 
 /**
+ * Tests the ParseDate processor.
+ * 
  * @author Kasper B. Graversen
+ * @author James Bassett
  */
 public class ParseDateTest {
-	ParseDate cp = null, ccp = null;
 	
+	private static final Date DATE = DateHelper.date(2011, 12, 25);
+	private static final String DATE_FORMAT = "dd/MM/yyyy";
+	private static final String FORMATTED_DATE = "25/12/2011";
+	private static final String DATE_FORMAT2 = "EEE, MMM d, ''yy";
+	private static final String FORMATTED_DATE2 = "Sun, Dec 25, '11";
+	
+	private CellProcessor processor;
+	private CellProcessor processor2;
+	private CellProcessor processorChain;
+	private CellProcessor processorChain2;
+	
+	/**
+	 * Sets up the processors for the test using all constructor combinations.
+	 */
 	@Before
-	public void setUp() throws Exception {
-		cp = new ParseDate("dd/MM/yy");
+	public void setUp() {
+		processor = new ParseDate(DATE_FORMAT);
+		processor2 = new ParseDate(DATE_FORMAT2);
+		processorChain = new ParseDate(DATE_FORMAT, new IdentityTransform());
+		processorChain2 = new ParseDate(DATE_FORMAT2, new IdentityTransform());
 	}
 	
+	/**
+	 * Tests unchained/chained execution with various date formats.
+	 */
 	@Test
-	public void testChaining() throws Exception {
-		ccp = new ParseDate("dd/MM/yyyy", new ComparerCellProcessor(TestConstants.EXPECTED_DATE)); // chain
-		// processors
-		Assert.assertEquals("get date", true, ccp.execute("17/4/2007", TestConstants.ANONYMOUS_CSVCONTEXT));
-		
-		ccp = new ParseDate("dd-MM-yyyy", new ComparerCellProcessor(TestConstants.EXPECTED_DATE)); // chain
-		// processors
-		Assert.assertEquals("get date", true, ccp.execute("17-4-2007", TestConstants.ANONYMOUS_CSVCONTEXT));
+	public void testValidDate(){
+		// first date format
+		assertEquals(DATE, processor.execute(FORMATTED_DATE, ANONYMOUS_CSVCONTEXT));
+		assertEquals(DATE, processorChain.execute(FORMATTED_DATE, ANONYMOUS_CSVCONTEXT));
+
+		// second date format
+		assertEquals(DATE, processor2.execute(FORMATTED_DATE2, ANONYMOUS_CSVCONTEXT));
+		assertEquals(DATE, processorChain2.execute(FORMATTED_DATE2, ANONYMOUS_CSVCONTEXT));
 	}
 	
+	/**
+	 * Tests execution with an invalid date (doesn't match format), should throw an exception.
+	 */
 	@Test(expected = SuperCSVException.class)
-	public void testEmptyInput() throws Exception {
-		cp.execute("", TestConstants.ANONYMOUS_CSVCONTEXT);
+	public void testBadlyFormattedDate() {
+		processor.execute("2011-12-25", ANONYMOUS_CSVCONTEXT);
 	}
 	
+	/**
+	 * Tests execution with an invalid date (matches format, but data invalid), should throw an exception.
+	 */
 	@Test(expected = SuperCSVException.class)
-	public void testInValidInput() throws Exception {
-		Assert.assertEquals("never reached", cp.execute("21/21/21", TestConstants.ANONYMOUS_CSVCONTEXT));
+	public void testInvalidDate() {
+		processor.execute("25/25/2011", ANONYMOUS_CSVCONTEXT);
 	}
 	
-	@Test
-	public void test_weird_not_failing_on_InValidInput_wrong_year_format() throws Exception {
-		cp.execute("17/04/2007", TestConstants.ANONYMOUS_CSVCONTEXT);
+	/**
+	 * Tests execution with a non String input (should throw an exception).
+	 */
+	@Test(expected = ClassCastInputCSVException.class)
+	public void testWithNonCharInput() {
+		processor.execute(1, ANONYMOUS_CSVCONTEXT);
 	}
 	
-	@Test(expected = SuperCSVException.class)
-	public void testInValidInput2() throws Exception {
-		Assert.assertEquals("never reached", cp.execute("a date", TestConstants.ANONYMOUS_CSVCONTEXT));
+	/**
+	 * Tests execution with a null input (should throw an Exception).
+	 */
+	@Test(expected = NullInputException.class)
+	public void testWithNull() {
+		processor.execute(null, ANONYMOUS_CSVCONTEXT);
 	}
 	
-	@Test
-	public void validInputTest() throws Exception {
-		Assert.assertEquals("read date", TestConstants.EXPECTED_DATE,
-			cp.execute("17/04/07", TestConstants.ANONYMOUS_CSVCONTEXT));
-		
-		cp = new ParseDate("MM-dd-yy");
-		Assert.assertEquals("read date", TestConstants.EXPECTED_DATE,
-			cp.execute("04-17-07", TestConstants.ANONYMOUS_CSVCONTEXT));
-	}
 }

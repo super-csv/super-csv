@@ -2,6 +2,7 @@ package org.supercsv.cellprocessor;
 
 import org.supercsv.cellprocessor.ift.DoubleCellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
+import org.supercsv.exception.ClassCastInputCSVException;
 import org.supercsv.exception.SuperCSVException;
 import org.supercsv.util.CSVContext;
 
@@ -47,8 +48,8 @@ public class ParseDouble extends CellProcessorAdaptor implements StringCellProce
 				throw new SuperCSVException("Parser error", context, this, e);
 			}
 		} else {
-			throw new SuperCSVException("Can't convert \"" + value
-				+ "\" to double. Input is not of type Double nor type String, but of type "
+			throw new ClassCastInputCSVException("Can't convert \"" + value
+				+ "\" to Double. Input is not of type Double nor type String, but of type "
 				+ value.getClass().getName(), context, this);
 		}
 		

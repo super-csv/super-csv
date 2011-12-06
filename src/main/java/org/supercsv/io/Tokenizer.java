@@ -117,7 +117,7 @@ public class Tokenizer implements ITokenizer {
 
 					if( c == delim ) {
 						/*
-						 * Delimiter. Save the token then continue to next character.
+						 * Delimiter. Save the column then continue to next character.
 						 */
 						result.add(sb.toString());
 						sb.setLength(0);
@@ -136,7 +136,7 @@ public class Tokenizer implements ITokenizer {
 						
 					} else if( c == '\n' ) {
 						/*
-						 * Newline. Save token and return (we've read a line).
+						 * Newline. Save the column and return (we've read a line).
 						 */
 						result.add(sb.toString());
 						return true;

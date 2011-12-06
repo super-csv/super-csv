@@ -1,64 +1,70 @@
 package org.supercsv.cellprocessor;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.supercsv.TestConstants.ANONYMOUS_CSVCONTEXT;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.exception.ClassCastInputCSVException;
-import org.supercsv.exception.SuperCSVException;
-import org.supercsv.mock.ComparerCellProcessor;
-import org.supercsv.util.CSVContext;
+import org.supercsv.exception.NullInputException;
+import org.supercsv.mock.IdentityTransform;
 
 /**
+ * Tests the FmtBool processor.
+ * 
  * @author Dominique De Vito
+ * @author James Bassett
  */
 public class FmtBoolTest {
 	
-	private static final CSVContext CTXT = new CSVContext(0, 0);
 	private static final String TRUE_VALUE = "y";
 	private static final String FALSE_VALUE = "n";
 	
-	CellProcessor cp, ccp;
+	private CellProcessor processor;
+	private CellProcessor processorChain;
 	
+	/**
+	 * Sets up the processors for the test using all constructor combinations.
+	 */
 	@Before
-	public void setUp() throws Exception {
-		cp = new FmtBool(TRUE_VALUE, FALSE_VALUE);
+	public void setUp() {
+		processor = new FmtBool(TRUE_VALUE, FALSE_VALUE);
+		processorChain = new FmtBool(TRUE_VALUE, FALSE_VALUE, new IdentityTransform());
 	}
 	
+	/**
+	 * Tests unchained/chained execution with true.
+	 */
 	@Test
-	public void testChaining() throws Exception {
-		ccp = new FmtBool(TRUE_VALUE, FALSE_VALUE, new ComparerCellProcessor(TRUE_VALUE)); // chain
-		// processors
-		Assert.assertEquals("make boolean", true, ccp.execute(Boolean.TRUE, CTXT));
-		
-		ccp = new FmtBool(TRUE_VALUE, FALSE_VALUE, new ComparerCellProcessor(FALSE_VALUE)); // chain
-		// processors
-		Assert.assertEquals("make boolean", true, ccp.execute(Boolean.FALSE, CTXT));
-		
+	public void testWithTrue() {
+		assertEquals(TRUE_VALUE, processor.execute(true, ANONYMOUS_CSVCONTEXT));
+		assertEquals(TRUE_VALUE, processorChain.execute(true, ANONYMOUS_CSVCONTEXT));
 	}
 	
+	/**
+	 * Tests unchained/chained execution with false.
+	 */
 	@Test
-	public void testGoAndBack() throws Exception {
-		ccp = new FmtBool(TRUE_VALUE, FALSE_VALUE, new ParseBool(TRUE_VALUE, FALSE_VALUE)); // chain
-		// processors
-		Assert.assertEquals("go and back", true, Boolean.TRUE.equals(ccp.execute(Boolean.TRUE, CTXT)));
-		Assert.assertEquals("go and back", true, Boolean.FALSE.equals(ccp.execute(Boolean.FALSE, CTXT)));
-		
-		ccp = new ParseBool(TRUE_VALUE, FALSE_VALUE, new FmtBool(TRUE_VALUE, FALSE_VALUE)); // chain
-		// processors
-		Assert.assertEquals("go and back", true, TRUE_VALUE.equals(ccp.execute(TRUE_VALUE, CTXT)));
-		Assert.assertEquals("go and back", true, FALSE_VALUE.equals(ccp.execute(FALSE_VALUE, CTXT)));
-		
+	public void testWithFalse() {
+		assertEquals(FALSE_VALUE, processor.execute(false, ANONYMOUS_CSVCONTEXT));
+		assertEquals(FALSE_VALUE, processorChain.execute(false, ANONYMOUS_CSVCONTEXT));
 	}
 	
-	@Test(expected = SuperCSVException.class)
-	public void testEmptyInput() throws Exception {
-		cp.execute(null, CTXT);
+	/**
+	 * Tests execution with a null input (should throw an Exception).
+	 */
+	@Test(expected = NullInputException.class)
+	public void testWithNull() {
+		processor.execute(null, ANONYMOUS_CSVCONTEXT);
 	}
 	
+	/**
+	 * Tests execution with a non-Boolean input (should throw an Exception).
+	 */
 	@Test(expected = ClassCastInputCSVException.class)
-	public void testInvalidInput() throws Exception {
-		cp.execute("text-not-a-boolean", CTXT);
+	public void testWithNonBoolean() {
+		processor.execute(123, ANONYMOUS_CSVCONTEXT);
 	}
 	
 }

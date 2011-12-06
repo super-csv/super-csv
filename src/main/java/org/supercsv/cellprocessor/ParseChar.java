@@ -2,6 +2,7 @@ package org.supercsv.cellprocessor;
 
 import org.supercsv.cellprocessor.ift.DoubleCellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
+import org.supercsv.exception.ClassCastInputCSVException;
 import org.supercsv.exception.SuperCSVException;
 import org.supercsv.util.CSVContext;
 
@@ -48,7 +49,7 @@ public class ParseChar extends CellProcessorAdaptor implements StringCellProcess
 					+ "\" to a char. It must have a length of 1 to be a valid char.", context, this);
 			}
 		} else {
-			throw new SuperCSVException("Can't convert \"" + value
+			throw new ClassCastInputCSVException("Can't convert \"" + value
 				+ "\" to char. Input is not of type Character nor type String, but of type "
 				+ value.getClass().getName(), context, this);
 		}

@@ -1,72 +1,73 @@
 package org.supercsv.cellprocessor;
 
-import java.util.Calendar;
+import static org.junit.Assert.assertEquals;
+import static org.supercsv.TestConstants.ANONYMOUS_CSVCONTEXT;
+
 import java.util.Date;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.exception.ClassCastInputCSVException;
-import org.supercsv.exception.SuperCSVException;
-import org.supercsv.mock.ComparerCellProcessor;
-import org.supercsv.util.CSVContext;
+import org.supercsv.exception.NullInputException;
+import org.supercsv.mock.IdentityTransform;
+import org.supercsv.util.DateHelper;
 
 /**
+ * Tests the FmtDate processor.
+ * 
  * @author Dominique De Vito
+ * @author James Bassett
  */
 public class FmtDateTest {
-	private static final CSVContext CTXT = new CSVContext(0, 0);
-	CellProcessor cp = null, ccp = null;
 	
+	private static final String DATE_FORMAT = "dd/MM/yyyy";
+	private static final Date DATE = DateHelper.date(2011, 12, 25);
+	private static final String FORMATTED_DATE = "25/12/2011";
+	
+	private CellProcessor processor;
+	private CellProcessor processorChain;
+	
+	/**
+	 * Sets up the processors for the test using all constructor combinations.
+	 */
 	@Before
-	public void setUp() throws Exception {
-		cp = new FmtDate("dd/MM/yyyy");
+	public void setUp() {
+		processor = new FmtDate(DATE_FORMAT);
+		processorChain = new FmtDate(DATE_FORMAT, new IdentityTransform());
 	}
 	
+	/**
+	 * Tests unchained/chained execution with a valid date.
+	 */
 	@Test
-	public void testChaining() throws Exception {
-		ccp = new FmtDate("dd/MM/yyyy", new ComparerCellProcessor("17/04/2007")); // chain
-		// processors
-		Assert.assertEquals("get date", true, ccp.execute(getDayDate(2007, 4, 17), CTXT));
-		
-		ccp = new FmtDate("dd-MM-yyyy", new ComparerCellProcessor("17-04-2007")); // chain
-		// processors
-		Assert.assertEquals("get date", true, ccp.execute(getDayDate(2007, 4, 17), CTXT));
+	public void testWithValidDate(){
+		assertEquals(FORMATTED_DATE, processor.execute(DATE, ANONYMOUS_CSVCONTEXT));
+		assertEquals(FORMATTED_DATE, processorChain.execute(DATE, ANONYMOUS_CSVCONTEXT));
 	}
 	
-	@Test
-	public void testGoAndBack() throws Exception {
-		ccp = new FmtDate("dd/MM/yyyy", new ParseDate("dd/MM/yyyy")); // chain
-		// processors
-		Date date = getDayDate(2007, 4, 17);
-		Assert.assertEquals("go and back", true, date.equals(ccp.execute(date, CTXT)));
-		
-		ccp = new ParseDate("dd/MM/yyyy", new FmtDate("dd/MM/yyyy")); // chain
-		// processors
-		String sDate = "17/04/2007";
-		Assert.assertEquals("go and back", true, sDate.equals(ccp.execute(sDate, CTXT)));
+	/**
+	 * Tests execution with a null input (should throw an Exception).
+	 */
+	@Test(expected = NullInputException.class)
+	public void testWithNull() {
+		processor.execute(null, ANONYMOUS_CSVCONTEXT);
 	}
 	
-	@Test(expected = SuperCSVException.class)
-	public void test_null_Input() throws Exception {
-		cp.execute(null, CTXT);
-	}
-	
-	@Test(expected = SuperCSVException.class)
-	public void testEmptyInput() throws Exception {
-		cp.execute("", CTXT);
-	}
-	
+	/**
+	 * Tests execution with a non-Date input (should throw an Exception).
+	 */
 	@Test(expected = ClassCastInputCSVException.class)
-	public void testInvalidInput() throws Exception {
-		cp.execute("text-not-a-date", CTXT);
+	public void testWithNonDate() {
+		processor.execute(123, ANONYMOUS_CSVCONTEXT);
 	}
 	
-	private static Date getDayDate(int year, int month, int day) {
-		Calendar cal = Calendar.getInstance();
-		cal.set(year, month - 1, day, 0, 0, 0);
-		cal.set(Calendar.MILLISECOND, 0);
-		return cal.getTime();
+	/**
+	 * Tests execution with a invalid date format (should throw an Exception).
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void testWithInvalidDateFormat() {
+		CellProcessor invalidDateFormatProcessor = new FmtDate("abcd");
+		invalidDateFormatProcessor.execute(DATE, ANONYMOUS_CSVCONTEXT);
 	}
 }

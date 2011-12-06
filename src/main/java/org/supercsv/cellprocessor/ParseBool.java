@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.supercsv.cellprocessor.ift.BoolCellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
+import org.supercsv.exception.ClassCastInputCSVException;
 import org.supercsv.exception.SuperCSVException;
 import org.supercsv.util.CSVContext;
 
@@ -120,6 +121,10 @@ public class ParseBool extends CellProcessorAdaptor implements StringCellProcess
 	 */
 	public Object execute(final Object value, final CSVContext context) {
 		validateInputNotNull(value, context, this);
+		
+		if (!(value instanceof String)){
+			throw new ClassCastInputCSVException("the value '" + value + "' is not of type String", context, this);
+		}
 		
 		Boolean result;
 		final String stringValue = ((String) value).toLowerCase();

@@ -71,6 +71,9 @@ public class Trim extends CellProcessorAdaptor implements StringCellProcessor {
 	 */
 	public Trim(final int maxSize, final StringCellProcessor next) {
 		super(next);
+		if( maxSize < 1 ) {
+			throw new SuperCSVException("argument maxSize must be > 0", this);
+		}
 		this.maxSize = maxSize;
 	}
 	

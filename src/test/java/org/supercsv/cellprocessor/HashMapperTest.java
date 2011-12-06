@@ -1,73 +1,105 @@
 package org.supercsv.cellprocessor;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.supercsv.TestConstants.ANONYMOUS_CSVCONTEXT;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.supercsv.TestConstants;
 import org.supercsv.cellprocessor.ift.CellProcessor;
-import org.supercsv.exception.SuperCSVException;
-import org.supercsv.mock.ComparerCellProcessor;
-import org.supercsv.util.CSVContext;
+import org.supercsv.exception.NullInputException;
+import org.supercsv.mock.IdentityTransform;
 
 /**
+ * Tests the HashMapper processor.
+ * 
  * @author Dominique De Vito
+ * @author James Bassett
  */
 public class HashMapperTest {
 	
-	private static final CSVContext CTXT = TestConstants.ANONYMOUS_CSVCONTEXT;
-	private static final Map<Object, Object> VALUE_MAP = new HashMap<Object, Object>();
+	private static final String DEFAULT_VALUE = "Default";
 	
+	private static final Map<Object, Object> VALUE_MAP = new HashMap<Object, Object>();
 	static {
 		VALUE_MAP.put(1, "1");
 		VALUE_MAP.put(2, "2");
 		VALUE_MAP.put(3, "3");
 	}
 	
-	HashMapper cp;
-	CellProcessor ccp;
+	private CellProcessor processor;
+	private CellProcessor processor2;
+	private CellProcessor processorChain;
+	private CellProcessor processorChain2;
 	
+	/**
+	 * Sets up the processors for the test using all constructor combinations.
+	 */
 	@Before
-	public void setUp() throws Exception {
-		cp = new HashMapper(VALUE_MAP);
+	public void setUp() {
+		processor = new HashMapper(VALUE_MAP);
+		processor2 = new HashMapper(VALUE_MAP, DEFAULT_VALUE);
+		processorChain = new HashMapper(VALUE_MAP, new IdentityTransform());
+		processorChain2 = new HashMapper(VALUE_MAP, DEFAULT_VALUE, new IdentityTransform());
 	}
 	
+	/**
+	 * Tests chained/unchained execution with a valid key from the map.
+	 */
 	@Test
-	public void testChaining() throws Exception {
-		Integer I_VALUE = 1;
-		String O_VALUE = Integer.toString(I_VALUE);
-		ccp = new HashMapper(VALUE_MAP, new ComparerCellProcessor(O_VALUE));
-		Assert.assertEquals("chaining test", true, ccp.execute(I_VALUE, CTXT));
+	public void testValidKey() {
+		int validKey = 1;
+		assertEquals("1", processor.execute(validKey, ANONYMOUS_CSVCONTEXT));
+		assertEquals("1", processor2.execute(validKey, ANONYMOUS_CSVCONTEXT));
+		assertEquals("1", processorChain.execute(validKey, ANONYMOUS_CSVCONTEXT));
+		assertEquals("1", processorChain2.execute(validKey, ANONYMOUS_CSVCONTEXT));
 	}
 	
+	/**
+	 * Tests chained/unchained execution with a key not in the map.
+	 */
 	@Test
-	public void testValidInput() throws Exception {
-		Integer I_VALUE = 1;
-		String O_VALUE = Integer.toString(I_VALUE);
-		ccp = new HashMapper(VALUE_MAP);
-		Assert.assertEquals("valid input", true, O_VALUE.equals(ccp.execute(I_VALUE, CTXT)));
+	public void testInvalidKey() {
+		int invalidKey = 4;
+		assertFalse(VALUE_MAP.containsKey(invalidKey));
+		
+		// no default values
+		assertNull(processor.execute(invalidKey, ANONYMOUS_CSVCONTEXT));
+		assertNull(processorChain.execute(invalidKey, ANONYMOUS_CSVCONTEXT));
+		
+		// with default values
+		assertEquals(DEFAULT_VALUE, processor2.execute(invalidKey, ANONYMOUS_CSVCONTEXT));
+		assertEquals(DEFAULT_VALUE, processorChain2.execute(invalidKey, ANONYMOUS_CSVCONTEXT));
 	}
 	
-	@Test
-	public void testNotFoundInput() throws Exception {
-		Integer I_VALUE = 4;
-		ccp = new HashMapper(VALUE_MAP);
-		Assert.assertEquals("invalid input", true, ccp.execute(I_VALUE, CTXT) == null);
+	/**
+	 * Tests execution with a null input (should throw an Exception).
+	 */
+	@Test(expected = NullInputException.class)
+	public void testWithNull() {
+		processor.execute(null, ANONYMOUS_CSVCONTEXT);
 	}
 	
-	@Test
-	public void testNotFoundButDefaultInput() throws Exception {
-		Integer I_VALUE = 4;
-		String O_VALUE = Integer.toString(I_VALUE);
-		ccp = new HashMapper(VALUE_MAP, O_VALUE);
-		Assert.assertEquals("invalid input", true, O_VALUE.equals(ccp.execute(I_VALUE, CTXT)));
+	/**
+	 * Tests execution with a null Map (should throw an Exception).
+	 */
+	@Test(expected = NullInputException.class)
+	public void testWithNullMap() {
+		CellProcessor nullMapProcessor = new HashMapper(null, DEFAULT_VALUE);
+		nullMapProcessor.execute("1", ANONYMOUS_CSVCONTEXT);
 	}
 	
-	@Test(expected = SuperCSVException.class)
-	public void testNullInput() throws Exception {
-		cp.execute(null, CTXT);
+	/**
+	 * Tests chained execution with a null Map (should throw an Exception).
+	 */
+	@Test(expected = NullInputException.class)
+	public void testChainedWithNullMap() {
+		CellProcessor nullMapProcessorChain = new HashMapper(null, DEFAULT_VALUE, new IdentityTransform());
+		nullMapProcessorChain.execute("1", ANONYMOUS_CSVCONTEXT);
 	}
 	
 }

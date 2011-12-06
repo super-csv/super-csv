@@ -32,9 +32,7 @@ public class HashMapper extends CellProcessorAdaptor implements BoolCellProcesso
 	 *            the Map
 	 */
 	public HashMapper(final Map<Object, Object> mapping) {
-		super();
-		this.mapping = mapping;
-		this.defaultValue = null;
+		this(mapping, (Object) null);
 	}
 	
 	/**
@@ -51,6 +49,9 @@ public class HashMapper extends CellProcessorAdaptor implements BoolCellProcesso
 		super();
 		this.mapping = mapping;
 		this.defaultValue = defaultValue;
+		if( mapping == null ) {
+			throw new NullInputException("Mapping cannot be null", this);
+		}
 	}
 	
 	/**

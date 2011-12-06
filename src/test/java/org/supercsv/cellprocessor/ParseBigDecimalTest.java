@@ -1,72 +1,114 @@
 package org.supercsv.cellprocessor;
 
+import static org.junit.Assert.assertEquals;
+import static org.supercsv.TestConstants.ANONYMOUS_CSVCONTEXT;
+
 import java.math.BigDecimal;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.supercsv.TestConstants;
 import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.exception.NullInputException;
 import org.supercsv.exception.SuperCSVException;
-import org.supercsv.mock.ComparerCellProcessor;
-import org.supercsv.util.CSVContext;
+import org.supercsv.mock.IdentityTransform;
 
 /**
+ * Tests the ParseBigDecimal processor.
+ * 
  * @author Kasper B. Graversen
+ * @author James Bassett
  */
 public class ParseBigDecimalTest {
-	private static final CSVContext CSVCONTEXT = TestConstants.ANONYMOUS_CSVCONTEXT;
-	private static final BigDecimal VAL2 = new BigDecimal("-43.0");
-	private static final String VAL2STR = "-43.0";
-	private static final BigDecimal VAL1 = new BigDecimal("17.3");
-	private static final String VAL1_STR_ = "17.3";
-	CellProcessor cp = null, ccp = null;
 	
-	@Test(expected = SuperCSVException.class)
-	public void invalid_input() {
-		Assert.assertEquals(cp.execute('C', CSVCONTEXT), 'C');
-	}
+	private static final DecimalFormatSymbols FRENCH_SYMBOLS = DecimalFormatSymbols.getInstance(Locale.FRANCE);
+	private static final DecimalFormatSymbols ENGLISH_SYMBOLS = DecimalFormatSymbols.getInstance(Locale.ENGLISH);
 	
+	private CellProcessor processor;
+	private CellProcessor processor2;
+	private CellProcessor processor3;
+	private CellProcessor processorChain;
+	private CellProcessor processorChain2;
+	private CellProcessor processorChain3;
+	
+	/**
+	 * Sets up the processors for the test using all constructor combinations.
+	 */
 	@Before
-	public void setUp() throws Exception {
-		cp = new ParseBigDecimal();
+	public void setUp() {
+		processor = new ParseBigDecimal();
+		processor2 = new ParseBigDecimal(ENGLISH_SYMBOLS);
+		processor3 = new ParseBigDecimal(FRENCH_SYMBOLS);
+		processorChain = new ParseBigDecimal(new IdentityTransform());
+		processorChain2 = new ParseBigDecimal(ENGLISH_SYMBOLS, new IdentityTransform());
+		processorChain3 = new ParseBigDecimal(FRENCH_SYMBOLS, new IdentityTransform());
 	}
 	
-	@Test(expected = SuperCSVException.class)
-	public void test_null_Input() throws Exception {
-		cp.execute(null, CSVCONTEXT);
-	}
-	
+	/**
+	 * Test unchained/chained execution with a valid positive input.
+	 */
 	@Test
-	public void testChaining() throws Exception {
-		ccp = new ParseBigDecimal(new ComparerCellProcessor(VAL1));
-		Assert.assertEquals("convert possitive ", true, ccp.execute(VAL1_STR_, CSVCONTEXT));
+	public void testValidInput(){
+		
+		String normalInput = "1357.459";
+		String frenchInput = "1357,459";
+		BigDecimal expectedOutput = new BigDecimal(normalInput);
+		
+		// normal input
+		assertEquals(expectedOutput, processor.execute(normalInput, ANONYMOUS_CSVCONTEXT));
+		assertEquals(expectedOutput, processor2.execute(normalInput, ANONYMOUS_CSVCONTEXT));
+		assertEquals(expectedOutput, processorChain.execute(normalInput, ANONYMOUS_CSVCONTEXT));
+		assertEquals(expectedOutput, processorChain2.execute(normalInput, ANONYMOUS_CSVCONTEXT));
+		
+		// french input ("," instead of "." as decimal symbol)
+		assertEquals(expectedOutput, processor3.execute(frenchInput, ANONYMOUS_CSVCONTEXT));
+		assertEquals(expectedOutput, processorChain3.execute(frenchInput, ANONYMOUS_CSVCONTEXT));
 	}
 	
-	@Test(expected = SuperCSVException.class)
-	public void testEmptyInput() throws Exception {
-		cp.execute("", CSVCONTEXT);
-	}
-	
-	@Test(expected = SuperCSVException.class)
-	public void testInValidInput() throws Exception {
-		Assert.assertEquals(cp.execute("hello", CSVCONTEXT), "");
-	}
-	
+	/**
+	 * Test unchained/chained execution with a valid negative input.
+	 */
 	@Test
-	public void validInputTest() throws Exception {
-		Assert.assertEquals("convert possitive", VAL1, cp.execute(VAL1_STR_, CSVCONTEXT));
-		Assert.assertEquals("convert negative", VAL2, cp.execute(VAL2STR, CSVCONTEXT));
+	public void testValidNegativeInput(){
+		
+		String normalInput = "-1357.459";
+		String frenchInput = "-1357,459";
+		BigDecimal expectedOutput = new BigDecimal(normalInput);
+		
+		// normal input
+		assertEquals(expectedOutput, processor.execute(normalInput, ANONYMOUS_CSVCONTEXT));
+		assertEquals(expectedOutput, processor2.execute(normalInput, ANONYMOUS_CSVCONTEXT));
+		assertEquals(expectedOutput, processorChain.execute(normalInput, ANONYMOUS_CSVCONTEXT));
+		assertEquals(expectedOutput, processorChain2.execute(normalInput, ANONYMOUS_CSVCONTEXT));
+		
+		// french input ("," instead of "." as decimal symbol)
+		assertEquals(expectedOutput, processor3.execute(frenchInput, ANONYMOUS_CSVCONTEXT));
+		assertEquals(expectedOutput, processorChain3.execute(frenchInput, ANONYMOUS_CSVCONTEXT));
 	}
 	
-	@Test
-	public void validInputWithDecimalFormatSymbolsTest() throws Exception {
-		String french = "1333,5";
-		BigDecimal expected = new BigDecimal("1333.5");
-		CellProcessor processor = new ParseBigDecimal(new DecimalFormatSymbols(Locale.FRANCE));
-		Assert.assertEquals(expected, processor.execute(french, CSVCONTEXT));
+	/**
+	 * Tests execution with a non-String input (should throw an exception).
+	 */
+	@Test(expected = SuperCSVException.class)
+	public void testWithNonString() {
+		processor.execute(1234, ANONYMOUS_CSVCONTEXT);
+	}
+	
+	/**
+	 * Tests execution with a null input (should throw an Exception).
+	 */
+	@Test(expected = NullInputException.class)
+	public void testWithNull() {
+		processor.execute(null, ANONYMOUS_CSVCONTEXT);
+	}
+	
+	/**
+	 * Tests execution with an empty-String input (should throw an exception).
+	 */
+	@Test(expected = SuperCSVException.class)
+	public void testWithEmptyString() {
+		processor.execute("", ANONYMOUS_CSVCONTEXT);
 	}
 	
 }

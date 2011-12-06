@@ -2,6 +2,7 @@ package org.supercsv.cellprocessor;
 
 import org.supercsv.cellprocessor.ift.LongCellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
+import org.supercsv.exception.ClassCastInputCSVException;
 import org.supercsv.exception.SuperCSVException;
 import org.supercsv.util.CSVContext;
 
@@ -47,7 +48,7 @@ public class ParseInt extends CellProcessorAdaptor implements StringCellProcesso
 				throw new SuperCSVException("Parser error", context, this, e);
 			}
 		} else {
-			throw new SuperCSVException("Can't convert \"" + value
+			throw new ClassCastInputCSVException("Can't convert \"" + value
 				+ "\" to integer. Input is not of type Integer nor type String but of type "
 				+ value.getClass().getName(), context, this);
 		}

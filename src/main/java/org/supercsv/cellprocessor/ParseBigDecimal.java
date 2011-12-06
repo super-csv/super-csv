@@ -12,9 +12,9 @@ import org.supercsv.util.CSVContext;
  * Convert a String to a BigDecimal. It uses the String constructor of BigDecimal (<tt>new BigDecimal("0.1")</tt>) as it
  * yields predictable results (see {@link BigDecimal}).
  * <p>
- * If the data uses a character other than "." as a decimal separator (France uses "," for example), then use the constructor
- * that accepts a <tt>DecimalFormatSymbols</tt> object, as it will convert the character to a "." before creating the
- * BigDecimal.
+ * If the data uses a character other than "." as a decimal separator (France uses "," for example), then use the
+ * constructor that accepts a <tt>DecimalFormatSymbols</tt> object, as it will convert the character to a "." before
+ * creating the BigDecimal.
  * 
  * @since 1.30
  * @author Kasper B. Graversen
@@ -55,8 +55,8 @@ public class ParseBigDecimal extends CellProcessorAdaptor implements StringCellP
 	
 	/**
 	 * Constructs a new <tt>ParseBigDecimal</tt> processor, which converts a String to a BigDecimal using the supplied
-	 * <tt>DecimalFormatSymbols</tt> object to convert any decimal separator to a "." before creating the BigDecimal, then
-	 * calls the next processor in the chain.
+	 * <tt>DecimalFormatSymbols</tt> object to convert any decimal separator to a "." before creating the BigDecimal,
+	 * then calls the next processor in the chain.
 	 * 
 	 * @param symbols
 	 *            the decimal format symbols, containing the decimal separator
@@ -77,16 +77,12 @@ public class ParseBigDecimal extends CellProcessorAdaptor implements StringCellP
 		final BigDecimal result;
 		if( value instanceof String ) {
 			try {
-				if( symbols == null ) {
+				if( symbols == null || symbols.getDecimalSeparator() == '.' ) {
 					result = new BigDecimal((String) value);
 				} else {
-					if( symbols.getDecimalSeparator() != '.' ) {
-						// replace any decimal separator in the input with "."
-						String s = (String) value;
-						result = new BigDecimal(s.replace(symbols.getDecimalSeparator(), '.'));
-					} else {
-						result = new BigDecimal((String) value);
-					}
+					// replace any decimal separator in the input with "."
+					String s = (String) value;
+					result = new BigDecimal(s.replace(symbols.getDecimalSeparator(), '.'));
 				}
 			}
 			catch(final Exception e) {

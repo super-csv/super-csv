@@ -6,6 +6,7 @@ import java.util.Date;
 
 import org.supercsv.cellprocessor.ift.DateCellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
+import org.supercsv.exception.ClassCastInputCSVException;
 import org.supercsv.exception.SuperCSVException;
 import org.supercsv.util.CSVContext;
 
@@ -56,6 +57,11 @@ public class ParseDate extends CellProcessorAdaptor implements StringCellProcess
 	 */
 	public Object execute(final Object value, final CSVContext context) {
 		validateInputNotNull(value, context, this);
+		
+		if (!(value instanceof String)){
+			throw new ClassCastInputCSVException("the value '" + value + "' is not of type String", context, this);
+		}
+		
 		try {
 			SimpleDateFormat formatter = new SimpleDateFormat(dateFormat);
 			formatter.setLenient(false);
