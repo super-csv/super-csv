@@ -39,7 +39,7 @@ public class CSVContext {
 	
 	@Override
 	public String toString() {
-		return String.format("Line: %d Column: %d Raw line:\n%s\n", lineNumber, columnNumber, lineSource);
+		return String.format("{line=%d, column=%d, lineSource=%s}", lineNumber, columnNumber, lineSource);
 	}
 	
 	@Override

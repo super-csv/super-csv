@@ -21,6 +21,9 @@ public class Optional extends Token {
 	/**
 	 * Constructs a new <tt>Optional</tt> processor, which when encountering empty String ("") will return <tt>null</tt>
 	 * , for all other values it will call the next processor in the chain.
+	 * 
+	 * @throws NullPointerException
+	 *             if next is null
 	 */
 	public Optional(final CellProcessor next) {
 		super("", null, next);

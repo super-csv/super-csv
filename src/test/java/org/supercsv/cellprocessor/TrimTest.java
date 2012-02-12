@@ -7,7 +7,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.exception.NullInputException;
-import org.supercsv.exception.SuperCSVException;
 import org.supercsv.mock.IdentityTransform;
 
 /**
@@ -70,7 +69,7 @@ public class TrimTest {
 	/**
 	 * Tests execution with an invalid max value (should throw an Exception).
 	 */
-	@Test(expected = SuperCSVException.class)
+	@Test(expected = IllegalArgumentException.class)
 	public void testWithInvalidMax() {
 		processor = new Trim(0);
 	}
@@ -78,7 +77,7 @@ public class TrimTest {
 	/**
 	 * Tests execution with an invalid max value and chaining (should throw an Exception).
 	 */
-	@Test(expected = SuperCSVException.class)
+	@Test(expected = IllegalArgumentException.class)
 	public void testWithInvalidMaxChained() {
 		processorChain = new Trim(0, new IdentityTransform());
 	}
@@ -89,6 +88,14 @@ public class TrimTest {
 	@Test(expected = NullInputException.class)
 	public void testWithNull() {
 		processor.execute(null, ANONYMOUS_CSVCONTEXT);
+	}
+	
+	/**
+	 * Tests construction with a null postfix String (should throw an Exception).
+	 */
+	@Test(expected = NullPointerException.class)
+	public void testConstructionWithNullPostFix() {
+		new Trim(MAX_SIZE, (String) null);
 	}
 	
 }

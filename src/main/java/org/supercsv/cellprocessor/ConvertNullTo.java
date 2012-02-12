@@ -27,7 +27,7 @@ import org.supercsv.util.CSVContext;
 public class ConvertNullTo extends CellProcessorAdaptor implements DateCellProcessor, DoubleCellProcessor,
 	LongCellProcessor, StringCellProcessor, BoolCellProcessor {
 	
-	Object returnValue = "";
+	private final Object returnValue;
 	
 	/**
 	 * Constructs a new <tt>ConvertNullTo</tt> processor, which returns a specified default value if the input is
@@ -43,12 +43,14 @@ public class ConvertNullTo extends CellProcessorAdaptor implements DateCellProce
 	
 	/**
 	 * Constructs a new <tt>ConvertNullTo</tt> processor, which returns a specified default value if the input is
-	 * <tt>null</tt>. If the input is not <tt>null</tt>, then the next processor is executed. 
+	 * <tt>null</tt>. If the input is not <tt>null</tt>, then the next processor is executed.
 	 * 
 	 * @param returnValue
 	 *            the value to return if the input is <tt>null</tt>
 	 * @param next
 	 *            the next <tt>CellProcessor</tt> in the chain
+	 * @throws NullPointerException
+	 *             if next is null
 	 */
 	public ConvertNullTo(final Object returnValue, final CellProcessor next) {
 		super(next);

@@ -9,7 +9,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.exception.NullInputException;
-import org.supercsv.exception.SuperCSVException;
 import org.supercsv.mock.IdentityTransform;
 
 /**
@@ -60,7 +59,7 @@ public class StrReplaceTest {
 	/**
 	 * Tests execution with a null regex (should throw an Exception).
 	 */
-	@Test(expected = NullInputException.class)
+	@Test(expected = NullPointerException.class)
 	public void testWithNullRegex() {
 		processor = new StrReplace(null, REPLACEMENT);
 	}
@@ -68,7 +67,7 @@ public class StrReplaceTest {
 	/**
 	 * Tests execution with a null replacement (should throw an Exception).
 	 */
-	@Test(expected = NullInputException.class)
+	@Test(expected = NullPointerException.class)
 	public void testWithNullReplacement() {
 		processor = new StrReplace(REGEX, null);
 	}
@@ -76,7 +75,7 @@ public class StrReplaceTest {
 	/**
 	 * Tests execution with an empty regex (should throw an Exception).
 	 */
-	@Test(expected = SuperCSVException.class)
+	@Test(expected = IllegalArgumentException.class)
 	public void testWithEmptyRegex() {
 		processor = new StrReplace("", REPLACEMENT);
 	}

@@ -1,58 +1,71 @@
 package org.supercsv.cellprocessor.constraint;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.supercsv.TestConstants.ANONYMOUS_CSVCONTEXT;
+
 import org.junit.Before;
 import org.junit.Test;
-import org.supercsv.TestConstants;
-import org.supercsv.cellprocessor.Optional;
 import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.exception.NullInputException;
 import org.supercsv.exception.SuperCSVException;
-import org.supercsv.util.CSVContext;
+import org.supercsv.mock.IdentityTransform;
 
 /**
+ * Tests the Required constraint.
+ * 
+ * @deprecated copy-paste of RequireHashCodeTest: to be removed when RequireHashCode is removed
  * @author Kasper B. Graversen
+ * @author James Bassett
  */
 public class RequiredTest {
-	CellProcessor cp = null;
-	CellProcessor ccp = null;
 	
-	@Test(expected = SuperCSVException.class)
-	public void invalidInputTest1() throws Exception {
-		Assert.assertEquals("test length", "holp".hashCode(),
-			cp.execute("help".hashCode(), TestConstants.ANONYMOUS_CSVCONTEXT));
-	}
+	private static final String INPUT1 = "One";
+	private static final String INPUT2 = "Two";
+	private static final int HASH1 = INPUT1.hashCode();
+	private static final int HASH2 = INPUT2.hashCode();
 	
-	@Test(expected = SuperCSVException.class)
-	public void invalidInputTest2() throws Exception {
-		Assert.assertEquals("can't add the same twice", 1,
-			new Required(1, 1).execute("help".hashCode(), new CSVContext(0, 0)));
-	}
+	private CellProcessor processor;
+	private CellProcessor processorChain;
+	private CellProcessor processorChain2;
 	
+	/**
+	 * Sets up the processors for the test using all constructor combinations.
+	 */
 	@Before
-	public void setUp() throws Exception {
-		cp = new Required(1, 3, 6, "hello".hashCode()); // several
-		// constructors
+	public void setUp() {
+		processor = new Required(HASH1, HASH2);
+		processorChain = new Required(HASH1, new IdentityTransform());
+		processorChain2 = new Required(new int[] { HASH1, HASH2 }, new IdentityTransform());
 	}
 	
+	/**
+	 * Tests unchained/chained execution with valid values.
+	 */
 	@Test
-	public void validChainingTest() throws Exception {
-		// chaining
-		ccp = new Required(3, new Optional());
-		Assert.assertEquals("test chaining ", 3, ccp.execute(3, TestConstants.ANONYMOUS_CSVCONTEXT));
-		// chaining
-		ccp = new Required(new int[] { 3, 4 }, new Optional());
-		Assert.assertEquals("test chaining and array of init", 3, ccp.execute(3, TestConstants.ANONYMOUS_CSVCONTEXT));
-	}
-	
-	@Test
-	public void validInputTest() throws Exception {
-		Assert.assertEquals("known array hashes", "hello".hashCode(),
-			cp.execute("hello".hashCode(), TestConstants.ANONYMOUS_CSVCONTEXT));
+	public void testValidInput() {
+		assertEquals(INPUT1, processor.execute(INPUT1, ANONYMOUS_CSVCONTEXT));
+		assertEquals(INPUT1, processorChain.execute(INPUT1, ANONYMOUS_CSVCONTEXT));
+		assertEquals(INPUT1, processorChain2.execute(INPUT1, ANONYMOUS_CSVCONTEXT));
 		
-		final CellProcessor cp2 = new Required("hello".hashCode()); // one arg
-		// constructor
-		Assert.assertEquals("one number constructor test", "hello".hashCode(),
-			cp2.execute("hello".hashCode(), TestConstants.ANONYMOUS_CSVCONTEXT));
+		assertEquals(INPUT2, processor.execute(INPUT2, ANONYMOUS_CSVCONTEXT));
+		// 'processorChain' doesn't have a second value to test with
+		assertEquals(INPUT2, processorChain2.execute(INPUT2, ANONYMOUS_CSVCONTEXT));
 	}
 	
+	/**
+	 * Tests execution with input that doesn't match any of the hashcodes (should throw an Exception).
+	 */
+	@Test(expected = SuperCSVException.class)
+	public void testInvalidInput() {
+		String input = "invalid";
+		assertEquals(input, processor.execute(input, ANONYMOUS_CSVCONTEXT));
+	}
+	
+	/**
+	 * Tests execution with a null input (should throw an Exception).
+	 */
+	@Test(expected = NullInputException.class)
+	public void testWithNull() {
+		processor.execute(null, ANONYMOUS_CSVCONTEXT);
+	}
 }

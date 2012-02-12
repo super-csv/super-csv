@@ -3,6 +3,7 @@ package org.supercsv.cellprocessor;
 import org.supercsv.cellprocessor.ift.DoubleCellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.exception.ClassCastInputCSVException;
+import org.supercsv.exception.NullInputException;
 import org.supercsv.exception.SuperCSVException;
 import org.supercsv.util.CSVContext;
 
@@ -27,6 +28,8 @@ public class ParseChar extends CellProcessorAdaptor implements StringCellProcess
 	 * 
 	 * @param next
 	 *            the next processor in the chain
+	 * @throws NullPointerException
+	 *             if next is null
 	 */
 	public ParseChar(final DoubleCellProcessor next) {
 		super(next);
@@ -34,9 +37,17 @@ public class ParseChar extends CellProcessorAdaptor implements StringCellProcess
 	
 	/**
 	 * {@inheritDoc}
+	 * 
+	 * @throws ClassCastInputCSVException
+	 *             if value isn't a Character or String
+	 * @throws NullInputException
+	 *             if value is null
+	 * @throws SuperCSVException
+	 *             if value is a String of multiple characters
 	 */
 	public Object execute(final Object value, final CSVContext context) {
-		validateInputNotNull(value, context, this);
+		validateInputNotNull(value, context);
+		
 		final Character result;
 		if( value instanceof Character ) {
 			result = (Character) value;
@@ -45,13 +56,15 @@ public class ParseChar extends CellProcessorAdaptor implements StringCellProcess
 			if( stringValue.length() == 1 ) {
 				result = Character.valueOf(stringValue.charAt(0));
 			} else {
-				throw new SuperCSVException("Can't convert \"" + value
-					+ "\" to a char. It must have a length of 1 to be a valid char.", context, this);
+				throw new SuperCSVException(String.format(
+					"'%s' cannot be parsed as a char as it is a String longer than 1 character", stringValue), context,
+					this);
 			}
 		} else {
-			throw new ClassCastInputCSVException("Can't convert \"" + value
-				+ "\" to char. Input is not of type Character nor type String, but of type "
-				+ value.getClass().getName(), context, this);
+			String actualClassName = value.getClass().getName();
+			throw new ClassCastInputCSVException(String.format(
+				"the input value should be of type Character or String but is of type %s", actualClassName), context,
+				this);
 		}
 		
 		return next.execute(result, context);

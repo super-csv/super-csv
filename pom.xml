@@ -8,7 +8,7 @@
 	the specific language governing permissions and limitations under the License. -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	
+
 	<!-- Use Sonatype's OSS repo to deploy to Maven central -->
 	<parent>
 		<groupId>org.sonatype.oss</groupId>
@@ -25,7 +25,7 @@
 	<version>1.6.0-SNAPSHOT</version>
 	<name>Super CSV</name>
 	<inceptionYear>2006</inceptionYear>
-	
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
@@ -54,7 +54,7 @@
 					<target>1.5</target>
 				</configuration>
 			</plugin>
-			
+
 			<!-- Creates the final jar. This is needed to use the OSGi manifest entries -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -66,7 +66,7 @@
 					</archive>
 				</configuration>
 			</plugin>
-			
+
 			<!-- Generates the OSGi manifest (required for OSGi support) -->
 			<plugin>
 				<groupId>org.apache.felix</groupId>
@@ -108,7 +108,7 @@
 					</classpathContainers>
 				</configuration>
 			</plugin>
-			
+
 			<!-- Creates the ant build file -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -293,11 +293,11 @@
 			</plugin>
 
 			<!-- Adds the findbugs report to the site -->
-<!-- 			<plugin> -->
-<!-- 				<groupId>org.codehaus.mojo</groupId> -->
-<!-- 				<artifactId>findbugs-maven-plugin</artifactId> -->
-<!-- 				<version>2.2</version> -->
-<!-- 			</plugin> -->
+			<!-- <plugin> -->
+			<!-- <groupId>org.codehaus.mojo</groupId> -->
+			<!-- <artifactId>findbugs-maven-plugin</artifactId> -->
+			<!-- <version>2.2</version> -->
+			<!-- </plugin> -->
 		</plugins>
 	</reporting>
 

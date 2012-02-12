@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.exception.ClassCastInputCSVException;
 import org.supercsv.exception.NullInputException;
+import org.supercsv.exception.SuperCSVException;
 import org.supercsv.mock.IdentityTransform;
 import org.supercsv.util.DateHelper;
 
@@ -65,9 +66,17 @@ public class FmtDateTest {
 	/**
 	 * Tests execution with a invalid date format (should throw an Exception).
 	 */
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = SuperCSVException.class)
 	public void testWithInvalidDateFormat() {
 		CellProcessor invalidDateFormatProcessor = new FmtDate("abcd");
 		invalidDateFormatProcessor.execute(DATE, ANONYMOUS_CSVCONTEXT);
+	}
+	
+	/**
+	 * Tests construction of the processor with a null date format (should throw an Exception).
+	 */
+	@Test(expected = NullPointerException.class)
+	public void testWithNullDateFormat() {
+		new FmtDate(null);
 	}
 }

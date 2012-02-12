@@ -2,15 +2,17 @@ package org.supercsv.cellprocessor.constraint;
 
 import org.supercsv.cellprocessor.CellProcessorAdaptor;
 import org.supercsv.cellprocessor.ift.DoubleCellProcessor;
+import org.supercsv.exception.NullInputException;
 import org.supercsv.exception.SuperCSVException;
 import org.supercsv.util.CSVContext;
 
 /**
- * Converts the input data to a Double and ensures that number is within a specified numeric range. If the data has no
- * upper bound (or lower bound), you should use either of <code>MIN</code> or <code>MAX</code> constants provided in the
- * class.
+ * Converts the input data to a Double and ensures that number is within a specified numeric range (inclusive). If the
+ * data has no upper bound (or lower bound), you should use either of <code>MIN</code> or <code>MAX</code> constants
+ * provided in the class.
  * 
  * @author Kasper B. Graversen
+ * @author James Bassett
  */
 public class DMinMax extends CellProcessorAdaptor {
 	
@@ -36,9 +38,11 @@ public class DMinMax extends CellProcessorAdaptor {
 	public static final int MAX8bit = 255;
 	
 	/** -128 */
-	public static final int MIN8bit = -128;
+	public static final int MIN8bit = -128; // TODO is this really correct?
 	
-	protected double min, max;
+	private final double min;
+	
+	private final double max;
 	
 	/**
 	 * Constructs a new <tt>DMinMax</tt> processor, which converts the input to a Double and ensures the value is
@@ -48,10 +52,14 @@ public class DMinMax extends CellProcessorAdaptor {
 	 *            the minimum value (inclusive)
 	 * @param max
 	 *            the maximum value (inclusive)
+	 * @throws IllegalArgumentException
+	 *             if max < min
 	 */
 	public DMinMax(final double min, final double max) {
 		super();
-		init(min, max);
+		checkPreconditions(min, max);
+		this.min = min;
+		this.max = max;
 	}
 	
 	/**
@@ -64,17 +72,44 @@ public class DMinMax extends CellProcessorAdaptor {
 	 *            the maximum value (inclusive)
 	 * @param next
 	 *            the next processor in the chain
+	 * @throws IllegalArgumentException
+	 *             if max < min
+	 * @throws NullPointerException
+	 *             if next is null
 	 */
 	public DMinMax(final double min, final double max, final DoubleCellProcessor next) {
 		super(next);
-		init(min, max);
+		checkPreconditions(min, max);
+		this.min = min;
+		this.max = max;
+	}
+	
+	/**
+	 * Checks the preconditions for creating a new DMinMax processor.
+	 * 
+	 * @param min
+	 *            the minimum value (inclusive)
+	 * @param max
+	 *            the maximum value (inclusive)
+	 * @throws IllegalArgumentException
+	 *             if max < min
+	 */
+	private static void checkPreconditions(final double min, final double max) {
+		if( max < min ) {
+			throw new IllegalArgumentException(String.format("max (%f) should not be < min (%f)", max, min));
+		}
 	}
 	
 	/**
 	 * {@inheritDoc}
+	 * 
+	 * @throws NullInputException
+	 *             if value is null
+	 * @throws SuperCSVException
+	 *             if value can't be parsed as a Double, or doesn't lie between min and max (inclusive)
 	 */
 	public Object execute(final Object value, final CSVContext context) {
-		validateInputNotNull(value, context, this);
+		validateInputNotNull(value, context);
 		
 		final Double result;
 		if( value instanceof Double ) {
@@ -84,31 +119,17 @@ public class DMinMax extends CellProcessorAdaptor {
 				result = Double.parseDouble(value.toString());
 			}
 			catch(final NumberFormatException e) {
-				throw new SuperCSVException("Parser error", context, this, e);
+				throw new SuperCSVException(String.format("'%s' could not be parsed as a Double", value), context, this,
+					e);
 			}
 		}
 		
-		if( !(result >= min && result <= max) ) {
-			throw new SuperCSVException("Entry \"" + value + "\" on line " + context.lineNumber + " column "
-				+ context.columnNumber + " is not within the numerical range " + min + "-" + max, context, this);
+		if( result < min || result > max ) {
+			throw new SuperCSVException(String.format(
+				"%f does not lie between the min (%f) and max (%f) values (inclusive)", result, min, max), context, this);
 		}
+		
 		return next.execute(result, context);
 	}
 	
-	/**
-	 * Ensures the arguments to the constructor are valid, and sets the instance variables.
-	 * 
-	 * @param min
-	 *            the minimum value
-	 * @param max
-	 *            the maximum value
-	 */
-	private void init(final double min, final double max) {
-		if( max < min ) {
-			throw new SuperCSVException("max < min in the arguments " + min + " " + max, this);
-		}
-		
-		this.min = min;
-		this.max = max;
-	}
 }

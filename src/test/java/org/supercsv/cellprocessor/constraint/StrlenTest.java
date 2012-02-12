@@ -1,62 +1,95 @@
 package org.supercsv.cellprocessor.constraint;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.supercsv.TestConstants.ANONYMOUS_CSVCONTEXT;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.supercsv.TestConstants;
-import org.supercsv.cellprocessor.Optional;
 import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.exception.NullInputException;
 import org.supercsv.exception.SuperCSVException;
-import org.supercsv.mock.ComparerCellProcessor;
+import org.supercsv.mock.IdentityTransform;
 
 /**
+ * Tests the Strlen constraint.
+ * 
  * @author Kasper B. Graversen
+ * @author James Bassett
  */
 public class StrlenTest {
-	Strlen cp;
-	CellProcessor ccp;
 	
-	@Test(expected = SuperCSVException.class)
-	public void invalidInputTest() throws Exception {
-		Assert.assertEquals("test length", "help", cp.execute("help", TestConstants.ANONYMOUS_CSVCONTEXT));
-	}
+	private static final int LENGTH1 = 2;
+	private static final int LENGTH2 = 3;
 	
+	private CellProcessor processor;
+	private CellProcessor processorChain;
+	private CellProcessor processorChain2;
+	
+	/**
+	 * Sets up the processors for the test using all constructor combinations.
+	 */
 	@Before
-	public void setUp() throws Exception {
-		cp = new Strlen(2);
+	public void setUp() {
+		processor = new Strlen(LENGTH1, LENGTH2);
+		processorChain = new Strlen(LENGTH1, new IdentityTransform()); // only allows 1 length
+		processorChain2 = new Strlen(new int[] { LENGTH1, LENGTH2 }, new IdentityTransform());
 	}
 	
-	public void testCastValueAndChaining() throws Exception {
-		ccp = new Strlen(2, new ComparerCellProcessor("17"));
-		Assert.assertEquals("number changed to string", true, ccp.execute(17, TestConstants.ANONYMOUS_CSVCONTEXT)); // convert
-		// number 17 to
-		// a string
-	}
-	
-	@Test(expected = SuperCSVException.class)
-	public void testInValidArrInput() throws Exception {
-		new Strlen(2, -1); // cannot pass a 0
-	}
-	
-	@Test(expected = SuperCSVException.class)
-	public void testInValidInput() throws Exception {
-		new Strlen(-1); // cannot pass a 0
-	}
-	
+	/**
+	 * Tests unchained/chained execution with inputs of valid lengths.
+	 */
 	@Test
-	public void validChainingTest() throws Exception {
-		// chaining
-		ccp = new Strlen(2, new Optional());
-		Assert.assertEquals("test chaining and ", "17", ccp.execute("17", TestConstants.ANONYMOUS_CSVCONTEXT));
-		ccp = new Strlen(new int[] { 2 }, new Optional());
-		Assert.assertEquals("test chaining and ", "17", ccp.execute("17", TestConstants.ANONYMOUS_CSVCONTEXT));
+	public void testValidInput() {
+		String input = "OK";
+		assertEquals(input, processor.execute(input, ANONYMOUS_CSVCONTEXT));
+		assertEquals(input, processorChain.execute(input, ANONYMOUS_CSVCONTEXT));
+		assertEquals(input, processorChain2.execute(input, ANONYMOUS_CSVCONTEXT));
+		
+		input = "yep";
+		assertEquals(input, processor.execute(input, ANONYMOUS_CSVCONTEXT));
+		// skip 'processorChain' as it only has 1 valid length
+		assertEquals(input, processorChain2.execute(input, ANONYMOUS_CSVCONTEXT));
+		
 	}
 	
-	@Test
-	public void validInputTest() throws Exception {
-		Assert.assertEquals("test length", "he", cp.execute("he", TestConstants.ANONYMOUS_CSVCONTEXT));
-		cp = new Strlen(1, 3);
-		Assert.assertEquals("one of many req. lengths", "hel", cp.execute("hel", TestConstants.ANONYMOUS_CSVCONTEXT));
-		Assert.assertEquals("one of many req. lengths", "h", cp.execute("h", TestConstants.ANONYMOUS_CSVCONTEXT));
+	/**
+	 * Tests execution with an input with an unexpected length (should throw an Exception).
+	 */
+	@Test(expected = SuperCSVException.class)
+	public void testInvalidInput() {
+		processor.execute("four", TestConstants.ANONYMOUS_CSVCONTEXT);
+	}
+	
+	/**
+	 * Tests construction of the processor with a negative length (should throw an Exception).
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void testNegativeLength() {
+		new Strlen(-1);
+	}
+	
+	/**
+	 * Tests execution with a null input (should throw an Exception).
+	 */
+	@Test(expected = NullInputException.class)
+	public void testWithNull() {
+		processor.execute(null, ANONYMOUS_CSVCONTEXT);
+	}
+	
+	/**
+	 * Tests construction with a null array (should throw an Exception).
+	 */
+	@Test(expected = NullPointerException.class)
+	public void testConstructionWithNullArray() {
+		new Strlen((int[]) null);
+	}
+	
+	/**
+	 * Tests construction with an empty array (should throw an Exception).
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void testConstructionWithEmptyArray() {
+		new Strlen(new int[]{});
 	}
 }

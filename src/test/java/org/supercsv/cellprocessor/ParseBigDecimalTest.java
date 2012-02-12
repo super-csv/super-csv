@@ -49,7 +49,7 @@ public class ParseBigDecimalTest {
 	 * Test unchained/chained execution with a valid positive input.
 	 */
 	@Test
-	public void testValidInput(){
+	public void testValidInput() {
 		
 		String normalInput = "1357.459";
 		String frenchInput = "1357,459";
@@ -70,7 +70,7 @@ public class ParseBigDecimalTest {
 	 * Test unchained/chained execution with a valid negative input.
 	 */
 	@Test
-	public void testValidNegativeInput(){
+	public void testValidNegativeInput() {
 		
 		String normalInput = "-1357.459";
 		String frenchInput = "-1357,459";
@@ -104,11 +104,19 @@ public class ParseBigDecimalTest {
 	}
 	
 	/**
-	 * Tests execution with an empty-String input (should throw an exception).
+	 * Tests execution with an empty-String input (should throw an Exception).
 	 */
 	@Test(expected = SuperCSVException.class)
 	public void testWithEmptyString() {
 		processor.execute("", ANONYMOUS_CSVCONTEXT);
+	}
+	
+	/**
+	 * Tests construction with null symbols (should throw an Exception).
+	 */
+	@Test(expected = NullPointerException.class)
+	public void testWithNullSymbols() {
+		new ParseBigDecimal((DecimalFormatSymbols) null);
 	}
 	
 }

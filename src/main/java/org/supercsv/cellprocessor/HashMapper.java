@@ -16,6 +16,7 @@ import org.supercsv.util.CSVContext;
  * 
  * @since 1.50
  * @author Dominique De Vito
+ * @author James Bassett
  */
 public class HashMapper extends CellProcessorAdaptor implements BoolCellProcessor, DateCellProcessor,
 	DoubleCellProcessor, LongCellProcessor, StringCellProcessor {
@@ -30,6 +31,10 @@ public class HashMapper extends CellProcessorAdaptor implements BoolCellProcesso
 	 * 
 	 * @param mapping
 	 *            the Map
+	 * @throws NullPointerException
+	 *             if mapping is null
+	 * @throws IllegalArgumentException
+	 *             if mapping is empty
 	 */
 	public HashMapper(final Map<Object, Object> mapping) {
 		this(mapping, (Object) null);
@@ -44,14 +49,17 @@ public class HashMapper extends CellProcessorAdaptor implements BoolCellProcesso
 	 *            the Map
 	 * @param defaultValue
 	 *            the value to return if no mapping is found
+	 * @throws NullPointerException
+	 *             if mapping is null
+	 * @throws IllegalArgumentException
+	 *             if mapping is empty
 	 */
 	public HashMapper(final Map<Object, Object> mapping, final Object defaultValue) {
 		super();
+		checkPreconditions(mapping);
 		this.mapping = mapping;
 		this.defaultValue = defaultValue;
-		if( mapping == null ) {
-			throw new NullInputException("Mapping cannot be null", this);
-		}
+		
 	}
 	
 	/**
@@ -64,6 +72,10 @@ public class HashMapper extends CellProcessorAdaptor implements BoolCellProcesso
 	 *            the Map
 	 * @param next
 	 *            the next processor in the chain
+	 * @throws NullPointerException
+	 *             if mapping or next is null
+	 * @throws IllegalArgumentException
+	 *             if mapping is empty
 	 */
 	public HashMapper(final Map<Object, Object> mapping, final BoolCellProcessor next) {
 		this(mapping, null, next);
@@ -81,25 +93,50 @@ public class HashMapper extends CellProcessorAdaptor implements BoolCellProcesso
 	 *            the value to return if no mapping is found
 	 * @param next
 	 *            the next processor in the chain
+	 * @throws NullPointerException
+	 *             if mapping or next is null
+	 * @throws IllegalArgumentException
+	 *             if mapping is empty
 	 */
 	public HashMapper(final Map<Object, Object> mapping, final Object defaultValue, final BoolCellProcessor next) {
 		super(next);
+		checkPreconditions(mapping);
 		this.mapping = mapping;
 		this.defaultValue = defaultValue;
+	}
+	
+	/**
+	 * Checks the preconditions for creating a new HashMapper processor.
+	 * 
+	 * @param mapping
+	 *            the Map
+	 * @throws NullPointerException
+	 *             if mapping is null
+	 * @throws IllegalArgumentException
+	 *             if mapping is empty
+	 */
+	private static void checkPreconditions(final Map<Object, Object> mapping) {
 		if( mapping == null ) {
-			throw new NullInputException("Mapping cannot be null", this);
+			throw new NullPointerException("mapping should not be null");
+		} else if( mapping.isEmpty() ) {
+			throw new IllegalArgumentException("mapping should not be empty");
 		}
 	}
 	
 	/**
 	 * {@inheritDoc}
+	 * 
+	 * @throws NullInputException
+	 *             if value is null
 	 */
 	public Object execute(final Object value, final CSVContext context) {
-		validateInputNotNull(value, context, this);
+		validateInputNotNull(value, context);
+		
 		Object result = mapping.get(value);
 		if( result == null ) {
 			result = defaultValue;
 		}
+		
 		return next.execute(result, context);
 	}
 }

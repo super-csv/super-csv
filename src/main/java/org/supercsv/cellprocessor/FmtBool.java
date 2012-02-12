@@ -3,6 +3,7 @@ package org.supercsv.cellprocessor;
 import org.supercsv.cellprocessor.ift.BoolCellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.exception.ClassCastInputCSVException;
+import org.supercsv.exception.NullInputException;
 import org.supercsv.util.CSVContext;
 
 /**
@@ -41,6 +42,8 @@ public class FmtBool extends CellProcessorAdaptor implements BoolCellProcessor {
 	 *            the String to use if the value is false
 	 * @param next
 	 *            the next processor in the chain
+	 * @throws NullPointerException
+	 *             if next is null
 	 */
 	public FmtBool(final String trueValue, final String falseValue, final StringCellProcessor next) {
 		super(next);
@@ -50,13 +53,20 @@ public class FmtBool extends CellProcessorAdaptor implements BoolCellProcessor {
 	
 	/**
 	 * {@inheritDoc}
+	 * 
+	 * @throws ClassCastInputCSVException
+	 *             if value is not a Boolean
+	 * @throws NullInputException
+	 *             if value is null
 	 */
 	public Object execute(final Object value, final CSVContext context) {
-		validateInputNotNull(value, context, this);
+		validateInputNotNull(value, context);
+		
 		if( !(value instanceof Boolean) ) {
-			throw new ClassCastInputCSVException("the value '" + value + "' is not of type Boolean", context, this);
+			throw new ClassCastInputCSVException(value, Boolean.class, context, this);
 		}
-		String result = ((Boolean) value).booleanValue() ? trueValue : falseValue;
+		
+		final String result = ((Boolean) value).booleanValue() ? trueValue : falseValue;
 		return next.execute(result, context);
 	}
 }

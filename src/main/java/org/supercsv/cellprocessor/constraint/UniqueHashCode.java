@@ -1,9 +1,11 @@
 package org.supercsv.cellprocessor.constraint;
 
 import java.util.HashSet;
+import java.util.Set;
 
 import org.supercsv.cellprocessor.CellProcessorAdaptor;
 import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.exception.NullInputException;
 import org.supercsv.exception.SuperCSVException;
 import org.supercsv.util.CSVContext;
 
@@ -22,7 +24,7 @@ import org.supercsv.util.CSVContext;
  */
 public class UniqueHashCode extends CellProcessorAdaptor {
 	
-	protected HashSet<Integer> uniqueSet = new HashSet<Integer>();
+	private final Set<Integer> uniqueSet = new HashSet<Integer>();
 	
 	/**
 	 * Constructs a new <tt>UniqueHashCode</tt> processor, which ensures that all rows in a column are unique.
@@ -37,6 +39,8 @@ public class UniqueHashCode extends CellProcessorAdaptor {
 	 * 
 	 * @param next
 	 *            the next processor in the chain
+	 * @throws NullPointerException
+	 *             if next is null
 	 */
 	public UniqueHashCode(final CellProcessor next) {
 		super(next);
@@ -44,13 +48,19 @@ public class UniqueHashCode extends CellProcessorAdaptor {
 	
 	/**
 	 * {@inheritDoc}
+	 * 
+	 * @throws NullInputException
+	 *             if value is null
+	 * @throws SuperCSVException
+	 *             if a non-unique value is encountered
 	 */
 	public Object execute(final Object value, final CSVContext context) {
-		validateInputNotNull(value, context, this);
+		validateInputNotNull(value, context);
 		
-		// check for uniqueness
-		if( !uniqueSet.add(value.hashCode()) ) {
-			throw new SuperCSVException("Duplicate entry \"" + value + "\" found with same hash code!", context, this);
+		int hash = value.hashCode();
+		if( !uniqueSet.add(hash) ) {
+			throw new SuperCSVException(
+				String.format("duplicate value '%s' encountered with hashcode %d", value, hash), context, this);
 		}
 		
 		return next.execute(value, context);

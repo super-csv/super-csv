@@ -13,6 +13,7 @@ import org.supercsv.util.CSVContext;
  * This constraint ensures that all input data is equal (to each other, or to a supplied constant value).
  * 
  * @author Dominique De Vito
+ * @author James Bassett
  * @since 1.50
  */
 public class Equals extends CellProcessorAdaptor implements LongCellProcessor, DoubleCellProcessor,
@@ -21,15 +22,15 @@ public class Equals extends CellProcessorAdaptor implements LongCellProcessor, D
 	private static final Object UNKNOWN = new Object();
 	
 	private Object constantValue;
-	private boolean isGivenValue;
+	private boolean constantSupplied;
 	
 	/**
 	 * Constructs a new <tt>Equals</tt> processor, which ensures all input data is equal.
 	 */
 	public Equals() {
 		super();
-		constantValue = UNKNOWN;
-		isGivenValue = false;
+		this.constantValue = UNKNOWN;
+		this.constantSupplied = false;
 	}
 	
 	/**
@@ -41,7 +42,7 @@ public class Equals extends CellProcessorAdaptor implements LongCellProcessor, D
 	public Equals(Object constantValue) {
 		super();
 		this.constantValue = constantValue;
-		isGivenValue = true;
+		this.constantSupplied = true;
 	}
 	
 	/**
@@ -50,11 +51,13 @@ public class Equals extends CellProcessorAdaptor implements LongCellProcessor, D
 	 * 
 	 * @param next
 	 *            the next processor in the chain
+	 * @throws NullPointerException
+	 *             if next is null
 	 */
-	public Equals(CellProcessor next) {
+	public Equals(final CellProcessor next) {
 		super(next);
-		constantValue = UNKNOWN;
-		isGivenValue = false;
+		this.constantValue = UNKNOWN;
+		this.constantSupplied = false;
 	}
 	
 	/**
@@ -67,27 +70,33 @@ public class Equals extends CellProcessorAdaptor implements LongCellProcessor, D
 	 *            the constant value that all input must equal
 	 * @param next
 	 *            the next processor in the chain
+	 * @throws NullPointerException
+	 *             if next is null
 	 */
-	public Equals(Object constantValue, CellProcessor next) {
+	public Equals(final Object constantValue, final CellProcessor next) {
 		super(next);
 		this.constantValue = constantValue;
-		isGivenValue = true;
+		this.constantSupplied = true;
 	}
 	
 	/**
 	 * {@inheritDoc}
+	 * 
+	 * @throws SuperCSVException
+	 *             if value isn't equal to the constant value (or previously encountered value if a constant wasn't
+	 *             supplied)
 	 */
-	public Object execute(Object value, CSVContext context) {
+	public Object execute(final Object value, final CSVContext context) {
 		if( UNKNOWN.equals(constantValue) ) {
-			constantValue = value;
+			constantValue = value; // no constant supplied, so remember the first value encountered
 		} else {
 			if( !equals(constantValue, value) ) {
-				if( isGivenValue ) {
-					throw new SuperCSVException("Entry \"" + value + "\" is not equal "
-						+ "to the supplied constant value \"" + constantValue + "\"", context, this);
+				if( constantSupplied ) {
+					throw new SuperCSVException(String.format("'%s' is not equal to the supplied constant '%s'", value,
+						constantValue), context, this);
 				} else {
-					throw new SuperCSVException("Entry \"" + value + "\" is not equal "
-						+ "to the other previous value(s) of \"" + constantValue + "\"", context, this);
+					throw new SuperCSVException(String.format("'%s' is not equal to the previous value(s) of '%s'",
+						value, constantValue), context, this);
 				}
 			}
 		}

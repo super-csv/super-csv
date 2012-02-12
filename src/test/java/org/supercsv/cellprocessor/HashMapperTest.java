@@ -85,21 +85,35 @@ public class HashMapperTest {
 	}
 	
 	/**
-	 * Tests execution with a null Map (should throw an Exception).
+	 * Tests construction with a null Map (should throw an Exception).
 	 */
-	@Test(expected = NullInputException.class)
-	public void testWithNullMap() {
-		CellProcessor nullMapProcessor = new HashMapper(null, DEFAULT_VALUE);
-		nullMapProcessor.execute("1", ANONYMOUS_CSVCONTEXT);
+	@Test(expected = NullPointerException.class)
+	public void testConstructionWithNullMap() {
+		new HashMapper(null, DEFAULT_VALUE);
 	}
 	
 	/**
 	 * Tests chained execution with a null Map (should throw an Exception).
 	 */
-	@Test(expected = NullInputException.class)
-	public void testChainedWithNullMap() {
-		CellProcessor nullMapProcessorChain = new HashMapper(null, DEFAULT_VALUE, new IdentityTransform());
-		nullMapProcessorChain.execute("1", ANONYMOUS_CSVCONTEXT);
+	@Test(expected = NullPointerException.class)
+	public void testChainedConstructionWithNullMap() {
+		new HashMapper(null, DEFAULT_VALUE, new IdentityTransform());
+	}
+	
+	/**
+	 * Tests construction with an empty Map (should throw an Exception).
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void testConstructionWithEmptyMap() {
+		new HashMapper(new HashMap<Object, Object>(), DEFAULT_VALUE);
+	}
+	
+	/**
+	 * Tests chained execution with an empty Map (should throw an Exception).
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void testChainedConstructionWithEmptyMap() {
+		new HashMapper(new HashMap<Object, Object>(), DEFAULT_VALUE, new IdentityTransform());
 	}
 	
 }

@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.exception.ClassCastInputCSVException;
 import org.supercsv.exception.NullInputException;
+import org.supercsv.exception.SuperCSVException;
 import org.supercsv.mock.IdentityTransform;
 
 /**
@@ -89,6 +90,36 @@ public class FmtNumberTest {
 	@Test(expected = ClassCastInputCSVException.class)
 	public void testWithNonNumber() {
 		processor.execute("abc", ANONYMOUS_CSVCONTEXT);
+	}
+	
+	/**
+	 * Tests execution with a invalid number format (should throw an Exception).
+	 */
+	@Test(expected = SuperCSVException.class)
+	public void testWithInvalidNumberFormat() {
+		double number = 12.34;
+		CellProcessor invalidNumberFormatProcessor = new FmtNumber("%%%");
+		invalidNumberFormatProcessor.execute(number, ANONYMOUS_CSVCONTEXT);
+	}
+	
+	/**
+	 * Tests execution with a invalid number format String (should throw an Exception).
+	 */
+	@Test(expected = NullPointerException.class)
+	public void testWithNullNumberFormatString() {
+		double number = 12.34;
+		CellProcessor invalidNumberFormatProcessor = new FmtNumber((String) null);
+		invalidNumberFormatProcessor.execute(number, ANONYMOUS_CSVCONTEXT);
+	}
+	
+	/**
+	 * Tests execution with a invalid number format object (should throw an Exception).
+	 */
+	@Test(expected = NullPointerException.class)
+	public void testWithNullNumberFormat() {
+		double number = 12.34;
+		CellProcessor invalidNumberFormatProcessor = new FmtNumber((DecimalFormat) null);
+		invalidNumberFormatProcessor.execute(number, ANONYMOUS_CSVCONTEXT);
 	}
 	
 }

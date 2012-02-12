@@ -1,6 +1,7 @@
 package org.supercsv.cellprocessor.constraint;
 
 import java.util.HashSet;
+import java.util.Set;
 
 import org.supercsv.cellprocessor.CellProcessorAdaptor;
 import org.supercsv.cellprocessor.ift.BoolCellProcessor;
@@ -9,6 +10,7 @@ import org.supercsv.cellprocessor.ift.DateCellProcessor;
 import org.supercsv.cellprocessor.ift.DoubleCellProcessor;
 import org.supercsv.cellprocessor.ift.LongCellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
+import org.supercsv.exception.NullInputException;
 import org.supercsv.exception.SuperCSVException;
 import org.supercsv.util.CSVContext;
 
@@ -23,11 +25,12 @@ import org.supercsv.util.CSVContext;
  * 
  * @since 1.50
  * @author Kasper B. Graversen
+ * @author James Bassett
  */
 public class RequireHashCode extends CellProcessorAdaptor implements BoolCellProcessor, DateCellProcessor,
 	DoubleCellProcessor, LongCellProcessor, StringCellProcessor {
 	
-	protected HashSet<Integer> requiredHashCodes = new HashSet<Integer>();
+	private final Set<Integer> requiredHashCodes = new HashSet<Integer>();
 	
 	/**
 	 * Constructs a new <tt>RequireHashCode</tt> processor, which converts the input to a String, and ensures that the
@@ -35,10 +38,17 @@ public class RequireHashCode extends CellProcessorAdaptor implements BoolCellPro
 	 * 
 	 * @param requiredHashcodes
 	 *            one or more hashcodes
+	 * @throws NullPointerException
+	 *             if requiredHashcodes is null
+	 * @throws IllegalArgumentException
+	 *             if requiredHashcodes is empty
 	 */
 	public RequireHashCode(final int... requiredHashcodes) {
 		super();
-		addValues(requiredHashcodes);
+		checkPreconditions(requiredHashcodes);
+		for( final int hash : requiredHashcodes ) {
+			this.requiredHashCodes.add(hash);
+		}
 	}
 	
 	/**
@@ -49,6 +59,8 @@ public class RequireHashCode extends CellProcessorAdaptor implements BoolCellPro
 	 *            the required hashcode
 	 * @param next
 	 *            the next processor in the chain
+	 * @throws NullPointerException
+	 *             if next is null
 	 */
 	public RequireHashCode(final int requiredHashcode, final CellProcessor next) {
 		this(new int[] { requiredHashcode }, next);
@@ -62,43 +74,53 @@ public class RequireHashCode extends CellProcessorAdaptor implements BoolCellPro
 	 *            one or more hashcodes
 	 * @param next
 	 *            the next processor in the chain
+	 * @throws NullPointerException
+	 *             if requiredHashcodes or next is null
+	 * @throws IllegalArgumentException
+	 *             if requiredHashcodes is empty
 	 */
 	public RequireHashCode(final int[] requiredHashcodes, final CellProcessor next) {
 		super(next);
-		addValues(requiredHashcodes);
+		checkPreconditions(requiredHashcodes);
+		for( final int hash : requiredHashcodes ) {
+			this.requiredHashCodes.add(hash);
+		}
 	}
 	
 	/**
-	 * Ensures that there are no duplicate hashcodes supplied.
+	 * Checks the preconditions for creating a new RequireHashCode processor.
 	 * 
 	 * @param requiredHashcodes
 	 *            the supplied hashcodes
+	 * @throws NullPointerException
+	 *             if requiredHashcodes is null
+	 * @throws IllegalArgumentException
+	 *             if requiredHashcodes is empty
 	 */
-	protected void addValues(final int... requiredHashcodes) {
-		for( final int hash : requiredHashcodes ) {
-			if( !requiredHashCodes.add(hash) ) {
-				throw new SuperCSVException("Cannot accept two identical hash codes", this);
-			}
+	private static void checkPreconditions(final int... requiredHashcodes) {
+		if( requiredHashcodes == null ) {
+			throw new NullPointerException("requiredHashcodes should not be null");
+		} else if( requiredHashcodes.length == 0 ) {
+			throw new IllegalArgumentException("requiredHashcodes should not be empty");
 		}
 	}
 	
 	/**
 	 * {@inheritDoc}
+	 * 
+	 * @throws NullInputException
+	 *             if value is null
+	 * @throws SuperCSVException
+	 *             if value isn't one of the required hash codes
 	 */
 	public Object execute(final Object value, final CSVContext context) {
-		validateInputNotNull(value, context, this);
-		// check for required hash
-		if( !requiredHashCodes.contains(value.hashCode()) ) {
-			// create string of required hashes for error msg
-			final StringBuilder sb = new StringBuilder();
-			for( final int hash : requiredHashCodes ) {
-				sb.append(hash + ", ");
-			}
-			sb.deleteCharAt(sb.length() - 1); // delete last comma
-			
-			throw new SuperCSVException("Entry \"" + value + "\" on line " + context.lineNumber + " column "
-				+ context.columnNumber + " has hashcode " + value.hashCode()
-				+ " which is not one of the required hash codes: " + sb.toString(), context, this);
+		validateInputNotNull(value, context);
+		
+		int hash = value.hashCode();
+		if( !requiredHashCodes.contains(hash) ) {
+			throw new SuperCSVException(String.format(
+				"the hashcode of %d for value '%s' does not match any of the required hashcodes", hash, value),
+				context, this);
 		}
 		
 		return next.execute(value, context);

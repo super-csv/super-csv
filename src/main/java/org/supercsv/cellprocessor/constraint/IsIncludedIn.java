@@ -11,6 +11,7 @@ import org.supercsv.cellprocessor.ift.DateCellProcessor;
 import org.supercsv.cellprocessor.ift.DoubleCellProcessor;
 import org.supercsv.cellprocessor.ift.LongCellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
+import org.supercsv.exception.NullInputException;
 import org.supercsv.exception.SuperCSVException;
 import org.supercsv.util.CSVContext;
 
@@ -19,10 +20,12 @@ import org.supercsv.util.CSVContext;
  * 
  * @since 1.50
  * @author Dominique De Vito
+ * @author James Bassett
  */
 public class IsIncludedIn extends CellProcessorAdaptor implements BoolCellProcessor, DateCellProcessor,
 	DoubleCellProcessor, LongCellProcessor, StringCellProcessor {
-	protected Set<Object> possibleValues;
+	
+	private final Set<Object> possibleValues = new HashSet<Object>();
 	
 	/**
 	 * Constructs a new <tt>IsIncludedIn</tt> processor, which ensures that the input value belongs to a specific set of
@@ -30,10 +33,15 @@ public class IsIncludedIn extends CellProcessorAdaptor implements BoolCellProces
 	 * 
 	 * @param possibleValues
 	 *            the Set of values
+	 * @throws NullPointerException
+	 *             if possibleValues is null
+	 * @throws IllegalArgumentException
+	 *             if possibleValues is empty
 	 */
 	public IsIncludedIn(final Set<Object> possibleValues) {
 		super();
-		this.possibleValues = possibleValues;
+		checkPreconditions(possibleValues);
+		this.possibleValues.addAll(possibleValues);
 	}
 	
 	/**
@@ -44,10 +52,15 @@ public class IsIncludedIn extends CellProcessorAdaptor implements BoolCellProces
 	 *            the Set of values
 	 * @param next
 	 *            the next processor in the chain
+	 * @throws NullPointerException
+	 *             if possibleValues or next is null
+	 * @throws IllegalArgumentException
+	 *             if possibleValues is empty
 	 */
 	public IsIncludedIn(final Set<Object> possibleValues, final CellProcessor next) {
 		super(next);
-		this.possibleValues = possibleValues;
+		checkPreconditions(possibleValues);
+		this.possibleValues.addAll(possibleValues);
 	}
 	
 	/**
@@ -56,10 +69,15 @@ public class IsIncludedIn extends CellProcessorAdaptor implements BoolCellProces
 	 * 
 	 * @param possibleValues
 	 *            the array of values
+	 * @throws NullPointerException
+	 *             if possibleValues is null
+	 * @throws IllegalArgumentException
+	 *             if possibleValues is empty
 	 */
 	public IsIncludedIn(final Object[] possibleValues) {
 		super();
-		this.possibleValues = createSet(possibleValues);
+		checkPreconditions(possibleValues);
+		Collections.addAll(this.possibleValues, possibleValues);
 	}
 	
 	/**
@@ -70,36 +88,67 @@ public class IsIncludedIn extends CellProcessorAdaptor implements BoolCellProces
 	 *            the array of values
 	 * @param next
 	 *            the next processor in the chain
+	 * @throws NullPointerException
+	 *             if possibleValues or next is null
+	 * @throws IllegalArgumentException
+	 *             if possibleValues is empty
 	 */
 	public IsIncludedIn(final Object[] possibleValues, final CellProcessor next) {
 		super(next);
-		this.possibleValues = createSet(possibleValues);
+		checkPreconditions(possibleValues);
+		Collections.addAll(this.possibleValues, possibleValues);
 	}
 	
 	/**
-	 * Creates a Set from the array of values.
+	 * Checks the preconditions for creating a new IsIncludedIn processor with a Set of Objects.
 	 * 
-	 * @param values
-	 *            the array of values
-	 * @return a Set containing the values
+	 * @param possibleValues
+	 *            the Set of possible values
+	 * @throws NullPointerException
+	 *             if possibleValues is null
+	 * @throws IllegalArgumentException
+	 *             if possibleValues is empty
 	 */
-	private static Set<Object> createSet(Object[] values) {
-		int size = (values == null) ? 0 : values.length;
-		HashSet<Object> set = new HashSet<Object>(size);
-		if( size > 0 ) {
-			Collections.addAll(set, values);
+	private static void checkPreconditions(final Set<Object> possibleValues) {
+		if( possibleValues == null ) {
+			throw new NullPointerException("possibleValues Set should not be null");
+		} else if( possibleValues.isEmpty() ) {
+			throw new IllegalArgumentException("possibleValues Set should not be empty");
 		}
-		return set;
+	}
+	
+	/**
+	 * Checks the preconditions for creating a new IsIncludedIn processor with a array of Objects.
+	 * 
+	 * @param possibleValues
+	 *            the array of possible values
+	 * @throws NullPointerException
+	 *             if possibleValues is null
+	 * @throws IllegalArgumentException
+	 *             if possibleValues is empty
+	 */
+	private static void checkPreconditions(final Object... possibleValues) {
+		if( possibleValues == null ) {
+			throw new NullPointerException("possibleValues array should not be null");
+		} else if( possibleValues.length == 0 ) {
+			throw new IllegalArgumentException("possibleValues array should not be empty");
+		}
 	}
 	
 	/**
 	 * {@inheritDoc}
+	 * 
+	 * @throws NullInputException
+	 *             if value is null
+	 * @throws SuperCSVException
+	 *             if value isn't one of the possible values
 	 */
 	public Object execute(final Object value, final CSVContext context) {
-		validateInputNotNull(value, context, this);
+		validateInputNotNull(value, context);
+		
 		if( !possibleValues.contains(value) ) {
-			throw new SuperCSVException("Entry \"" + value + "\" on line " + context.lineNumber + " column "
-				+ context.columnNumber + " is not accepted as a possible value", context, this);
+			throw new SuperCSVException(String.format("'%s' is not included in the allowed set of values", value),
+				context, this);
 		}
 		
 		return next.execute(value, context);

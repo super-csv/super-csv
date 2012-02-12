@@ -3,6 +3,7 @@ package org.supercsv.cellprocessor.constraint;
 import org.supercsv.cellprocessor.CellProcessorAdaptor;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
+import org.supercsv.exception.NullInputException;
 import org.supercsv.exception.SuperCSVException;
 import org.supercsv.util.CSVContext;
 
@@ -12,9 +13,12 @@ import org.supercsv.util.CSVContext;
  * <code>toString()</code> method.
  * 
  * @author Kasper B. Graversen
+ * @author James Bassett
  */
 public class StrMinMax extends CellProcessorAdaptor implements StringCellProcessor {
-	protected long min, max;
+	
+	private final long min;
+	private final long max;
 	
 	/**
 	 * Constructs a new <tt>StrMinMax</tt> processor, which ensures that the input data has a string length between the
@@ -24,16 +28,12 @@ public class StrMinMax extends CellProcessorAdaptor implements StringCellProcess
 	 *            the minimum String length
 	 * @param max
 	 *            the maximum String length
+	 * @throws IllegalArgumentException
+	 *             if max < min, or min is < 0
 	 */
 	public StrMinMax(final long min, final long max) {
 		super();
-		if( max < min ) {
-			throw new SuperCSVException("max < min in the arguments " + min + " " + max, this);
-		}
-		if( min < 0 ) {
-			throw new SuperCSVException("min length must be >= 0, is " + min, this);
-		}
-		
+		checkPreconditions(min, max);
 		this.min = min;
 		this.max = max;
 	}
@@ -48,27 +48,56 @@ public class StrMinMax extends CellProcessorAdaptor implements StringCellProcess
 	 *            the maximum String length
 	 * @param next
 	 *            the next processor in the chain
+	 * @throws NullPointerException
+	 *             if next is null
+	 * @throws IllegalArgumentException
+	 *             if max < min, or min is < 0
 	 */
 	public StrMinMax(final long min, final long max, final CellProcessor next) {
 		super(next);
-		if( max < min ) {
-			throw new SuperCSVException("max < min in the arguments " + min + " " + max, this);
-		}
+		checkPreconditions(min, max);
 		this.min = min;
 		this.max = max;
 	}
 	
 	/**
+	 * Checks the preconditions for creating a new StrMinMax processor.
+	 * 
+	 * @param min
+	 *            the minimum String length
+	 * @param max
+	 *            the maximum String length
+	 * @throws IllegalArgumentException
+	 *             if max < min, or min is < 0
+	 */
+	private static void checkPreconditions(final long min, final long max) {
+		if( max < min ) {
+			throw new IllegalArgumentException(String.format("max (%d) should not be < min (%d)", max, min));
+		}
+		if( min < 0 ) {
+			throw new IllegalArgumentException(String.format("min length (%d) should not be < 0", min));
+		}
+	}
+	
+	/**
 	 * {@inheritDoc}
+	 * 
+	 * @throws NullInputException
+	 *             if value is null
+	 * @throws SuperCSVException
+	 *             if length is < min or length > max
 	 */
 	public Object execute(final Object value, final CSVContext context) {
-		validateInputNotNull(value, context, this);
-		final String sval = value.toString(); // cast
-		if( sval.length() < min || sval.length() > max ) {
-			throw new SuperCSVException("Entry \"" + value + "\" on line " + context.lineNumber + " column "
-				+ context.columnNumber + " is not within the string sizes " + min + " - " + max, context, this);
+		validateInputNotNull(value, context);
+		
+		final String stringValue = value.toString();
+		final int length = stringValue.length();
+		if( length < min || length > max ) {
+			throw new SuperCSVException(String.format(
+				"the length (%d) of value '%s' does not lie between the min (%d) and max (%d) values (inclusive)",
+				length, stringValue, min, max), context, this);
 		}
 		
-		return next.execute(sval, context);
+		return next.execute(stringValue, context);
 	}
 }

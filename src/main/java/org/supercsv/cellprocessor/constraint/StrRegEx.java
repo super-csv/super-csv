@@ -1,7 +1,9 @@
 package org.supercsv.cellprocessor.constraint;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 import org.supercsv.cellprocessor.CellProcessorAdaptor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
@@ -13,6 +15,7 @@ import org.supercsv.util.CSVContext;
  * This constraint ensures that the input data matches the given regular expression.
  * 
  * @author Dominique De Vito
+ * @author James Bassett
  * @since 1.50
  */
 public class StrRegEx extends CellProcessorAdaptor implements StringCellProcessor {
@@ -20,7 +23,7 @@ public class StrRegEx extends CellProcessorAdaptor implements StringCellProcesso
 	private final String regex;
 	private final Pattern regexPattern;
 	
-	private static final HashMap<String, String> REGEX_MSGS = new HashMap<String, String>();
+	private static final Map<String, String> REGEX_MSGS = new HashMap<String, String>();
 	
 	/**
 	 * Constructs a new <tt>StrRegEx</tt> processor, which ensures that the input data matches the given regular
@@ -28,10 +31,16 @@ public class StrRegEx extends CellProcessorAdaptor implements StringCellProcesso
 	 * 
 	 * @param regex
 	 *            the regular expression to match
+	 * @throws NullPointerException
+	 *             if regex is null
+	 * @throws IllegalArgumentException
+	 *             if regex is empty
+	 * @throws PatternSyntaxException
+	 *             if regex is not a valid regular expression
 	 */
 	public StrRegEx(final String regex) {
 		super();
-		validateArguments(regex);
+		checkPreconditions(regex);
 		this.regexPattern = Pattern.compile(regex);
 		this.regex = regex;
 	}
@@ -44,44 +53,59 @@ public class StrRegEx extends CellProcessorAdaptor implements StringCellProcesso
 	 *            the regular expression to match
 	 * @param next
 	 *            the next processor in the chain
+	 * @throws NullPointerException
+	 *             if regex is null
+	 * @throws IllegalArgumentException
+	 *             if regex is empty
+	 * @throws PatternSyntaxException
+	 *             if regex is not a valid regular expression
 	 */
 	public StrRegEx(final String regex, final StringCellProcessor next) {
 		super(next);
-		validateArguments(regex);
+		checkPreconditions(regex);
 		this.regexPattern = Pattern.compile(regex);
 		this.regex = regex;
 	}
 	
 	/**
-	 * Validates that the supplied arguments are correct.
+	 * Checks the preconditions for creating a new StrRegEx processor.
 	 * 
 	 * @param regex
-	 *            the supplied regex
+	 *            the regular expression to match
+	 * @throws NullPointerException
+	 *             if regex is null
+	 * @throws IllegalArgumentException
+	 *             if regex is empty
 	 */
-	private void validateArguments(final String regex) {
+	private static void checkPreconditions(final String regex) {
 		if( regex == null ) {
-			throw new NullInputException("the regular expression cannot be null", this);
-		}
-		if( regex.equals("") ) {
-			throw new SuperCSVException("the regular expression  cannot be \"\" as this has no effect", this);
+			throw new NullPointerException("regex should not be null");
+		} else if( regex.isEmpty() ) {
+			throw new IllegalArgumentException("regex should not be empty");
 		}
 	}
 	
 	/**
 	 * {@inheritDoc}
+	 * 
+	 * @throws NullInputException
+	 *             if value is null
+	 * @throws SuperCSVException
+	 *             if value doesn't match the regular expression
 	 */
 	public Object execute(final Object value, final CSVContext context) {
-		validateInputNotNull(value, context, this);
+		validateInputNotNull(value, context);
 		
-		boolean found = regexPattern.matcher((String) value).find();
+		final boolean found = regexPattern.matcher((String) value).find();
 		if( !found ) {
-			String msg = REGEX_MSGS.get(regex);
+			final String msg = REGEX_MSGS.get(regex);
 			if( msg == null ) {
-				throw new SuperCSVException("Entry \"" + value + "\" does not respect the regular expression '" + regex
-					+ "'", context, this);
+				throw new SuperCSVException(String.format("'%s' does not match the regular expression '%s'", value,
+					regex), context, this);
 			} else {
-				throw new SuperCSVException("Entry \"" + value + "\" does not respect the constraint '" + msg + "' "
-					+ "(defined by the regular expression '" + regex + "')", context, this);
+				throw new SuperCSVException(
+					String.format("'%s' does not match the constraint '%s' defined by the regular expression '%s'",
+						value, msg, regex), context, this);
 			}
 		}
 		return next.execute(value, context);

@@ -133,18 +133,4 @@ public final class Util {
 		return res;
 	}
 	
-	/**
-	 * Adds each element in the array to the Collection (null-safe).
-	 * 
-	 * @param <T>
-	 * @param collection
-	 *            the collection
-	 * @param array
-	 *            the array
-	 */
-	public static <T> void addAll(Collection<T> collection, T... array) {
-		if( array != null && collection != null ) {
-			Collections.addAll(collection, array);
-		}
-	}
 }

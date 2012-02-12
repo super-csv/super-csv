@@ -7,6 +7,7 @@ import org.supercsv.cellprocessor.ift.DateCellProcessor;
 import org.supercsv.cellprocessor.ift.DoubleCellProcessor;
 import org.supercsv.cellprocessor.ift.LongCellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
+import org.supercsv.exception.NullInputException;
 import org.supercsv.util.CSVContext;
 
 /**
@@ -45,9 +46,12 @@ public class NotNull extends CellProcessorAdaptor implements BoolCellProcessor, 
 	
 	/**
 	 * {@inheritDoc}
+	 * 
+	 * @throws NullInputException
+	 *             if value is null
 	 */
 	public Object execute(final Object value, final CSVContext context) {
-		validateInputNotNull(value, context, this);
+		validateInputNotNull(value, context);
 		return next.execute(value, context);
 	}
 }

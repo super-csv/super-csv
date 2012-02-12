@@ -7,6 +7,7 @@ import java.util.Date;
 import org.supercsv.cellprocessor.ift.DateCellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.exception.ClassCastInputCSVException;
+import org.supercsv.exception.NullInputException;
 import org.supercsv.exception.SuperCSVException;
 import org.supercsv.util.CSVContext;
 
@@ -25,16 +26,22 @@ import org.supercsv.util.CSVContext;
  */
 public class ParseDate extends CellProcessorAdaptor implements StringCellProcessor {
 	
-	protected final String dateFormat;
+	private final String dateFormat;
+	
+	// TODO add constructors with 'lenient' flag, see
+	// http://sourceforge.net/tracker/?func=detail&aid=2988353&group_id=201724&atid=978710
 	
 	/**
 	 * Constructs a new <tt>ParseDate</tt> processor which converts a String to a Date using the supplied date format.
 	 * 
 	 * @param dateFormat
 	 *            the date format to use
+	 * @throws NullPointerException
+	 *             if dateFormat is null
 	 */
 	public ParseDate(final String dateFormat) {
 		super();
+		checkPreconditions(dateFormat);
 		this.dateFormat = dateFormat;
 	}
 	
@@ -46,20 +53,44 @@ public class ParseDate extends CellProcessorAdaptor implements StringCellProcess
 	 *            the date format to use
 	 * @param next
 	 *            the next processor in the chain
+	 * @throws NullPointerException
+	 *             if dateFormat or next is null
 	 */
 	public ParseDate(final String dateFormat, final DateCellProcessor next) {
 		super(next);
+		checkPreconditions(dateFormat);
 		this.dateFormat = dateFormat;
 	}
 	
 	/**
+	 * Checks the preconditions for creating a new ParseDate processor.
+	 * 
+	 * @param dateFormat
+	 *            the date format to use
+	 * @throws NullPointerException
+	 *             if dateFormat is null
+	 */
+	private static void checkPreconditions(final String dateFormat) {
+		if( dateFormat == null ) {
+			throw new NullPointerException("dateFormat should not be null");
+		}
+	}
+	
+	/**
 	 * {@inheritDoc}
+	 * 
+	 * @throws ClassCastInputCSVException
+	 *             if value isn't a String
+	 * @throws NullInputException
+	 *             if value is null
+	 * @throws SuperCSVException
+	 *             if value can't be parsed to a Date
 	 */
 	public Object execute(final Object value, final CSVContext context) {
-		validateInputNotNull(value, context, this);
+		validateInputNotNull(value, context);
 		
-		if (!(value instanceof String)){
-			throw new ClassCastInputCSVException("the value '" + value + "' is not of type String", context, this);
+		if( !(value instanceof String) ) {
+			throw new ClassCastInputCSVException(value, String.class, context, this);
 		}
 		
 		try {
@@ -69,7 +100,7 @@ public class ParseDate extends CellProcessorAdaptor implements StringCellProcess
 			return next.execute(result, context);
 		}
 		catch(final ParseException e) {
-			throw new SuperCSVException("Problems parsing '" + value + "' as a date", context, this, e);
+			throw new SuperCSVException(String.format("'%s' could not be parsed as a Date", value), context, this, e);
 		}
 	}
 }

@@ -1,63 +1,122 @@
 package org.supercsv.cellprocessor.constraint;
 
+import static org.junit.Assert.assertEquals;
+import static org.supercsv.TestConstants.ANONYMOUS_CSVCONTEXT;
+
 import java.util.HashSet;
 import java.util.Set;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.supercsv.TestConstants;
 import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.exception.NullInputException;
 import org.supercsv.exception.SuperCSVException;
-import org.supercsv.mock.ComparerCellProcessor;
-import org.supercsv.util.CSVContext;
+import org.supercsv.mock.IdentityTransform;
 
 /**
+ * Tests the IsIncludedIn constraint.
+ * 
  * @author Dominique De Vito
+ * @author James Bassett
  */
 public class IsIncludedInTest {
 	
-	private static final CSVContext CTXT = TestConstants.ANONYMOUS_CSVCONTEXT;
 	private static final Set<Object> VALUE_SET = new HashSet<Object>();
 	
+	private static final Integer ONE = 1;
+	private static final String TWO = "Two";
+	private static final Double THREE = 3.0;
+	
 	static {
-		VALUE_SET.add(1);
-		VALUE_SET.add(2);
-		VALUE_SET.add(3);
+		VALUE_SET.add(ONE);
+		VALUE_SET.add(TWO);
+		VALUE_SET.add(THREE);
 	}
 	
-	IsIncludedIn cp;
-	CellProcessor ccp;
+	private CellProcessor processor;
+	private CellProcessor processor2;
+	private CellProcessor processorChain;
+	private CellProcessor processorChain2;
 	
+	/**
+	 * Sets up the processors for the test using all constructor combinations.
+	 */
 	@Before
-	public void setUp() throws Exception {
-		cp = new IsIncludedIn(VALUE_SET);
+	public void setUp() {
+		processor = new IsIncludedIn(VALUE_SET);
+		processor2 = new IsIncludedIn(VALUE_SET.toArray());
+		processorChain = new IsIncludedIn(VALUE_SET, new IdentityTransform());
+		processorChain2 = new IsIncludedIn(VALUE_SET.toArray(), new IdentityTransform());
 	}
 	
+	/**
+	 * Tests unchained/chained execution with values from the Set.
+	 */
 	@Test
-	public void testChaining() throws Exception {
-		Integer VALUE = 1;
-		ccp = new IsIncludedIn(VALUE_SET, new ComparerCellProcessor(VALUE));
-		Assert.assertEquals("chaining test", true, ccp.execute(VALUE, CTXT));
+	public void testValidInput() {
+		assertEquals(ONE, processor.execute(ONE, ANONYMOUS_CSVCONTEXT));
+		assertEquals(ONE, processor2.execute(ONE, ANONYMOUS_CSVCONTEXT));
+		assertEquals(ONE, processorChain.execute(ONE, ANONYMOUS_CSVCONTEXT));
+		assertEquals(ONE, processorChain2.execute(ONE, ANONYMOUS_CSVCONTEXT));
+		
+		assertEquals(TWO, processor.execute(TWO, ANONYMOUS_CSVCONTEXT));
+		assertEquals(TWO, processor2.execute(TWO, ANONYMOUS_CSVCONTEXT));
+		assertEquals(TWO, processorChain.execute(TWO, ANONYMOUS_CSVCONTEXT));
+		assertEquals(TWO, processorChain2.execute(TWO, ANONYMOUS_CSVCONTEXT));
+		
+		assertEquals(THREE, processor.execute(THREE, ANONYMOUS_CSVCONTEXT));
+		assertEquals(THREE, processor2.execute(THREE, ANONYMOUS_CSVCONTEXT));
+		assertEquals(THREE, processorChain.execute(THREE, ANONYMOUS_CSVCONTEXT));
+		assertEquals(THREE, processorChain2.execute(THREE, ANONYMOUS_CSVCONTEXT));
+		
 	}
 	
-	@Test
-	public void testValidInput() throws Exception {
-		Integer VALUE = 1;
-		ccp = new IsIncludedIn(VALUE_SET);
-		Assert.assertEquals("valid input", true, VALUE.equals(ccp.execute(VALUE, CTXT)));
-	}
-	
+	/**
+	 * Tests execution with a value that's not in the Set (should throw an Exception).
+	 */
 	@Test(expected = SuperCSVException.class)
-	public void testInvalidInput() throws Exception {
-		Integer VALUE = 4;
-		ccp = new IsIncludedIn(VALUE_SET);
-		Assert.assertEquals("invalid input", true, VALUE.equals(ccp.execute(VALUE, CTXT)));
+	public void testWithInvalidInput() {
+		processor.execute(4, ANONYMOUS_CSVCONTEXT);
 	}
 	
-	@Test(expected = SuperCSVException.class)
-	public void testNullInput() throws Exception {
-		cp.execute(null, CTXT);
+	/**
+	 * Tests execution with a null input (should throw an Exception).
+	 */
+	@Test(expected = NullInputException.class)
+	public void testWithNull() {
+		processor.execute(null, ANONYMOUS_CSVCONTEXT);
+	}
+	
+	/**
+	 * Tests construction with a null array (should throw an Exception).
+	 */
+	@Test(expected = NullPointerException.class)
+	public void testConstructionWithNullArray() {
+		new IsIncludedIn((Object[]) null);
+	}
+	
+	/**
+	 * Tests construction with an empty array (should throw an Exception).
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void testConstructionWithEmptyArray() {
+		new IsIncludedIn(new Object[]{});
+	}
+	
+	/**
+	 * Tests construction with a null Set (should throw an Exception).
+	 */
+	@Test(expected = NullPointerException.class)
+	public void testConstructionWithNullSet() {
+		new IsIncludedIn((Set<Object>)null);
+	}
+	
+	/**
+	 * Tests construction with an empty Set (should throw an Exception).
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void testConstructionWithEmptySet() {
+		new IsIncludedIn(new HashSet<Object>());
 	}
 	
 }

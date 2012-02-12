@@ -19,9 +19,13 @@ public class StrForbidden extends ForbidSubStr {
 	 * 
 	 * @param forbiddenStrings
 	 *            the List of forbidden substrings
+	 * @throws NullPointerException
+	 *             if forbiddenStrings is null
+	 * @throws IllegalArgumentException
+	 *             if forbiddenStrings is empty
 	 */
 	public StrForbidden(final List<String> forbiddenStrings) {
-		this(forbiddenStrings.toArray(new String[0]));
+		super(forbiddenStrings);
 	}
 	
 	/**
@@ -32,9 +36,13 @@ public class StrForbidden extends ForbidSubStr {
 	 *            the List of forbidden substrings
 	 * @param next
 	 *            the next processor in the chain
+	 * @throws NullPointerException
+	 *             if forbiddenStrings or next is null
+	 * @throws IllegalArgumentException
+	 *             if forbiddenStrings is empty
 	 */
 	public StrForbidden(final List<String> forbiddenStrings, final CellProcessor next) {
-		this(forbiddenStrings.toArray(new String[0]), next);
+		super(forbiddenStrings, next);
 	}
 	
 	/**
@@ -43,6 +51,10 @@ public class StrForbidden extends ForbidSubStr {
 	 * 
 	 * @param forbiddenStrings
 	 *            the forbidden substrings
+	 * @throws NullPointerException
+	 *             if forbiddenStrings is null
+	 * @throws IllegalArgumentException
+	 *             if forbiddenStrings is empty
 	 */
 	public StrForbidden(final String... forbiddenStrings) {
 		super(forbiddenStrings);
@@ -56,9 +68,11 @@ public class StrForbidden extends ForbidSubStr {
 	 *            the forbidden substring
 	 * @param next
 	 *            the next processor in the chain
+	 * @throws NullPointerException
+	 *             if forbiddenStrings or next is null
 	 */
 	public StrForbidden(final String forbiddenString, final CellProcessor next) {
-		this(new String[] { forbiddenString }, next);
+		super(forbiddenString, next);
 	}
 	
 	/**
@@ -69,8 +83,13 @@ public class StrForbidden extends ForbidSubStr {
 	 *            the forbidden substrings
 	 * @param next
 	 *            the next processor in the chain
+	 * @throws NullPointerException
+	 *             if forbiddenStrings or next is null
+	 * @throws IllegalArgumentException
+	 *             if forbiddenStrings is empty
 	 */
 	public StrForbidden(final String[] forbiddenStrings, final CellProcessor next) {
 		super(forbiddenStrings, next);
 	}
+	
 }

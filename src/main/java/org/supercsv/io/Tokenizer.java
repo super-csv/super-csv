@@ -233,7 +233,7 @@ public class Tokenizer implements ITokenizer {
 						break;
 					}
 				default:
-					throw new RuntimeException("this can never happen!");
+					throw new AssertionError(); // this can never happen
 					
 			}
 			

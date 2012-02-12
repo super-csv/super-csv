@@ -6,6 +6,8 @@ import org.supercsv.cellprocessor.ift.DoubleCellProcessor;
 import org.supercsv.cellprocessor.ift.LongCellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.exception.ClassCastInputCSVException;
+import org.supercsv.exception.NullInputException;
+import org.supercsv.exception.SuperCSVException;
 import org.supercsv.util.CSVContext;
 
 /**
@@ -35,10 +37,10 @@ import org.supercsv.util.CSVContext;
 public class FmtNumber extends CellProcessorAdaptor implements DoubleCellProcessor, LongCellProcessor {
 	
 	/** the decimal format string */
-	protected String decimalFormat;
+	private final String decimalFormat;
 	
 	/** the decimal format object - not thread safe */
-	protected DecimalFormat formatter;
+	private final DecimalFormat formatter;
 	
 	/**
 	 * Constructs a new <tt>FmtNumber</tt> processor, which converts a double into a formatted string using the supplied
@@ -46,10 +48,14 @@ public class FmtNumber extends CellProcessorAdaptor implements DoubleCellProcess
 	 * 
 	 * @param decimalFormat
 	 *            the decimal format String (see {@link DecimalFormat})
+	 * @throws NullPointerException
+	 *             if decimalFormat is null
 	 */
 	public FmtNumber(final String decimalFormat) {
 		super();
+		checkPreconditions(decimalFormat);
 		this.decimalFormat = decimalFormat;
+		this.formatter = null;
 	}
 	
 	/**
@@ -60,10 +66,14 @@ public class FmtNumber extends CellProcessorAdaptor implements DoubleCellProcess
 	 *            the decimal format String (see {@link DecimalFormat})
 	 * @param next
 	 *            the next processor in the chain
+	 * @throws NullPointerException
+	 *             if decimalFormat or next is null
 	 */
 	public FmtNumber(final String decimalFormat, final StringCellProcessor next) {
 		super(next);
+		checkPreconditions(decimalFormat);
 		this.decimalFormat = decimalFormat;
+		this.formatter = null;
 	}
 	
 	/**
@@ -72,10 +82,14 @@ public class FmtNumber extends CellProcessorAdaptor implements DoubleCellProcess
 	 * 
 	 * @param formatter
 	 *            the DecimalFormat
+	 * @throws NullPointerException
+	 *             if formatter is null
 	 */
 	public FmtNumber(final DecimalFormat formatter) {
 		super();
-		this.formatter = formatter;
+		checkPreconditions(formatter);
+		this.formatter = formatter; // TODO: defensive copy?
+		this.decimalFormat = null;
 	}
 	
 	/**
@@ -86,25 +100,71 @@ public class FmtNumber extends CellProcessorAdaptor implements DoubleCellProcess
 	 *            the DecimalFormat
 	 * @param next
 	 *            the next processor in the chain
+	 * @throws NullPointerException
+	 *             if formatter or next is null
 	 */
 	public FmtNumber(final DecimalFormat formatter, final StringCellProcessor next) {
 		super(next);
-		this.formatter = formatter;
+		checkPreconditions(formatter);
+		this.formatter = formatter; // TODO: defensive copy?
+		this.decimalFormat = null;
+	}
+	
+	/**
+	 * Checks the preconditions for creating a new FmtNumber processor with a date format String.
+	 * 
+	 * @param dateFormat
+	 *            the date format String
+	 * @throws NullPointerException
+	 *             if dateFormat is null
+	 */
+	private static void checkPreconditions(final String dateFormat) {
+		if( dateFormat == null ) {
+			throw new NullPointerException("dateFormat should not be null");
+		}
+	}
+	
+	/**
+	 * Checks the preconditions for creating a new FmtNumber processor with a DecimalFormat.
+	 * 
+	 * @param formatter
+	 *            the DecimalFormat
+	 * @throws NullPointerException
+	 *             if formatter is null
+	 */
+	private static void checkPreconditions(final DecimalFormat formatter) {
+		if( formatter == null ) {
+			throw new NullPointerException("formatter should not be null");
+		}
 	}
 	
 	/**
 	 * {@inheritDoc}
+	 * 
+	 * @throws ClassCastInputCSVException
+	 *             if value is not a Number
+	 * @throws NullInputException
+	 *             if value is null
+	 * @throws SuperCSVException
+	 *             if an invalid decimalFormat String was supplied
 	 */
 	public Object execute(final Object value, final CSVContext context) {
-		validateInputNotNull(value, context, this);
+		validateInputNotNull(value, context);
 		
 		if( !(value instanceof Number) ) {
-			throw new ClassCastInputCSVException("the value '" + value + "' is not of type Number", context, this);
+			throw new ClassCastInputCSVException(value, Number.class, context, this);
 		}
 		
 		// create a new DecimalFormat if one is not supplied
-		DecimalFormat decimalformatter = (formatter == null) ? new DecimalFormat(decimalFormat) : formatter;
-		final String result = decimalformatter.format(value);
+		final DecimalFormat decimalFormatter;
+		try {
+			decimalFormatter = formatter != null ? formatter : new DecimalFormat(decimalFormat);
+		}
+		catch(IllegalArgumentException e) {
+			throw new SuperCSVException(String.format("'%s' is not a valid decimal format", decimalFormat), context, this, e);
+		}
+		
+		final String result = decimalFormatter.format(value);
 		return next.execute(result, context);
 	}
 }

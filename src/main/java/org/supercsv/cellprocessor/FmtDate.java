@@ -6,6 +6,8 @@ import java.util.Date;
 import org.supercsv.cellprocessor.ift.DateCellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.exception.ClassCastInputCSVException;
+import org.supercsv.exception.NullInputException;
+import org.supercsv.exception.SuperCSVException;
 import org.supercsv.util.CSVContext;
 
 /**
@@ -24,7 +26,7 @@ import org.supercsv.util.CSVContext;
  */
 public class FmtDate extends CellProcessorAdaptor implements DateCellProcessor {
 	
-	protected String dateFormat;
+	private final String dateFormat;
 	
 	/**
 	 * Constructs a new <tt>FmtDate</tt> processor, which converts a date into a formatted string using
@@ -32,9 +34,12 @@ public class FmtDate extends CellProcessorAdaptor implements DateCellProcessor {
 	 * 
 	 * @param dateFormat
 	 *            the date format String (see {@link SimpleDateFormat})
+	 * @throws NullPointerException
+	 *             if dateFormat is null
 	 */
 	public FmtDate(final String dateFormat) {
 		super();
+		checkPreconditions(dateFormat);
 		this.dateFormat = dateFormat;
 	}
 	
@@ -46,23 +51,55 @@ public class FmtDate extends CellProcessorAdaptor implements DateCellProcessor {
 	 *            the date format String (see {@link SimpleDateFormat})
 	 * @param next
 	 *            the next processor in the chain
+	 * @throws NullPointerException
+	 *             if dateFormat or next is null
 	 */
 	public FmtDate(final String dateFormat, final StringCellProcessor next) {
 		super(next);
+		checkPreconditions(dateFormat);
 		this.dateFormat = dateFormat;
 	}
 	
 	/**
+	 * Checks the preconditions for creating a new FmtDate processor.
+	 * 
+	 * @param dateFormat
+	 *            the date format String
+	 * @throws NullPointerException
+	 *             if dateFormat is null
+	 */
+	private static void checkPreconditions(final String dateFormat) {
+		if( dateFormat == null ) {
+			throw new NullPointerException("dateFormat should not be null");
+		}
+	}
+	
+	/**
 	 * {@inheritDoc}
+	 * 
+	 * @throws ClassCastInputCSVException
+	 *             if value is not a Date
+	 * @throws NullInputException
+	 *             if value is null
+	 * @throws SuperCSVException
+	 *             is dateFormat is not a valid date format
 	 */
 	public Object execute(final Object value, final CSVContext context) {
-		validateInputNotNull(value, context, this);
+		validateInputNotNull(value, context);
+		
 		if( !(value instanceof Date) ) {
-			throw new ClassCastInputCSVException("the value '" + value + "' is not of type Date", context, this);
+			throw new ClassCastInputCSVException(value, Date.class, context, this);
 		}
 		
-		SimpleDateFormat formatter = new SimpleDateFormat(dateFormat);
-		final String result = formatter.format((Date) value);
+		final SimpleDateFormat formatter;
+		try {
+			formatter = new SimpleDateFormat(dateFormat);
+		}
+		catch(IllegalArgumentException e) {
+			throw new SuperCSVException(String.format("'%s' is not a valid date format", dateFormat), context, this, e);
+		}
+		
+		String result = formatter.format((Date) value);
 		return next.execute(result, context);
 	}
 }

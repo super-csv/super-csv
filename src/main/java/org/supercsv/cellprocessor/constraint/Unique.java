@@ -1,9 +1,11 @@
 package org.supercsv.cellprocessor.constraint;
 
 import java.util.HashSet;
+import java.util.Set;
 
 import org.supercsv.cellprocessor.CellProcessorAdaptor;
 import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.exception.NullInputException;
 import org.supercsv.exception.SuperCSVException;
 import org.supercsv.util.CSVContext;
 
@@ -22,7 +24,7 @@ import org.supercsv.util.CSVContext;
  */
 public class Unique extends CellProcessorAdaptor {
 	
-	protected HashSet<Object> previousEncounteredElements = new HashSet<Object>();
+	private final Set<Object> encounteredElements = new HashSet<Object>();
 	
 	/**
 	 * Constructs a new <tt>Unique</tt> processor, which ensures that all rows in a column are unique.
@@ -32,11 +34,13 @@ public class Unique extends CellProcessorAdaptor {
 	}
 	
 	/**
-	 * Constructs a new <tt>Unique</tt> processor, which ensures that all rows in a column are unique, then
-	 * calls the next processor in the chain.
+	 * Constructs a new <tt>Unique</tt> processor, which ensures that all rows in a column are unique, then calls the
+	 * next processor in the chain.
 	 * 
 	 * @param next
 	 *            the next processor in the chain
+	 * @throws NullPointerException
+	 *             if next is null
 	 */
 	public Unique(final CellProcessor next) {
 		super(next);
@@ -44,10 +48,17 @@ public class Unique extends CellProcessorAdaptor {
 	
 	/**
 	 * {@inheritDoc}
+	 * 
+	 * @throws NullInputException
+	 *             if value is null
+	 * @throws SuperCSVException
+	 *             if a non-unique value is encountered
 	 */
 	public Object execute(final Object value, final CSVContext context) {
-		if( !previousEncounteredElements.add(value) ) {
-			throw new SuperCSVException("Duplicate entry \"" + value + "\" error", context, this);
+		validateInputNotNull(value, context);
+		
+		if( !encounteredElements.add(value) ) {
+			throw new SuperCSVException(String.format("duplicate value '%s' encountered", value), context, this);
 		}
 		
 		return next.execute(value, context);

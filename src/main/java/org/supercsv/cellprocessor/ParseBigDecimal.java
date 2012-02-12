@@ -5,6 +5,8 @@ import java.text.DecimalFormatSymbols;
 
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
+import org.supercsv.exception.ClassCastInputCSVException;
+import org.supercsv.exception.NullInputException;
 import org.supercsv.exception.SuperCSVException;
 import org.supercsv.util.CSVContext;
 
@@ -18,16 +20,19 @@ import org.supercsv.util.CSVContext;
  * 
  * @since 1.30
  * @author Kasper B. Graversen
+ * @author James Bassett
  */
 public class ParseBigDecimal extends CellProcessorAdaptor implements StringCellProcessor {
 	
-	private DecimalFormatSymbols symbols;
+	private static final char DEFAULT_DECIMAL_SEPARATOR = '.';
+	
+	private final char decimalSeparator;
 	
 	/**
 	 * Constructs a new <tt>ParseBigDecimal</tt> processor, which converts a String to a BigDecimal.
 	 */
 	public ParseBigDecimal() {
-		this((DecimalFormatSymbols) null);
+		this.decimalSeparator = DEFAULT_DECIMAL_SEPARATOR;
 	}
 	
 	/**
@@ -36,10 +41,13 @@ public class ParseBigDecimal extends CellProcessorAdaptor implements StringCellP
 	 * 
 	 * @param symbols
 	 *            the decimal format symbols, containing the decimal separator
+	 * @throws NullPointerException
+	 *             if symbols is null
 	 */
-	public ParseBigDecimal(DecimalFormatSymbols symbols) {
+	public ParseBigDecimal(final DecimalFormatSymbols symbols) {
 		super();
-		this.symbols = symbols;
+		checkPreconditions(symbols);
+		this.decimalSeparator = symbols.getDecimalSeparator();
 	}
 	
 	/**
@@ -48,9 +56,12 @@ public class ParseBigDecimal extends CellProcessorAdaptor implements StringCellP
 	 * 
 	 * @param next
 	 *            the next processor in the chain
+	 * @throws NullPointerException
+	 *             if next is null
 	 */
 	public ParseBigDecimal(final CellProcessor next) {
-		this(null, next);
+		super(next);
+		this.decimalSeparator = DEFAULT_DECIMAL_SEPARATOR;
 	}
 	
 	/**
@@ -62,36 +73,58 @@ public class ParseBigDecimal extends CellProcessorAdaptor implements StringCellP
 	 *            the decimal format symbols, containing the decimal separator
 	 * @param next
 	 *            the next processor in the chain
+	 * @throws NullPointerException
+	 *             if symbols or next is null
 	 */
-	public ParseBigDecimal(DecimalFormatSymbols symbols, final CellProcessor next) {
+	public ParseBigDecimal(final DecimalFormatSymbols symbols, final CellProcessor next) {
 		super(next);
-		this.symbols = symbols;
+		checkPreconditions(symbols);
+		this.decimalSeparator = symbols.getDecimalSeparator();
+	}
+	
+	/**
+	 * Checks the preconditions for creating a new ParseBigDecimal processor.
+	 * 
+	 * @param symbols
+	 *            the decimal format symbols, containing the decimal separator
+	 * @throws NullPointerException
+	 *             if symbols is null
+	 */
+	private static void checkPreconditions(final DecimalFormatSymbols symbols) {
+		if( symbols == null ) {
+			throw new NullPointerException("symbols should not be null");
+		}
 	}
 	
 	/**
 	 * {@inheritDoc}
+	 * 
+	 * @throws NullInputException
+	 *             if value is null
+	 * @throws SuperCSVException
+	 *             if the value can't be parsed as a BigDecimal
+	 * @throws ClassCastInputCSVException
+	 *             if the value isn't a String
 	 */
 	public Object execute(final Object value, final CSVContext context) {
-		validateInputNotNull(value, context, this);
+		validateInputNotNull(value, context);
 		
 		final BigDecimal result;
 		if( value instanceof String ) {
+			final String s = (String) value;
 			try {
-				if( symbols == null || symbols.getDecimalSeparator() == '.' ) {
-					result = new BigDecimal((String) value);
+				if( decimalSeparator == DEFAULT_DECIMAL_SEPARATOR ) {
+					result = new BigDecimal(s);
 				} else {
-					// replace any decimal separator in the input with "."
-					String s = (String) value;
-					result = new BigDecimal(s.replace(symbols.getDecimalSeparator(), '.'));
+					result = new BigDecimal(s.replace(decimalSeparator, DEFAULT_DECIMAL_SEPARATOR));
 				}
 			}
-			catch(final Exception e) {
-				throw new SuperCSVException("Parser error", context, this, e);
+			catch(final NumberFormatException e) {
+				throw new SuperCSVException(String.format("'%s' could not be parsed as a BigDecimal", value),
+					context, this, e);
 			}
 		} else {
-			throw new SuperCSVException("Can't convert \"" + value
-				+ "\" to a BigDecimal. Input is not of type String, but of type " + value.getClass().getName(),
-				context, this);
+			throw new ClassCastInputCSVException(value, String.class, context, this);
 		}
 		
 		return next.execute(result, context);

@@ -1,7 +1,7 @@
 package org.supercsv.cellprocessor;
 
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
-import org.supercsv.exception.SuperCSVException;
+import org.supercsv.exception.NullInputException;
 import org.supercsv.util.CSVContext;
 
 /**
@@ -12,21 +12,21 @@ import org.supercsv.util.CSVContext;
  */
 public class Trim extends CellProcessorAdaptor implements StringCellProcessor {
 	
-	private int maxSize;
-	private String trimPostfix = "";
+	private static final String EMPTY_STRING = "";
+	
+	private final int maxSize;
+	private final String trimPostfix;
 	
 	/**
 	 * Constructs a new <tt>Trim</tt> processor, which trims a String to ensure it is no longer than the specified size.
 	 * 
 	 * @param maxSize
 	 *            the maximum size of the String
+	 * @throws IllegalArgumentException
+	 *             if maxSize <= 0
 	 */
 	public Trim(final int maxSize) {
-		super();
-		if( maxSize < 1 ) {
-			throw new SuperCSVException("argument maxSize must be > 0", this);
-		}
-		this.maxSize = maxSize;
+		this(maxSize, EMPTY_STRING);
 	}
 	
 	/**
@@ -37,9 +37,14 @@ public class Trim extends CellProcessorAdaptor implements StringCellProcessor {
 	 *            the maximum size of the String
 	 * @param trimPostfix
 	 *            the String to append if the input is trimmed (e.g. "...")
+	 * @throws IllegalArgumentException
+	 *             if maxSize <= 0
+	 * @throws NullPointerException
+	 *             if trimPostfix is null
 	 */
 	public Trim(final int maxSize, final String trimPostfix) {
-		this(maxSize);
+		checkPreconditions(maxSize, trimPostfix);
+		this.maxSize = maxSize;
 		this.trimPostfix = trimPostfix;
 	}
 	
@@ -54,9 +59,15 @@ public class Trim extends CellProcessorAdaptor implements StringCellProcessor {
 	 *            the String to append if the input is trimmed (e.g. "...")
 	 * @param next
 	 *            the next processor in the chain
+	 * @throws IllegalArgumentException
+	 *             if maxSize <= 0
+	 * @throws NullPointerException
+	 *             if trimPostfix or next is null
 	 */
 	public Trim(final int maxSize, final String trimPostfix, final StringCellProcessor next) {
-		this(maxSize, next);
+		super(next);
+		checkPreconditions(maxSize, trimPostfix);
+		this.maxSize = maxSize;
 		this.trimPostfix = trimPostfix;
 	}
 	
@@ -68,23 +79,47 @@ public class Trim extends CellProcessorAdaptor implements StringCellProcessor {
 	 *            the maximum size of the String
 	 * @param next
 	 *            the next processor in the chain
+	 * @throws IllegalArgumentException
+	 *             if maxSize <= 0
+	 * @throws NullPointerException
+	 *             if next is null
 	 */
 	public Trim(final int maxSize, final StringCellProcessor next) {
-		super(next);
-		if( maxSize < 1 ) {
-			throw new SuperCSVException("argument maxSize must be > 0", this);
+		this(maxSize, EMPTY_STRING, next);
+	}
+	
+	/**
+	 * Checks the preconditions for creating a new Trim processor.
+	 * 
+	 * @param maxSize
+	 *            the maximum size of the String
+	 * @param trimPostfix
+	 *            the String to append if the input is trimmed (e.g. "...")
+	 * @throws IllegalArgumentException
+	 *             if maxSize <= 0
+	 * @throws NullPointerException
+	 *             if trimPostfix is null
+	 */
+	private static void checkPreconditions(final int maxSize, final String trimPostfix) {
+		if( maxSize <= 0 ) {
+			throw new IllegalArgumentException(String.format("maxSize should be > 0 but was %d", maxSize));
 		}
-		this.maxSize = maxSize;
+		if( trimPostfix == null ) {
+			throw new NullPointerException("trimPostfix should not be null");
+		}
 	}
 	
 	/**
 	 * {@inheritDoc}
+	 * 
+	 * @throws NullInputException
+	 *             if value is null
 	 */
 	public Object execute(final Object value, final CSVContext context) {
-		validateInputNotNull(value, context, this);
-		final String stringValue = value.toString();
+		validateInputNotNull(value, context);
 		
-		String result;
+		final String stringValue = value.toString();
+		final String result;
 		if( stringValue.length() <= maxSize ) {
 			result = stringValue;
 		} else {

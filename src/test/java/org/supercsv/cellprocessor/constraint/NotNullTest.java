@@ -1,48 +1,60 @@
 package org.supercsv.cellprocessor.constraint;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.supercsv.TestConstants.ANONYMOUS_CSVCONTEXT;
+
 import org.junit.Before;
 import org.junit.Test;
-import org.supercsv.TestConstants;
-import org.supercsv.cellprocessor.Optional;
 import org.supercsv.cellprocessor.ift.CellProcessor;
-import org.supercsv.exception.SuperCSVException;
-import org.supercsv.mock.ComparerCellProcessor;
-import org.supercsv.util.CSVContext;
+import org.supercsv.exception.NullInputException;
+import org.supercsv.mock.IdentityTransform;
 
 /**
+ * Tests the NotNull constraint.
+ * 
  * @author Dominique De Vito
+ * @author James Bassett
  */
 public class NotNullTest {
 	
-	private static final CSVContext CTXT = TestConstants.ANONYMOUS_CSVCONTEXT;
+	private CellProcessor processor;
+	private CellProcessor processorChain;
 	
-	NotNull cp;
-	CellProcessor ccp;
-	
+	/**
+	 * Sets up the processors for the test using all constructor combinations.
+	 */
 	@Before
-	public void setUp() throws Exception {
-		cp = new NotNull();
+	public void setUp() {
+		processor = new NotNull();
+		processorChain = new NotNull(new IdentityTransform());
 	}
 	
-	public void testChaining() throws Exception {
-		String VALUE = "some value";
-		ccp = new NotNull(new ComparerCellProcessor(VALUE));
-		Assert.assertEquals("chaining test", true, VALUE.equals(ccp.execute(VALUE, CTXT)));
-	}
-	
+	/**
+	 * Tests unchained/chained execution with a non-null value.
+	 */
 	@Test
-	public void testValidInput() throws Exception {
-		Assert.assertEquals("test length", "help", cp.execute("help", CTXT));
+	public void testValidInput() {
+		String input = "not null!";
+		assertEquals(input, processor.execute(input, ANONYMOUS_CSVCONTEXT));
+		assertEquals(input, processorChain.execute(input, ANONYMOUS_CSVCONTEXT));
 	}
 	
-	@Test(expected = SuperCSVException.class)
-	public void testNullInput() throws Exception {
-		cp.execute(null, CTXT);
-	}
-	
+	/**
+	 * Tests unchained/chained execution with a empty String.
+	 */
 	@Test
-	public void testEmptyInput() throws Exception {
-		cp.execute("", CTXT);
+	public void testEmptyString() {
+		String input = "";
+		assertEquals(input, processor.execute(input, ANONYMOUS_CSVCONTEXT));
+		assertEquals(input, processorChain.execute(input, ANONYMOUS_CSVCONTEXT));
 	}
+	
+	/**
+	 * Tests execution with a null input (should throw an Exception).
+	 */
+	@Test(expected = NullInputException.class)
+	public void testWithNull() {
+		processor.execute(null, ANONYMOUS_CSVCONTEXT);
+	}
+	
 }

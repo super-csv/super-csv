@@ -90,4 +90,12 @@ public class ParseDateTest {
 		processor.execute(null, ANONYMOUS_CSVCONTEXT);
 	}
 	
+	/**
+	 * Tests construction with a null date format (should throw an Exception).
+	 */
+	@Test(expected = NullPointerException.class)
+	public void testConstructionWithNullDateFormat() {
+		new ParseDate(null);
+	}
+	
 }

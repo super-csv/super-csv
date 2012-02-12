@@ -6,6 +6,7 @@ import org.supercsv.cellprocessor.ift.DateCellProcessor;
 import org.supercsv.cellprocessor.ift.DoubleCellProcessor;
 import org.supercsv.cellprocessor.ift.LongCellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
+import org.supercsv.exception.NullInputException;
 import org.supercsv.util.CSVContext;
 
 /**
@@ -25,8 +26,8 @@ import org.supercsv.util.CSVContext;
 public class Token extends CellProcessorAdaptor implements DateCellProcessor, DoubleCellProcessor, LongCellProcessor,
 	StringCellProcessor, BoolCellProcessor {
 	
-	final Object returnValue;
-	final Object token;
+	private final Object returnValue;
+	private final Object token;
 	
 	/**
 	 * Constructs a new <tt>Token</tt> processor, which returns the supplied value if the token is encountered,
@@ -53,6 +54,8 @@ public class Token extends CellProcessorAdaptor implements DateCellProcessor, Do
 	 *            the value to return if the token is encountered
 	 * @param next
 	 *            the next processor in the chain
+	 * @throws NullPointerException
+	 *             if next is null
 	 */
 	public Token(final Object token, final Object returnValue, final CellProcessor next) {
 		super(next);
@@ -62,9 +65,13 @@ public class Token extends CellProcessorAdaptor implements DateCellProcessor, Do
 	
 	/**
 	 * {@inheritDoc}
+	 * 
+	 * @throws NullInputException
+	 *             if value is null
 	 */
 	public Object execute(final Object value, final CSVContext context) {
-		validateInputNotNull(value, context, this);
+		validateInputNotNull(value, context);
+		
 		if( value.equals(token) ) {
 			return returnValue;
 		}

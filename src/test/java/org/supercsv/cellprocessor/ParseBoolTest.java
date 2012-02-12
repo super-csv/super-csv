@@ -105,5 +105,53 @@ public class ParseBoolTest {
 	public void testWithEmptyString() {
 		processor.execute("", ANONYMOUS_CSVCONTEXT);
 	}
+	
+	/**
+	 * Tests construction with a null true String (should throw an Exception).
+	 */
+	@Test(expected = NullPointerException.class)
+	public void testConstructionWithNullTrueString() {
+		new ParseBool((String) null, FALSE_VALUE);
+	}
+	
+	/**
+	 * Tests construction with a null false String (should throw an Exception).
+	 */
+	@Test(expected = NullPointerException.class)
+	public void testConstructionWithNullFalseString() {
+		new ParseBool(TRUE_VALUE, (String) null);
+	}
+	
+	/**
+	 * Tests construction with a null true array (should throw an Exception).
+	 */
+	@Test(expected = NullPointerException.class)
+	public void testConstructionWithNullTrueArray() {
+		new ParseBool((String[]) null, new String[] { FALSE_VALUE });
+	}
+	
+	/**
+	 * Tests construction with a null false array (should throw an Exception).
+	 */
+	@Test(expected = NullPointerException.class)
+	public void testConstructionWithNullFalseArray() {
+		new ParseBool(new String[] { TRUE_VALUE }, (String[]) null);
+	}
+	
+	/**
+	 * Tests construction with an empty true array (should throw an Exception).
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void testConstructionWithEmptyTrueArray() {
+		new ParseBool(new String[]{}, new String[] { FALSE_VALUE });
+	}
+	
+	/**
+	 * Tests construction with an empty false array (should throw an Exception).
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void testConstructionWithEmptyFalseArray() {
+		new ParseBool(new String[] { TRUE_VALUE }, new String[]{});
+	}
 
 }

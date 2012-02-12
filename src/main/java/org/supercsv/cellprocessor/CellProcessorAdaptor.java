@@ -9,35 +9,34 @@ import org.supercsv.util.CSVContext;
  * list. The end element of this list should always be an instance of <tt>NullObjectPattern</tt>.
  * 
  * @author Kasper B. Graversen
+ * @author James Bassett
  */
 public abstract class CellProcessorAdaptor implements CellProcessor {
 	
 	/** the next processor in the chain */
-	protected CellProcessor next = null; // must be untyped as it must hold any kind of type
+	protected final CellProcessor next;
 	
 	/**
 	 * Constructor used by CellProcessors to indicate that they are the last processor in the chain.
 	 */
 	protected CellProcessorAdaptor() {
 		super();
-		if( !(this instanceof NullObjectPattern) ) {
-			next = NullObjectPattern.INSTANCE;
-		}
+		this.next = this instanceof NullObjectPattern ? null : NullObjectPattern.INSTANCE;
 	}
 	
 	/**
-	 * Constructor used by CellProcessors that require <tt>CellProcessor</tt> chaining (further processing is
-	 * required).
+	 * Constructor used by CellProcessors that require <tt>CellProcessor</tt> chaining (further processing is required).
 	 * 
 	 * @param next
 	 *            the next <tt>CellProcessor</tt> in the chain
+	 * @throws NullPointerException
+	 *             if next is null
 	 */
 	protected CellProcessorAdaptor(final CellProcessor next) {
 		super();
 		if( next == null ) {
-			throw new NullInputException("next CellProcessor in the chain cannot be null", this);
+			throw new NullPointerException("next CellProcessor should not be null");
 		}
-		
 		this.next = next;
 	}
 	
@@ -49,15 +48,22 @@ public abstract class CellProcessorAdaptor implements CellProcessor {
 	 *            the input value
 	 * @param context
 	 *            the CSV context
-	 * @param processor
-	 *            the processor being executed
+	 * @throws NullInputException
+	 *             if value is null
 	 * @since 1.6.0
 	 */
-	protected static void validateInputNotNull(final Object value, final CSVContext context, final CellProcessor processor) {
+	protected final void validateInputNotNull(final Object value, final CSVContext context) {
 		if( value == null ) {
-			throw new NullInputException("Input cannot be null on line " + context.lineNumber + " at column "
-				+ context.columnNumber, context, processor);
+			throw new NullInputException("this processor does not accept null input", context, this);
 		}
+	}
+	
+	/**
+	 * Returns the CellProccessor's fully qualified class name.
+	 */
+	@Override
+	public String toString() {
+		return getClass().getName();
 	}
 	
 }

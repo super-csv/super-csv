@@ -95,11 +95,9 @@ public class ClassCastInputCSVException extends SuperCSVException implements Ser
 	 * @return the assembled error message
 	 */
 	private static String getDefaultMessage(Object receivedValue, Class<?> expectedClass) {
-		String printedReceivedClass = (receivedValue == null) ? "? (null was provided)" : receivedValue.getClass()
-			.getName();
-		String printedExpectedClass = expectedClass.getName();
-		return "unexpected input value '" + receivedValue + "' of class " + printedReceivedClass
-			+ " while expecting a value of class " + printedExpectedClass;
+		String expectedClassName = expectedClass.getName();
+		String actualClassName = (receivedValue != null) ? receivedValue.getClass()
+		                                     			.getName() : "null";
+		return String.format("the input value should be of type %s but is %s", expectedClassName, actualClassName);
 	}
-	
 }

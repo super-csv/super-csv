@@ -1,69 +1,118 @@
 package org.supercsv.cellprocessor.constraint;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.supercsv.TestConstants.ANONYMOUS_CSVCONTEXT;
+import static org.supercsv.cellprocessor.constraint.LMinMax.MAX;
+import static org.supercsv.cellprocessor.constraint.LMinMax.MIN;
+
 import org.junit.Before;
 import org.junit.Test;
-import org.supercsv.TestConstants;
-import org.supercsv.cellprocessor.Optional;
 import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.exception.NullInputException;
 import org.supercsv.exception.SuperCSVException;
+import org.supercsv.mock.IdentityTransform;
 
 /**
+ * Tests the LMinMax constraint.
+ * 
  * @author Kasper B. Graversen
+ * @author James Bassett
  */
 public class LMinMaxTest {
-	LMinMax cp;
-	CellProcessor ccp;
 	
-	@Test(expected = SuperCSVException.class)
-	public void invalidmaxInputTest() throws Exception {
-		Assert.assertEquals("max boundary +1", LMinMax.MAXC + 1,
-			cp.execute(LMinMax.MAXC + 1, TestConstants.ANONYMOUS_CSVCONTEXT));
-	}
+	private CellProcessor processor;
+	private CellProcessor processorChain;
 	
-	@Test(expected = SuperCSVException.class)
-	public void invalidminInputTest() throws Exception {
-		Assert.assertEquals("min boundary -1", 0 - 1, cp.execute(0 - 1, TestConstants.ANONYMOUS_CSVCONTEXT));
-	}
-	
-	@Test(expected = SuperCSVException.class)
-	public void invalidminMaxTest() throws Exception {
-		Assert
-			.assertEquals("max < min", 0, new LMinMax(TestConstants.VALUE_100_AS_INT, TestConstants.VALUE_17_AS_LONG));
-	}
-	
-	@Test(expected = SuperCSVException.class)
-	public void invalidminMaxTest_c2() throws Exception {
-		Assert.assertEquals("max < min", 0, new LMinMax(TestConstants.VALUE_100_AS_INT, TestConstants.VALUE_17_AS_LONG,
-			null));
-	}
-	
+	/**
+	 * Sets up the processors for the test using all constructor combinations.
+	 */
 	@Before
-	public void setUp() throws Exception {
-		cp = new LMinMax(0, LMinMax.MAXC);
+	public void setUp() {
+		processor = new LMinMax(MIN, MAX);
+		processorChain = new LMinMax(MIN, MAX, new IdentityTransform());
 	}
 	
+	/**
+	 * Tests unchained/chained execution with a long in the range.
+	 */
 	@Test
-	public void validChainingTest() throws Exception {
-		// chaining
-		ccp = new LMinMax(1, TestConstants.VALUE_100_AS_INT, new Optional());
-		Assert.assertEquals("test chaining ", TestConstants.VALUE_17_AS_LONG,
-			ccp.execute(TestConstants.VALUE_17_AS_STRING, TestConstants.ANONYMOUS_CSVCONTEXT));
-		Assert.assertEquals("test chaining ", TestConstants.VALUE_17_AS_LONG,
-			ccp.execute(new Long(TestConstants.VALUE_17_AS_INT), TestConstants.ANONYMOUS_CSVCONTEXT));
+	public void testValidLong(){
+		long input = 123L;
+		assertEquals(input, processor.execute(input, ANONYMOUS_CSVCONTEXT));
+		assertEquals(input, processorChain.execute(input, ANONYMOUS_CSVCONTEXT));
 	}
 	
+	/**
+	 * Tests unchained/chained execution with a long String in the range (should be converted to a Long).
+	 */
 	@Test
-	public void validInputTest() throws Exception {
-		Assert.assertEquals("min boundary as text", 0L, cp.execute("0", TestConstants.ANONYMOUS_CSVCONTEXT));
-		Assert.assertEquals("min boundary as number", 0L, cp.execute(0, TestConstants.ANONYMOUS_CSVCONTEXT));
-		Assert.assertEquals("max boundary as number", (long) LMinMax.MAXC,
-			cp.execute(LMinMax.MAXC, TestConstants.ANONYMOUS_CSVCONTEXT));
+	public void testValidLongString(){
+		String input = "123";
+		Long expected = 123L;
+		assertEquals(expected, processor.execute(input, ANONYMOUS_CSVCONTEXT));
+		assertEquals(expected, processorChain.execute(input, ANONYMOUS_CSVCONTEXT));
 	}
 	
+	/**
+	 * Tests unchained/chained execution with the minimum allowed value.
+	 */
+	@Test
+	public void testMinBoundary(){
+		long input = MIN;
+		assertEquals(input, processor.execute(input, ANONYMOUS_CSVCONTEXT));
+		assertEquals(input, processorChain.execute(input, ANONYMOUS_CSVCONTEXT));
+	}
+	
+	/**
+	 * Tests unchained/chained execution with the maximum allowed value.
+	 */
+	@Test
+	public void testMaxBoundary(){
+		long input = MAX;
+		assertEquals(input, processor.execute(input, ANONYMOUS_CSVCONTEXT));
+		assertEquals(input, processorChain.execute(input, ANONYMOUS_CSVCONTEXT));
+	}
+	
+
+	/**
+	 * Tests execution with a value less than the minimum (should throw an Exception).
+	 */
 	@Test(expected = SuperCSVException.class)
-	public void should_not_allow_non_number() {
-		new LMinMax(0, TestConstants.VALUE_100_AS_INT).execute("non number", TestConstants.ANONYMOUS_CSVCONTEXT);
+	public void testLessThanMin() {
+		long lessThanMin = MIN - 1L;
+		processor.execute(lessThanMin, ANONYMOUS_CSVCONTEXT);
 	}
 	
+	/**
+	 * Tests execution with a value greater than the maximum (should throw an Exception).
+	 */
+	@Test(expected = SuperCSVException.class)
+	public void testGreaterThanMax() {
+		long greaterThanMax = MAX + 1L;
+		processor.execute(greaterThanMax, ANONYMOUS_CSVCONTEXT);
+	}
+	
+	/**
+	 * Tests execution with a String that can't be parsed to a Long (should throw an Exception).
+	 */
+	@Test(expected = SuperCSVException.class)
+	public void testWithNonLongString() {
+		processor.execute("not long!", ANONYMOUS_CSVCONTEXT);
+	}
+	
+	/**
+	 * Tests execution with a max < min (should throw an Exception).
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void testWithInvalidMaxMin() {
+		new LMinMax(MAX, MIN);
+	}
+	
+	/**
+	 * Tests execution with a null input (should throw an Exception).
+	 */
+	@Test(expected = NullInputException.class)
+	public void testWithNull() {
+		processor.execute(null, ANONYMOUS_CSVCONTEXT);
+	}
 }
