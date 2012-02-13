@@ -1,8 +1,10 @@
 package org.supercsv.cellprocessor;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.supercsv.TestConstants.ANONYMOUS_CSVCONTEXT;
 
+import java.util.Arrays;
 import java.util.Date;
 
 import org.junit.Before;
@@ -30,8 +32,10 @@ public class ParseDateTest {
 	
 	private CellProcessor processor;
 	private CellProcessor processor2;
+	private CellProcessor processor3;
 	private CellProcessor processorChain;
 	private CellProcessor processorChain2;
+	private CellProcessor processorChain3;
 	
 	/**
 	 * Sets up the processors for the test using all constructor combinations.
@@ -39,9 +43,11 @@ public class ParseDateTest {
 	@Before
 	public void setUp() {
 		processor = new ParseDate(DATE_FORMAT);
-		processor2 = new ParseDate(DATE_FORMAT2);
+		processor2 = new ParseDate(DATE_FORMAT, true);
+		processor3 = new ParseDate(DATE_FORMAT, false);
 		processorChain = new ParseDate(DATE_FORMAT, new IdentityTransform());
-		processorChain2 = new ParseDate(DATE_FORMAT2, new IdentityTransform());
+		processorChain2 = new ParseDate(DATE_FORMAT, true, new IdentityTransform());
+		processorChain3 = new ParseDate(DATE_FORMAT, false, new IdentityTransform());
 	}
 	
 	/**
@@ -51,11 +57,26 @@ public class ParseDateTest {
 	public void testValidDate(){
 		// first date format
 		assertEquals(DATE, processor.execute(FORMATTED_DATE, ANONYMOUS_CSVCONTEXT));
+		assertEquals(DATE, processor2.execute(FORMATTED_DATE, ANONYMOUS_CSVCONTEXT));
+		assertEquals(DATE, processor3.execute(FORMATTED_DATE, ANONYMOUS_CSVCONTEXT));
 		assertEquals(DATE, processorChain.execute(FORMATTED_DATE, ANONYMOUS_CSVCONTEXT));
+		assertEquals(DATE, processorChain2.execute(FORMATTED_DATE, ANONYMOUS_CSVCONTEXT));
+		assertEquals(DATE, processorChain3.execute(FORMATTED_DATE, ANONYMOUS_CSVCONTEXT));
 
-		// second date format
-		assertEquals(DATE, processor2.execute(FORMATTED_DATE2, ANONYMOUS_CSVCONTEXT));
-		assertEquals(DATE, processorChain2.execute(FORMATTED_DATE2, ANONYMOUS_CSVCONTEXT));
+	}
+	
+	/**
+	 * Tests unchained/chained execution with a different date format.
+	 */
+	@Test
+	public void testValidDateDifferentFormat(){
+		
+		CellProcessor differentFormat = new ParseDate(DATE_FORMAT2);
+		CellProcessor differentFormatChain = new ParseDate(DATE_FORMAT2, new IdentityTransform());
+		
+		// try a different date format
+		assertEquals(DATE, differentFormat.execute(FORMATTED_DATE2, ANONYMOUS_CSVCONTEXT));
+		assertEquals(DATE, differentFormatChain.execute(FORMATTED_DATE2, ANONYMOUS_CSVCONTEXT));
 	}
 	
 	/**
@@ -67,11 +88,29 @@ public class ParseDateTest {
 	}
 	
 	/**
-	 * Tests execution with an invalid date (matches format, but data invalid), should throw an exception.
+	 * Tests execution with an invalid date (matches format, but data invalid) and non-lenient processors (should throw an exception).
 	 */
-	@Test(expected = SuperCSVException.class)
-	public void testInvalidDate() {
-		processor.execute("25/25/2011", ANONYMOUS_CSVCONTEXT);
+	@Test
+	public void testInvalidDateWithNonLenient() {
+		String dodgyDate = "30/02/2012";
+		for (CellProcessor cp : Arrays.asList(processor, processor3, processorChain, processorChain3)){
+			try {
+				cp.execute(dodgyDate, ANONYMOUS_CSVCONTEXT);
+				fail("should have thrown a SuperCSVException");
+				} catch (SuperCSVException e){
+				}
+		}
+	}
+	
+	/**
+	 * Tests execution with an invalid date (matches format, but data invalid) and lenient processors (should work!).
+	 */
+	@Test
+	public void testInvalidDateWithLenient() {
+		String dodgyDate = "30/02/2012";
+		Date expectedDate = DateHelper.date(2012, 3, 1);
+		assertEquals(expectedDate, processor2.execute(dodgyDate, ANONYMOUS_CSVCONTEXT));
+		assertEquals(expectedDate, processorChain2.execute(dodgyDate, ANONYMOUS_CSVCONTEXT));
 	}
 	
 	/**

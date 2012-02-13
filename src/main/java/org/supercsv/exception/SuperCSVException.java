@@ -139,6 +139,6 @@ public class SuperCSVException extends RuntimeException implements Serializable 
 	 */
 	@Override
 	public String toString() {
-		return String.format("%s\noffending processor=%s\ncontext=%s", getMessage(), offendingProcessor, csvContext);
+		return String.format("%s: %s\noffending processor=%s\ncontext=%s", getClass().getName(), getMessage(), offendingProcessor, csvContext);
 	}
 }

@@ -20,6 +20,9 @@ import org.supercsv.util.CSVContext;
  * <code>"dd-MMM-yy"</code> (parses a date formatted as "25-Dec-11")<br>
  * <code>"yyyy.MM.dd.HH.mm.ss"</code> (parses a date formatted as "2011.12.25.08.36.33"<br>
  * <code>"E, dd MMM yyyy HH:mm:ss Z"</code> (parses a date formatted as "Tue, 25 Dec 2011 08:36:33 -0500")<br>
+ * <p>
+ * This processor caters for lenient or non-lenient date interpretations (the default is false for constructors without
+ * a 'lenient' parameter). See {@link SimpleDateFormat#setLenient(boolean)} for more information.
  * 
  * @author Kasper B. Graversen
  * @author James Bassett
@@ -28,11 +31,11 @@ public class ParseDate extends CellProcessorAdaptor implements StringCellProcess
 	
 	private final String dateFormat;
 	
-	// TODO add constructors with 'lenient' flag, see
-	// http://sourceforge.net/tracker/?func=detail&aid=2988353&group_id=201724&atid=978710
+	private final boolean lenient;
 	
 	/**
 	 * Constructs a new <tt>ParseDate</tt> processor which converts a String to a Date using the supplied date format.
+	 * This constructor uses non-lenient Date interpretation.
 	 * 
 	 * @param dateFormat
 	 *            the date format to use
@@ -40,14 +43,29 @@ public class ParseDate extends CellProcessorAdaptor implements StringCellProcess
 	 *             if dateFormat is null
 	 */
 	public ParseDate(final String dateFormat) {
+		this(dateFormat, false);
+	}
+	
+	/**
+	 * Constructs a new <tt>ParseDate</tt> processor which converts a String to a Date using the supplied date format.
+	 * 
+	 * @param dateFormat
+	 *            the date format to use
+	 * @param lenient
+	 *            whether date interpretation is lenient
+	 * @throws NullPointerException
+	 *             if dateFormat is null
+	 */
+	public ParseDate(final String dateFormat, final boolean lenient) {
 		super();
 		checkPreconditions(dateFormat);
 		this.dateFormat = dateFormat;
+		this.lenient = lenient;
 	}
 	
 	/**
 	 * Constructs a new <tt>ParseDate</tt> processor which converts a String to a Date using the supplied date format,
-	 * then calls the next processor in the chain.
+	 * then calls the next processor in the chain. This constructor uses non-lenient Date interpretation.
 	 * 
 	 * @param dateFormat
 	 *            the date format to use
@@ -57,9 +75,27 @@ public class ParseDate extends CellProcessorAdaptor implements StringCellProcess
 	 *             if dateFormat or next is null
 	 */
 	public ParseDate(final String dateFormat, final DateCellProcessor next) {
+		this(dateFormat, false, next);
+	}
+	
+	/**
+	 * Constructs a new <tt>ParseDate</tt> processor which converts a String to a Date using the supplied date format,
+	 * then calls the next processor in the chain.
+	 * 
+	 * @param dateFormat
+	 *            the date format to use
+	 * @param lenient
+	 *            whether date interpretation is lenient
+	 * @param next
+	 *            the next processor in the chain
+	 * @throws NullPointerException
+	 *             if dateFormat or next is null
+	 */
+	public ParseDate(final String dateFormat, final boolean lenient, final DateCellProcessor next) {
 		super(next);
 		checkPreconditions(dateFormat);
 		this.dateFormat = dateFormat;
+		this.lenient = lenient;
 	}
 	
 	/**
@@ -94,8 +130,8 @@ public class ParseDate extends CellProcessorAdaptor implements StringCellProcess
 		}
 		
 		try {
-			SimpleDateFormat formatter = new SimpleDateFormat(dateFormat);
-			formatter.setLenient(false);
+			final SimpleDateFormat formatter = new SimpleDateFormat(dateFormat);
+			formatter.setLenient(lenient);
 			final Date result = formatter.parse((String) value);
 			return next.execute(result, context);
 		}
