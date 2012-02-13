@@ -14,7 +14,6 @@ public class SuperCSVReflectionExceptionTest {
 	
 	private static final String MSG = "Reflection failed";
 	private static final Throwable THROWABLE = new RuntimeException("Mirror is broken");
-	private static final String CONCATENATED_MSG = THROWABLE.getMessage() + "\n" + MSG;
 	
 	/**
 	 * Tests the first constructor.
@@ -37,7 +36,7 @@ public class SuperCSVReflectionExceptionTest {
 	@Test
 	public void testConstructor2(){
 		SuperCSVReflectionException e = new SuperCSVReflectionException(MSG, THROWABLE);
-		assertEquals(CONCATENATED_MSG, e.getMessage());
+		assertEquals(MSG, e.getMessage());
 		assertEquals(THROWABLE, e.getCause());
 		e.printStackTrace();
 		

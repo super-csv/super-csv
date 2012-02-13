@@ -19,10 +19,6 @@ public class SuperCSVException extends RuntimeException implements Serializable 
 	
 	private CellProcessor offendingProcessor;
 	
-	// TODO remove concatenation of messages to fix
-	// http://sourceforge.net/tracker/?func=detail&aid=2926982&group_id=201724&atid=978707
-	// nested messages shouldn't be prepended
-	
 	/**
 	 * Constructs a new <tt>SuperCSVException</tt>.
 	 * 
@@ -57,7 +53,7 @@ public class SuperCSVException extends RuntimeException implements Serializable 
 	 *            the nested exception
 	 */
 	public SuperCSVException(final String msg, final CSVContext context, final Throwable t) {
-		super(t.getMessage() + "\n" + msg, t); // TODO don't concatenate!!
+		super(msg, t);
 		this.csvContext = context;
 	}
 	
@@ -104,7 +100,7 @@ public class SuperCSVException extends RuntimeException implements Serializable 
 	 */
 	public SuperCSVException(final String msg, final CSVContext context, final CellProcessor processor,
 		final Throwable t) {
-		super(t.getMessage() + "\n" + msg, t); // TODO don't concatenate!!
+		super(msg, t);
 		this.csvContext = context;
 		this.offendingProcessor = processor;
 	}

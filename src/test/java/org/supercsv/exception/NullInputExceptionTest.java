@@ -19,7 +19,6 @@ public class NullInputExceptionTest {
 	private static final String MSG = "Ahhhh a null!";
 	private static final Throwable THROWABLE = new RuntimeException("Muhahahahah I'm null");
 	private static final CellProcessor PROCESSOR = new IdentityTransform();
-	private static final String CONCATENATED_MSG = THROWABLE.getMessage() + "\n" + MSG;
 	
 	/**
 	 * Tests the first constructor.
@@ -42,7 +41,7 @@ public class NullInputExceptionTest {
 	@Test
 	public void testConstructor2() {
 		NullInputException e = new NullInputException(MSG, PROCESSOR, THROWABLE);
-		assertEquals(CONCATENATED_MSG, e.getMessage());
+		assertEquals(MSG, e.getMessage());
 		assertEquals(PROCESSOR, e.getOffendingProcessor());
 		assertEquals(THROWABLE, e.getCause());
 		e.printStackTrace();
@@ -61,7 +60,7 @@ public class NullInputExceptionTest {
 	@Test
 	public void testConstructor3() {
 		NullInputException e = new NullInputException(MSG, ANONYMOUS_CSVCONTEXT, THROWABLE);
-		assertEquals(CONCATENATED_MSG, e.getMessage());
+		assertEquals(MSG, e.getMessage());
 		assertEquals(ANONYMOUS_CSVCONTEXT, e.getCsvContext());
 		assertEquals(THROWABLE, e.getCause());
 		e.printStackTrace();

@@ -79,6 +79,8 @@ public class ClassCastInputCSVException extends SuperCSVException implements Ser
 	 *            the CSV context
 	 * @param processor
 	 *            the offending processor
+	 * @throws NullPointerException
+	 *             if expectedClass is null
 	 */
 	public ClassCastInputCSVException(Object receivedValue, Class<?> expectedClass, CSVContext context,
 		CellProcessor processor) {
@@ -93,11 +95,15 @@ public class ClassCastInputCSVException extends SuperCSVException implements Ser
 	 * @param expectedClass
 	 *            the expected class
 	 * @return the assembled error message
+	 * @throws NullPointerException
+	 *             if expectedClass is null
 	 */
 	private static String getDefaultMessage(Object receivedValue, Class<?> expectedClass) {
+		if( expectedClass == null ) {
+			throw new NullPointerException("expectedClass should not be null");
+		}
 		String expectedClassName = expectedClass.getName();
-		String actualClassName = (receivedValue != null) ? receivedValue.getClass()
-		                                     			.getName() : "null";
+		String actualClassName = (receivedValue != null) ? receivedValue.getClass().getName() : "null";
 		return String.format("the input value should be of type %s but is %s", expectedClassName, actualClassName);
 	}
 }

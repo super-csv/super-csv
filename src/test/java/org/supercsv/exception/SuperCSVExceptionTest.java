@@ -18,7 +18,6 @@ public class SuperCSVExceptionTest {
 	private static final String MSG = "Something terrible happened!";
 	private static final Throwable THROWABLE = new RuntimeException("I'm the cause of the problem");
 	private static final CellProcessor PROCESSOR = new IdentityTransform();
-	private static final String CONCATENATED_MSG = THROWABLE.getMessage() + "\n" + MSG;
 	
 	/**
 	 * Tests the first constructor.
@@ -58,7 +57,7 @@ public class SuperCSVExceptionTest {
 	@Test
 	public void testConstuctor3(){
 		SuperCSVException e = new SuperCSVException(MSG, ANONYMOUS_CSVCONTEXT, THROWABLE);
-		assertEquals(CONCATENATED_MSG, e.getMessage());
+		assertEquals(MSG, e.getMessage());
 		assertEquals(ANONYMOUS_CSVCONTEXT, e.getCsvContext());
 		assertEquals(THROWABLE, e.getCause());
 		e.printStackTrace();
@@ -94,7 +93,7 @@ public class SuperCSVExceptionTest {
 	@Test
 	public void testConstuctor5(){
 		SuperCSVException e = new SuperCSVException(MSG, ANONYMOUS_CSVCONTEXT, THROWABLE);
-		assertEquals(CONCATENATED_MSG, e.getMessage());
+		assertEquals(MSG, e.getMessage());
 		assertEquals(ANONYMOUS_CSVCONTEXT, e.getCsvContext());
 		assertEquals(THROWABLE, e.getCause());
 		e.printStackTrace();
@@ -113,7 +112,7 @@ public class SuperCSVExceptionTest {
 	@Test
 	public void testConstuctor6(){
 		SuperCSVException e = new SuperCSVException(MSG, ANONYMOUS_CSVCONTEXT, PROCESSOR, THROWABLE);
-		assertEquals(CONCATENATED_MSG, e.getMessage());
+		assertEquals(MSG, e.getMessage());
 		assertEquals(ANONYMOUS_CSVCONTEXT, e.getCsvContext());
 		assertEquals(PROCESSOR, e.getOffendingProcessor());
 		assertEquals(THROWABLE, e.getCause());

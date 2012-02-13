@@ -1,4 +1,5 @@
 package org.supercsv.exception;
+
 import static org.junit.Assert.*;
 import static org.supercsv.TestConstants.ANONYMOUS_CSVCONTEXT;
 import org.junit.Test;
@@ -16,15 +17,14 @@ public class ClassCastInputCSVExceptionTest {
 	private static final String MSG = "What class is that supposed to be?";
 	private static final Throwable THROWABLE = new RuntimeException("I'm the cause of the problem");
 	private static final CellProcessor PROCESSOR = new IdentityTransform();
-	private static final String CONCATENATED_MSG = THROWABLE.getMessage() + "\n" + MSG;
 	
 	/**
 	 * Tests the first constructor.
 	 */
 	@Test
-	public void testConstructor1(){
+	public void testConstructor1() {
 		ClassCastInputCSVException e = new ClassCastInputCSVException(MSG, ANONYMOUS_CSVCONTEXT, THROWABLE);
-		assertEquals(CONCATENATED_MSG, e.getMessage());
+		assertEquals(MSG, e.getMessage());
 		assertEquals(ANONYMOUS_CSVCONTEXT, e.getCsvContext());
 		assertEquals(THROWABLE, e.getCause());
 		e.printStackTrace();
@@ -41,7 +41,7 @@ public class ClassCastInputCSVExceptionTest {
 	 * Tests the second constructor.
 	 */
 	@Test
-	public void testConstructor2(){
+	public void testConstructor2() {
 		ClassCastInputCSVException e = new ClassCastInputCSVException(MSG, ANONYMOUS_CSVCONTEXT);
 		assertEquals(MSG, e.getMessage());
 		assertEquals(ANONYMOUS_CSVCONTEXT, e.getCsvContext());
@@ -58,7 +58,7 @@ public class ClassCastInputCSVExceptionTest {
 	 * Tests the third constructor.
 	 */
 	@Test
-	public void testConstructor3(){
+	public void testConstructor3() {
 		ClassCastInputCSVException e = new ClassCastInputCSVException(MSG, ANONYMOUS_CSVCONTEXT, PROCESSOR);
 		assertEquals(MSG, e.getMessage());
 		assertEquals(ANONYMOUS_CSVCONTEXT, e.getCsvContext());
@@ -77,7 +77,7 @@ public class ClassCastInputCSVExceptionTest {
 	 * Tests the fourth constructor.
 	 */
 	@Test
-	public void testConstructor4(){
+	public void testConstructor4() {
 		ClassCastInputCSVException e = new ClassCastInputCSVException(MSG);
 		assertEquals(MSG, e.getMessage());
 		e.printStackTrace();
@@ -92,8 +92,9 @@ public class ClassCastInputCSVExceptionTest {
 	 * Tests the fifth constructor.
 	 */
 	@Test
-	public void testConstructor5(){
-		ClassCastInputCSVException e = new ClassCastInputCSVException(Integer.valueOf(23), String.class, ANONYMOUS_CSVCONTEXT, PROCESSOR);
+	public void testConstructor5() {
+		ClassCastInputCSVException e = new ClassCastInputCSVException(Integer.valueOf(23), String.class,
+			ANONYMOUS_CSVCONTEXT, PROCESSOR);
 		assertEquals(ANONYMOUS_CSVCONTEXT, e.getCsvContext());
 		assertEquals(PROCESSOR, e.getOffendingProcessor());
 		e.printStackTrace();
@@ -105,11 +106,12 @@ public class ClassCastInputCSVExceptionTest {
 		e.printStackTrace();
 		
 		// test with null received, expected, context and processor
-		e = new ClassCastInputCSVException(null, null, (CSVContext) null, (CellProcessor) null);
-		assertNull(e.getMessage());
-		assertNull(e.getCsvContext());
-		assertNull(e.getOffendingProcessor());
-		e.printStackTrace();
+		try {
+			e = new ClassCastInputCSVException(null, null, (CSVContext) null, (CellProcessor) null);
+			fail("should have thrown NullPointerException");
+		}
+		catch(NullPointerException npe) {}
+		
 	}
 	
 }
