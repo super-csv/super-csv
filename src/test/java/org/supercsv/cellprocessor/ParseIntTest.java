@@ -1,7 +1,22 @@
+/*
+ * Copyright 2007 Kasper B. Graversen
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.supercsv.cellprocessor;
 
 import static org.junit.Assert.assertEquals;
-import static org.supercsv.TestConstants.ANONYMOUS_CSVCONTEXT;
+import static org.supercsv.SuperCsvTestUtils.ANONYMOUS_CSVCONTEXT;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -35,12 +50,12 @@ public class ParseIntTest {
 		processor = new ParseInt();
 		processorChain = new ParseInt(new IdentityTransform());
 	}
-
+	
 	/**
 	 * Tests unchained/chained execution with valid ints as input.
 	 */
 	@Test
-	public void testValidInts(){
+	public void testValidInts() {
 		// positive values
 		assertEquals(POSITIVE_VAL, processor.execute(POSITIVE_VAL, ANONYMOUS_CSVCONTEXT));
 		assertEquals(POSITIVE_VAL, processorChain.execute(POSITIVE_VAL, ANONYMOUS_CSVCONTEXT));
@@ -49,12 +64,12 @@ public class ParseIntTest {
 		assertEquals(NEGATIVE_VAL, processor.execute(NEGATIVE_VAL, ANONYMOUS_CSVCONTEXT));
 		assertEquals(NEGATIVE_VAL, processorChain.execute(NEGATIVE_VAL, ANONYMOUS_CSVCONTEXT));
 	}
-
+	
 	/**
 	 * Tests unchained/chained execution with valid int Strings as input.
 	 */
 	@Test
-	public void testValidIntStrings(){
+	public void testValidIntStrings() {
 		// positive values
 		assertEquals(POSITIVE_VAL, processor.execute(POSITIVE_STRING, ANONYMOUS_CSVCONTEXT));
 		assertEquals(POSITIVE_VAL, processorChain.execute(POSITIVE_STRING, ANONYMOUS_CSVCONTEXT));

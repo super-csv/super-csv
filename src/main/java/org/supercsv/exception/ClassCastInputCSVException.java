@@ -1,9 +1,22 @@
+/*
+ * Copyright 2007 Kasper B. Graversen
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.supercsv.exception;
 
-import java.io.Serializable;
-
 import org.supercsv.cellprocessor.ift.CellProcessor;
-import org.supercsv.util.CSVContext;
+import org.supercsv.util.CsvContext;
 
 /**
  * This exception is thrown by <tt>CellProcessor</tt>s when receiving a value with a type different than the one
@@ -12,7 +25,7 @@ import org.supercsv.util.CSVContext;
  * @since 1.50
  * @author Dominique De Vito
  */
-public class ClassCastInputCSVException extends SuperCSVException implements Serializable {
+public class ClassCastInputCSVException extends SuperCSVException {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -26,7 +39,7 @@ public class ClassCastInputCSVException extends SuperCSVException implements Ser
 	 * @param t
 	 *            the nested exception
 	 */
-	public ClassCastInputCSVException(String msg, CSVContext context, Throwable t) {
+	public ClassCastInputCSVException(String msg, CsvContext context, Throwable t) {
 		super(msg, context, t);
 	}
 	
@@ -38,7 +51,7 @@ public class ClassCastInputCSVException extends SuperCSVException implements Ser
 	 * @param context
 	 *            the CSV context
 	 */
-	public ClassCastInputCSVException(String msg, CSVContext context) {
+	public ClassCastInputCSVException(String msg, CsvContext context) {
 		super(msg, context);
 	}
 	
@@ -53,7 +66,7 @@ public class ClassCastInputCSVException extends SuperCSVException implements Ser
 	 * @param processor
 	 *            the offending processor
 	 */
-	public ClassCastInputCSVException(String msg, CSVContext context, CellProcessor processor) {
+	public ClassCastInputCSVException(String msg, CsvContext context, CellProcessor processor) {
 		super(msg, context, processor);
 	}
 	
@@ -82,7 +95,7 @@ public class ClassCastInputCSVException extends SuperCSVException implements Ser
 	 * @throws NullPointerException
 	 *             if expectedClass is null
 	 */
-	public ClassCastInputCSVException(Object receivedValue, Class<?> expectedClass, CSVContext context,
+	public ClassCastInputCSVException(Object receivedValue, Class<?> expectedClass, CsvContext context,
 		CellProcessor processor) {
 		super(getDefaultMessage(receivedValue, expectedClass), context, processor);
 	}

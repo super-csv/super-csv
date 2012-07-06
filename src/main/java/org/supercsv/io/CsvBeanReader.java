@@ -1,8 +1,22 @@
+/*
+ * Copyright 2007 Kasper B. Graversen
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.supercsv.io;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,18 +30,21 @@ import org.supercsv.util.MethodCache;
 import org.supercsv.util.Util;
 
 /**
- * This class reads a CSV file by instantiating a bean for every row and mapping each column to a field on the bean
- * (using the supplied name mapping).
+ * CsvBeanReader reads a CSV file by instantiating a bean for every row and mapping each column to a field on the bean
+ * (using the supplied name mapping). The bean to populate can be either a class or interface. If a class is used, it
+ * must be a valid Javabean, i.e. it must have a default no-argument constructor and getter/setter methods. An interface
+ * may also be used if it defines getters/setters - a proxy object will be created that implements the interface.
  * 
  * @author Kasper B. Graversen
+ * @author James Bassett
  */
 public class CsvBeanReader extends AbstractCsvReader implements ICsvBeanReader {
 	
-	/** temporary storage of processed columns to be mapped to the bean */
-	protected List<? super Object> lineResult = new ArrayList<Object>();
+	// temporary storage of processed columns to be mapped to the bean
+	private final List<Object> processedColumns = new ArrayList<Object>();
 	
-	/** cache of methods for mapping from columns to fields */
-	protected MethodCache cache = new MethodCache();
+	// cache of methods for mapping from columns to fields
+	private final MethodCache cache = new MethodCache();
 	
 	/**
 	 * Constructs a new <tt>CsvBeanReader</tt> with the supplied Reader and CSV preferences. Note that the
@@ -37,10 +54,77 @@ public class CsvBeanReader extends AbstractCsvReader implements ICsvBeanReader {
 	 *            the reader
 	 * @param preferences
 	 *            the CSV preferences
+	 * @throws NullPointerException
+	 *             if reader or preferences are null
 	 */
 	public CsvBeanReader(final Reader reader, final CsvPreference preferences) {
-		setPreferences(preferences);
-		setInput(reader);
+		super(reader, preferences);
+	}
+	
+	/**
+	 * Constructs a new <tt>CsvBeanReader</tt> with the supplied (custom) Tokenizer and CSV preferences. The tokenizer
+	 * should be set up with the Reader (CSV input) and CsvPreference beforehand.
+	 * 
+	 * @param tokenizer
+	 *            the tokenizer
+	 * @param preferences
+	 *            the CSV preferences
+	 * @throws NullPointerException
+	 *             if tokenizer or preferences are null
+	 */
+	public CsvBeanReader(final ITokenizer tokenizer, final CsvPreference preferences) {
+		super(tokenizer, preferences);
+	}
+	
+	/**
+	 * Instantiates the bean (or creates a proxy if it's an interface).
+	 * 
+	 * @param clazz
+	 *            the bean class to instantiate (a proxy will be created if an interface is supplied), using the default
+	 *            (no argument) constructor
+	 * @return the instantiated bean
+	 * @throws SuperCSVReflectionException
+	 *             if there was a reflection exception when instantiating the bean
+	 */
+	private static <T> T instantiateBean(final Class<T> clazz) {
+		final T bean;
+		if( clazz.isInterface() ) {
+			bean = BeanInterfaceProxy.createProxy(clazz);
+		} else {
+			try {
+				bean = clazz.newInstance();
+			}
+			catch(InstantiationException e) {
+				throw new SuperCSVReflectionException(String.format(
+					"error instantiating bean, check that %s has a default no-args constructor", clazz.getName()), e);
+			}
+			catch(IllegalAccessException e) {
+				throw new SuperCSVReflectionException("error instantiating bean", e);
+			}
+		}
+		
+		return bean;
+	}
+	
+	/**
+	 * Invokes the setter on the bean with the supplied value.
+	 * 
+	 * @param bean
+	 *            the bean
+	 * @param setMethod
+	 *            the setter method for the field
+	 * @param fieldValue
+	 *            the field value to set
+	 * @throws SuperCSVException
+	 *             if there was an exception invoking the setter
+	 */
+	private static void invokeSetter(final Object bean, final Method setMethod, final Object fieldValue) {
+		try {
+			setMethod.invoke(bean, fieldValue);
+		}
+		catch(final Exception e) {
+			throw new SuperCSVReflectionException(String.format("error invoking method %s()", setMethod.getName()), e);
+		}
 	}
 	
 	/**
@@ -52,60 +136,51 @@ public class CsvBeanReader extends AbstractCsvReader implements ICsvBeanReader {
 	 *            (no argument) constructor
 	 * @param nameMapping
 	 *            the name mappings
-	 * @return A filled object
+	 * @return the populated bean
 	 * @throws SuperCSVReflectionException
+	 *             if there was a reflection exception while populating the bean
 	 */
-	private <T> T populateBean(final Class<T> clazz, final String[] nameMapping) throws SuperCSVReflectionException {
-		try {
-			// instantiate the bean or proxy
-			final T resultBean;
-			if( clazz.isInterface() ) {
-				resultBean = new BeanInterfaceProxy().createProxy(clazz);
-			} else {
-				resultBean = clazz.newInstance();
+	private <T> T populateBean(final Class<T> clazz, final String[] nameMapping) {
+		
+		// instantiate the bean or proxy
+		final T resultBean = instantiateBean(clazz);
+		
+		// map each column to its associated field on the bean
+		for( int i = 0; i < nameMapping.length; i++ ) {
+			
+			final Object fieldValue = processedColumns.get(i);
+			
+			// don't call a set-method in the bean if there is no name mapping for the column or no result to store
+			if( nameMapping[i] == null || fieldValue == null ) {
+				continue;
 			}
 			
-			// map each column to its associated field on the bean
-			for( int i = 0; i < nameMapping.length; i++ ) {
-				
-				// don't call a set-method in the bean if there is no name mapping for the column or no result to store
-				if( nameMapping[i] == null || lineResult.get(i) == null ) {
-					continue;
-				}
-				
-				try {
-					Method setMethod = cache.getSetMethod(resultBean, nameMapping[i], lineResult.get(i).getClass());
-					setMethod.invoke(resultBean, lineResult.get(i));
-				}
-				catch(final IllegalArgumentException e) {
-					throw new SuperCSVException("Method set" + nameMapping[i].substring(0, 1).toUpperCase()
-						+ nameMapping[i].substring(1) + "() does not accept input \"" + lineResult.get(i)
-						+ "\" of type " + lineResult.get(i).getClass().getName(), null, e);
-				}
-			}
-			return resultBean;
+			// invoke the setter on the bean
+			Method setMethod = cache.getSetMethod(resultBean, nameMapping[i], fieldValue.getClass());
+			invokeSetter(resultBean, setMethod, fieldValue);
+			
 		}
-		catch(final InstantiationException e) {
-			throw new SuperCSVReflectionException("Error while populating bean", e);
-		}
-		catch(final IllegalAccessException e) {
-			throw new SuperCSVReflectionException("Error while populating bean", e);
-		}
-		catch(final InvocationTargetException e) {
-			throw new SuperCSVReflectionException("Error while populating bean", e);
-		}
+		
+		return resultBean;
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 */
-	public <T> T read(final Class<T> clazz, final String... nameMapping) throws IOException,
-		SuperCSVReflectionException {
-		if( tokenizer.readStringList(super.line) ) {
-			lineResult.clear();
-			lineResult.addAll(super.line);
+	public <T> T read(final Class<T> clazz, final String... nameMapping) throws IOException {
+		
+		if( clazz == null ) {
+			throw new NullPointerException("clazz should not be null");
+		} else if( nameMapping == null ) {
+			throw new NullPointerException("nameMapping should not be null");
+		}
+		
+		if( readRow() ) {
+			processedColumns.clear();
+			processedColumns.addAll(getColumns());
 			return populateBean(clazz, nameMapping);
 		}
+		
 		return null; // EOF
 	}
 	
@@ -113,12 +188,23 @@ public class CsvBeanReader extends AbstractCsvReader implements ICsvBeanReader {
 	 * {@inheritDoc}
 	 */
 	public <T> T read(final Class<T> clazz, final String[] nameMapping, final CellProcessor... processors)
-		throws IOException, SuperCSVReflectionException, SuperCSVException {
-		if( tokenizer.readStringList(super.line) ) {
+		throws IOException {
+		
+		if( clazz == null ) {
+			throw new NullPointerException("clazz should not be null");
+		} else if( nameMapping == null ) {
+			throw new NullPointerException("nameMapping should not be null");
+		} else if( processors == null ) {
+			throw new NullPointerException("processors should not be null");
+		}
+		
+		if( readRow() ) {
 			// execute the processors then populate the bean
-			Util.processStringList(lineResult, super.line, processors, tokenizer.getLineNumber());
+			Util.executeCellProcessors(processedColumns, getColumns(), processors, getLineNumber(), getRowNumber());
 			return populateBean(clazz, nameMapping);
 		}
+		
 		return null; // EOF
 	}
+	
 }

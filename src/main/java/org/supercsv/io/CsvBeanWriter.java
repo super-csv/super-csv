@@ -1,32 +1,49 @@
+/*
+ * Copyright 2007 Kasper B. Graversen
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.supercsv.io;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.supercsv.cellprocessor.ift.CellProcessor;
-import org.supercsv.exception.NullInputException;
 import org.supercsv.exception.SuperCSVReflectionException;
 import org.supercsv.prefs.CsvPreference;
 import org.supercsv.util.MethodCache;
 import org.supercsv.util.Util;
 
 /**
- * This class writes a CSV file by mapping each field on the bean to a column in the CSV file (using the supplied name
- * mapping).
+ * CsvBeanWriter writes a CSV file by mapping each field on the bean to a column in the CSV file (using the supplied
+ * name mapping).
  * 
  * @author Kasper B. Graversen
+ * @author James Bassett
  */
 public class CsvBeanWriter extends AbstractCsvWriter implements ICsvBeanWriter {
 	
-	/** temporary storage of processed fields to be written */
-	protected List<? super Object> result;
+	// temporary storage of bean values
+	private final List<Object> beanValues = new ArrayList<Object>();
 	
-	/** cache of methods for mapping from fields to columns */
-	protected MethodCache cache = new MethodCache();
+	// temporary storage of processed columns to be written
+	private final List<Object> processedColumns = new ArrayList<Object>();
+	
+	// cache of methods for mapping from fields to columns
+	private final MethodCache cache = new MethodCache();
 	
 	/**
 	 * Constructs a new <tt>CsvBeanWriter</tt> with the supplied Writer and CSV preferences. Note that the
@@ -36,70 +53,87 @@ public class CsvBeanWriter extends AbstractCsvWriter implements ICsvBeanWriter {
 	 *            the writer
 	 * @param preference
 	 *            the CSV preferences
+	 * @throws NullPointerException
+	 *             if writer or preference are null
 	 */
 	public CsvBeanWriter(final Writer writer, final CsvPreference preference) {
 		super(writer, preference);
-		result = new ArrayList<Object>();
 	}
 	
 	/**
-	 * Creates a List of Strings from the bean representing the columns to write.
+	 * Extracts the bean values, using the supplied name mapping array.
 	 * 
 	 * @param source
 	 *            the bean
 	 * @param nameMapping
 	 *            the name mapping
+	 * @throws NullPointerException
+	 *             if source or nameMapping are null
 	 * @throws SuperCSVReflectionException
+	 *             if there was a reflection exception extracting the bean value
 	 */
-	protected void fillListFromObject(final Object source, final String[] nameMapping)
-		throws SuperCSVReflectionException {
+	private void extractBeanValues(final Object source, final String[] nameMapping) throws SuperCSVReflectionException {
 		
-		// name mapping is mandatory for bean writing
-		if( nameMapping == null ) {
-			throw new NullInputException(
+		if( source == null ) {
+			throw new NullPointerException("the bean to write should not be null");
+		} else if( nameMapping == null ) {
+			throw new NullPointerException(
 				"the nameMapping array can't be null as it's used to map from fields to columns");
 		}
 		
-		try {
-			result.clear(); // object re-use
+		beanValues.clear();
+		
+		for (int i = 0; i < nameMapping.length; i++){
 			
-			for( final String methodName : nameMapping ) {
-				Method getMethod = cache.getGetMethod(source, methodName);
-				result.add(getMethod.invoke(source));
+			final String fieldName = nameMapping[i];
+			
+			if (fieldName == null){
+				throw new NullPointerException(String.format("the nameMapping array should not contain a null entry at index %s", i));
+			}
+			
+			Method getMethod = cache.getGetMethod(source, fieldName);
+			try {
+				beanValues.add(getMethod.invoke(source));
+			}
+			catch(final Exception e) {
+				throw new SuperCSVReflectionException(String.format("error extracting bean value for field %s",
+					fieldName), e);
 			}
 		}
-		catch(final IllegalAccessException e) {
-			throw new SuperCSVReflectionException("Error accessing object " + source, e);
-		}
-		catch(final InvocationTargetException e) {
-			throw new SuperCSVReflectionException("Error accessing object " + source, e);
-		}
+		
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 */
-	public void write(final Object source, final String... nameMapping) throws IOException, SuperCSVReflectionException {
-		// fill the list with the values in the bean's fields
-		fillListFromObject(source, nameMapping);
+	public void write(final Object source, final String... nameMapping) throws IOException {
+		
+		// update the current row/line numbers
+		super.incrementRowAndLineNo();
+		
+		// extract the bean values
+		extractBeanValues(source, nameMapping);
 		
 		// write the list
-		super.write(result);
+		super.writeRow(beanValues);
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 */
 	public void write(final Object source, final String[] nameMapping, final CellProcessor[] processors)
-		throws IOException, SuperCSVReflectionException {
-		// fill the list with the values in the bean's fields
-		fillListFromObject(source, nameMapping);
+		throws IOException {
+		
+		// update the current row/line numbers
+		super.incrementRowAndLineNo();
+		
+		// extract the bean values
+		extractBeanValues(source, nameMapping);
 		
 		// execute the processors for each column
-		final List<? super Object> processedColumns = new ArrayList<Object>();
-		Util.processStringList(processedColumns, result, processors, super.getLineNumber());
+		Util.executeCellProcessors(processedColumns, beanValues, processors, getLineNumber(), getRowNumber());
 		
 		// write the list
-		super.write(processedColumns);
+		super.writeRow(processedColumns);
 	}
 }

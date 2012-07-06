@@ -1,3 +1,18 @@
+/*
+ * Copyright 2007 Kasper B. Graversen
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.supercsv.io;
 
 import java.io.BufferedWriter;
@@ -5,21 +20,28 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
 
-import org.supercsv.exception.NullInputException;
-import org.supercsv.exception.SuperCSVException;
 import org.supercsv.prefs.CsvPreference;
-import org.supercsv.util.CSVContext;
+import org.supercsv.util.Util;
 
 /**
  * Defines the standard behaviour of a CSV writer.
  * 
  * @author Kasper B. Graversen
+ * @author James Bassett
  */
 public abstract class AbstractCsvWriter implements ICsvWriter {
-	final StringBuilder sb = new StringBuilder();
-	BufferedWriter writer;
-	int lineNo;
-	CsvPreference preference;
+	
+	private final BufferedWriter writer;
+	
+	private final CsvPreference preference;
+	
+	// the line number being written / just written
+	private int lineNumber = 0;
+	
+	// the row being written / just written
+	private int rowNumber = 0;
+	
+	private final StringBuilder currentColumn = new StringBuilder();
 	
 	/**
 	 * Constructs a new <tt>AbstractCsvWriter</tt> with the supplied writer and preferences.
@@ -28,11 +50,18 @@ public abstract class AbstractCsvWriter implements ICsvWriter {
 	 *            the stream to write to
 	 * @param preference
 	 *            the CSV preferences
+	 * @throws NullPointerException
+	 *             if writer or preference are null
 	 */
-	protected AbstractCsvWriter(final Writer writer, final CsvPreference preference) {
-		setPreferences(preference);
+	public AbstractCsvWriter(final Writer writer, final CsvPreference preference) {
+		if( writer == null ) {
+			throw new NullPointerException("writer should not be null");
+		} else if( preference == null ) {
+			throw new NullPointerException("preference should not be null");
+		}
+		
 		this.writer = new BufferedWriter(writer);
-		lineNo = 1;
+		this.preference = preference;
 	}
 	
 	/**
@@ -50,164 +79,165 @@ public abstract class AbstractCsvWriter implements ICsvWriter {
 	}
 	
 	/**
-	 * Make a string ready for writing by escaping various characters as specified by the CSV format
+	 * Make a string ready for writing by escaping various characters as specified by the CSV format. This method also
+	 * updates the current lineNumber as newlines are encountered in the String to be escaped.
 	 * 
 	 * @param csvElement
 	 *            an element of a CSV file
 	 * @return an escaped version of the element ready for persisting
 	 */
 	protected String escapeString(final String csvElement) {
-		if( csvElement.length() == 0 ) {
+		if( csvElement.isEmpty() ) {
 			return "";
 		}
 		
-		sb.delete(0, sb.length()); // reusing builder object
+		currentColumn.delete(0, currentColumn.length()); // reusing builder object
 		
 		final int delimiter = preference.getDelimiterChar();
 		final char quote = (char) preference.getQuoteChar();
-		final char whiteSpace = ' ';
+		final char space = ' ';
 		final String eolSymbols = preference.getEndOfLineSymbols();
+		final boolean trimMode = preference.isTrimMode();
+		final int lastCharIndex = csvElement.length() - 1;
 		
-		boolean needForEscape = false; // if newline or start with space
-		if( csvElement.charAt(0) == whiteSpace ) {
-			needForEscape = true;
-		}
+		// elements with leading/trailing spaces require surrounding quotes if in trimMode
+		boolean needForEscape = trimMode
+			&& (csvElement.charAt(0) == space || csvElement.charAt(lastCharIndex) == space);
 		
-		char c;
-		final int lastPos = csvElement.length() - 1;
-		for( int i = 0; i <= lastPos; i++ ) {
+		for( int i = 0; i <= lastCharIndex; i++ ) {
 			
-			c = csvElement.charAt(i);
+			final char c = csvElement.charAt(i);
 			
 			if( c == delimiter ) {
 				needForEscape = true;
-				sb.append(c);
+				currentColumn.append(c);
 			} else if( c == quote ) {
-				// if its the first character, escape it and set need for space
-				if( i == 0 ) {
-					sb.append(quote);
-					sb.append(quote);
-					needForEscape = true;
-				} else {
-					sb.append(quote);
-					sb.append(quote);
-					needForEscape = true; // TODO review comments above
-				}
+				needForEscape = true;
+				currentColumn.append(quote);
+				currentColumn.append(quote);
 			} else if( c == '\n' ) {
 				needForEscape = true;
-				sb.append(eolSymbols);
+				currentColumn.append(eolSymbols);
+				lineNumber++;
 			} else {
-				sb.append(c);
+				currentColumn.append(c);
 			}
 		}
 		
-		// if element contains a newline (mac,windows or linux), escape the
-		// whole with a surrounding quotes
+		// if element contains special characters, escape the
+		// whole element with surrounding quotes
 		if( needForEscape ) {
-			return quote + sb.toString() + quote;
+			currentColumn.insert(0, quote).append(quote);
 		}
 		
-		return sb.toString();
+		return currentColumn.toString();
 		
+	}
+	
+	/**
+	 * In order to maintain the current row and line numbers, this method <strong>must</strong> be called at the very
+	 * beginning of every write method implemented in concrete CSV writers. This will allow the correct row/line numbers
+	 * to be used in any exceptions thrown before writing occurs (e.g. during CellProcessor execution), and means that
+	 * {@link #getLineNumber()} and {@link #getRowNumber()} can be called after writing to return the line/row just
+	 * written.
+	 */
+	protected void incrementRowAndLineNo() {
+		lineNumber++;
+		rowNumber++;
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 */
 	public int getLineNumber() {
-		return lineNo;
+		return lineNumber;
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 */
-	public ICsvWriter setPreferences(final CsvPreference preference) {
-		this.preference = preference;
-		return this;
+	public int getRowNumber() {
+		return rowNumber;
 	}
 	
 	/**
-	 * Writes the List of content.
+	 * Writes a List of columns as a line to the CsvWriter.
 	 * 
-	 * @param content
-	 *            the content to write
+	 * @param columns
+	 *            the columns to write
+	 * @throws IllegalArgumentException
+	 *             if columns.size == 0
 	 * @throws IOException
+	 *             If an I/O error occurs
+	 * @throws NullPointerException
+	 *             if columns is null
 	 */
-	protected void write(final List<? extends Object> content) throws IOException {
-		// convert object array to strings and write them
-		final String[] strarr = new String[content.size()];
-		int i = 0;
-		for( final Object o : content ) {
-			if( o == null ) {
-				throw new NullInputException("Object at position " + i + " is null",
-					new CSVContext(getLineNumber(), i), (Throwable) null);
-			}
-			strarr[i++] = o.toString();
-		}
-		write(strarr);
+	protected void writeRow(final List<?> columns) throws IOException {
+		writeRow(Util.objectListToStringArray(columns));
 	}
 	
 	/**
-	 * Writes one or more Objects.
+	 * Writes one or more Object columns as a line to the CsvWriter.
 	 * 
-	 * @param content
-	 *            the content to write
+	 * @param columns
+	 *            the columns to write
+	 * @throws IllegalArgumentException
+	 *             if columns.length == 0
 	 * @throws IOException
+	 *             If an I/O error occurs
+	 * @throws NullPointerException
+	 *             if columns is null
 	 */
-	protected void write(final Object... content) throws IOException {
-		// convert object array to strings and write them
-		final String[] strarr = new String[content.length];
-		int i = 0;
-		for( final Object o : content ) {
-			if( o == null ) {
-				throw new NullInputException("Object at position " + i + " is null",
-					new CSVContext(getLineNumber(), i), (Throwable) null);
-			}
-			strarr[i++] = o.toString();
-		}
-		write(strarr);
+	protected void writeRow(final Object... columns) throws IOException {
+		writeRow(Util.objectArrayToStringArray(columns));
 	}
 	
 	/**
-	 * Writes one or more Strings.
+	 * Writes one or more String columns as a line to the CsvWriter.
 	 * 
-	 * @param content
-	 *            the content to write
+	 * @param columns
+	 *            the columns to write
+	 * @throws IllegalArgumentException
+	 *             if columns.length == 0
 	 * @throws IOException
+	 *             If an I/O error occurs
+	 * @throws NullPointerException
+	 *             if columns is null
 	 */
-	protected void write(final String... content) throws IOException {
-		lineNo++;
+	protected void writeRow(final String... columns) throws IOException {
 		
-		final int delimiter = preference.getDelimiterChar();
-		int i = 0;
-		switch( content.length ) {
-			case 0:
-				throw new SuperCSVException("There is no content to write for line " + getLineNumber(), new CSVContext(
-					getLineNumber(), 0));
-				
-			case 1: // just write last element after switch
-				break;
+		if( columns == null ) {
+			throw new NullPointerException(String.format("columns to write should not be null on line %d", lineNumber));
+		} else if( columns.length == 0 ) {
+			throw new IllegalArgumentException(String.format("columns to write should not be empty on line %d",
+				lineNumber));
+		}
+		
+		for( int i = 0; i < columns.length; i++ ) {
 			
-			default:
-				// write first 0..N-1 elems
-				for( ; i < content.length - 1; i++ ) {
-					writer.write(escapeString(content[i]));
-					writer.write(delimiter);
-				}
-				break;
+			if( i > 0 ) {
+				writer.write(preference.getDelimiterChar()); // delimiter
+			}
+			
+			if( columns[i] != null ) {
+				// TODO this new null check means you can have a null column turn into "" - what's the impact of this???
+				writer.write(escapeString(columns[i])); // escaped column
+			}
+			
 		}
 		
-		// write last elem (without delimiter) and the EOL
-		writer.write(escapeString(content[i]));
-		writer.write(preference.getEndOfLineSymbols());
-		return;
+		writer.write(preference.getEndOfLineSymbols()); // EOL
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 */
-	public void writeHeader(final String... header) throws IOException, SuperCSVException {
-		this.write(header);
+	public void writeHeader(final String... header) throws IOException {
+		
+		// update the current row/line numbers
+		incrementRowAndLineNo();
+		
+		writeRow(header);
 	}
 	
 }

@@ -1,7 +1,22 @@
+/*
+ * Copyright 2007 Kasper B. Graversen
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.supercsv.cellprocessor.constraint;
 
 import static org.junit.Assert.assertEquals;
-import static org.supercsv.TestConstants.ANONYMOUS_CSVCONTEXT;
+import static org.supercsv.SuperCsvTestUtils.ANONYMOUS_CSVCONTEXT;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,14 +55,14 @@ public class ForbidSubStrTest {
 		processor2 = new ForbidSubStr(FORBIDDEN, FORBIDDEN2);
 		processorChain = new ForbidSubStr(Arrays.asList(FORBIDDEN, FORBIDDEN2), new IdentityTransform());
 		processorChain2 = new ForbidSubStr(FORBIDDEN, new IdentityTransform());
-		processorChain3 = new ForbidSubStr(new String[]{FORBIDDEN, FORBIDDEN2}, new IdentityTransform());
+		processorChain3 = new ForbidSubStr(new String[] { FORBIDDEN, FORBIDDEN2 }, new IdentityTransform());
 	}
 	
 	/**
 	 * Tests unchained/chained execution with a String that doesn't contain any forbidden Strings.
 	 */
 	@Test
-	public void testValidInput(){
+	public void testValidInput() {
 		String input = "I think Java is an awesome language";
 		assertEquals(input, processor.execute(input, ANONYMOUS_CSVCONTEXT));
 		assertEquals(input, processor2.execute(input, ANONYMOUS_CSVCONTEXT));
@@ -71,10 +86,10 @@ public class ForbidSubStrTest {
 	 */
 	@Test(expected = SuperCSVException.class)
 	public void testForbidden2() {
-		String input = "I love Microsoft"; 
+		String input = "I love Microsoft";
 		processor.execute(input, ANONYMOUS_CSVCONTEXT);
 	}
-
+	
 	/**
 	 * Tests execution with a null input (should throw an Exception).
 	 */
@@ -96,7 +111,7 @@ public class ForbidSubStrTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testConstructionWithEmptyArray() {
-		new ForbidSubStr(new String[]{});
+		new ForbidSubStr(new String[] {});
 	}
 	
 	/**
@@ -120,6 +135,6 @@ public class ForbidSubStrTest {
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testConstructionWithNullSubstring() {
-		new ForbidSubStr(new String[]{null});
+		new ForbidSubStr(new String[] { null });
 	}
 }

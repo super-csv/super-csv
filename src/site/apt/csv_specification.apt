@@ -1,32 +1,132 @@
-CSV Specification
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~ Copyright 2007 Kasper B. Graversen
+~~ 
+~~ Licensed under the Apache License, Version 2.0 (the "License");
+~~ you may not use this file except in compliance with the License.
+~~ You may obtain a copy of the License at
+~~ 
+~~     http://www.apache.org/licenses/LICENSE-2.0
+~~ 
+~~ Unless required by applicable law or agreed to in writing, software
+~~ distributed under the License is distributed on an "AS IS" BASIS,
+~~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~~ See the License for the specific language governing permissions and
+~~ limitations under the License.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+What is CSV?
 
-  The following is the CSV format specification that is used by Super CSV.
+  The comma-separated values (CSV) format is a widely-used text-file format often used to exchange data between applications.
   
-  First, a formal EBNF (extended Bachus-Naur Form) grammar where "," denotes the separation character. See {{{http://en.wikipedia.org/wiki/Backus-Naur_form}Wikipedia/BNF}} and {{{http://en.wikipedia.org/wiki/Extended_Backus-Naur_form}Wikipedia/EBNF}} for further information on (E)BNF. 
+  It contains multiple records (one per line), with each field being delimited by a comma.
+  
+  Further useful information about the CSV format can be found on {{{http://en.wikipedia.org/wiki/Comma-separated_values}Wikipedia}} and 
+  {{{http://www.creativyst.com/Doc/Articles/CSV/CSV01.htm}www.creativyst.com}}.
+  
+* Super CSV and RFC 4180
+
+  There is no definitive standard for CSV, however the most commonly accepted definition is {{{http://tools.ietf.org/html/rfc4180}RFC 4180}} - 
+  the definition used by Super CSV. 
+
+  The following shows each rule defined in RFC 4180, and how it is treated by Super CSV.
+
+** Rule 1
+  
+-----------------------------------------------------------------------------------
+1. Each record is located on a separate line, delimited by a line
+   break (CRLF).  For example:
+
+   aaa,bbb,ccc CRLF
+   zzz,yyy,xxx CRLF
+-----------------------------------------------------------------------------------
+
+  The line break is configurable in Super CSV through the <<<CsvPreference>>> object, which is supplied to a Reader or Writer.
+
+** Rule 2
 
 -----------------------------------------------------------------------------------
-file         ::= [ header ] { line }
-header       ::= [ { entry separator } entry ] newline
-line         ::= [ { entry separator } entry ] newline
-entry        ::= character+ | { character* " separator " } | " entry newline entry "
-newline      ::= \n
-separator    ::= ,
-character    ::= a|b|..|A|B|..|0|1|..
-escapedQuote ::= ""
+2. The last record in the file may or may not have an ending line
+   break.  For example:
+
+   aaa,bbb,ccc CRLF
+   zzz,yyy,xxx
 -----------------------------------------------------------------------------------
 
-  Or more informally..
-   
-    * Entities are separated by new line characters 
-    
-    * Entries of an entity are separated by a separation character, often a comma (",") excluding the the last element of a line
-     
-    * An entry may contain the separation character - in which case that character is enclosed in quotes
-     
-    * An entry may contain newlines - in which case the whole entry is enclosed in quotation marks
-     
-    * The first line of the file may contain the header descriptions for the columns of the file, and may be ignored (or as in the case of Super CSV be utilized when reading data into maps or beans).
-     
-    * Any white-spaces at the start of a line, just after the separation character, just before a separation character, or just before a newline character are ignored.
-     
-    * An escaped quote is two consecutive quote characters. The only exception to this rule is when the first character in a cell is a quote it always denotes a quote for the form <<<" entry newline entry ">>>. Hence the entry "" (double quote in a cell) denotes the empty string, whereas the input """" denotes the string " 
+  Super CSV <will> use a line break when writing the last line of a CSV file, but a line break on the last line is optional when reading.
+  
+** Rule 3
+
+-----------------------------------------------------------------------------------
+3. There maybe an optional header line appearing as the first line
+   of the file with the same format as normal record lines.  This
+   header will contain names corresponding to the fields in the file
+   and should contain the same number of fields as the records in
+   the rest of the file (the presence or absence of the header line
+   should be indicated via the optional "header" parameter of this
+   MIME type).  For example:
+
+   field_name,field_name,field_name CRLF
+   aaa,bbb,ccc CRLF
+   zzz,yyy,xxx CRLF
+-----------------------------------------------------------------------------------
+
+  Super CSV accepts an optional header when reading or writing. In fact it typically uses the header for mapping between CSV and POJOs.
+  
+** Rule 4
+
+-----------------------------------------------------------------------------------
+4. Within the header and each record, there may be one or more
+   fields, separated by commas.  Each line should contain the same
+   number of fields throughout the file.  Spaces are considered part
+   of a field and should not be ignored.  The last field in the
+   record must not be followed by a comma.  For example:
+
+   aaa,bbb,ccc
+-----------------------------------------------------------------------------------
+
+  The delimiter in Super CSV is configurable via the <<<CsvPreference>>> object, though it is typically a comma.
+  
+  Super CSV expects each line to contain the same number of fields (including the header).
+
+  Super CSV trims leading and trailing spaces (fields that require leading or trailing spaces must be quoted). 
+  
+** Rule 5
+
+-----------------------------------------------------------------------------------
+5. Each field may or may not be enclosed in double quotes (however
+   some programs, such as Microsoft Excel, do not use double quotes
+   at all).  If fields are not enclosed with double quotes, then
+   double quotes may not appear inside the fields.  For example:
+
+   "aaa","bbb","ccc" CRLF
+   zzz,yyy,xxx
+-----------------------------------------------------------------------------------
+
+  Super CSV only encloses fields in double quotes when they require escaping (see next item).
+  
+  The quote character is configurable via the <<<CsvPreference>>> object.
+
+** Rule 6
+
+-----------------------------------------------------------------------------------
+6. Fields containing line breaks (CRLF), double quotes, and commas
+   should be enclosed in double-quotes.  For example:
+
+   "aaa","b CRLF
+   bb","ccc" CRLF
+   zzz,yyy,xxx
+-----------------------------------------------------------------------------------
+
+  Super CSV encloses a field in quotes if it contains a line break, double quote or comma.
+
+** Rule 7
+
+-----------------------------------------------------------------------------------
+7. If double-quotes are used to enclose fields, then a double-quote
+   appearing inside a field must be escaped by preceding it with
+   another double quote.  For example:
+
+   "aaa","b""bb","ccc"
+-----------------------------------------------------------------------------------
+
+  Super CSV escapes double-quotes with a preceding double-quote.
+ 

@@ -1,103 +1,202 @@
+/*
+ * Copyright 2007 Kasper B. Graversen
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.supercsv.io;
 
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.supercsv.SuperCsvTestUtils.CSV_FILE;
+import static org.supercsv.SuperCsvTestUtils.CUSTOMERS;
+import static org.supercsv.SuperCsvTestUtils.HEADER;
+import static org.supercsv.SuperCsvTestUtils.READ_PROCESSORS;
+import static org.supercsv.SuperCsvTestUtils.STRING_CUSTOMERS;
+
 import java.io.IOException;
+import java.io.Reader;
 import java.io.StringReader;
 import java.util.List;
 
-import org.junit.Assert;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.supercsv.cellprocessor.Trim;
 import org.supercsv.cellprocessor.ift.CellProcessor;
-import org.supercsv.exception.SuperCSVException;
 import org.supercsv.prefs.CsvPreference;
 
 /**
- * @author Kasper B. Graversen
+ * Tests the CsvListReader class.
+ * 
+ * @author James Bassett
  */
 public class CsvListReaderTest {
-	CsvListReader inFile = null;
 	
+	private static final CsvPreference PREFS = CsvPreference.STANDARD_PREFERENCE;
+	
+	private Reader reader;
+	
+	private CsvListReader listReader;
+	
+	private CsvListReader tokenizerListReader;
+	
+	/**
+	 * Sets up the reader for the tests (loading the CSV file from the classpath).
+	 */
 	@Before
-	public void setUp() throws Exception {
-		final String str = "a!a,b.b,\"cc,dd\",\r" + "e:e,a@A$\n" + "f;f,g g,h/h\n" + "i'i,\"\"\"hej\"\"\" \n" + ""; // various
-		// sign, "
-		// mac and
-		// pc
-		// newline
-		inFile = new CsvListReader(new StringReader(str), new CsvPreference('"', ',', "\n"));
-	}
-	
-	@Test(expected = SuperCSVException.class)
-	public void testCellprocessor_fail() throws IOException {
-		List<String> l;
-		final StringBuilder sb = new StringBuilder();
-		l = inFile.read(new CellProcessor[] { null });
-		Assert.assertEquals("read 4 columns", 4, l.size());
-		Assert.assertEquals("a", l.get(0));
-		Assert.assertEquals("b.", l.get(1));
-		Assert.assertEquals("cc,dd", l.get(2));
-		Assert.assertEquals("no errors", "", sb.toString());
+	public void setUp() {
+		reader = new StringReader(CSV_FILE);
+		listReader = new CsvListReader(reader, PREFS);
+		
+		final Tokenizer tokenizer = new Tokenizer(reader, PREFS);
+		tokenizerListReader = new CsvListReader(tokenizer, PREFS);
 	}
 	
 	/**
-	 * Test method for {@link org.supercsv.io.AbstractCsvReader#getLineNumber()}.
+	 * Closes the readers after the test.
+	 */
+	@After
+	public void tearDown() throws IOException {
+		listReader.close();
+		tokenizerListReader.close();
+	}
+	
+	/**
+	 * Tests the read() method.
 	 */
 	@Test
-	public void testNewLines() throws IOException {
-		List<String> l;
-		l = inFile.read();
-		Assert.assertNotNull(l);
-		Assert.assertEquals(1, inFile.getLineNumber());
-		l = inFile.read();
-		Assert.assertNotNull(l);
-		Assert.assertEquals(2, inFile.getLineNumber());
-		l = inFile.read();
-		Assert.assertNotNull(l);
-		Assert.assertEquals(3, inFile.getLineNumber());
-		l = inFile.read();
-		Assert.assertNotNull(l);
-		Assert.assertEquals(4, inFile.getLineNumber());
-		l = inFile.read();
-		Assert.assertNull(l);
-		Assert.assertEquals(4, inFile.getLineNumber());
+	public void testRead() throws IOException {
+		
+		final String[] header = listReader.getCsvHeader(true);
+		assertArrayEquals(HEADER, header);
+		
+		int i = 0;
+		List<String> customer;
+		while( (customer = listReader.read()) != null ) {
+			assertEquals(STRING_CUSTOMERS.get(i).getCustomerNo(), customer.get(0));
+			assertEquals(STRING_CUSTOMERS.get(i).getFirstName(), customer.get(1));
+			assertEquals(STRING_CUSTOMERS.get(i).getLastName(), customer.get(2));
+			assertEquals(STRING_CUSTOMERS.get(i).getBirthDate(), customer.get(3));
+			assertEquals(STRING_CUSTOMERS.get(i).getMailingAddress(), customer.get(4));
+			assertEquals(STRING_CUSTOMERS.get(i).getMarried(), customer.get(5));
+			assertEquals(STRING_CUSTOMERS.get(i).getNumberOfKids(), customer.get(6));
+			assertEquals(STRING_CUSTOMERS.get(i).getFavouriteQuote(), customer.get(7));
+			assertEquals(STRING_CUSTOMERS.get(i).getEmail(), customer.get(8));
+			assertEquals(STRING_CUSTOMERS.get(i).getLoyaltyPoints(), customer.get(9));
+			i++;
+		}
+		
+		assertEquals(STRING_CUSTOMERS.size() + 1, listReader.getRowNumber());
 	}
 	
+	/**
+	 * Tests the read() method with processors.
+	 */
 	@Test
-	public void testProcessorRead() throws IOException {
-		List<String> l;
-		l = inFile.read(new CellProcessor[] { new Trim(1), new Trim(2), null, null });
-		Assert.assertEquals("read 4 columns", 4, l.size());
-		Assert.assertEquals("a", l.get(0));
-		Assert.assertEquals("b.", l.get(1));
-		Assert.assertEquals("cc,dd", l.get(2));
+	public void testReadWithProcessors() throws IOException {
 		
-		// test input array is cleared after each read
-		l = inFile.read(new CellProcessor[] { new Trim(1), null });
-		// Assert.assertEquals("read 2 columns", 2, l.size());
-		Assert.assertEquals("e", l.get(0));
-		Assert.assertEquals("a@A$", l.get(1));
+		final String[] header = listReader.getCsvHeader(true);
+		assertArrayEquals(HEADER, header);
+		
+		int i = 0;
+		List<Object> customer;
+		while( (customer = listReader.read(READ_PROCESSORS)) != null ) {
+			assertEquals(CUSTOMERS.get(i).getCustomerNo(), customer.get(0));
+			assertEquals(CUSTOMERS.get(i).getFirstName(), customer.get(1));
+			assertEquals(CUSTOMERS.get(i).getLastName(), customer.get(2));
+			assertEquals(CUSTOMERS.get(i).getBirthDate(), customer.get(3));
+			assertEquals(CUSTOMERS.get(i).getMailingAddress(), customer.get(4));
+			assertEquals(CUSTOMERS.get(i).getMarried(), customer.get(5));
+			assertEquals(CUSTOMERS.get(i).getNumberOfKids(), customer.get(6));
+			assertEquals(CUSTOMERS.get(i).getFavouriteQuote(), customer.get(7));
+			assertEquals(CUSTOMERS.get(i).getEmail(), customer.get(8));
+			assertEquals(CUSTOMERS.get(i).getLoyaltyPoints(), customer.get(9));
+			i++;
+		}
+		
+		assertEquals(CUSTOMERS.size() + 1, listReader.getRowNumber());
 	}
 	
+	/**
+	 * Tests the read() method using the tokenizer version of CsvListReader (just to make sure it behaves exactly the
+	 * same as the reader version).
+	 */
 	@Test
-	public void testVariousCharacters() throws IOException {
-		List<String> l;
-		l = inFile.read();
-		Assert.assertEquals("read 4 columns", 4, l.size());
-		Assert.assertEquals("! test", "a!a", l.get(0));
-		Assert.assertEquals(". test", "b.b", l.get(1));
-		Assert.assertEquals("\" test", "cc,dd", l.get(2));
-		Assert.assertEquals("empty test", "", l.get(3));
+	public void testReadUsingTokenizerReader() throws IOException {
 		
-		l = inFile.read();
-		Assert.assertEquals("read 2 columns", 2, l.size());
-		Assert.assertEquals(": test", "e:e", l.get(0));
-		Assert.assertEquals(": test", "a@A$", l.get(1));
+		final String[] header = tokenizerListReader.getCsvHeader(true);
+		assertArrayEquals(HEADER, header);
 		
-		l = inFile.read();
-		Assert.assertEquals("read 3 columns", 3, l.size());
-		Assert.assertEquals("; test", "f;f", l.get(0));
-		Assert.assertEquals("  test", "g g", l.get(1));
-		Assert.assertEquals("  test", "h/h", l.get(2));
+		int i = 0;
+		List<String> customer;
+		while( (customer = tokenizerListReader.read()) != null ) {
+			assertEquals(STRING_CUSTOMERS.get(i).getCustomerNo(), customer.get(0));
+			assertEquals(STRING_CUSTOMERS.get(i).getFirstName(), customer.get(1));
+			assertEquals(STRING_CUSTOMERS.get(i).getLastName(), customer.get(2));
+			assertEquals(STRING_CUSTOMERS.get(i).getBirthDate(), customer.get(3));
+			assertEquals(STRING_CUSTOMERS.get(i).getMailingAddress(), customer.get(4));
+			assertEquals(STRING_CUSTOMERS.get(i).getMarried(), customer.get(5));
+			assertEquals(STRING_CUSTOMERS.get(i).getNumberOfKids(), customer.get(6));
+			assertEquals(STRING_CUSTOMERS.get(i).getFavouriteQuote(), customer.get(7));
+			assertEquals(STRING_CUSTOMERS.get(i).getEmail(), customer.get(8));
+			assertEquals(STRING_CUSTOMERS.get(i).getLoyaltyPoints(), customer.get(9));
+			i++;
+		}
+		
+		assertEquals(STRING_CUSTOMERS.size() + 1, tokenizerListReader.getRowNumber());
 	}
+	
+	/**
+	 * Tests the read() method (with processors), with a null cell processor array.
+	 */
+	@Test(expected = NullPointerException.class)
+	public void testReadProcessorsWithNullProcessors() throws IOException {
+		listReader.read((CellProcessor[]) null);
+	}
+	
+	/**
+	 * Tests the Reader constructor with a null Reader.
+	 */
+	@SuppressWarnings("resource")
+	@Test(expected = NullPointerException.class)
+	public void testReaderConstructorWithNullReader() {
+		new CsvListReader((Reader) null, PREFS);
+	}
+	
+	/**
+	 * Tests the Reader constructor with a null preference.
+	 */
+	@SuppressWarnings("resource")
+	@Test(expected = NullPointerException.class)
+	public void testReaderConstructorWithNullPreferences() {
+		new CsvListReader(reader, null);
+	}
+	
+	/**
+	 * Tests the Tokenizer constructor with a null Reader.
+	 */
+	@SuppressWarnings("resource")
+	@Test(expected = NullPointerException.class)
+	public void testTokenizerConstructorWithNullReader() {
+		new CsvListReader((Tokenizer) null, PREFS);
+	}
+	
+	/**
+	 * Tests the Tokenizer constructor with a null preference.
+	 */
+	@SuppressWarnings("resource")
+	@Test(expected = NullPointerException.class)
+	public void testTokenizerConstructorWithNullPreferences() {
+		new CsvListReader(new Tokenizer(reader, PREFS), null);
+	}
+	
 }

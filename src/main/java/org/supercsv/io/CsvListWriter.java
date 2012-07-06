@@ -1,3 +1,18 @@
+/*
+ * Copyright 2007 Kasper B. Graversen
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.supercsv.io;
 
 import java.io.IOException;
@@ -10,11 +25,15 @@ import org.supercsv.prefs.CsvPreference;
 import org.supercsv.util.Util;
 
 /**
- * This writer class is capable of writing arrays and Lists to a CSV file.
+ * CsvListWriter is a simple writer capable of writing arrays and Lists to a CSV file.
  * 
  * @author Kasper B. Graversen
+ * @author James Bassett
  */
 public class CsvListWriter extends AbstractCsvWriter implements ICsvListWriter {
+	
+	// temporary storage of processed columns to be written
+	private final List<Object> processedColumns = new ArrayList<Object>();
 	
 	/**
 	 * Constructs a new <tt>CsvListWriter</tt> with the supplied Writer and CSV preferences. Note that the
@@ -22,8 +41,10 @@ public class CsvListWriter extends AbstractCsvWriter implements ICsvListWriter {
 	 * 
 	 * @param writer
 	 *            the writer
-	 * @param preferences
+	 * @param preference
 	 *            the CSV preferences
+	 * @throws NullPointerException
+	 *             if writer or preference are null
 	 */
 	public CsvListWriter(final Writer writer, final CsvPreference preference) {
 		super(writer, preference);
@@ -32,41 +53,37 @@ public class CsvListWriter extends AbstractCsvWriter implements ICsvListWriter {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void write(final List<? extends Object> content, final CellProcessor[] processors) throws IOException {
-		final List<? super Object> destination = new ArrayList<Object>();
+	public void write(final List<?> columns, final CellProcessor[] processors) throws IOException {
 		
-		// convert source to List<String>
-		final List<String> source = new ArrayList<String>();
-		for( int i = 0; i < content.size(); i++ ) {
-			Object value = content.get(i);
-			source.add(value == null ? null : value.toString());
-		}
+		super.incrementRowAndLineNo();
 		
-		Util.processStringList(destination, source, processors, super.getLineNumber());
-		write(destination);
+		// execute the processors for each column
+		Util.executeCellProcessors(processedColumns, columns, processors, getLineNumber(), getRowNumber());
+		
+		super.writeRow(processedColumns);
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
-	public void write(final List<?> content) throws IOException {
-		super.write(content);
+	public void write(List<?> columns) throws IOException {
+		super.incrementRowAndLineNo();
+		super.writeRow(columns);
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
-	public void write(final Object... content) throws IOException {
-		super.write(content);
+	public void write(final Object... columns) throws IOException {
+		super.incrementRowAndLineNo();
+		super.writeRow(columns);
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
-	public void write(final String... content) throws IOException {
-		super.write(content);
+	public void write(final String... columns) throws IOException {
+		super.incrementRowAndLineNo();
+		super.writeRow(columns);
 	}
 }

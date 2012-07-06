@@ -1,11 +1,27 @@
+/*
+ * Copyright 2007 Kasper B. Graversen
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.supercsv.util;
 
+import static org.supercsv.util.ReflectionUtils.SET_PREFIX;
+import static org.supercsv.util.ReflectionUtils.GET_PREFIX;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.HashMap;
-
-import org.supercsv.exception.SuperCSVReflectionException;
+import java.util.Map;
 
 /**
  * This is part of the internal implementation of Super CSV.
@@ -16,45 +32,76 @@ import org.supercsv.exception.SuperCSVReflectionException;
  * argument.
  * 
  * @author Kasper B. Graversen
+ * @author James Bassett
  */
-public class BeanInterfaceProxy implements InvocationHandler {
+public final class BeanInterfaceProxy implements InvocationHandler {
 	
-	private static final int GET_SET_PREFIX_LENGTH = 3;
+	private final Map<String, Object> beanState = new HashMap<String, Object>();
 	
-	private final HashMap<String, Object> beanState = new HashMap<String, Object>();
-	
-	/**
-	 * Creates a proxy object which implements a given bean interface. This proxy object will act as an implementation
-	 * of the interface.
-	 * 
-	 * @param anInterface
-	 *            Interface for which to create a proxy
-	 * @return the proxy implementation
-	 */
-	@SuppressWarnings("unchecked")
-	public <T> T createProxy(final Class<T> anInterface) {
-		return (T) Proxy.newProxyInstance(anInterface.getClassLoader(), new Class[] { anInterface }, this);
+	// no instantiation
+	private BeanInterfaceProxy() {
 	}
 	
 	/**
-	 * This method is invoked every time a method is invoked on the proxy. If a getter method is encountered then this
-	 * method returns the stored value from the bean state (or null if the field has not been set). If a setter methods
-	 * is encountered then the bean state is updated with the value of the first argument and the value is returned (to
-	 * allow for method chaining)
+	 * Creates a proxy object which implements a given bean interface.
+	 * 
+	 * @param proxyInterface
+	 *            the interface the the proxy will implement
+	 * @return the proxy implementation
+	 * @throws NullPointerException
+	 *             if proxyInterface is null
 	 */
-	public Object invoke(final Object proxy, final Method method, final Object[] args) throws Exception {
-		if( method.getName().startsWith("get") ) {
-			return beanState.get(method.getName().substring(GET_SET_PREFIX_LENGTH));
+	public static <T> T createProxy(final Class<T> proxyInterface) {
+		if( proxyInterface == null ) {
+			throw new NullPointerException("proxyInterface should not be null");
 		}
-		if( method.getName().startsWith("set") ) {
-			if( args.length == 1 ) {
-				beanState.put(method.getName().substring(GET_SET_PREFIX_LENGTH), args[0]);
-				return proxy;
-			} else {
-				throw new SuperCSVReflectionException("Method should only take 1 argument");
+		return proxyInterface.cast(Proxy.newProxyInstance(proxyInterface.getClassLoader(),
+			new Class[] { proxyInterface }, new BeanInterfaceProxy()));
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 * <p>
+	 * If a getter method is encountered then this method returns the stored value from the bean state (or null if the
+	 * field has not been set).
+	 * <p>
+	 * If a setter method is encountered then the bean state is updated with the value of the first argument and the
+	 * value is returned (to allow for method chaining)
+	 * 
+	 * @throws IllegalArgumentException
+	 *             if the method is not a valid getter/setter
+	 */
+	public Object invoke(final Object proxy, final Method method, final Object[] args) {
+		
+		final String methodName = method.getName();
+		
+		if( methodName.startsWith(GET_PREFIX) ) {
+			
+			if( method.getParameterTypes().length > 0 ) {
+				throw new IllegalArgumentException(String.format(
+					"method %s.%s() should have no parameters to be a valid getter", method.getDeclaringClass()
+						.getName(), methodName));
 			}
+			
+			// simulate getter by retrieving value from bean state
+			return beanState.get(methodName.substring(GET_PREFIX.length()));
+			
+		} else if( methodName.startsWith(SET_PREFIX) ) {
+			
+			if( args == null || args.length != 1 ) {
+				throw new IllegalArgumentException(String.format(
+					"method  %s.%s() should have exactly one parameter to be a valid setter", method
+						.getDeclaringClass().getName(), methodName));
+			}
+			
+			// simulate setter by storing value in bean state
+			beanState.put(methodName.substring(SET_PREFIX.length()), args[0]);
+			return proxy;
+			
+		} else {
+			throw new IllegalArgumentException(String.format("method %s.%s() is not a valid getter/setter", method
+				.getDeclaringClass().getName(), methodName));
 		}
-		throw new SuperCSVReflectionException(
-			"Can only understand method calls starting with 'get' or 'set'. Got method '" + method.getName() + "'");
+		
 	}
 }

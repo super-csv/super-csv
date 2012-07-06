@@ -1,8 +1,28 @@
+/*
+ * Copyright 2007 Kasper B. Graversen
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.supercsv.cellprocessor;
 
+import org.supercsv.cellprocessor.ift.BoolCellProcessor;
 import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.cellprocessor.ift.DateCellProcessor;
+import org.supercsv.cellprocessor.ift.DoubleCellProcessor;
+import org.supercsv.cellprocessor.ift.LongCellProcessor;
+import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.exception.NullInputException;
-import org.supercsv.util.CSVContext;
+import org.supercsv.util.CsvContext;
 
 /**
  * Abstract super class containing shared behaviour of all cell processors. Processors are linked together in a linked
@@ -21,7 +41,7 @@ public abstract class CellProcessorAdaptor implements CellProcessor {
 	 */
 	protected CellProcessorAdaptor() {
 		super();
-		this.next = this instanceof NullObjectPattern ? null : NullObjectPattern.INSTANCE;
+		this.next = NullObjectPattern.INSTANCE;
 	}
 	
 	/**
@@ -50,9 +70,9 @@ public abstract class CellProcessorAdaptor implements CellProcessor {
 	 *            the CSV context
 	 * @throws NullInputException
 	 *             if value is null
-	 * @since 1.6.0
+	 * @since 2.0.0
 	 */
-	protected final void validateInputNotNull(final Object value, final CSVContext context) {
+	protected final void validateInputNotNull(final Object value, final CsvContext context) {
 		if( value == null ) {
 			throw new NullInputException("this processor does not accept null input", context, this);
 		}
@@ -64,6 +84,35 @@ public abstract class CellProcessorAdaptor implements CellProcessor {
 	@Override
 	public String toString() {
 		return getClass().getName();
+	}
+	
+	/**
+	 * This is an implementation-specific processor and should only be used by the <tt>CellProcessorAdaptor</tt> class.
+	 * It is the implementation of the null object pattern (it does nothing - just returns the value!) and should always
+	 * be the last <tt>CellProcessor</tt> in the chain. It is implemented as a reusable singleton to avoid unnecessary
+	 * object creation.
+	 * 
+	 * @author Kasper B. Graversen
+	 * @author James Bassett
+	 */
+	private static final class NullObjectPattern implements BoolCellProcessor, DateCellProcessor, DoubleCellProcessor,
+		LongCellProcessor, StringCellProcessor {
+		
+		private static final NullObjectPattern INSTANCE = new NullObjectPattern();
+		
+		/*
+		 * This processor must not be instantiated outside of CellProcessorAdaptor.
+		 */
+		private NullObjectPattern() {
+			super();
+		}
+		
+		/**
+		 * {@inheritDoc}
+		 */
+		public Object execute(final Object value, final CsvContext context) {
+			return value;
+		}
 	}
 	
 }

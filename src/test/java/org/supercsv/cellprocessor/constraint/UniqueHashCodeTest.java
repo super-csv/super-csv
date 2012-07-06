@@ -1,7 +1,22 @@
+/*
+ * Copyright 2007 Kasper B. Graversen
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.supercsv.cellprocessor.constraint;
 
 import static org.junit.Assert.assertEquals;
-import static org.supercsv.TestConstants.ANONYMOUS_CSVCONTEXT;
+import static org.supercsv.SuperCsvTestUtils.ANONYMOUS_CSVCONTEXT;
 
 import java.util.Arrays;
 
@@ -51,13 +66,13 @@ public class UniqueHashCodeTest {
 	public void testValidObjectInput() {
 		
 		PersonBean p1 = new PersonBean();
-		p1.setFirstname("Neo");
+		p1.setFirstName("Neo");
 		PersonBean p2 = new PersonBean();
-		p2.setFirstname("Trinity");
+		p2.setFirstName("Trinity");
 		PersonBean p3 = new PersonBean();
-		p3.setFirstname("Morpheus");
+		p3.setFirstName("Morpheus");
 		PersonBean p4 = new PersonBean();
-		p4.setFirstname("Switch");
+		p4.setFirstName("Switch");
 		
 		for( PersonBean input : Arrays.asList(p1, p2, p3, p4) ) {
 			assertEquals(input, processor.execute(input, ANONYMOUS_CSVCONTEXT));
@@ -84,13 +99,13 @@ public class UniqueHashCodeTest {
 	public void testInvalidObjectInput() {
 		
 		PersonBean p1 = new PersonBean();
-		p1.setFirstname("Neo");
+		p1.setFirstName("Neo");
 		PersonBean p2 = new PersonBean();
-		p2.setFirstname("Trinity");
+		p2.setFirstName("Trinity");
 		PersonBean p3 = new PersonBean();
-		p3.setFirstname("Morpheus");
+		p3.setFirstName("Morpheus");
 		PersonBean p4 = new PersonBean();
-		p4.setFirstname("Neo"); // invalid! there's only one 'one'!
+		p4.setFirstName("Neo"); // invalid! there's only one 'one'!
 		
 		assertEquals(p1, processor.execute(p1, ANONYMOUS_CSVCONTEXT));
 		assertEquals(p2, processor.execute(p2, ANONYMOUS_CSVCONTEXT));

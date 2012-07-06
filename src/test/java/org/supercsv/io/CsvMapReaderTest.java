@@ -1,156 +1,273 @@
+/*
+ * Copyright 2007 Kasper B. Graversen
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.supercsv.io;
 
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.supercsv.SuperCsvTestUtils.CSV_FILE;
+import static org.supercsv.SuperCsvTestUtils.CUSTOMERS;
+import static org.supercsv.SuperCsvTestUtils.HEADER;
+import static org.supercsv.SuperCsvTestUtils.PARTIAL_HEADER;
+import static org.supercsv.SuperCsvTestUtils.READ_PROCESSORS;
+import static org.supercsv.SuperCsvTestUtils.STRING_CUSTOMERS;
+
 import java.io.IOException;
+import java.io.Reader;
 import java.io.StringReader;
 import java.util.Map;
 
-import org.junit.Assert;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.supercsv.cellprocessor.Optional;
-import org.supercsv.cellprocessor.ParseDate;
-import org.supercsv.cellprocessor.ParseInt;
-import org.supercsv.cellprocessor.ParseLong;
-import org.supercsv.cellprocessor.Trim;
-import org.supercsv.cellprocessor.ift.CellProcessor;
-import org.supercsv.exception.SuperCSVException;
 import org.supercsv.prefs.CsvPreference;
 
+/**
+ * Tests the CsvMapReader class.
+ * 
+ * @author James Bassett
+ */
 public class CsvMapReaderTest {
-	static final CellProcessor[] PROCESSORS = new CellProcessor[] { null, null, null, new Optional(new ParseInt()),
-		new Optional() };
-	static final CellProcessor[] PROCESSORS_PARTIAL = new CellProcessor[] { new Trim(3), null, null, null,
-		new Optional() };
-	static final CellProcessor[] PROCESSORS_EMPTY = new CellProcessor[] { null, null, null, null, null };
-	CsvMapReader inFile = null;
-	final String[] nameMapper = { "firstname", "lastname", "street", "zip", "town" };
-	final String[] nameMapperPartial = { "firstname", null, null, null, "town" };
-	final String[] invalidNameMapperPartial = { "firstname", null, null, null, "firstname" };
+	
+	private static final CsvPreference PREFS = CsvPreference.STANDARD_PREFERENCE;
+	
+	private Reader reader;
+	
+	private CsvMapReader mapReader;
+	
+	private CsvMapReader tokenizerMapReader;
 	
 	/**
-	 * @throws java.lang.Exception
+	 * Sets up the reader for the tests (loading the CSV file from the classpath).
 	 */
 	@Before
-	public void setUp() throws Exception {
-		final String str = "Klaus,     Anderson,   Mauler Street 43,   4328,           New York\n"
-			+ "Moby,      Duck,       Sesam str,              ,         \n"; // missing
-		// parts
-		// of
-		// the
-		// address
-		inFile = new CsvMapReader(new StringReader(str), new CsvPreference('"', ',', "\n"));
-	}
-	
-	@Test
-	public void testAdvSkipColumnsRead() throws IOException {
-		final Map<String, ? super Object> res = inFile.read(nameMapperPartial, PROCESSORS_PARTIAL); // read line and
-		// check the values
-		Assert.assertEquals("read elem from map", "Kla", res.get("firstname"));
-		Assert.assertNull("skipped column", res.get("lastname"));
-		Assert.assertEquals("read elem from map", "New York", res.get("town"));
-		Assert.assertEquals("no keys", 2, res.size());
-	}
-	
-	@Test
-	public void testAdvSkipColumnsRead_fail() throws IOException {
-		final Map<String, ? super Object> res = inFile.read(nameMapperPartial, PROCESSORS_EMPTY); // read line and
-		// check the values
-		Assert.assertEquals("read elem from map", "Klaus", res.get("firstname"));
-		Assert.assertNull("skipped column", res.get("lastname"));
-		Assert.assertEquals("read elem from map", "New York", res.get("town"));
-		Assert.assertEquals("no keys", 2, res.size());
+	public void setUp() {
+		reader = new StringReader(CSV_FILE);
+		mapReader = new CsvMapReader(reader, PREFS);
+		
+		final Tokenizer tokenizer = new Tokenizer(reader, PREFS);
+		tokenizerMapReader = new CsvMapReader(tokenizer, PREFS);
 	}
 	
 	/**
-	 * This example is being used on the web page and consequently must work! :-)
-	 * 
-	 * @throws IOException
+	 * Closes the readers after the test.
+	 */
+	@After
+	public void tearDown() throws IOException {
+		mapReader.close();
+		tokenizerMapReader.close();
+	}
+	
+	/**
+	 * Tests the read() method.
 	 */
 	@Test
-	public void testEmptyLastLineWebExmaple() throws IOException {
-		final StringReader file = new StringReader("name, birthdate,  phone,     town\r\n"
-			+ "Bil,  30/05-1975, 5551684,   Nottingham\r\n" + "Kira, 01/04-2001, 5556621,   Sheffield\r\n");
+	public void testRead() throws IOException {
 		
-		final ICsvMapReader mapReader = new CsvMapReader(file, CsvPreference.EXCEL_PREFERENCE);
-		Map<String, ? super Object> map;
-		Map<String, ? super Object> secondLastRead = null;
+		final String[] header = mapReader.getCsvHeader(true);
+		assertArrayEquals(HEADER, header);
 		
-		// read the header to fetch column names (which are used as keys for the map)
-		final String[] header = mapReader.getCSVHeader(true);
-		
-		while( (map = mapReader.read(header, new CellProcessor[] { null, new ParseDate("dd/MM-yyyy"), new ParseLong(),
-			null })) != null ) {
-			secondLastRead = map;
+		int i = 0;
+		Map<String, String> customer;
+		while( (customer = mapReader.read(header)) != null ) {
+			assertEquals(STRING_CUSTOMERS.get(i).getCustomerNo(), customer.get("customerNo"));
+			assertEquals(STRING_CUSTOMERS.get(i).getFirstName(), customer.get("firstName"));
+			assertEquals(STRING_CUSTOMERS.get(i).getLastName(), customer.get("lastName"));
+			assertEquals(STRING_CUSTOMERS.get(i).getBirthDate(), customer.get("birthDate"));
+			assertEquals(STRING_CUSTOMERS.get(i).getMailingAddress(), customer.get("mailingAddress"));
+			assertEquals(STRING_CUSTOMERS.get(i).getMarried(), customer.get("married"));
+			assertEquals(STRING_CUSTOMERS.get(i).getNumberOfKids(), customer.get("numberOfKids"));
+			assertEquals(STRING_CUSTOMERS.get(i).getFavouriteQuote(), customer.get("favouriteQuote"));
+			assertEquals(STRING_CUSTOMERS.get(i).getEmail(), customer.get("email"));
+			assertEquals(STRING_CUSTOMERS.get(i).getLoyaltyPoints(), customer.get("loyaltyPoints"));
+			i++;
 		}
-		Assert.assertEquals("last read phone", 5556621L, secondLastRead.get("phone"));
-	}
-	
-	@Test
-	public void testHeaderRead() throws IOException {
-		final String[] header = inFile.getCSVHeader(true);
-		Assert.assertEquals("First element in 'header' is the first column of the file", "Klaus", header[0]);
-		Assert.assertEquals("Anderson", header[1]);
-		Assert.assertEquals("Mauler Street 43", header[2]);
-		Assert.assertEquals("4328", header[3]);
-		Assert.assertEquals("New York", header[4]);
-	}
-	
-	@Test(expected = SuperCSVException.class)
-	public void testReadInvalidMap() throws IOException {
-		@SuppressWarnings("unused")
-		final Map<String, ? super Object> res = inFile.read(invalidNameMapperPartial, PROCESSORS_EMPTY);
-	}
-	
-	@Test
-	public void testSimplestRead() throws IOException {
-		Map<String, String> res = inFile.read(nameMapper); // read line and check the values
-		Assert.assertEquals("read elem from map", "Klaus", res.get("firstname"));
-		Assert.assertEquals("read elem from map", "Anderson", res.get("lastname"));
-		Assert.assertEquals("read elem from map", "Mauler Street 43", res.get("street"));
-		Assert.assertEquals("read elem from map", "4328", res.get("zip"));
-		Assert.assertEquals("read elem from map", "New York", res.get("town"));
-		Assert.assertEquals("no keys", 5, res.size());
 		
-		res = inFile.read(nameMapper); // read line and check the values
-		Assert.assertEquals("read elem from map", "Moby", res.get("firstname"));
-		Assert.assertEquals("read elem from map", "Duck", res.get("lastname"));
-		Assert.assertEquals("read elem from map", "Sesam str", res.get("street"));
-		Assert.assertEquals("read elem from map", "", res.get("zip"));
-		Assert.assertEquals("read elem from map", "", res.get("town"));
-		Assert.assertEquals("no keys", 5, res.size());
+		assertEquals(STRING_CUSTOMERS.size() + 1, mapReader.getRowNumber());
 	}
 	
+	/**
+	 * Tests the read() method, but only mapping a few columns.
+	 */
 	@Test
-	public void testSimplestSkipColumnsRead() throws IOException {
-		final Map<String, String> res = inFile.read(nameMapperPartial); // read line and check the values
-		Assert.assertEquals("read elem from map", "Klaus", res.get("firstname"));
-		Assert.assertEquals("skipped column", null, res.get("lastname"));
-		Assert.assertEquals("read elem from map", "New York", res.get("town"));
-		Assert.assertEquals("no keys", 2, res.size());
-	}
-	
-	@Test
-	public void testWithProcessorsRead() throws IOException {
-		Map<String, ? super Object> res = inFile.read(nameMapper, PROCESSORS); // read line and check the values
-		Assert.assertEquals("read elem from map", "Klaus", res.get("firstname"));
-		Assert.assertEquals("read elem from map", "Anderson", res.get("lastname"));
-		Assert.assertEquals("read elem from map", "Mauler Street 43", res.get("street"));
-		Assert.assertEquals("read elem from map", 4328, res.get("zip"));
-		Assert.assertEquals("read elem from map", "New York", res.get("town"));
-		Assert.assertEquals("no keys", 5, res.size());
+	public void testPartialRead() throws IOException {
 		
-		res = inFile.read(nameMapper, PROCESSORS); // read line and check the values
-		Assert.assertEquals("read elem from map", "Moby", res.get("firstname"));
-		Assert.assertEquals("read elem from map", "Duck", res.get("lastname"));
-		Assert.assertEquals("read elem from map", "Sesam str", res.get("street"));
-		Assert.assertEquals("read elem from map", null, res.get("zip"));
-		Assert.assertEquals("read elem from map", null, res.get("town"));
-		Assert.assertEquals("no keys", 5, res.size());
+		assertArrayEquals(HEADER, mapReader.getCsvHeader(true));
+		
+		int i = 0;
+		Map<String, String> customer;
+		while( (customer = mapReader.read(PARTIAL_HEADER)) != null ) {
+			assertNull(customer.get("customerNo"));
+			assertEquals(STRING_CUSTOMERS.get(i).getFirstName(), customer.get("firstName"));
+			assertEquals(STRING_CUSTOMERS.get(i).getLastName(), customer.get("lastName"));
+			assertNull(customer.get("birthDate"));
+			assertNull(customer.get("mailingAddress"));
+			assertNull(customer.get("married"));
+			assertNull(customer.get("numberOfKids"));
+			assertNull(customer.get("favouriteQuote"));
+			assertEquals(STRING_CUSTOMERS.get(i).getEmail(), customer.get("email"));
+			assertNull(customer.get("loyaltyPoints"));
+			i++;
+		}
+		
+		assertEquals(STRING_CUSTOMERS.size() + 1, mapReader.getRowNumber());
 	}
 	
-	@Test(expected = SuperCSVException.class)
-	public void testWithProcessorsRead_fail() throws IOException {
-		@SuppressWarnings("unused")
-		final Map<String, ? super Object> res = inFile.read(nameMapper, new CellProcessor[] { null });
+	/**
+	 * Tests the read() method with processors.
+	 */
+	@Test
+	public void testReadWithProcessors() throws IOException {
+		
+		final String[] header = mapReader.getCsvHeader(true);
+		assertArrayEquals(HEADER, header);
+		
+		int i = 0;
+		Map<String, Object> customer;
+		while( (customer = mapReader.read(header, READ_PROCESSORS)) != null ) {
+			assertEquals(CUSTOMERS.get(i).getCustomerNo(), customer.get("customerNo"));
+			assertEquals(CUSTOMERS.get(i).getFirstName(), customer.get("firstName"));
+			assertEquals(CUSTOMERS.get(i).getLastName(), customer.get("lastName"));
+			assertEquals(CUSTOMERS.get(i).getBirthDate(), customer.get("birthDate"));
+			assertEquals(CUSTOMERS.get(i).getMailingAddress(), customer.get("mailingAddress"));
+			assertEquals(CUSTOMERS.get(i).getMarried(), customer.get("married"));
+			assertEquals(CUSTOMERS.get(i).getNumberOfKids(), customer.get("numberOfKids"));
+			assertEquals(CUSTOMERS.get(i).getFavouriteQuote(), customer.get("favouriteQuote"));
+			assertEquals(CUSTOMERS.get(i).getEmail(), customer.get("email"));
+			assertEquals(CUSTOMERS.get(i).getLoyaltyPoints(), customer.get("loyaltyPoints"));
+			i++;
+		}
+		
+		assertEquals(CUSTOMERS.size() + 1, mapReader.getRowNumber());
 	}
+	
+	/**
+	 * Tests the read() method with processors, but only mapping a few columns.
+	 */
+	@Test
+	public void testPartialReadWithProcessors() throws IOException {
+		
+		assertArrayEquals(HEADER, mapReader.getCsvHeader(true));
+		
+		int i = 0;
+		Map<String, Object> customer;
+		while( (customer = mapReader.read(PARTIAL_HEADER, READ_PROCESSORS)) != null ) {
+			assertNull(customer.get("customerNo"));
+			assertEquals(CUSTOMERS.get(i).getFirstName(), customer.get("firstName"));
+			assertEquals(CUSTOMERS.get(i).getLastName(), customer.get("lastName"));
+			assertNull(customer.get("birthDate"));
+			assertNull(customer.get("mailingAddress"));
+			assertNull(customer.get("married"));
+			assertNull(customer.get("numberOfKids"));
+			assertNull(customer.get("favouriteQuote"));
+			assertEquals(CUSTOMERS.get(i).getEmail(), customer.get("email"));
+			assertNull(customer.get("loyaltyPoints"));
+			i++;
+		}
+		
+		assertEquals(CUSTOMERS.size() + 1, mapReader.getRowNumber());
+	}
+	
+	/**
+	 * Tests the read() method using the tokenizer version of CsvMapReader (just to make sure it behaves exactly the
+	 * same as the reader version).
+	 */
+	@Test
+	public void testReadUsingTokenizerReader() throws IOException {
+		
+		final String[] header = tokenizerMapReader.getCsvHeader(true);
+		assertArrayEquals(HEADER, header);
+		
+		int i = 0;
+		Map<String, String> customer;
+		while( (customer = tokenizerMapReader.read(HEADER)) != null ) {
+			assertEquals(STRING_CUSTOMERS.get(i).getCustomerNo(), customer.get("customerNo"));
+			assertEquals(STRING_CUSTOMERS.get(i).getFirstName(), customer.get("firstName"));
+			assertEquals(STRING_CUSTOMERS.get(i).getLastName(), customer.get("lastName"));
+			assertEquals(STRING_CUSTOMERS.get(i).getBirthDate(), customer.get("birthDate"));
+			assertEquals(STRING_CUSTOMERS.get(i).getMailingAddress(), customer.get("mailingAddress"));
+			assertEquals(STRING_CUSTOMERS.get(i).getMarried(), customer.get("married"));
+			assertEquals(STRING_CUSTOMERS.get(i).getNumberOfKids(), customer.get("numberOfKids"));
+			assertEquals(STRING_CUSTOMERS.get(i).getFavouriteQuote(), customer.get("favouriteQuote"));
+			assertEquals(STRING_CUSTOMERS.get(i).getEmail(), customer.get("email"));
+			assertEquals(STRING_CUSTOMERS.get(i).getLoyaltyPoints(), customer.get("loyaltyPoints"));
+			i++;
+		}
+		
+		assertEquals(STRING_CUSTOMERS.size() + 1, tokenizerMapReader.getRowNumber());
+	}
+	
+	/**
+	 * Tests the read() method, with a null name mapping array.
+	 */
+	@Test(expected = NullPointerException.class)
+	public void testReadWithNullNameMapping() throws IOException {
+		mapReader.read((String[]) null);
+	}
+	
+	/**
+	 * Tests the read() method (with processors), with a null cell processor array.
+	 */
+	@Test(expected = NullPointerException.class)
+	public void testReadProcessorsWithNullProcessors() throws IOException {
+		mapReader.read(HEADER, null);
+	}
+	
+	/**
+	 * Tests the read() method (with processors), with a null name mapping array.
+	 */
+	@Test(expected = NullPointerException.class)
+	public void testReadProcessorsWithNullNameMapping() throws IOException {
+		mapReader.read((String[]) null, READ_PROCESSORS);
+	}
+	
+	/**
+	 * Tests the Reader constructor with a null Reader.
+	 */
+	@SuppressWarnings("resource")
+	@Test(expected = NullPointerException.class)
+	public void testReaderConstructorWithNullReader() {
+		new CsvMapReader((Reader) null, PREFS);
+	}
+	
+	/**
+	 * Tests the Reader constructor with a null preference.
+	 */
+	@SuppressWarnings("resource")
+	@Test(expected = NullPointerException.class)
+	public void testReaderConstructorWithNullPreferences() {
+		new CsvMapReader(reader, null);
+	}
+	
+	/**
+	 * Tests the Tokenizer constructor with a null Reader.
+	 */
+	@SuppressWarnings("resource")
+	@Test(expected = NullPointerException.class)
+	public void testTokenizerConstructorWithNullReader() {
+		new CsvMapReader((Tokenizer) null, PREFS);
+	}
+	
+	/**
+	 * Tests the Tokenizer constructor with a null preference.
+	 */
+	@SuppressWarnings("resource")
+	@Test(expected = NullPointerException.class)
+	public void testTokenizerConstructorWithNullPreferences() {
+		new CsvMapReader(new Tokenizer(reader, PREFS), null);
+	}
+	
 }

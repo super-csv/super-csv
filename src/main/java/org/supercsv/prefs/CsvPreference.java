@@ -1,61 +1,118 @@
+/*
+ * Copyright 2007 Kasper B. Graversen
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.supercsv.prefs;
 
 /**
- * Before reading or writing CSV files, you must supply the reader/writer with a setup (this object)
+ * Before reading or writing CSV files, you must supply the reader/writer with some preferences.
+ * <p>
+ * <strong>Please note:</strong> the end of line symbols are <em>only</em> used for writing.
+ * <p>
+ * The following predefined configurations are available:
+ * <table border="0" cellpadding="1" >
+ * <tbody>
+ * <tr>
+ * <th align="left">Constant</th>
+ * <th align="left">Quote character</th>
+ * <th align="left">Delimiter character</th>
+ * <th align="left">End of line symbols</th>
+ * </tr>
+ * <tr>
+ * <td><code>STANDARD_PREFERENCE</code></td>
+ * <td><code>"</code></td>
+ * <td><code>,</code></td>
+ * <td><code>\r\n</code></td>
+ * </tr>
+ * <tr>
+ * <td><code>EXCEL_PREFERENCE</code></td>
+ * <td><code>"</code></td>
+ * <td><code>,</code></td>
+ * <td><code>\n</code></td>
+ * </tr>
+ * <tr>
+ * <td><code>EXCEL_NORTH_EUROPE_PREFERENCE</code></td>
+ * <td><code>"</code></td>
+ * <td><code>;</code></td>
+ * <td><code>\n</code></td>
+ * </tr>
+ * <tr>
+ * <td><code>TAB_PREFERENCE</code></td>
+ * <td><code>"</code></td>
+ * <td><code>\t</code></td>
+ * <td><code>\n</code></td>
+ * </tr>
+ * </tbody>
+ * </table>
+ * <p>
+ * By default, spaces surrounding an unquoted column are treated as part of the data. In versions of Super CSV prior to
+ * 2.0.0 this wasn't the case, and any surrounding spaces that weren't within quotes were ignored when reading (and
+ * quotes were automatically added to Strings containing surrounding spaces when writing).
+ * <p>
+ * If you wish enable this functionality again, then you can create a CsvPreference with the <tt>trimMode</tt> set to
+ * true. This means that surrounding spaces without quotes will be trimmed when reading, and quotes will automatically
+ * be added for Strings containing surrounding spaces when writing. 
+ * <p>
+ * You can apply trimMode to an
+ * existing preference as follows:<br/>
+ * {@code final CsvPreference excelWithTrimMode = new CsvPreference.Builder(CsvPreference.EXCEL_PREFERENCE).trimMode(true).build();}
+ * <p>
+ * You can also create your own preferences. For example if your file was pipe-delimited, you could use the
+ * following:<br/>
+ * {@code final CsvPreference pipeDelimited = new CsvPreference.Builder('"', '|', "\n").build();}
  * 
  * @author Kasper B. Graversen
+ * @author James Bassett
  */
-public class CsvPreference {
+public final class CsvPreference {
+	
 	/**
-	 * Ready to use configuration. This one should cover 99% of all usages of the package
+	 * Ready to use configuration that should cover 99% of all usages.
 	 */
-	public static final CsvPreference STANDARD_PREFERENCE = new CsvPreference('"', ',', "\r\n");
+	public static final CsvPreference STANDARD_PREFERENCE = new CsvPreference.Builder('"', ',', "\r\n").build();
 	
 	/**
 	 * Ready to use configuration for reading Windows Excel exported CSV files.
 	 */
-	public static final CsvPreference EXCEL_PREFERENCE = new CsvPreference('"', ',', "\n");
+	public static final CsvPreference EXCEL_PREFERENCE = new CsvPreference.Builder('"', ',', "\n").build();
 	
 	/**
 	 * Ready to use configuration for north European excel CSV files (columns are separated by ";" instead of ",")
 	 */
-	public static final CsvPreference EXCEL_NORTH_EUROPE_PREFERENCE = new CsvPreference('"', ';', "\n");
+	public static final CsvPreference EXCEL_NORTH_EUROPE_PREFERENCE = new CsvPreference.Builder('"', ';', "\n").build();
 	
 	/**
-	 * Ready to use configuration. Reading and making sure no data is accidently parsed as comments
+	 * Ready to use configuration for tab-delimited files.
 	 */
-	public static final CsvPreference NO_COMMENT_PREFERENCE = new CsvPreference('"', ',', "\n");
+	public static final CsvPreference TAB_PREFERENCE = new CsvPreference.Builder('"', '\t', "\n").build();
+	
+	private final char quoteChar;
+	
+	private final int delimiterChar;
+	
+	private final String endOfLineSymbols;
+	
+	private final boolean trimMode;
 	
 	/**
-	 * The quote character
+	 * Constructs a new <tt>CsvPreference</tt> from a Builder.
 	 */
-	protected char quoteChar;
-	
-	/**
-	 * The delimiter character
-	 */
-	protected int delimiterChar;
-	
-	/**
-	 * Only used when writing. Recommended "\n" or for mac "\r" or if special sequences are needed such as "<EOL>\n"
-	 */
-	protected String endOfLineSymbols;
-	
-	/**
-	 * Constructs a new <tt>CsvPreference</tt> to use when reading or writing (the end of line symbols are only used for
-	 * writing, however).
-	 * 
-	 * @param quoteChar
-	 *            specifies that matching pairs of this character delimit string constants in this tokenizer.
-	 * @param delimiterChar
-	 *            specifies the character separating each column
-	 * @param endOfLineSymbols
-	 *            one or more symbols terminating the line, e.g. "\n". This parameter only makes sense for writers
-	 */
-	public CsvPreference(final char quoteChar, final int delimiterChar, final String endOfLineSymbols) {
-		setQuoteChar(quoteChar);
-		setDelimiterChar(delimiterChar);
-		setEndOfLineSymbols(endOfLineSymbols);
+	private CsvPreference(Builder builder) {
+		this.quoteChar = builder.quoteChar;
+		this.delimiterChar = builder.delimiterChar;
+		this.endOfLineSymbols = builder.endOfLineSymbols;
+		this.trimMode = builder.trimMode;
 	}
 	
 	/**
@@ -86,38 +143,91 @@ public class CsvPreference {
 	}
 	
 	/**
-	 * Sets the delimiter character
+	 * Returns the trimMode flag.
 	 * 
-	 * @param delimiterChar
-	 *            the character to use as a delimiter
-	 * @return the updated preference
+	 * @return the trimMode flag
 	 */
-	public CsvPreference setDelimiterChar(final int delimiterChar) {
-		this.delimiterChar = delimiterChar;
-		return this;
+	public boolean isTrimMode() {
+		return trimMode;
 	}
 	
 	/**
-	 * Sets the end of line symbols
-	 * 
-	 * @param endOfLineSymbols
-	 *            the end of line symbols
-	 * @return the updated preference
+	 * Builds immutable <tt>CsvPreference</tt> instances. The builder pattern allows for additional preferences to be
+	 * added in the future.
 	 */
-	public CsvPreference setEndOfLineSymbols(final String endOfLineSymbols) {
-		this.endOfLineSymbols = endOfLineSymbols;
-		return this;
+	public static class Builder {
+		
+		private final char quoteChar;
+		
+		private final int delimiterChar;
+		
+		private final String endOfLineSymbols;
+		
+		private boolean trimMode = false;
+		
+		/**
+		 * Constructs a Builder with all of the values from an existing <tt>CsvPreference</tt> instance. Useful if you
+		 * want to base your preferences off one of the existing CsvPreference constants.
+		 * 
+		 * @param preference
+		 *            the existing preference
+		 */
+		public Builder(final CsvPreference preference) {
+			this.quoteChar = preference.quoteChar;
+			this.delimiterChar = preference.delimiterChar;
+			this.endOfLineSymbols = preference.endOfLineSymbols;
+			this.trimMode = preference.trimMode;
+		}
+		
+		/**
+		 * Constructs a Builder with the mandatory preference values.
+		 * 
+		 * @param quoteChar
+		 *            matching pairs of this character are used to escape columns containing the delimiter
+		 * @param delimiterChar
+		 *            the character separating each column
+		 * @param endOfLineSymbols
+		 *            one or more symbols terminating the line, e.g. "\n". Only used for writing.
+		 * @throws IllegalArgumentException
+		 *             if quoteChar and delimiterChar are the same character
+		 * @throws NullPointerException
+		 *             if endOfLineSymbols is null
+		 */
+		public Builder(final char quoteChar, final int delimiterChar, final String endOfLineSymbols) {
+			if( quoteChar == delimiterChar ) {
+				throw new IllegalArgumentException(String.format(
+					"quoteChar and delimiterChar should not be the same character: %c", quoteChar));
+			} else if( endOfLineSymbols == null ) {
+				throw new NullPointerException("endOfLineSymbols should not be null");
+			}
+			this.quoteChar = quoteChar;
+			this.delimiterChar = delimiterChar;
+			this.endOfLineSymbols = endOfLineSymbols;
+		}
+		
+		/**
+		 * Flag indicating whether spaces at the beginning or end of a column should be trimmed (applicable to both
+		 * reading and writing CSV). The default is <tt>false</tt>, as spaces
+		 * "are considered part of a field and should not be ignored" according to RFC 4180.
+		 * 
+		 * @param trimMode
+		 *            flag indicating whether spaces at the beginning or end of a column should be trimmed
+		 * @return the updated Builder
+		 */
+		public Builder trimMode(final boolean trimMode) {
+			this.trimMode = trimMode;
+			return this;
+		}
+		
+		/**
+		 * Builds the CsvPreference instance.
+		 * 
+		 * @return the immutable CsvPreference instance
+		 */
+		public CsvPreference build() {
+			return new CsvPreference(this);
+		}
+		
 	}
 	
-	/**
-	 * Sets the quote character
-	 * 
-	 * @param quoteChar
-	 *            the quote character
-	 * @return the updated preference
-	 */
-	public CsvPreference setQuoteChar(final char quoteChar) {
-		this.quoteChar = quoteChar;
-		return this;
-	}
 }

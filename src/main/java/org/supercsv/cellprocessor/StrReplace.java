@@ -1,3 +1,18 @@
+/*
+ * Copyright 2007 Kasper B. Graversen
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.supercsv.cellprocessor;
 
 import java.util.regex.Pattern;
@@ -9,7 +24,7 @@ import org.supercsv.cellprocessor.ift.DoubleCellProcessor;
 import org.supercsv.cellprocessor.ift.LongCellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.exception.NullInputException;
-import org.supercsv.util.CSVContext;
+import org.supercsv.util.CsvContext;
 
 /**
  * Replaces each substring of the input string that matches the given regular expression with the given replacement. The
@@ -84,13 +99,13 @@ public class StrReplace extends CellProcessorAdaptor implements BoolCellProcesso
 	 *             if regex or replacement is null
 	 */
 	private static void checkPreconditions(final String regex, final String replacement) {
-		if (regex == null){
+		if( regex == null ) {
 			throw new NullPointerException("regex should not be null");
-		} else if (regex.isEmpty()) {
+		} else if( regex.isEmpty() ) {
 			throw new IllegalArgumentException("regex should not be empty");
 		}
 		
-		if (replacement == null){
+		if( replacement == null ) {
 			throw new NullPointerException("replacement should not be null");
 		}
 	}
@@ -101,7 +116,7 @@ public class StrReplace extends CellProcessorAdaptor implements BoolCellProcesso
 	 * @throws NullInputException
 	 *             if value is null
 	 */
-	public Object execute(final Object value, final CSVContext context) {
+	public Object execute(final Object value, final CsvContext context) {
 		validateInputNotNull(value, context);
 		String result = regexPattern.matcher(value.toString()).replaceAll(replacement);
 		return next.execute(result, context);

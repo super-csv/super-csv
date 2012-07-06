@@ -1,110 +1,163 @@
+/*
+ * Copyright 2007 Kasper B. Graversen
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.supercsv.util;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.lang.reflect.Method;
 
-import org.junit.Assert;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
-import org.supercsv.exception.SuperCSVException;
+import org.supercsv.mock.ReflectionBean;
 
+/**
+ * Tests the MethodCache class.
+ * 
+ * @author James Bassett
+ */
 public class MethodCacheTest {
 	
-	/** we use objects of this class as access test */
-	static class ObjectMock {
-		int i = STARTVAL;
-		
-		public int getA() {
-			return i;
-		}
-		
-		public int getB() {
-			return i;
-		}
-		
-		public int getC() {
-			return i;
-		}
-		
-		public int getD() {
-			return i;
-		}
-		
-		public int getI() {
-			return i;
-		}
-		
-		public void setA(final int i) {
-			this.i = i;
-		}
-		
-		public void setB(final int i) {
-			this.i = i;
-		}
-		
-		public void setC(final int i) {
-			this.i = i;
-		}
-		
-		public void setD(final int i) {
-			this.i = i;
-		}
-		
-		public void setI(final int i) {
-			this.i = i;
-		}
+	private MethodCache cache;
+	
+	/**
+	 * Sets up before the test.
+	 */
+	@Before
+	public void setUp() {
+		cache = new MethodCache();
 	}
 	
-	private static final int STARTVAL = 42;
-	private static final int ENDVAL = 43;
-	
-	@Test(expected = SuperCSVException.class)
-	public void test_InvalidmethodCall() {
-		final MethodCache cache = new MethodCache();
-		cache.getGetMethod(new ObjectMock(), "bibibabibibaib");
+	/**
+	 * Tidies up after the test.
+	 */
+	@After
+	public void tearDown() {
+		cache = null;
 	}
 	
+	/**
+	 * Tests getGetMethod().
+	 */
 	@Test
-	public void test_Set_Lookup() throws Exception {
-		final MethodCache cache = new MethodCache();
+	public void testGetGetMethod() throws Exception {
+		ReflectionBean bean = new ReflectionBean();
 		
-		final ObjectMock om = new ObjectMock();
+		// first time - not cached
+		final long start = System.currentTimeMillis();
+		final Method uncachedGetter = cache.getGetMethod(bean, "name");
+		final long uncachedTime = System.currentTimeMillis() - start;
 		
-		Assert.assertEquals("object read", STARTVAL, cache.getGetMethod(om, "i").invoke(om));
-		long time1 = System.nanoTime();
-		Method setMethod = cache.getSetMethod(om, "i", int.class);
-		setMethod.invoke(om, ENDVAL);
-		time1 = System.nanoTime() - time1;
-		Assert.assertEquals("object read", ENDVAL, cache.getGetMethod(om, "i").invoke(om));
+		// second time - cached
+		final long start2 = System.currentTimeMillis();
+		final Method cachedGetter = cache.getGetMethod(bean, "name");
+		final long cachedTime = System.currentTimeMillis() - start2;
 		
-		// fetch again
-		Assert.assertEquals("object read", ENDVAL, cache.getGetMethod(om, "i").invoke(om));
-		long time2 = System.nanoTime();
-		setMethod = cache.getSetMethod(om, "i", int.class);
-		setMethod.invoke(om, ENDVAL + 1);
-		time2 = System.nanoTime() - time2;
-		Assert.assertEquals("object read", ENDVAL + 1, cache.getGetMethod(om, "i").invoke(om));
-		// System.out.println("set t1 " + time1 + " t2 " + time2);
-		Assert.assertTrue("Cache lookup should be faster", time1 > time2);
+		// retrieval from cache should be at least as fast as reflection
+		System.out.println(String.format("getGetMethod uncachedTime: %d, cachedTime: %d", uncachedTime, cachedTime));
+		assertTrue(cachedTime <= uncachedTime);
+		
+		// the same getter method should be returned in both calls
+		assertEquals(uncachedGetter, cachedGetter);
+		
+		// test the uncached getter works
+		final String name1 = "uncached";
+		bean.setName(name1);
+		assertEquals(name1, uncachedGetter.invoke(bean));
+		
+		// test the cached getter works
+		final String name2 = "cached";
+		bean.setName(name2);
+		assertEquals(name2, cachedGetter.invoke(bean));
 	}
 	
+	/**
+	 * Tests getSetMethod().
+	 */
 	@Test
-	public void testGetLookup() throws Exception {
-		final MethodCache cache = new MethodCache();
+	public void testGetSetMethod() throws Exception {
+		ReflectionBean bean = new ReflectionBean();
 		
-		final ObjectMock om = new ObjectMock();
-		long time1 = System.nanoTime();
-		Method getMethod = cache.getGetMethod(om, "i");
-		getMethod = cache.getGetMethod(om, "b");
-		getMethod = cache.getGetMethod(om, "a");
-		Assert.assertEquals("object read", STARTVAL, getMethod.invoke(om));
-		time1 = System.nanoTime() - time1;
+		// first time - not cached
+		final long start = System.currentTimeMillis();
+		final Method uncachedSetter = cache.getSetMethod(bean, "name", String.class);
+		final long uncachedTime = System.currentTimeMillis() - start;
 		
-		// fetch again to activate the cache
-		long time2 = System.nanoTime();
-		getMethod = cache.getGetMethod(om, "i");
-		getMethod = cache.getGetMethod(om, "b");
-		getMethod = cache.getGetMethod(om, "a");
-		Assert.assertEquals("object read", STARTVAL, getMethod.invoke(om));
-		time2 = System.nanoTime() - time2;
-		Assert.assertTrue("Cache lookup should be faster " + time1 + " > " + time2, time1 > time2);
+		// second time - cached
+		final long start2 = System.currentTimeMillis();
+		final Method cachedSetter = cache.getSetMethod(bean, "name", String.class);
+		final long cachedTime = System.currentTimeMillis() - start2;
+		
+		// retrieval from cache should be at least as fast as reflection
+		System.out.println(String.format("getSetMethod uncachedTime: %d, cachedTime: %d", uncachedTime, cachedTime));
+		assertTrue(cachedTime <= uncachedTime);
+		
+		// the same setter method should be returned in both calls
+		assertEquals(uncachedSetter, cachedSetter);
+		
+		// test the uncached setter works
+		final String name1 = "uncached";
+		uncachedSetter.invoke(bean, name1);
+		assertEquals(name1, bean.getName());
+		
+		// test the cached setter works
+		final String name2 = "cached";
+		cachedSetter.invoke(bean, name2);
+		assertEquals(name2, bean.getName());
 	}
+	
+	/**
+	 * Tests getGetMethod() with a null object (should throw an exception).
+	 */
+	@Test(expected = NullPointerException.class)
+	public void testGetGetMethodWithNullObject() {
+		cache.getGetMethod(null, "name");
+	}
+	
+	/**
+	 * Tests getGetMethod() with a null field name (should throw an exception).
+	 */
+	@Test(expected = NullPointerException.class)
+	public void testGetGetMethodWithNullFieldName() {
+		cache.getGetMethod(new ReflectionBean(), null);
+	}
+	
+	/**
+	 * Tests getSetMethod() with a null object (should throw an exception).
+	 */
+	@Test(expected = NullPointerException.class)
+	public void testGetSetMethodWithNullObject() {
+		cache.getSetMethod(null, "name", String.class);
+	}
+	
+	/**
+	 * Tests getSetMethod() with a null field name (should throw an exception).
+	 */
+	@Test(expected = NullPointerException.class)
+	public void testGetSetMethodWithNullFieldName() {
+		cache.getSetMethod(new ReflectionBean(), null, String.class);
+	}
+	
+	/**
+	 * Tests getSetMethod() with a null argument type (should throw an exception).
+	 */
+	@Test(expected = NullPointerException.class)
+	public void testGetSetMethodWithNullArgumentType() {
+		cache.getSetMethod(new ReflectionBean(), "name", null);
+	}
+	
 }

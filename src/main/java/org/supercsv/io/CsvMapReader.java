@@ -1,3 +1,18 @@
+/*
+ * Copyright 2007 Kasper B. Graversen
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.supercsv.io;
 
 import java.io.IOException;
@@ -12,9 +27,11 @@ import org.supercsv.prefs.CsvPreference;
 import org.supercsv.util.Util;
 
 /**
- * CsvMapReaders read each CSV line into a Map with the column name as the key, and the input value as the value.
+ * CsvMapReader reads each CSV row into a Map with the column name as the map key, and the column value as the map
+ * value.
  * 
  * @author Kasper B. Graversen
+ * @author James Bassett
  */
 public class CsvMapReader extends AbstractCsvReader implements ICsvMapReader {
 	
@@ -26,50 +43,68 @@ public class CsvMapReader extends AbstractCsvReader implements ICsvMapReader {
 	 *            the reader
 	 * @param preferences
 	 *            the CSV preferences
+	 * @throws NullPointerException
+	 *             if reader or preferences are null
 	 */
 	public CsvMapReader(final Reader reader, final CsvPreference preferences) {
-		setPreferences(preferences);
-		setInput(reader);
+		super(reader, preferences);
+	}
+	
+	/**
+	 * Constructs a new <tt>CsvMapReader</tt> with the supplied (custom) Tokenizer and CSV preferences. The tokenizer
+	 * should be set up with the Reader (CSV input) and CsvPreference beforehand.
+	 * 
+	 * @param tokenizer
+	 *            the tokenizer
+	 * @param preferences
+	 *            the CSV preferences
+	 * @throws NullPointerException
+	 *             if tokenizer or preferences are null
+	 */
+	public CsvMapReader(final ITokenizer tokenizer, final CsvPreference preferences) {
+		super(tokenizer, preferences);
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 */
 	public Map<String, String> read(final String... nameMapping) throws IOException {
-		final Map<String, String> destination = new HashMap<String, String>();
-		super.line.clear();
-		// read the line, if result, convert it to a map
-		if( tokenizer.readStringList(super.line) ) {
-			Util.mapStringList(destination, nameMapping, super.line);
+		
+		if( nameMapping == null ) {
+			throw new NullPointerException("nameMapping should not be null");
+		}
+		
+		if( readRow() ) {
+			final Map<String, String> destination = new HashMap<String, String>();
+			Util.filterListToMap(destination, nameMapping, getColumns());
 			return destination;
 		}
 		
-		return null;
+		return null; // EOF
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 */
-	public Map<String, ? super Object> read(final String[] nameMapping, final CellProcessor[] processors)
-		throws IOException {
-		final Map<String, Object> destination = new HashMap<String, Object>();
+	public Map<String, Object> read(final String[] nameMapping, final CellProcessor[] processors) throws IOException {
 		
-		// temporary storage of processed column before writing to the map
-		final List<Object> lineResult = new ArrayList<Object>();
-		
-		if( !tokenizer.readStringList(super.line) ) {
-			return null;
+		if( nameMapping == null ) {
+			throw new NullPointerException("nameMapping should not be null");
+		} else if( processors == null ) {
+			throw new NullPointerException("processors should not be null");
 		}
 		
-		// set to null all read columns we want to ignore
-		for( int i = 0; i < line.size(); i++ ) {
-			if( nameMapping[i] == null ) {
-				super.line.set(i, null);
-			}
+		if( readRow() ) {
+			// process the columns
+			final List<Object> processedColumns = new ArrayList<Object>(getColumns().size());
+			Util.executeCellProcessors(processedColumns, getColumns(), processors, getLineNumber(), getRowNumber());
+			
+			// convert the List to a Map
+			final Map<String, Object> destination = new HashMap<String, Object>(processedColumns.size());
+			Util.filterListToMap((Map<String, Object>) destination, nameMapping, (List<Object>) processedColumns);
+			return destination;
 		}
-		Util.processStringList(lineResult, super.line, processors, getLineNumber());
-		Util.mapStringList((Map<String, Object>) destination, nameMapping, (List<Object>) lineResult);
 		
-		return destination;
+		return null; // EOF
 	}
 }

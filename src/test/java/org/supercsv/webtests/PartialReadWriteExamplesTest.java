@@ -1,3 +1,18 @@
+/*
+ * Copyright 2007 Kasper B. Graversen
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.supercsv.webtests;
 
 import java.io.StringReader;
@@ -54,7 +69,7 @@ public class PartialReadWriteExamplesTest {
 	@Test
 	public void should_partial_read() throws Exception {
 		// content of a file containing orders and product numbers
-		final String fileData = "orderNumber, productNumber\n1,22";
+		final String fileData = "orderNumber,productNumber\n1,22";
 		
 		// setup conversion from String to integers (as our fields are type int)
 		final CellProcessor[] processing = new CellProcessor[] { new ParseInt(), new ParseInt() };
@@ -62,7 +77,7 @@ public class PartialReadWriteExamplesTest {
 		// the actual reading
 		final CsvBeanReader reader = new CsvBeanReader(new StringReader(fileData), CsvPreference.EXCEL_PREFERENCE);
 		// get header to identify what fields to populate
-		final String[] header = reader.getCSVHeader(true);
+		final String[] header = reader.getCsvHeader(true);
 		final Order order = reader.read(PartialReadWriteExamplesTest.Order.class, header, processing);
 		
 		// show that only part of the object has been populated with values

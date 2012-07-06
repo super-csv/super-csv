@@ -1,10 +1,25 @@
+/*
+ * Copyright 2007 Kasper B. Graversen
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.supercsv.cellprocessor.constraint;
 
 import org.supercsv.cellprocessor.CellProcessorAdaptor;
 import org.supercsv.cellprocessor.ift.LongCellProcessor;
 import org.supercsv.exception.NullInputException;
 import org.supercsv.exception.SuperCSVException;
-import org.supercsv.util.CSVContext;
+import org.supercsv.util.CsvContext;
 
 /**
  * Converts the input data to a Long and and ensures the value is between the supplied min and max values (inclusive).
@@ -17,34 +32,40 @@ import org.supercsv.util.CSVContext;
 public class LMinMax extends CellProcessorAdaptor {
 	
 	/** Maximum value for a Long */
-	public static final long MAXL = Long.MAX_VALUE;
+	public static final long MAX_LONG = Long.MAX_VALUE;
 	
 	/** Minimum value for a Long */
-	public static final long MINL = Long.MIN_VALUE;
+	public static final long MIN_LONG = Long.MIN_VALUE;
 	
 	/** Maximum value for an Integer */
-	public static final int MAX = Integer.MAX_VALUE;
+	public static final int MAX_INTEGER = Integer.MAX_VALUE;
 	
 	/** Minimum value for an Integer */
-	public static final int MIN = Integer.MIN_VALUE;
+	public static final int MIN_INTEGER = Integer.MIN_VALUE;
 	
 	/** Maximum value for a Short */
-	public static final short MAXS = Short.MAX_VALUE;
+	public static final short MAX_SHORT = Short.MAX_VALUE;
 	
 	/** Minimum value for a Short */
-	public static final short MINS = Short.MIN_VALUE;
+	public static final short MIN_SHORT = Short.MIN_VALUE;
 	
 	/** Maximum value for a Character */
-	public static final int MAXC = Character.MAX_VALUE;
+	public static final int MAX_CHAR = Character.MAX_VALUE;
 	
 	/** Minimum value for a Character */
-	public static final int MINC = Character.MIN_VALUE;
+	public static final int MIN_CHAR = Character.MIN_VALUE;
 	
-	/** 255 */
-	public static final int MAX8bit = 255;
+	/** Maximum value for 8 bits (unsigned) */
+	public static final int MAX_8_BIT_UNSIGNED = 255;
 	
-	/** -128 */
-	public static final int MIN8bit = -128;
+	/** Minimum value for 8 bits (unsigned) */
+	public static final int MIN_8_BIT_UNSIGNED = 0;
+	
+	/** Maximum value for 8 bits (signed) */
+	public static final int MAX_8_BIT_SIGNED = Byte.MAX_VALUE;
+	
+	/** Minimum value for 8 bits (signed) */
+	public static final int MIN_8_BIT_SIGNED = Byte.MIN_VALUE;
 	
 	private final long min;
 	
@@ -114,7 +135,7 @@ public class LMinMax extends CellProcessorAdaptor {
 	 * @throws SuperCSVException
 	 *             if value can't be parsed as a Long, or doesn't lie between min and max (inclusive)
 	 */
-	public Object execute(final Object value, final CSVContext context) {
+	public Object execute(final Object value, final CsvContext context) {
 		validateInputNotNull(value, context);
 		
 		final Long result;
@@ -125,13 +146,15 @@ public class LMinMax extends CellProcessorAdaptor {
 				result = Long.parseLong(value.toString());
 			}
 			catch(final NumberFormatException e) {
-				throw new SuperCSVException(String.format("'%s' could not be parsed as a Long", value), context, this, e);
+				throw new SuperCSVException(String.format("'%s' could not be parsed as a Long", value), context, this,
+					e);
 			}
 		}
 		
 		if( result < min || result > max ) {
 			throw new SuperCSVException(String.format(
-				"%d does not lie between the min (%d) and max (%d) values (inclusive)", result, min, max), context, this);
+				"%d does not lie between the min (%d) and max (%d) values (inclusive)", result, min, max), context,
+				this);
 		}
 		
 		return next.execute(result, context);

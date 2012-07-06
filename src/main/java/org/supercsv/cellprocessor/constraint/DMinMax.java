@@ -1,10 +1,25 @@
+/*
+ * Copyright 2007 Kasper B. Graversen
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.supercsv.cellprocessor.constraint;
 
 import org.supercsv.cellprocessor.CellProcessorAdaptor;
 import org.supercsv.cellprocessor.ift.DoubleCellProcessor;
 import org.supercsv.exception.NullInputException;
 import org.supercsv.exception.SuperCSVException;
-import org.supercsv.util.CSVContext;
+import org.supercsv.util.CsvContext;
 
 /**
  * Converts the input data to a Double and ensures that number is within a specified numeric range (inclusive). If the
@@ -17,28 +32,34 @@ import org.supercsv.util.CSVContext;
 public class DMinMax extends CellProcessorAdaptor {
 	
 	/** Maximum value for a Double */
-	public static final double MAXD = Double.MAX_VALUE;
+	public static final double MAX_DOUBLE = Double.MAX_VALUE;
 	
 	/** Minimum value for a Double */
-	public static final double MIND = Double.MIN_VALUE;
+	public static final double MIN_DOUBLE = Double.MIN_VALUE;
 	
 	/** Maximum value for a Short */
-	public static final double MAXS = Short.MAX_VALUE;
+	public static final double MAX_SHORT = Short.MAX_VALUE;
 	
 	/** Minimum value for a Short */
-	public static final double MINS = Short.MIN_VALUE;
+	public static final double MIN_SHORT = Short.MIN_VALUE;
 	
 	/** Maximum value for a Character */
-	public static final double MAXC = Character.MAX_VALUE;
+	public static final double MAX_CHAR = Character.MAX_VALUE;
 	
 	/** Minimum value for a Character */
-	public static final double MINC = Character.MIN_VALUE;
+	public static final double MIN_CHAR = Character.MIN_VALUE;
 	
-	/** 255 */
-	public static final int MAX8bit = 255;
+	/** Maximum value for 8 bits (unsigned) */
+	public static final int MAX_8_BIT_UNSIGNED = 255;
 	
-	/** -128 */
-	public static final int MIN8bit = -128; // TODO is this really correct?
+	/** Minimum value for 8 bits (unsigned) */
+	public static final int MIN_8_BIT_UNSIGNED = 0;
+	
+	/** Maximum value for 8 bits (signed) */
+	public static final int MAX_8_BIT_SIGNED = Byte.MAX_VALUE;
+	
+	/** Minimum value for 8 bits (signed) */
+	public static final int MIN_8_BIT_SIGNED = Byte.MIN_VALUE;
 	
 	private final double min;
 	
@@ -108,7 +129,7 @@ public class DMinMax extends CellProcessorAdaptor {
 	 * @throws SuperCSVException
 	 *             if value can't be parsed as a Double, or doesn't lie between min and max (inclusive)
 	 */
-	public Object execute(final Object value, final CSVContext context) {
+	public Object execute(final Object value, final CsvContext context) {
 		validateInputNotNull(value, context);
 		
 		final Double result;
@@ -119,14 +140,15 @@ public class DMinMax extends CellProcessorAdaptor {
 				result = Double.parseDouble(value.toString());
 			}
 			catch(final NumberFormatException e) {
-				throw new SuperCSVException(String.format("'%s' could not be parsed as a Double", value), context, this,
-					e);
+				throw new SuperCSVException(String.format("'%s' could not be parsed as a Double", value), context,
+					this, e);
 			}
 		}
 		
 		if( result < min || result > max ) {
 			throw new SuperCSVException(String.format(
-				"%f does not lie between the min (%f) and max (%f) values (inclusive)", result, min, max), context, this);
+				"%f does not lie between the min (%f) and max (%f) values (inclusive)", result, min, max), context,
+				this);
 		}
 		
 		return next.execute(result, context);

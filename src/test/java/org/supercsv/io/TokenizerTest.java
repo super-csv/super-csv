@@ -1,152 +1,416 @@
+/*
+ * Copyright 2007 Kasper B. Graversen
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.supercsv.io;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.supercsv.prefs.CsvPreference.EXCEL_PREFERENCE;
 
+import java.io.IOException;
+import java.io.Reader;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.supercsv.exception.SuperCSVException;
 import org.supercsv.prefs.CsvPreference;
 
 public class TokenizerTest {
-	Tokenizer tokenizer;
-	List<String> result;
 	
-	@Test
-	public void headerFile_emptyValue() throws Exception {
-		final String input = "header1\n ";
-		tokenizer = new Tokenizer(new StringReader(input), CsvPreference.EXCEL_PREFERENCE);
-		tokenizer.readStringList(result); // skip header
-		tokenizer.readStringList(result);
-		assertThat(result.size(), is(1));
-		assertThat(result.get(0), is(""));
-	}
+	private static final CsvPreference NORMAL_PREFERENCE = EXCEL_PREFERENCE;
+	private static final CsvPreference TRIM_PREFERENCE = new CsvPreference.Builder(EXCEL_PREFERENCE).trimMode(true)
+		.build();
 	
-	@Test
-	public void inputOneRow_2_quote() throws Exception {
-		final String input = "\"\"";
-		tokenizer = new Tokenizer(new StringReader(input), CsvPreference.EXCEL_PREFERENCE);
-		tokenizer.readStringList(result);
-		assertThat(result.size(), is(1));
-		assertThat("only two must yield empty entry", result.get(0), is(""));
-	}
+	private Tokenizer tokenizer;
+	private List<String> columns;
 	
-	@Test
-	public void inputOneRow_2_quote_inside_quote() throws Exception {
-		final String input = "\"\"\"hello\"\"\"";
-		tokenizer = new Tokenizer(new StringReader(input), CsvPreference.EXCEL_PREFERENCE);
-		tokenizer.readStringList(result);
-		assertThat("only two must yield empty entry", result.get(0), is("\"hello\""));
-	}
-	
-	@Test
-	public void inputOneRow_2_quote_outside_quote() throws Exception {
-		final String input = "  yo \"\"hello\"\"  "; // must not have " at start of line.. as that will not denote "
-		tokenizer = new Tokenizer(new StringReader(input), CsvPreference.EXCEL_PREFERENCE);
-		tokenizer.readStringList(result);
-		assertThat(result.get(0), is("yo \"hello\""));
-	}
-	
-	@Test
-	public void inputOneRow_4_quote() throws Exception {
-		final String input = "\"\"\"\"";
-		tokenizer = new Tokenizer(new StringReader(input), CsvPreference.EXCEL_PREFERENCE);
-		tokenizer.readStringList(result);
-		assertThat(result.size(), is(1));
-		assertThat("4 quotes is 2 for start+end and 2 for an escaped quote", result.get(0), is("\""));
-	}
-	
-	@Test
-	public void inputOneRow_empty() throws Exception {
-		final String input = "";
-		tokenizer = new Tokenizer(new StringReader(input), CsvPreference.EXCEL_PREFERENCE);
-		tokenizer.readStringList(result);
-		assertThat(result.size(), is(0));
-	}
-	
-	@Test
-	public void inputOneRow_should_not_strim_spaces_before_and_after() throws Exception {
-		final String input = "\"    hello    \" , \"   you  \" , \" there \"";
-		tokenizer = new Tokenizer(new StringReader(input), CsvPreference.EXCEL_PREFERENCE);
-		tokenizer.readStringList(result);
-		assertThat(result.get(0), is("    hello    "));
-		assertThat(result.get(1), is("   you  "));
-		assertThat(result.get(2), is(" there "));
-	}
-	
-	@Test
-	public void inputOneRow_should_not_trim_spaces_between_words() throws Exception {
-		final String input = "    hello  you  ,   there  on   the  ,  corner ";
-		tokenizer = new Tokenizer(new StringReader(input), CsvPreference.EXCEL_PREFERENCE);
-		tokenizer.readStringList(result);
-		assertThat(result.get(0), is("hello  you"));
-		assertThat(result.get(1), is("there  on   the"));
-		assertThat(result.get(2), is("corner"));
-	}
-	
-	@Test
-	public void inputOneRow_should_not_trim_tabs_before_and_after() throws Exception {
-		final String input = " \thello\t ,\tyou\t,\tthere\t";
-		tokenizer = new Tokenizer(new StringReader(input), CsvPreference.EXCEL_PREFERENCE);
-		tokenizer.readStringList(result);
-		assertThat(result.get(0), is("\thello\t"));
-		assertThat(result.get(1), is("\tyou\t"));
-		assertThat(result.get(2), is("\tthere\t"));
-	}
-	
-	@Test
-	public void inputOneRow_should_trim_spaces_before_and_after() throws Exception {
-		final String input = "    hello    ,   you  ,  there  ";
-		tokenizer = new Tokenizer(new StringReader(input), CsvPreference.EXCEL_PREFERENCE);
-		tokenizer.readStringList(result);
-		assertThat(result.get(0), is("hello"));
-		assertThat(result.get(1), is("you"));
-		assertThat(result.get(2), is("there"));
-	}
-	
-	@Test
-	public void inputOneRow_value() throws Exception {
-		final String input = "k";
-		tokenizer = new Tokenizer(new StringReader(input), CsvPreference.EXCEL_PREFERENCE);
-		tokenizer.readStringList(result);
-		assertThat(result.size(), is(1));
-		assertThat(result.get(0), is("k"));
-	}
-	
-	@Test(expected = SuperCSVException.class)
-	public void inputOneRow_value_missing_end_quote() throws Exception {
-		final String input = "\"missing";
-		tokenizer = new Tokenizer(new StringReader(input), CsvPreference.EXCEL_PREFERENCE);
-		tokenizer.readStringList(result);
-		assertThat(result.size(), is(1));
-		assertThat(result.get(0), is("m\nn"));
-	}
-	
-	@Test
-	public void inputOneRow_value_newline() throws Exception {
-		final String input = "\"m\nn\"";
-		tokenizer = new Tokenizer(new StringReader(input), CsvPreference.EXCEL_PREFERENCE);
-		tokenizer.readStringList(result);
-		assertThat(result.size(), is(1));
-		assertThat(result.get(0), is("m\nn"));
-	}
-	
+	/**
+	 * Sets up the columns List for the test.
+	 * 
+	 * @throws Exception
+	 */
 	@Before
-	public void setUp() throws Exception {
-		result = new ArrayList<String>();
+	public void setUp() {
+		columns = new ArrayList<String>();
 	}
 	
-	@Test
-	public void valueInHeaderFile() throws Exception {
-		final String input = "header1\nvalue";
-		tokenizer = new Tokenizer(new StringReader(input), CsvPreference.EXCEL_PREFERENCE);
-		tokenizer.readStringList(result); // skip header
-		tokenizer.readStringList(result);
-		assertThat(result.size(), is(1));
-		assertThat(result.get(0), is("value"));
+	/**
+	 * Tidies up after the test.
+	 */
+	@After
+	public void tearDown() throws IOException {
+		if (tokenizer != null){
+			tokenizer.close();
+		}
 	}
+	
+	/**
+	 * Creates a Tokenizer with the input and preferences.
+	 * 
+	 * @param input
+	 *            the input String
+	 * @param preference
+	 *            the preferences
+	 * @return the Tokenizer
+	 */
+	private static Tokenizer createTokenizer(String input, CsvPreference preference) {
+		final Reader r = input != null ? new StringReader(input) : null;
+		return new Tokenizer(r, preference);
+	}
+	
+	/**
+	 * Tests the constructor with a null Reader (should throw an Exception).
+	 */
+	@Test(expected = NullPointerException.class)
+	public void testConstructorWithNullReader() throws Exception {
+		createTokenizer(null, NORMAL_PREFERENCE);
+	}
+	
+	/**
+	 * Tests the constructor with a null CsvPreference (should throw an Exception).
+	 */
+	@Test(expected = NullPointerException.class)
+	public void testConstructorWithNullPreferences() throws Exception {
+		createTokenizer("", null);
+	}
+	
+	/**
+	 * Tests the readColumns() method with null List (should throw an Exception).
+	 */
+	@Test(expected = NullPointerException.class)
+	public void testReadColumnsWithNullList() throws Exception {
+		tokenizer = createTokenizer("", NORMAL_PREFERENCE);
+		tokenizer.readColumns(null);
+	}
+	
+	/**
+	 * Tests the getPreferences() method.
+	 */
+	@Test()
+	public void testGetPreferences() throws Exception {
+		tokenizer = createTokenizer("", NORMAL_PREFERENCE);
+		CsvPreference prefs = tokenizer.getPreferences();
+		assertEquals(NORMAL_PREFERENCE.getDelimiterChar(), prefs.getDelimiterChar());
+		assertEquals(NORMAL_PREFERENCE.getEndOfLineSymbols(), prefs.getEndOfLineSymbols());
+		assertEquals(NORMAL_PREFERENCE.getQuoteChar(), prefs.getQuoteChar());
+		assertEquals(NORMAL_PREFERENCE.isTrimMode(), prefs.isTrimMode());
+	}
+	
+	/**
+	 * Tests the readColumns() method with no data.
+	 */
+	@Test
+	public void testReadColumnsWithNoData() throws Exception {
+		final String input = "";
+		tokenizer = createTokenizer(input, NORMAL_PREFERENCE);
+		tokenizer.readColumns(columns);
+		assertTrue(columns.isEmpty());
+		assertEquals(input, tokenizer.getUntokenizedRow());
+	}
+	
+	/**
+	 * Tests that the readColumns() method skips over blank lines at the start of a file.
+	 */
+	@Test
+	public void testBlankLinesAtStart() throws Exception {
+		
+		// EOF reached within quote scope
+		final String input = "\n\nthis is the third line\n";
+		tokenizer = createTokenizer(input, NORMAL_PREFERENCE);
+		tokenizer.readColumns(columns);
+		assertTrue(columns.size() == 1);
+		assertEquals("this is the third line", columns.get(0));
+		assertEquals(3, tokenizer.getLineNumber());
+	}
+	
+	/**
+	 * Tests the readColumns() method when a quote is not the first character.
+	 */
+	@Test
+	public void testQuoteNotFirstChar() throws Exception {
+		
+		// EOF reached within quote scope
+		final String input = "invalid \"quoted\" section";
+		tokenizer = createTokenizer(input, NORMAL_PREFERENCE);
+		try {
+			tokenizer.readColumns(columns);
+			fail("should have thrown SuperCSVException");
+		}
+		catch(SuperCSVException e) {
+			assertEquals("the quoteChar [\"] must be the first character in a field, line: 1, char: 9", e.getMessage());
+		}
+	}
+	
+	/**
+	 * Tests the readColumns() method when a quoted section has an illegal character after it.
+	 */
+	@Test
+	public void testQuotedFieldWithIllegalCharAfter() throws Exception {
+		
+		// illegal char after quoted section
+		final String input = "\"quoted on 2 lines\nwith illegal char after\"illegal";
+		tokenizer = createTokenizer(input, NORMAL_PREFERENCE);
+		try {
+			tokenizer.readColumns(columns);
+			fail("should have thrown SuperCSVException");
+		}
+		catch(SuperCSVException e) {
+			assertEquals("illegal character [i] following quoted field on line: 2, char: 25", e.getMessage());
+		}
+		
+		// trim mode should have exactly the same error
+		tokenizer = createTokenizer(input, TRIM_PREFERENCE);
+		try {
+			tokenizer.readColumns(columns);
+			fail("should have thrown SuperCSVException");
+		}
+		catch(SuperCSVException e) {
+			assertEquals("illegal character [i] following quoted field on line: 2, char: 25", e.getMessage());
+		}
+	}
+	
+	/**
+	 * Tests the readColumns() method when EOF is reached within quote scope.
+	 */
+	@Test
+	public void testQuotedFieldWithUnexpectedEOF() throws Exception {
+		
+		// EOF reached within quote scope
+		final String input = "\"quoted spanning\ntwo lines with EOF reached before another quote";
+		tokenizer = createTokenizer(input, NORMAL_PREFERENCE);
+		try {
+			tokenizer.readColumns(columns);
+			fail("should have thrown SuperCSVException");
+		}
+		catch(SuperCSVException e) {
+			assertEquals("unexpected end of file while reading quoted column beginning on line 1 and ending on line 2", e.getMessage());
+		}
+	}
+	
+	/**
+	 * Tests the readColumns() method with a leading space before the first quoted field.
+	 */
+	@Test
+	public void testQuotedFirstFieldWithLeadingSpace() throws Exception {
+		
+		// first field has a leading space before quote
+		final String input = "  \"quoted with leading spaces\",two";
+		tokenizer = createTokenizer(input, NORMAL_PREFERENCE);
+		try {
+			tokenizer.readColumns(columns);
+			fail("should have thrown SuperCSVException");
+		}
+		catch(SuperCSVException e) {
+			assertEquals("the quoteChar [\"] must be the first character in a field, line: 1, char: 3", e.getMessage());
+		}
+		
+		// same input in trim mode (should work!)
+		tokenizer = createTokenizer(input, TRIM_PREFERENCE);
+		tokenizer.readColumns(columns);
+		assertTrue(columns.size() == 2);
+		assertEquals("quoted with leading spaces", columns.get(0));
+		assertEquals("two", columns.get(1));
+		assertEquals(input, tokenizer.getUntokenizedRow());
+	}
+	
+	/**
+	 * Tests the readColumns() method with a leading space before the last quoted field.
+	 */
+	@Test
+	public void testQuotedLastFieldWithLeadingSpace() throws Exception {
+		
+		// last field has a leading space before quote
+		final String input = "one,two,  \"quoted with leading spaces\"";
+		tokenizer = createTokenizer(input, NORMAL_PREFERENCE);
+		try {
+			tokenizer.readColumns(columns);
+			fail("should have thrown SuperCSVException");
+		}
+		catch(SuperCSVException e) {
+			assertEquals("the quoteChar [\"] must be the first character in a field, line: 1, char: 11", e.getMessage());
+		}
+		
+		// same input in trim mode (should work!)
+		tokenizer = createTokenizer(input, TRIM_PREFERENCE);
+		tokenizer.readColumns(columns);
+		assertTrue(columns.size() == 3);
+		assertEquals("one", columns.get(0));
+		assertEquals("two", columns.get(1));
+		assertEquals("quoted with leading spaces", columns.get(2));
+		assertEquals(input, tokenizer.getUntokenizedRow());
+	}
+	
+	/**
+	 * Tests the readColumns() method with a trailing space after the first quoted field.
+	 */
+	@Test
+	public void testQuotedFirstFieldWithTrailingSpace() throws Exception {
+		
+		// first field has a leading space before quote
+		final String input = "\"quoted with trailing spaces\"  ,two";
+		tokenizer = createTokenizer(input, NORMAL_PREFERENCE);
+		try {
+			tokenizer.readColumns(columns);
+			fail("should have thrown SuperCSVException");
+		}
+		catch(SuperCSVException e) {
+			assertEquals("illegal character [ ] following quoted field on line: 1, char: 30", e.getMessage());
+		}
+		
+		// same input in trim mode (should work!)
+		tokenizer = createTokenizer(input, TRIM_PREFERENCE);
+		tokenizer.readColumns(columns);
+		assertTrue(columns.size() == 2);
+		assertEquals("quoted with trailing spaces", columns.get(0));
+		assertEquals("two", columns.get(1));
+		assertEquals(input, tokenizer.getUntokenizedRow());
+	}
+	
+	/**
+	 * Tests the readColumns() method with a trailing space after the last quoted field.
+	 */
+	@Test
+	public void testQuotedLastFieldWithTrailingSpace() throws Exception {
+		
+		// last field has a leading space before quote
+		final String input = "one,two,\"quoted with trailing spaces\"  ";
+		tokenizer = createTokenizer(input, NORMAL_PREFERENCE);
+		try {
+			tokenizer.readColumns(columns);
+			fail("should have thrown SuperCSVException");
+		}
+		catch(SuperCSVException e) {
+			assertEquals("illegal character [ ] following quoted field on line: 1, char: 38", e.getMessage());
+		}
+		
+		// same input in trim mode (should work!)
+		tokenizer = createTokenizer(input, TRIM_PREFERENCE);
+		tokenizer.readColumns(columns);
+		assertTrue(columns.size() == 3);
+		assertEquals("one", columns.get(0));
+		assertEquals("two", columns.get(1));
+		assertEquals("quoted with trailing spaces", columns.get(2));
+		assertEquals(input, tokenizer.getUntokenizedRow());
+	}
+	
+	/**
+	 * Tests the readColumns() method with a variety of quoted spaces.
+	 */
+	@Test
+	public void testQuotedSpaces() throws Exception {
+		
+		final String input = "\" one \",\"  two  \",\"   three   \"";
+		tokenizer = createTokenizer(input, NORMAL_PREFERENCE);
+		tokenizer.readColumns(columns);
+		assertTrue(columns.size() == 3);
+		assertEquals(" one ", columns.get(0));
+		assertEquals("  two  ", columns.get(1));
+		assertEquals("   three   ", columns.get(2));
+		assertEquals(input, tokenizer.getUntokenizedRow());
+		
+		// same input in trim mode (results should be identical to non-trim mode)
+		tokenizer = createTokenizer(input, TRIM_PREFERENCE);
+		tokenizer.readColumns(columns);
+		assertTrue(columns.size() == 3);
+		assertEquals(" one ", columns.get(0));
+		assertEquals("  two  ", columns.get(1));
+		assertEquals("   three   ", columns.get(2));
+		assertEquals(input, tokenizer.getUntokenizedRow());
+	}
+	
+	/**
+	 * Tests the readColumns() method with a variety of unquoted spaces.
+	 */
+	@Test
+	public void testSpaces() throws Exception {
+		
+		final String input = " one ,  two  ,   three   ";
+		tokenizer = createTokenizer(input, NORMAL_PREFERENCE);
+		tokenizer.readColumns(columns);
+		assertTrue(columns.size() == 3);
+		assertEquals(" one ", columns.get(0));
+		assertEquals("  two  ", columns.get(1));
+		assertEquals("   three   ", columns.get(2));
+		assertEquals(input, tokenizer.getUntokenizedRow());
+		
+		// same input in trim mode
+		tokenizer = createTokenizer(input, TRIM_PREFERENCE);
+		tokenizer.readColumns(columns);
+		assertTrue(columns.size() == 3);
+		assertEquals("one", columns.get(0));
+		assertEquals("two", columns.get(1));
+		assertEquals("three", columns.get(2));
+		assertEquals(input, tokenizer.getUntokenizedRow());
+	}
+	
+	/**
+	 * Tests the readColumns() method with a variety of spaces and tabs.
+	 */
+	@Test
+	public void testSpacesAndTabs() throws Exception {
+		
+		// tabs should never be trimmed
+		final String input = "\t, \tone\t ,  \ttwo\t  ,   \tthree\t   ";
+		tokenizer = createTokenizer(input, NORMAL_PREFERENCE);
+		tokenizer.readColumns(columns);
+		assertTrue(columns.size() == 4);
+		assertEquals("\t", columns.get(0));
+		assertEquals(" \tone\t ", columns.get(1));
+		assertEquals("  \ttwo\t  ", columns.get(2));
+		assertEquals("   \tthree\t   ", columns.get(3));
+		assertEquals(input, tokenizer.getUntokenizedRow());
+		
+		// same input in trim mode
+		tokenizer = createTokenizer(input, TRIM_PREFERENCE);
+		tokenizer.readColumns(columns);
+		assertTrue(columns.size() == 4);
+		assertEquals("\t", columns.get(0));
+		assertEquals("\tone\t", columns.get(1));
+		assertEquals("\ttwo\t", columns.get(2));
+		assertEquals("\tthree\t", columns.get(3));
+		assertEquals(input, tokenizer.getUntokenizedRow());
+	}
+	
+	/**
+	 * Tests the readColumns() method with spaces between words.
+	 */
+	@Test
+	public void testSpacesBetweenWords() throws Exception {
+		
+		final String input = " one partridge ,  two turtle doves  ,   three french hens   ";
+		tokenizer = createTokenizer(input, NORMAL_PREFERENCE);
+		tokenizer.readColumns(columns);
+		assertTrue(columns.size() == 3);
+		assertEquals(" one partridge ", columns.get(0));
+		assertEquals("  two turtle doves  ", columns.get(1));
+		assertEquals("   three french hens   ", columns.get(2));
+		assertEquals(input, tokenizer.getUntokenizedRow());
+		
+		// same input in trim mode
+		tokenizer = createTokenizer(input, TRIM_PREFERENCE);
+		tokenizer.readColumns(columns);
+		assertTrue(columns.size() == 3);
+		assertEquals("one partridge", columns.get(0));
+		assertEquals("two turtle doves", columns.get(1));
+		assertEquals("three french hens", columns.get(2));
+		assertEquals(input, tokenizer.getUntokenizedRow());
+	}
+
 }

@@ -1,35 +1,65 @@
+/*
+ * Copyright 2007 Kasper B. Graversen
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.supercsv.io;
 
 import java.io.IOException;
 import java.util.List;
 
 import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.exception.SuperCSVException;
 
 /**
  * Interface for readers that read into Lists.
  * 
  * @author Kasper B. Graversen
+ * @author James Bassett
  */
 public interface ICsvListReader extends ICsvReader {
+	
 	/**
-	 * Reads a line into a List of Strings. This is the traditional and hence very low-level approach to CSV file
-	 * reading and consequently should be avoided.
+	 * Reads a row of a CSV file and returns a List of Strings containing each column.
 	 * 
-	 * @return null if end-of-file or a list representing the read line
+	 * @return the List of columns, or null if EOF
+	 * @throws IOException
+	 *             if an I/O error occurred
+	 * @throws SuperCSVException
+	 *             if there was a general exception while reading/processing
 	 * @since 1.0
 	 */
 	List<String> read() throws IOException;
 	
 	/**
-	 * Reads a line into a List of Strings with the possibility to process the entries first (restricted by the fact
-	 * that the values must fit into a List of Strings).
+	 * Reads a row of a CSV file and returns a List of Objects containing each column. The data can be further processed
+	 * by cell processors (each element in the processors array corresponds with a CSV column). A <tt>null</tt> entry in
+	 * the processors array indicates no further processing is required (the unprocessed String value will be added to
+	 * the List). Prior to version 2.0.0 this method returned a List of Strings.
 	 * 
 	 * @param processors
-	 *            An array of processors that processes each entry. <code>null</code> entries denote no processing for
-	 *            that cell
-	 * @return null if end-of-file or a list representing the read line
+	 *            an array of CellProcessors used to further process data before it is added to the List (each element
+	 *            in the processors array corresponds with a CSV column - the number of processors should match the
+	 *            number of columns). A <tt>null</tt> entry indicates no further processing is required (the unprocessed
+	 *            String value will be added to the List).
+	 * @return the List of columns, or null if EOF
 	 * @throws IOException
+	 *             if an I/O error occurred
+	 * @throws NullPointerException
+	 *             if processors is null
+	 * @throws SuperCSVException
+	 *             if there was a general exception while reading/processing
 	 * @since 1.0
 	 */
-	List<String> read(CellProcessor... processors) throws IOException;
+	List<Object> read(CellProcessor... processors) throws IOException;
 }

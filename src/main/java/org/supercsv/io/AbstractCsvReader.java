@@ -1,3 +1,18 @@
+/*
+ * Copyright 2007 Kasper B. Graversen
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.supercsv.io;
 
 import java.io.IOException;
@@ -12,27 +27,66 @@ import org.supercsv.prefs.CsvPreference;
  * Defines the standard behaviour of a CSV reader.
  * 
  * @author Kasper B. Graversen
+ * @author James Bassett
  */
 public abstract class AbstractCsvReader implements ICsvReader {
 	
-	/** A reference to the last read line */
-	protected List<String> line;
+	private final ITokenizer tokenizer;
 	
-	/** the tokenizer */
-	protected ITokenizer tokenizer;
+	private final CsvPreference preferences;
 	
-	/** the preferences */
-	protected CsvPreference preferences;
+	// the current tokenized columns
+	private final List<String> columns = new ArrayList<String>();
+	
+	// the number of CSV records read
+	private int rowNumber = 0;
 	
 	/**
-	 * Constructs a new <tt>AbstractCsvReader</tt>.
+	 * Constructs a new <tt>AbstractCsvReader</tt>, using the default {@link Tokenizer}.
+	 * 
+	 * @param reader
+	 *            the reader
+	 * @param preferences
+	 *            the CSV preferences
+	 * @throws NullPointerException
+	 *             if reader or preferences are null
 	 */
-	protected AbstractCsvReader() {
-		line = new ArrayList<String>();
+	public AbstractCsvReader(final Reader reader, final CsvPreference preferences) {
+		if( reader == null ) {
+			throw new NullPointerException("reader should not be null");
+		} else if( preferences == null ) {
+			throw new NullPointerException("preferences should not be null");
+		}
+		
+		this.preferences = preferences;
+		this.tokenizer = new Tokenizer(reader, preferences);
 	}
 	
 	/**
-	 * Closes the underlying tokenizer.
+	 * Constructs a new <tt>AbstractCsvReader</tt>, using a custom {@link Tokenizer} (which should have already been set
+	 * up with the Reader, CsvPreference, and CsvContext). This constructor should only be used if the default Tokenizer
+	 * doesn't provide the required functionality.
+	 * 
+	 * @param tokenizer
+	 *            the tokenizer
+	 * @param preferences
+	 *            the CSV preferences
+	 * @throws NullPointerException
+	 *             if tokenizer or preferences are null
+	 */
+	public AbstractCsvReader(final ITokenizer tokenizer, final CsvPreference preferences) {
+		if( tokenizer == null ) {
+			throw new NullPointerException("tokenizer should not be null");
+		} else if( preferences == null ) {
+			throw new NullPointerException("preferences should not be null");
+		}
+		
+		this.preferences = preferences;
+		this.tokenizer = tokenizer;
+	}
+	
+	/**
+	 * Closes the Tokenizer and its associated Reader.
 	 */
 	public void close() throws IOException {
 		tokenizer.close();
@@ -41,28 +95,27 @@ public abstract class AbstractCsvReader implements ICsvReader {
 	/**
 	 * {@inheritDoc}
 	 */
-	public String get(final int n) throws IOException, IndexOutOfBoundsException {
-		return line.get(n);
+	public String get(final int n) {
+		return columns.get(n - 1); // column numbers start at 1
 	}
 	
 	/**
-	 * A convenience method for reading the header of a CSV file as a string array. This array can serve as input when
-	 * reading maps or beans.
-	 * 
-	 * @param firstLineCheck
-	 *            check to ensure that this method is only applied to the first line of the CSV file.
-	 * @since 1.0
+	 * {@inheritDoc}
 	 */
-	public String[] getCSVHeader(final boolean firstLineCheck) throws IOException {
+	public String[] getCsvHeader(final boolean firstLineCheck) throws IOException {
+		
 		if( firstLineCheck && tokenizer.getLineNumber() != 0 ) {
-			throw new SuperCSVException("CSV header can only be fetched as the first read operation on a source!");
+			throw new SuperCSVException(String.format(
+				"CSV header must be fetched as the first read operation, but %d lines have already been read",
+				tokenizer.getLineNumber()));
 		}
-		final List<String> tmp = new ArrayList<String>();
-		String[] res = null;
-		if( tokenizer.readStringList(tmp) ) {
-			res = tmp.toArray(new String[tmp.size()]);
+		
+		if( readRow() ) {
+			// TODO trim header columns when !trimMode?
+			return columns.toArray(new String[columns.size()]);
 		}
-		return res;
+		
+		return null;
 	}
 	
 	/**
@@ -75,36 +128,57 @@ public abstract class AbstractCsvReader implements ICsvReader {
 	/**
 	 * {@inheritDoc}
 	 */
-	public int length() throws IOException {
-		return line.size();
+	public String getUntokenizedRow() {
+		return tokenizer.getUntokenizedRow();
 	}
 	
 	/**
-	 * Sets the reader to use as input.
+	 * {@inheritDoc}
+	 */
+	public int getRowNumber() {
+		return rowNumber;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public int length() {
+		return columns.size();
+	}
+	
+	/**
+	 * Gets the tokenized columns.
 	 * 
-	 * @param reader
-	 *            the reader
-	 * @return the updated CSV reader
+	 * @return the tokenized columns
 	 */
-	public ICsvReader setInput(final Reader reader) {
-		tokenizer = new Tokenizer(reader, this.preferences);
-		return this;
+	protected List<String> getColumns() {
+		return columns;
 	}
 	
 	/**
-	 * {@inheritDoc}
+	 * Gets the preferences.
+	 * 
+	 * @return the preferences
 	 */
-	public ICsvReader setPreferences(final CsvPreference preference) {
-		this.preferences = preference;
-		return this;
+	protected CsvPreference getPreferences() {
+		return preferences;
 	}
 	
 	/**
-	 * {@inheritDoc}
+	 * Calls the tokenizer to read a CSV row. The columns can then be retrieved using {@link #getColumns()}.
+	 * 
+	 * @return true if something was read, and false if EOF
+	 * @throws IOException
+	 *             when an IOException occurs
+	 * @throws SuperCSVException
+	 *             on errors in parsing the input
 	 */
-	public ICsvReader setTokenizer(final ITokenizer tokenizer) {
-		this.tokenizer = tokenizer;
-		return this;
+	protected boolean readRow() throws IOException {
+		if( tokenizer.readColumns(columns) ) {
+			rowNumber++;
+			return true;
+		}
+		return false;
 	}
 	
 }

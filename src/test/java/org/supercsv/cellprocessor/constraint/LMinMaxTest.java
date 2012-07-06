@@ -1,9 +1,24 @@
+/*
+ * Copyright 2007 Kasper B. Graversen
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.supercsv.cellprocessor.constraint;
 
 import static org.junit.Assert.assertEquals;
-import static org.supercsv.TestConstants.ANONYMOUS_CSVCONTEXT;
-import static org.supercsv.cellprocessor.constraint.LMinMax.MAX;
-import static org.supercsv.cellprocessor.constraint.LMinMax.MIN;
+import static org.supercsv.SuperCsvTestUtils.ANONYMOUS_CSVCONTEXT;
+import static org.supercsv.cellprocessor.constraint.LMinMax.MAX_INTEGER;
+import static org.supercsv.cellprocessor.constraint.LMinMax.MIN_INTEGER;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -28,15 +43,15 @@ public class LMinMaxTest {
 	 */
 	@Before
 	public void setUp() {
-		processor = new LMinMax(MIN, MAX);
-		processorChain = new LMinMax(MIN, MAX, new IdentityTransform());
+		processor = new LMinMax(MIN_INTEGER, MAX_INTEGER);
+		processorChain = new LMinMax(MIN_INTEGER, MAX_INTEGER, new IdentityTransform());
 	}
 	
 	/**
 	 * Tests unchained/chained execution with a long in the range.
 	 */
 	@Test
-	public void testValidLong(){
+	public void testValidLong() {
 		long input = 123L;
 		assertEquals(input, processor.execute(input, ANONYMOUS_CSVCONTEXT));
 		assertEquals(input, processorChain.execute(input, ANONYMOUS_CSVCONTEXT));
@@ -46,7 +61,7 @@ public class LMinMaxTest {
 	 * Tests unchained/chained execution with a long String in the range (should be converted to a Long).
 	 */
 	@Test
-	public void testValidLongString(){
+	public void testValidLongString() {
 		String input = "123";
 		Long expected = 123L;
 		assertEquals(expected, processor.execute(input, ANONYMOUS_CSVCONTEXT));
@@ -57,8 +72,8 @@ public class LMinMaxTest {
 	 * Tests unchained/chained execution with the minimum allowed value.
 	 */
 	@Test
-	public void testMinBoundary(){
-		long input = MIN;
+	public void testMinBoundary() {
+		long input = MIN_INTEGER;
 		assertEquals(input, processor.execute(input, ANONYMOUS_CSVCONTEXT));
 		assertEquals(input, processorChain.execute(input, ANONYMOUS_CSVCONTEXT));
 	}
@@ -67,19 +82,18 @@ public class LMinMaxTest {
 	 * Tests unchained/chained execution with the maximum allowed value.
 	 */
 	@Test
-	public void testMaxBoundary(){
-		long input = MAX;
+	public void testMaxBoundary() {
+		long input = MAX_INTEGER;
 		assertEquals(input, processor.execute(input, ANONYMOUS_CSVCONTEXT));
 		assertEquals(input, processorChain.execute(input, ANONYMOUS_CSVCONTEXT));
 	}
 	
-
 	/**
 	 * Tests execution with a value less than the minimum (should throw an Exception).
 	 */
 	@Test(expected = SuperCSVException.class)
 	public void testLessThanMin() {
-		long lessThanMin = MIN - 1L;
+		long lessThanMin = MIN_INTEGER - 1L;
 		processor.execute(lessThanMin, ANONYMOUS_CSVCONTEXT);
 	}
 	
@@ -88,7 +102,7 @@ public class LMinMaxTest {
 	 */
 	@Test(expected = SuperCSVException.class)
 	public void testGreaterThanMax() {
-		long greaterThanMax = MAX + 1L;
+		long greaterThanMax = MAX_INTEGER + 1L;
 		processor.execute(greaterThanMax, ANONYMOUS_CSVCONTEXT);
 	}
 	
@@ -105,7 +119,7 @@ public class LMinMaxTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testWithInvalidMaxMin() {
-		new LMinMax(MAX, MIN);
+		new LMinMax(MAX_INTEGER, MIN_INTEGER);
 	}
 	
 	/**

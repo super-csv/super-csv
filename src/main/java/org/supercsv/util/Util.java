@@ -1,8 +1,21 @@
+/*
+ * Copyright 2007 Kasper B. Graversen
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.supercsv.util;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -16,121 +29,207 @@ import org.supercsv.exception.SuperCSVException;
  * @author James Bassett
  */
 public final class Util {
-
+	
 	// no instantiation
-	private Util(){
+	private Util() {
 	}
 	
 	/**
-	 * Convert a map to a list
+	 * Processes each element in the source List (using the corresponding processor chain in the processors array) and
+	 * adds it to the destination List. A <tt>null</tt> CellProcessor in the array indicates that no processing is
+	 * required and the element should be added as-is.
 	 * 
+	 * @param destination
+	 *            the List to add the processed elements to (which is cleared before it's populated)
 	 * @param source
-	 *            the map to create a list from
-	 * @param nameMapping
-	 *            the keys of the map whose values will constitute the list
-	 * @return a list
+	 *            the List of source elements to be processed
+	 * @param processors
+	 *            the array of CellProcessors used to process each element. The number of elements in this array must
+	 *            match the size of the source List. A <tt>null</tt> CellProcessor in this array indicates that no
+	 *            processing is required and the element should be added as-is.
+	 * @param lineNo
+	 *            the current line number
+	 * @param rowNo
+	 *            the current row number
+	 * @throws NullPointerException
+	 *             if destination, source or processors is null
+	 * @throws SuperCSVException
+	 *             if source.size() != processors.length, or CellProcessor execution failed
 	 */
-	public static List<? extends Object> map2List(final Map<String, ? extends Object> source, final String[] nameMapping) {
-		final List<? super Object> result = new ArrayList<Object>(nameMapping.length);
-		for( final String element : nameMapping ) {
-			result.add(source.get(element));
+	public static void executeCellProcessors(final List<Object> destination, final List<?> source,
+		final CellProcessor[] processors, final int lineNo, final int rowNo) throws SuperCSVException {
+		
+		if( destination == null ) {
+			throw new NullPointerException("destination should not be null");
+		} else if( source == null ) {
+			throw new NullPointerException("source should not be null");
+		} else if( processors == null ) {
+			throw new NullPointerException("processors should not be null");
+		}
+		
+		// the context used when cell processors report exceptions
+		final CsvContext context = new CsvContext(lineNo, rowNo, 1);
+		context.setRowSource(new ArrayList<Object>(source));
+		
+		if( source.size() != processors.length ) {
+			throw new SuperCSVException(String.format(
+				"The number of columns to be processed (%d) must match the number of CellProcessors (%d): check that the number"
+					+ " of CellProcessors you have defined matches the expected number of columns being read/written",
+				source.size(), processors.length), context);
+		}
+		
+		destination.clear();
+		
+		for( int i = 0; i < source.size(); i++ ) {
+			
+			context.setColumnNumber(i + 1); // update context (columns start at 1)
+			
+			if( processors[i] == null ) {
+				destination.add(source.get(i)); // no processing required
+			} else {
+				destination.add(processors[i].execute(source.get(i), context)); // execute the processor chain
+			}
+		}
+	}
+	
+	/**
+	 * Converts a List to a Map using the elements of the nameMapping array as the keys of the Map.
+	 * 
+	 * @param destinationMap
+	 *            the destination Map (which is cleared before it's populated)
+	 * @param nameMapping
+	 *            the keys of the Map (corresponding with the elements in the sourceList). Cannot contain duplicates.
+	 * @param sourceList
+	 *            the List to convert
+	 * @throws NullPointerException
+	 *             if destinationMap, nameMapping or sourceList are null
+	 * @throws SuperCSVException
+	 *             if nameMapping and sourceList are not the same size
+	 */
+	public static <T> void filterListToMap(final Map<String, T> destinationMap, final String[] nameMapping,
+		final List<? extends T> sourceList) {
+		if( destinationMap == null ) {
+			throw new NullPointerException("destinationMap should not be null");
+		} else if( nameMapping == null ) {
+			throw new NullPointerException("nameMapping should not be null");
+		} else if( sourceList == null ) {
+			throw new NullPointerException("sourceList should not be null");
+		} else if( nameMapping.length != sourceList.size() ) {
+			throw new SuperCSVException(
+				String
+					.format(
+						"the nameMapping array and the sourceList should be the same size (nameMapping length = %d, sourceList size = %d)",
+						nameMapping.length, sourceList.size()));
+		}
+		
+		destinationMap.clear();
+		
+		for( int i = 0; i < nameMapping.length; i++ ) {
+			final String key = nameMapping[i];
+			
+			if( key == null ) {
+				continue; // null's in the name mapping means skip column
+			}
+			
+			// no duplicates allowed
+			if( destinationMap.containsKey(key) ) {
+				throw new SuperCSVException(String.format("duplicate nameMapping '%s' at index %d", key, i));
+			}
+			
+			destinationMap.put(key, sourceList.get(i));
+		}
+	}
+	
+	/**
+	 * Returns a List of all of the values in the Map whose key matches an entry in the nameMapping array.
+	 * 
+	 * @param map
+	 *            the map
+	 * @param nameMapping
+	 *            the keys of the Map values to add to the List
+	 * @return a List of all of the values in the Map whose key matches an entry in the nameMapping array
+	 * @throws NullPointerException
+	 *             if map or nameMapping is null
+	 */
+	public static List<Object> filterMapToList(final Map<String, ?> map, final String[] nameMapping) {
+		if( map == null ) {
+			throw new NullPointerException("map should not be null");
+		} else if( nameMapping == null ) {
+			throw new NullPointerException("nameMapping should not be null");
+		}
+		
+		final List<Object> result = new ArrayList<Object>(nameMapping.length);
+		for( final String key : nameMapping ) {
+			result.add(map.get(key));
 		}
 		return result;
 	}
 	
 	/**
-	 * A function to convert a list to a map using a namemapper for defining the keys of the map.
-	 * 
-	 * @param destination
-	 *            the resulting map instance. The map is cleared before populated
-	 * @param nameMapper
-	 *            cannot contain duplicate names
-	 * @param values
-	 *            A list of values TODO: see if using an iterator for the values is more efficient
-	 */
-	public static <T> void mapStringList(final Map<String, T> destination, final String[] nameMapper,
-		final List<T> values) {
-		if( nameMapper.length != values.size() ) {
-			throw new SuperCSVException(
-				"The namemapper array and the value list must match in size. Number of columns mismatch number of entries for your map.");
-		}
-		destination.clear();
-		
-		// map each element of the array
-		for( int i = 0; i < nameMapper.length; i++ ) {
-			final String key = nameMapper[i];
-			
-			// null's in the name mapping means skip column
-			if( key == null ) {
-				continue;
-			}
-			
-			// only perform safe inserts
-			if( destination.containsKey(key) ) {
-				throw new SuperCSVException("nameMapper array contains duplicate key \"" + key
-					+ "\" cannot map the list");
-			}
-			
-			destination.put(key, values.get(i));
-		}
-	}
-	
-	/**
-	 * A function which given a list of strings, process each cell using its corresponding processor-chain from the
-	 * processor array and return the result as an array. Can be extended so the safety check is cached in case the same
-	 * two arrays are used on several requests
-	 * 
-	 * @param destination
-	 *            This list is emptied and then populated with the result from reading a line
-	 * @param source
-	 *            Is an array of Strings/null's representing the soure elements
-	 * @param processors
-	 *            an array of CellProcessors/null's enabling custom processing of each cellvalue specified in the
-	 *            cellValue array. The number of non-null entries in the cellValues array must match the number of
-	 *            processors/null given.
-	 * @param lineNo
-	 *            the line number of the CSV source the processing is taking place on
-	 */
-	public static void processStringList(final List<? super Object> destination, final List<? extends Object> source,
-		final CellProcessor[] processors, final int lineNo) throws SuperCSVException {
-		final CSVContext context = new CSVContext();
-		context.lineSource = source;
-		context.lineNumber = lineNo;
-		if( source.size() != processors.length ) {
-			throw new SuperCSVException("The value array (size " + source.size()
-				+ ")  must match the processors array (size " + processors.length + "):"
-				+ " You are probably reading a CSV line with a different number of columns"
-				+ " than the number of cellprocessors specified", context);
-		}
-		
-		destination.clear();
-		for( int i = 0; i < source.size(); i++ ) {
-			// if no processor, just add the string
-			if( processors[i] == null ) {
-				destination.add(source.get(i));
-			} else {
-				context.columnNumber = i;
-				destination.add(processors[i].execute(source.get(i), context)); // add
-			}
-		}
-	}
-	
-	/**
-	 * Convert a map to an array of objects
+	 * Converts a Map to an array of objects, adding only those entries whose key is in the nameMapping array.
 	 * 
 	 * @param values
-	 *            the values
+	 *            the Map of values to convert
 	 * @param nameMapping
-	 *            the mapping defining the order of the value extract of the map
-	 * @return the map unfolded as an array based on the nameMapping
+	 *            the keys to extract from the Map (elements in the target array will be added in this order)
+	 * @return the array of Objects
+	 * @throws NullPointerException
+	 *             if values or nameMapping is null
 	 */
-	public static Object[] stringMap(final Map<String, ? extends Object> values, final String[] nameMapping) {
-		final Object[] res = new Object[nameMapping.length];
+	public static Object[] filterMapToObjectArray(final Map<String, ?> values, final String[] nameMapping) {
+		
+		if( values == null ) {
+			throw new NullPointerException("values should not be null");
+		} else if( nameMapping == null ) {
+			throw new NullPointerException("nameMapping should not be null");
+		}
+		
+		final Object[] targetArray = new Object[nameMapping.length];
 		int i = 0;
 		for( final String name : nameMapping ) {
-			res[i++] = values.get(name);
+			targetArray[i++] = values.get(name);
 		}
-		return res;
+		return targetArray;
+	}
+	
+	/**
+	 * Converts an Object array to a String array (null-safe), by calling toString() on each element.
+	 * 
+	 * @param objectArray
+	 *            the Object array
+	 * @return the String array, or null if objectArray is null
+	 */
+	public static String[] objectArrayToStringArray(final Object[] objectArray) {
+		if( objectArray == null ) {
+			return null;
+		}
+		
+		final String[] stringArray = new String[objectArray.length];
+		for( int i = 0; i < objectArray.length; i++ ) {
+			stringArray[i] = objectArray[i] != null ? objectArray[i].toString() : null;
+		}
+		
+		return stringArray;
+	}
+	
+	/**
+	 * Converts an List<Object) to a String array (null-safe), by calling toString() on each element.
+	 * 
+	 * @param objectList
+	 *            the List
+	 * @return the String array, or null if objectList is null
+	 */
+	public static String[] objectListToStringArray(final List<?> objectList) {
+		if( objectList == null ) {
+			return null;
+		}
+		
+		final String[] stringArray = new String[objectList.size()];
+		for( int i = 0; i < objectList.size(); i++ ) {
+			stringArray[i] = objectList.get(i) != null ? objectList.get(i).toString() : null;
+		}
+		
+		return stringArray;
 	}
 	
 }

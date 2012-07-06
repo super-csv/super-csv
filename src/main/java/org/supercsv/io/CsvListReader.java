@@ -1,3 +1,18 @@
+/*
+ * Copyright 2007 Kasper B. Graversen
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.supercsv.io;
 
 import java.io.IOException;
@@ -10,12 +25,15 @@ import org.supercsv.prefs.CsvPreference;
 import org.supercsv.util.Util;
 
 /**
- * A simple reader, reading a line from a CSV file into a <tt>List</tt>. This low-level approach to CSV-reading
- * should be considered a last resort when the more elaborate schemes do not fit your purpose.
+ * CsvListReader is a simple reader that reads a row from a CSV file into a <tt>List</tt> of Strings.
  * 
  * @author Kasper B. Graversen
+ * @author James Bassett
  */
 public class CsvListReader extends AbstractCsvReader implements ICsvListReader {
+	
+	// temporary storage of processed columns
+	private final List<Object> processedColumns = new ArrayList<Object>();
 	
 	/**
 	 * Constructs a new <tt>CsvListReader</tt> with the supplied Reader and CSV preferences. Note that the
@@ -25,39 +43,54 @@ public class CsvListReader extends AbstractCsvReader implements ICsvListReader {
 	 *            the reader
 	 * @param preferences
 	 *            the CSV preferences
+	 * @throws NullPointerException
+	 *             if reader or preferences are null
 	 */
 	public CsvListReader(final Reader reader, final CsvPreference preferences) {
-		setPreferences(preferences);
-		setInput(reader);
+		super(reader, preferences);
+	}
+	
+	/**
+	 * Constructs a new <tt>CsvListReader</tt> with the supplied (custom) Tokenizer and CSV preferences. The tokenizer
+	 * should be set up with the Reader (CSV input) and CsvPreference beforehand.
+	 * 
+	 * @param tokenizer
+	 *            the tokenizer
+	 * @param preferences
+	 *            the CSV preferences
+	 * @throws NullPointerException
+	 *             if tokenizer or preferences are null
+	 */
+	public CsvListReader(final ITokenizer tokenizer, final CsvPreference preferences) {
+		super(tokenizer, preferences);
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 */
 	public List<String> read() throws IOException {
-		if( tokenizer.readStringList(super.line) ) {
-			return super.line;
+		
+		if( readRow() ) {
+			return getColumns();
 		}
-		return null;
+		
+		return null; // EOF
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 */
-	public List<String> read(final CellProcessor... processors) throws IOException {
-		if( tokenizer.readStringList(super.line) ) {
-			// execute the processors
-			final List<? super Object> processedColumns = new ArrayList<Object>();
-			Util.processStringList(processedColumns, super.line, processors, getLineNumber());
-			
-			// call toString() on each object
-			final List<String> result = new ArrayList<String>();
-			for( final Object i : processedColumns ) {
-				result.add(i.toString());
-			}
-			return result;
-			
+	public List<Object> read(final CellProcessor... processors) throws IOException {
+		
+		if( processors == null ) {
+			throw new NullPointerException("processors should not be null");
 		}
-		return null;
+		
+		if( readRow() ) {
+			Util.executeCellProcessors(processedColumns, getColumns(), processors, getLineNumber(), getRowNumber());
+			return processedColumns;
+		}
+		
+		return null; // EOF
 	}
 }

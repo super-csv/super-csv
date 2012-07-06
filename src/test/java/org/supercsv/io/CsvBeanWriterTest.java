@@ -1,82 +1,181 @@
+/*
+ * Copyright 2007 Kasper B. Graversen
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.supercsv.io;
 
-import java.io.StringWriter;
+import static org.junit.Assert.assertEquals;
+import static org.supercsv.SuperCsvTestUtils.CSV_FILE;
+import static org.supercsv.SuperCsvTestUtils.CUSTOMERS;
+import static org.supercsv.SuperCsvTestUtils.HEADER;
+import static org.supercsv.SuperCsvTestUtils.STRING_CUSTOMERS;
+import static org.supercsv.SuperCsvTestUtils.*;
 
-import org.junit.Assert;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
+
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.supercsv.cellprocessor.Optional;
-import org.supercsv.cellprocessor.ParseInt;
-import org.supercsv.cellprocessor.constraint.Strlen;
-import org.supercsv.cellprocessor.ift.CellProcessor;
-import org.supercsv.exception.SuperCSVException;
-import org.supercsv.mock.PersonBean;
+import org.supercsv.exception.SuperCSVReflectionException;
+import org.supercsv.mock.CustomerBean;
+import org.supercsv.mock.CustomerStringBean;
 import org.supercsv.prefs.CsvPreference;
 
+/**
+ * Tests the CsvBeanWriter class.
+ * 
+ * @author James Bassett
+ */
 public class CsvBeanWriterTest {
 	
-	private static final String EXPECTED_NORMAL_OUTPUT = "Klaus,Anderson,Mauler Street 43,4328,New York\n";
-	CsvBeanWriter cw = null;
-	String[] nameMapper = { "firstname", "password", "street", "zip", "town" };
-	final CellProcessor[] processors = new CellProcessor[] { new Strlen(5), null, null, new Optional(new ParseInt()),
-		null };
-	StringWriter outfile;
-	PersonBean p1;
+	private static final CsvPreference PREFS = CsvPreference.STANDARD_PREFERENCE;
 	
+	private Writer writer;
+	
+	private CsvBeanWriter beanWriter;
+	
+	private CustomerBean customer;
+	
+	/**
+	 * Sets up the writer for the tests.
+	 */
 	@Before
-	public void setUp() throws Exception {
-		p1 = new PersonBean();
-		p1.setFirstname("Klaus");
-		p1.setPassword("Anderson");
-		p1.setStreet("Mauler Street 43");
-		p1.setZip(4328);
-		p1.setTown("New York");
+	public void setUp() {
+		writer = new StringWriter();
+		beanWriter = new CsvBeanWriter(writer, PREFS);
+		customer = new CustomerBean();
+	}
+	
+	/**
+	 * Closes the bean writer after the test.
+	 */
+	@After
+	public void tearDown() throws IOException {
+		beanWriter.close();
+	}
+	
+	/**
+	 * Tests the constructor with a null writer.
+	 */
+	@SuppressWarnings("resource")
+	@Test(expected = NullPointerException.class)
+	public void testConstructorWillNullWriter() {
+		new CsvBeanWriter(null, PREFS);
+	}
+	
+	/**
+	 * Tests the constructor with a null CsvPreference.
+	 */
+	@SuppressWarnings("resource")
+	@Test(expected = NullPointerException.class)
+	public void testConstructorWillNullPreference() {
+		new CsvBeanWriter(writer, null);
+	}
+	
+	/**
+	 * Tests the write() method.
+	 */
+	@Test
+	public void testWrite() throws IOException {
+		beanWriter.writeHeader(HEADER);
+		for( CustomerStringBean customer : STRING_CUSTOMERS ) {
+			beanWriter.write(customer, HEADER);
+		}
+		beanWriter.flush();
+		assertEquals(CSV_FILE, writer.toString());
+	}
+
+	/**
+	 * Tests the write() method with processors.
+	 */
+	@Test
+	public void testWriteProcessors() throws IOException {
+		beanWriter.writeHeader(HEADER);
+		for( CustomerBean customer : CUSTOMERS ) {
+			beanWriter.write(customer, HEADER, WRITE_PROCESSORS);
+		}
+		beanWriter.flush();
+		assertEquals(CSV_FILE, writer.toString());
+	}
+	
+	/**
+	 * Tests the write() method with a null bean.
+	 */
+	@Test(expected = NullPointerException.class)
+	public void testWriteWithNullSource() throws IOException {
+		beanWriter.write(null, HEADER);
+	}
+	
+	/**
+	 * Tests the write() method with a null name mapping array.
+	 */
+	@Test(expected = NullPointerException.class)
+	public void testWriteWithNullNameMappingArray() throws IOException {
+		beanWriter.write(customer, (String[]) null);
+	}
+
+	/**
+	 * Tests the write() method with a null name mapping.
+	 */
+	@Test(expected = NullPointerException.class)
+	public void testWriteWithNullNameMapping() throws IOException {
+		beanWriter.write(customer, (String) null);
+	}
+	
+	/**
+	 * Tests the write() method (with processors) with a null bean.
+	 */
+	@Test(expected = NullPointerException.class)
+	public void testWriteProcessorsWithNullSource() throws IOException {
+		beanWriter.write(null, HEADER, WRITE_PROCESSORS);
+	}
+	
+	/**
+	 * Tests the write() method (with processors) with a null name mapping array.
+	 */
+	@Test(expected = NullPointerException.class)
+	public void testWriteProcessorsWithNullNameMapping() throws IOException {
+		beanWriter.write(customer, null, WRITE_PROCESSORS);
+	}
+	
+	/**
+	 * Tests the write() method (with processors) with a null cell processor array.
+	 */
+	@Test(expected = NullPointerException.class)
+	public void testWriteProcessorsWithNullProcessors() throws IOException {
+		beanWriter.write(customer, HEADER, null);
 		
-		outfile = new StringWriter();
-		cw = new CsvBeanWriter(outfile, new CsvPreference('"', ',', "\n"));
 	}
 	
-	@Test(expected = SuperCSVException.class)
-	public void testFail() throws Exception {
-		p1.setFirstname("longerthanfive");
-		// final StringBuilder sb = new StringBuilder();
-		cw.write(p1, nameMapper, processors);
-		cw.close();
-		// Assert.assertEquals("error in log", "java.lang.BestCSVException: Entry \"longerthanfive\" on line 1 is not of
-		// any of the required lengths 5 ", sb.toString());
-		Assert.assertEquals("Empty file", "", outfile.toString());
+	/**
+	 * Tests the write() method when a getter throws an Exception.
+	 */
+	@Test(expected = SuperCSVReflectionException.class)
+	public void testGetterThrowingException() throws IOException {
+		beanWriter.write(new ExceptionBean(), "exception");
 	}
 	
-	@Test
-	public void testWrite() throws Exception {
-		cw.write(p1, nameMapper);
-		cw.close();
-		Assert.assertEquals("simple write", EXPECTED_NORMAL_OUTPUT, outfile.toString());
-	}
-	
-	@Test
-	public void testWriteWithFlush() throws Exception {
-		cw.write(p1, nameMapper);
-		cw.flush();
-		Assert.assertEquals("simple write", EXPECTED_NORMAL_OUTPUT, outfile.toString());
-		cw.write(p1, nameMapper);
-		cw.close();
-		Assert.assertEquals("simple write", EXPECTED_NORMAL_OUTPUT + EXPECTED_NORMAL_OUTPUT, outfile.toString());
-	}
-	
-	@Test
-	public void testWriteEncode() throws Exception {
-		p1.setFirstname("Kla,us");
-		cw.write(p1, nameMapper);
-		cw.close();
-		Assert.assertEquals("encode before writing", "\"Kla,us\",Anderson,Mauler Street 43,4328,New York\n",
-			outfile.toString());
-	}
-	
-	@Test
-	public void testWriteProcessor() throws Exception {
-		cw.write(p1, nameMapper, processors);
-		cw.close();
-		Assert.assertEquals("processor write", EXPECTED_NORMAL_OUTPUT, outfile.toString());
+	/**
+	 * Bean to test exceptions when invoking getters using CsvBeanWriter.
+	 */
+	public static class ExceptionBean extends CustomerBean {
+		
+		public String getException() {
+			throw new RuntimeException("oops!");
+		}
+		
 	}
 }

@@ -1,3 +1,18 @@
+/*
+ * Copyright 2007 Kasper B. Graversen
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.supercsv.util;
 
 import java.util.HashMap;
@@ -6,20 +21,20 @@ import java.util.Set;
 /**
  * A two-dimensional hashmap, is a HashMap that enables you to refer to values via two keys rather than one. The
  * underlying implementation is simply a HashMap containing HashMap, each of which maps to values.
- * <P>
- * This is quite useful e.g. when wanting to cache values such as "currency ration" based keys "day of year" and "year".
  * 
  * @see java.util.HashMap
  * @author Kasper B. Graversen
+ * @since 2.0.0 (migrated from Spiffy 0.5)
  */
 public class TwoDHashMap<K1, K2, V> {
 	
-	private HashMap<K1, HashMap<K2, V>> map = new HashMap<K1, HashMap<K2, V>>();
+	private final HashMap<K1, HashMap<K2, V>> map;
 	
 	/**
 	 * Constructs a new <tt>TwoDHashMap</tt>.
 	 */
 	public TwoDHashMap() {
+		map = new HashMap<K1, HashMap<K2, V>>();
 	}
 	
 	/**
@@ -27,8 +42,13 @@ public class TwoDHashMap<K1, K2, V> {
 	 * 
 	 * @param map
 	 *            the map
+	 * @throws NullPointerException
+	 *             if map is null
 	 */
 	public TwoDHashMap(final HashMap<K1, HashMap<K2, V>> map) {
+		if( map == null ) {
+			throw new NullPointerException("map should not be null");
+		}
 		this.map = map;
 	}
 	

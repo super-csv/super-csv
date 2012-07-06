@@ -1,8 +1,23 @@
+/*
+ * Copyright 2007 Kasper B. Graversen
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.supercsv.cellprocessor;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.supercsv.TestConstants.ANONYMOUS_CSVCONTEXT;
+import static org.supercsv.SuperCsvTestUtils.ANONYMOUS_CSVCONTEXT;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -50,14 +65,14 @@ public class ParseBoolTest {
 	 * Tests unchained/chained execution with valid true/false values.
 	 */
 	@Test
-	public void testValidInput(){
+	public void testValidInput() {
 		
 		// processors using default true/false values
-		for (String trueValue : DEFAULT_TRUE_VALUES){
+		for( String trueValue : DEFAULT_TRUE_VALUES ) {
 			assertTrue((Boolean) processor.execute(trueValue, ANONYMOUS_CSVCONTEXT));
 			assertTrue((Boolean) processorChain.execute(trueValue, ANONYMOUS_CSVCONTEXT));
 		}
-		for (String falseValue : DEFAULT_FALSE_VALUES){
+		for( String falseValue : DEFAULT_FALSE_VALUES ) {
 			assertFalse((Boolean) processor.execute(falseValue, ANONYMOUS_CSVCONTEXT));
 			assertFalse((Boolean) processorChain.execute(falseValue, ANONYMOUS_CSVCONTEXT));
 		}
@@ -143,7 +158,7 @@ public class ParseBoolTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testConstructionWithEmptyTrueArray() {
-		new ParseBool(new String[]{}, new String[] { FALSE_VALUE });
+		new ParseBool(new String[] {}, new String[] { FALSE_VALUE });
 	}
 	
 	/**
@@ -151,7 +166,7 @@ public class ParseBoolTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testConstructionWithEmptyFalseArray() {
-		new ParseBool(new String[] { TRUE_VALUE }, new String[]{});
+		new ParseBool(new String[] { TRUE_VALUE }, new String[] {});
 	}
-
+	
 }

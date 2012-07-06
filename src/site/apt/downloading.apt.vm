@@ -1,0 +1,39 @@
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~ Copyright 2007 Kasper B. Graversen
+~~ 
+~~ Licensed under the Apache License, Version 2.0 (the "License");
+~~ you may not use this file except in compliance with the License.
+~~ You may obtain a copy of the License at
+~~ 
+~~     http://www.apache.org/licenses/LICENSE-2.0
+~~ 
+~~ Unless required by applicable law or agreed to in writing, software
+~~ distributed under the License is distributed on an "AS IS" BASIS,
+~~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~~ See the License for the specific language governing permissions and
+~~ limitations under the License.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Downloading Super CSV
+
+  If you are using Maven, simply copy the following dependency into your pom.xml file.
+  
++-------------------------------------+
+<dependency>
+    <groupId>net.sf.supercsv</groupId>
+    <artifactId>super-csv</artifactId>
+    <version>${project.version}</version>
+</dependency>
++-------------------------------------+
+
+  Otherwise you can download the distribution zip file from {{{http://sourceforge.net/projects/supercsv/files/v1-branch/v1.52/}Sourceforge}}, 
+  which contains:
+
+*------------------------------------------+---------------------------------------------------------------------+
+|| File                                    || Description                                                        |  
+*------------------------------------------+---------------------------------------------------------------------+
+| super-csv-${project.version}.jar         | Version ${project.version} of Super CSV (compiled classes only)                  |
+*------------------------------------------+---------------------------------------------------------------------+
+| super-csv-${project.version}-sources.jar | The source code                                                     |
+*------------------------------------------+---------------------------------------------------------------------+
+| super-csv-${project.version}-javadoc.jar | The Javadoc documentation. Can be integrated with your favourite IDE|
+*------------------------------------------+---------------------------------------------------------------------+

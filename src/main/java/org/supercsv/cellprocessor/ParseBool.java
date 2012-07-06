@@ -1,3 +1,18 @@
+/*
+ * Copyright 2007 Kasper B. Graversen
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.supercsv.cellprocessor;
 
 import java.util.Collections;
@@ -9,7 +24,7 @@ import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.exception.ClassCastInputCSVException;
 import org.supercsv.exception.NullInputException;
 import org.supercsv.exception.SuperCSVException;
-import org.supercsv.util.CSVContext;
+import org.supercsv.util.CsvContext;
 
 /**
  * Converts a String to a Boolean.
@@ -145,10 +160,10 @@ public class ParseBool extends CellProcessorAdaptor implements StringCellProcess
 	 *             if trueValue or falseValue is null
 	 */
 	private static void checkPreconditions(final String trueValue, final String falseValue) {
-		if (trueValue == null){
+		if( trueValue == null ) {
 			throw new NullPointerException("trueValue should not be null");
 		}
-		if (falseValue == null){
+		if( falseValue == null ) {
 			throw new NullPointerException("falseValue should not be null");
 		}
 	}
@@ -167,15 +182,15 @@ public class ParseBool extends CellProcessorAdaptor implements StringCellProcess
 	 */
 	private static void checkPreconditions(final String[] trueValues, final String[] falseValues) {
 		
-		if (trueValues == null){
+		if( trueValues == null ) {
 			throw new NullPointerException("trueValues should not be null");
-		} else if (trueValues.length == 0){
+		} else if( trueValues.length == 0 ) {
 			throw new IllegalArgumentException("trueValues should not be empty");
 		}
 		
-		if (falseValues == null){
+		if( falseValues == null ) {
 			throw new NullPointerException("falseValues should not be null");
-		} else if (falseValues.length == 0){
+		} else if( falseValues.length == 0 ) {
 			throw new IllegalArgumentException("falseValues should not be empty");
 		}
 		
@@ -191,14 +206,14 @@ public class ParseBool extends CellProcessorAdaptor implements StringCellProcess
 	 * @throws SuperCSVException
 	 *             if value can't be parsed to a Boolean
 	 */
-	public Object execute(final Object value, final CSVContext context) {
+	public Object execute(final Object value, final CsvContext context) {
 		validateInputNotNull(value, context);
 		
 		if( !(value instanceof String) ) {
 			throw new ClassCastInputCSVException(value, String.class, context, this);
 		}
 		
-		final String stringValue = ((String) value).toLowerCase(); // TODO is this really the best way??
+		final String stringValue = ((String) value).toLowerCase();
 		final Boolean result;
 		if( trueValues.contains(stringValue) ) {
 			result = Boolean.TRUE;

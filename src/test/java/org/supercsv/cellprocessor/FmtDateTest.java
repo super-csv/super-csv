@@ -1,7 +1,23 @@
+/*
+ * Copyright 2007 Kasper B. Graversen
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.supercsv.cellprocessor;
 
 import static org.junit.Assert.assertEquals;
-import static org.supercsv.TestConstants.ANONYMOUS_CSVCONTEXT;
+import static org.supercsv.SuperCsvTestUtils.ANONYMOUS_CSVCONTEXT;
+import static org.supercsv.SuperCsvTestUtils.date;
 
 import java.util.Date;
 
@@ -12,7 +28,6 @@ import org.supercsv.exception.ClassCastInputCSVException;
 import org.supercsv.exception.NullInputException;
 import org.supercsv.exception.SuperCSVException;
 import org.supercsv.mock.IdentityTransform;
-import org.supercsv.util.DateHelper;
 
 /**
  * Tests the FmtDate processor.
@@ -23,7 +38,7 @@ import org.supercsv.util.DateHelper;
 public class FmtDateTest {
 	
 	private static final String DATE_FORMAT = "dd/MM/yyyy";
-	private static final Date DATE = DateHelper.date(2011, 12, 25);
+	private static final Date DATE = date(2011, 12, 25);
 	private static final String FORMATTED_DATE = "25/12/2011";
 	
 	private CellProcessor processor;
@@ -42,7 +57,7 @@ public class FmtDateTest {
 	 * Tests unchained/chained execution with a valid date.
 	 */
 	@Test
-	public void testWithValidDate(){
+	public void testWithValidDate() {
 		assertEquals(FORMATTED_DATE, processor.execute(DATE, ANONYMOUS_CSVCONTEXT));
 		assertEquals(FORMATTED_DATE, processorChain.execute(DATE, ANONYMOUS_CSVCONTEXT));
 	}

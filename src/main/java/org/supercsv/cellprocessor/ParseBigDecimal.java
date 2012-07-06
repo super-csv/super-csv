@@ -1,3 +1,18 @@
+/*
+ * Copyright 2007 Kasper B. Graversen
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.supercsv.cellprocessor;
 
 import java.math.BigDecimal;
@@ -8,7 +23,7 @@ import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.exception.ClassCastInputCSVException;
 import org.supercsv.exception.NullInputException;
 import org.supercsv.exception.SuperCSVException;
-import org.supercsv.util.CSVContext;
+import org.supercsv.util.CsvContext;
 
 /**
  * Convert a String to a BigDecimal. It uses the String constructor of BigDecimal (<tt>new BigDecimal("0.1")</tt>) as it
@@ -106,7 +121,7 @@ public class ParseBigDecimal extends CellProcessorAdaptor implements StringCellP
 	 * @throws ClassCastInputCSVException
 	 *             if the value isn't a String
 	 */
-	public Object execute(final Object value, final CSVContext context) {
+	public Object execute(final Object value, final CsvContext context) {
 		validateInputNotNull(value, context);
 		
 		final BigDecimal result;
@@ -120,8 +135,8 @@ public class ParseBigDecimal extends CellProcessorAdaptor implements StringCellP
 				}
 			}
 			catch(final NumberFormatException e) {
-				throw new SuperCSVException(String.format("'%s' could not be parsed as a BigDecimal", value),
-					context, this, e);
+				throw new SuperCSVException(String.format("'%s' could not be parsed as a BigDecimal", value), context,
+					this, e);
 			}
 		} else {
 			throw new ClassCastInputCSVException(value, String.class, context, this);
