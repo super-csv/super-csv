@@ -100,7 +100,7 @@ public final class ReflectionUtils {
 	 * primitive {@code int} but the argument passed to the setter is an {@code Integer}) by looking for a setter with
 	 * the same type, and failing that checking for a setter with the corresponding primitive/wrapper type.
 	 * <p>
-	 * At present, it doesn't allow for an argument type that is a subclass or implementation of the setter type (when
+	 * It also allows for an argument type that is a subclass or implementation of the setter type (when
 	 * the setter type is an {@code Object} or {@code interface} respectively).
 	 * 
 	 * @param object
