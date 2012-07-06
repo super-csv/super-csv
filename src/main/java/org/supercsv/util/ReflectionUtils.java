@@ -124,34 +124,64 @@ public final class ReflectionUtils {
 			throw new NullPointerException("argumentType should not be null");
 		}
 		
-		String setterName = getMethodNameForField(SET_PREFIX, fieldName);
-		Class<?> clazz = object.getClass();
+		final String setterName = getMethodNameForField(SET_PREFIX, fieldName);
+		final Class<?> clazz = object.getClass();
 		
-		try {
-			return clazz.getMethod(setterName, argumentType);
-		}
-		catch(final NoSuchMethodException e) {
-			
-			if( !AUTOBOXING_CONVERTER.containsKey(argumentType) ) {
-				throw assembleExceptionForFindSetter(clazz, setterName, argumentType, e);
-			}
-			
-			// check for methods which allow autoboxing/unboxing (setter type is a primitive or its wrapper class)
-			try {
-				return clazz.getMethod(setterName, AUTOBOXING_CONVERTER.get(argumentType));
-			}
-			catch(final NoSuchMethodException e1) {
-				throw assembleExceptionForFindSetter(clazz, setterName, argumentType, e1);
-			}
-			catch(final SecurityException e1) {
-				throw assembleExceptionForFindSetter(clazz, setterName, argumentType, e1);
-			}
-			
-		}
-		catch(final SecurityException e) {
-			throw assembleExceptionForFindSetter(clazz, setterName, argumentType, e);
+		// find a setter compatible with the supplied argument type
+		Method setter = findSetterWithCompatibleParamType(clazz, setterName, argumentType);
+		
+		// if that failed, try the corresponding primitive/wrapper if it's a type that can be autoboxed/unboxed
+		if (setter == null && AUTOBOXING_CONVERTER.containsKey(argumentType)){
+			setter = findSetterWithCompatibleParamType(clazz, setterName, AUTOBOXING_CONVERTER.get(argumentType));
 		}
 		
+		if (setter == null){
+			throw new SuperCSVReflectionException(
+				String.format(
+					"unable to find method %s(%s) in class %s - check that the corresponding nameMapping element matches the field name in the bean, "
+						+ "and the cell processor returns a type compatible with the field", setterName,
+					argumentType.getName(), clazz.getName()));
+		}
+		
+		return setter;
+	}
+	
+	/**
+	 * Helper method for findSetter() that returns the setter method of the supplied name, whose parameter type is
+	 * compatible with the supplied argument type (will allow an object of that type to be used when invoking the
+	 * setter), or returns <tt>null</tt> if no match is found. Preference is given to setters whose parameter type is an
+	 * exact match, but if there is none, then the first compatible method found is returned.
+	 * 
+	 * @param clazz
+	 *            the class containing the setter
+	 * @param setterName
+	 *            the name of the setter
+	 * @param argumentType
+	 *            the type to be passed to the setter
+	 * @return the setter method, or null if none is found
+	 */
+	private static Method findSetterWithCompatibleParamType(final Class<?> clazz, final String setterName,
+		final Class<?> argumentType) {
+		
+		Method compatibleSetter = null;
+		for( final Method method : clazz.getMethods() ) {
+			
+			if( !setterName.equals(method.getName()) || method.getParameterTypes().length != 1 ) {
+				continue; // setter must have correct name and only 1 parameter
+			}
+			
+			final Class<?> parameterType = method.getParameterTypes()[0];
+			if( parameterType.equals(argumentType) ) {
+				compatibleSetter = method;
+				break; // exact match
+				
+			} else if( parameterType.isAssignableFrom(argumentType) ) {
+				compatibleSetter = method; // potential match, but keep looking for exact match
+			}
+			
+		}
+		
+		return compatibleSetter;
 	}
 	
 	/**
@@ -172,29 +202,6 @@ public final class ReflectionUtils {
 			String.format(
 				"unable to find method %s() in class %s - check that the corresponding nameMapping element matches the field name in the bean",
 				getterName, clazz.getName()), e);
-	}
-	
-	/**
-	 * Assembles a generic SuperCSVReflectionException with the details of what went wrong when trying to find the
-	 * setter.
-	 * 
-	 * @param clazz
-	 *            the class on which the reflection was being performed
-	 * @param setterName
-	 *            the name of the setter that couldn't be located
-	 * @param argumentType
-	 *            type to be passed to the setter
-	 * @param e
-	 *            the reflection exception
-	 * @return the assembled SuperCSVReflectionException
-	 */
-	private static SuperCSVReflectionException assembleExceptionForFindSetter(final Class<?> clazz,
-		final String setterName, final Class<?> argumentType, Throwable e) {
-		return new SuperCSVReflectionException(
-			String.format(
-				"unable to find method %s(%s) in class %s - check that the corresponding nameMapping element matches the field name in the bean, "
-					+ "and the cell processor returns a type compatible with the field", setterName,
-				argumentType.getName(), clazz.getName()), e);
 	}
 	
 	/**

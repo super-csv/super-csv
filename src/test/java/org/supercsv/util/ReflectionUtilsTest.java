@@ -16,6 +16,7 @@
 package org.supercsv.util;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.supercsv.util.ReflectionUtils.findGetter;
 import static org.supercsv.util.ReflectionUtils.findSetter;
 
@@ -109,15 +110,34 @@ public class ReflectionUtilsTest {
 		assertEquals(name, bean.getName());
 	}
 	
-	// /**
-	// * Tests the findSetter() method with a field type that is a subtype of the setter parameter type.
-	// */
-	// @Test
-	// public void testFindSetterWithSubtype() throws Exception {
-	// TODO findSetter() needs updating to allow for this!
-	// findSetter(bean, "favouriteNumber", Integer.class).invoke(bean, Integer.valueOf(123));
-	// assertEquals(123, bean.getFavouriteNumber().intValue());
-	// }
+	/**
+	 * Tests the findSetter() method with a field type that is a subtype of the setter parameter type.
+	 */
+	@Test
+	public void testFindSetterWithSubtype() throws Exception {
+		findSetter(bean, "favouriteNumber", Integer.class).invoke(bean, Integer.valueOf(123));
+		assertEquals(123, bean.getFavouriteNumber().intValue());
+	}
+	
+	/**
+	 * Tests the findSetter() method with a field type that's compatible with 2 setters (the exact match should always
+	 * be used).
+	 */
+	@Test
+	public void testFindSetterWithTwoOptions() throws Exception {
+		findSetter(bean, "overloaded", Number.class).invoke(bean, Integer.valueOf(123));
+		assertEquals(123, bean.getOverloaded().intValue());
+	}
+	
+	/**
+	 * Tests the findSetter() method with a field type that's compatible with 1 setter but has the same name as another
+	 * method (which should be ignored).
+	 */
+	@Test
+	public void testFindSetterWithMethodOfSameName() throws Exception {
+		findSetter(bean, "sailForTreasure", Boolean.class).invoke(bean, Boolean.TRUE);
+		assertTrue(bean.getSailForTreasure());
+	}
 	
 	/**
 	 * Tests the findSetter() method by passing primitives and wrapper classes to setters that expect wrapper classes
@@ -252,37 +272,6 @@ public class ReflectionUtilsTest {
 	@Test(expected = SuperCSVReflectionException.class)
 	public void testFindSetterWithInvalidFieldNameAndPrimitiveType() {
 		findSetter(bean, "invalid", int.class);
-	}
-	
-	/**
-	 * Tests the findSetter() method when a SecurityException is thrown (should throw an exception).
-	 */
-	@Test(expected = SuperCSVReflectionException.class)
-	public void testFindSetterWithSecurityException() {
-		try {
-			initSecurityManager(0);
-			findSetter(bean, "name", String.class);
-		}
-		finally {
-			clearSecurityManager();
-		}
-		
-	}
-	
-	/**
-	 * Tests the findSetter() method with a primitive parameter type (should throw a SecurityException after trying both
-	 * primitive and wrapper method signatures).
-	 */
-	@Test(expected = SuperCSVReflectionException.class)
-	public void testFindSetterWithAndPrimitiveTypeAndSecurityException() {
-		try {
-			initSecurityManager(1);
-			findSetter(bean, "integerWrapper", int.class);
-		}
-		finally {
-			clearSecurityManager();
-		}
-		
 	}
 	
 	/**

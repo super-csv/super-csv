@@ -22,9 +22,10 @@ package org.supercsv.mock;
  */
 public class ReflectionBean {
 	
+	private boolean sailForTreasure;
 	private String name;
 	private Number favouriteNumber;
-	
+	private Number overloaded;
 	private int primitiveInt;
 	private short primitiveShort;
 	private long primitiveLong;
@@ -39,6 +40,18 @@ public class ReflectionBean {
 	private Float floatWrapper;
 	private Character charWrapper;
 	private Byte byteWrapper;
+	
+	public boolean getSailForTreasure() {
+		return sailForTreasure;
+	}
+
+	public void setSailForTreasure(boolean sailForTreasure) {
+		this.sailForTreasure = sailForTreasure;
+	}
+
+	public void setSailForTreasure(){
+		throw new RuntimeException("this method isn't a setter and should never be invoked");
+	}
 	
 	public String getName() {
 		return name;
@@ -56,6 +69,18 @@ public class ReflectionBean {
 		this.favouriteNumber = favouriteNumber;
 	}
 	
+	public Number getOverloaded() {
+		return overloaded;
+	}
+
+	public void setOverloaded(Integer overloaded) {
+		throw new RuntimeException("this overloaded setter shouldn't be invoked!");
+	}
+	
+	public void setOverloaded(Number overloaded) {
+		this.overloaded = overloaded;
+	}
+
 	public int getPrimitiveInt() {
 		return primitiveInt;
 	}
