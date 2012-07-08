@@ -74,7 +74,9 @@ public abstract class CellProcessorAdaptor implements CellProcessor {
 	 */
 	protected final void validateInputNotNull(final Object value, final CsvContext context) {
 		if( value == null ) {
-			throw new NullInputException("this processor does not accept null input", context, this);
+			throw new NullInputException(
+				"this processor does not accept null input - if the column is optional then chain an Optional() processor before this one",
+				context, this);
 		}
 	}
 	

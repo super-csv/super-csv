@@ -83,22 +83,24 @@ public class CsvBeanWriter extends AbstractCsvWriter implements ICsvBeanWriter {
 		
 		beanValues.clear();
 		
-		for (int i = 0; i < nameMapping.length; i++){
+		for( int i = 0; i < nameMapping.length; i++ ) {
 			
 			final String fieldName = nameMapping[i];
 			
-			if (fieldName == null){
-				throw new NullPointerException(String.format("the nameMapping array should not contain a null entry at index %s", i));
+			if( fieldName == null ) {
+				beanValues.add(null); // assume they always want a blank column
+				
+			} else {
+				Method getMethod = cache.getGetMethod(source, fieldName);
+				try {
+					beanValues.add(getMethod.invoke(source));
+				}
+				catch(final Exception e) {
+					throw new SuperCSVReflectionException(String.format("error extracting bean value for field %s",
+						fieldName), e);
+				}
 			}
 			
-			Method getMethod = cache.getGetMethod(source, fieldName);
-			try {
-				beanValues.add(getMethod.invoke(source));
-			}
-			catch(final Exception e) {
-				throw new SuperCSVReflectionException(String.format("error extracting bean value for field %s",
-					fieldName), e);
-			}
 		}
 		
 	}

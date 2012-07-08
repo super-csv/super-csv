@@ -78,16 +78,16 @@ public class AbstractCsvReaderTest {
 	 */
 	@Before
 	public void setUp() {
-		reader = new StringReader("firstName,lastName,age,address\n" + "John,Smith,23,\"1 Sesame St\nNew York\"\n"
-			+ "Harry,Potter,13,\"Gryffindor\nHogwarts Castle\nUK\"");
+		reader = new StringReader("firstName,lastName,age,address\n" + "John,Smith,23,\n"
+			+ "Harry,Potter,,\"Gryffindor\nHogwarts Castle\nUK\"");
 		abstractReader = new MockCsvReader(reader, PREFS);
 		
 		tokenizer = new Tokenizer(reader, PREFS);
 		tokenizerAbstractReader = new MockCsvReader(tokenizer, PREFS);
 		
 		trimModeReader = new StringReader("firstName, lastName, age, address\n"
-			+ " John , Smith, 23 , \"1 Sesame St\nNew York\" \n"
-			+ "Harry, Potter, 13, \"Gryffindor\nHogwarts Castle\nUK\"");
+			+ " John , Smith, 23 , \n"
+			+ "Harry, Potter, , \"Gryffindor\nHogwarts Castle\nUK\" ");
 		trimModeAbstractReader = new MockCsvReader(trimModeReader, TRIM_PREFS);
 	}
 	
@@ -150,15 +150,15 @@ public class AbstractCsvReaderTest {
 		assertEquals("John", line.get(0));
 		assertEquals("Smith", line.get(1));
 		assertEquals("23", line.get(2));
-		assertEquals("1 Sesame St\nNew York", line.get(3));
+		assertNull(line.get(3));
 		
 		// get() should return the same values as the List from read()
 		assertTrue(Arrays.equals(line.toArray(), new Object[] { csvReader.get(1), csvReader.get(2), csvReader.get(3),
 			csvReader.get(4) }));
 		
-		assertEquals(3, csvReader.getLineNumber()); // newline in john's address
+		assertEquals(2, csvReader.getLineNumber());
 		assertEquals(2, csvReader.getRowNumber());
-		assertEquals("John,Smith,23,\"1 Sesame St\nNew York\"", csvReader.getUntokenizedRow());
+		assertEquals("John,Smith,23,", csvReader.getUntokenizedRow());
 		assertEquals(4, csvReader.length());
 		
 		// read the second data row
@@ -167,21 +167,21 @@ public class AbstractCsvReaderTest {
 		assertEquals(4, csvReader.length());
 		assertEquals("Harry", line.get(0));
 		assertEquals("Potter", line.get(1));
-		assertEquals("13", line.get(2));
+		assertNull(line.get(2));
 		assertEquals("Gryffindor\nHogwarts Castle\nUK", line.get(3));
 		
 		// get() should return the same values as the List from read()
 		assertTrue(Arrays.equals(line.toArray(), new Object[] { csvReader.get(1), csvReader.get(2), csvReader.get(3),
 			csvReader.get(4) }));
 		
-		assertEquals(6, csvReader.getLineNumber()); // 2 newlines in harry's address
+		assertEquals(5, csvReader.getLineNumber()); // 2 newlines in harry's address
 		assertEquals(3, csvReader.getRowNumber());
-		assertEquals("Harry,Potter,13,\"Gryffindor\nHogwarts Castle\nUK\"", csvReader.getUntokenizedRow());
+		assertEquals("Harry,Potter,,\"Gryffindor\nHogwarts Castle\nUK\"", csvReader.getUntokenizedRow());
 		assertEquals(4, csvReader.length());
 		
 		// read again (should be EOF)
 		assertFalse(csvReader.readRow());
-		assertEquals(6, csvReader.getLineNumber());
+		assertEquals(5, csvReader.getLineNumber());
 		assertEquals(3, csvReader.getRowNumber());
 		assertEquals("", csvReader.getUntokenizedRow());
 		assertEquals(0, csvReader.length());
@@ -189,8 +189,7 @@ public class AbstractCsvReaderTest {
 	}
 	
 	/**
-	 * Tests a normal reading scenario (with trim mode enabled), asserting all of the properties available
-	 * each time.
+	 * Tests a normal reading scenario (with trim mode enabled), asserting all of the properties available each time.
 	 */
 	@Test
 	public void testReadingWithTrimModeReader() throws IOException {
@@ -201,7 +200,7 @@ public class AbstractCsvReaderTest {
 	 * Reusable method to test a trim mode reading scenario, asserting all of the properties are available each time.
 	 */
 	private void assertTrimModeReading(final AbstractCsvReader csvReader) throws IOException {
-
+		
 		assertEquals(TRIM_PREFS, csvReader.getPreferences());
 		
 		assertEquals(0, csvReader.getLineNumber());
@@ -224,20 +223,20 @@ public class AbstractCsvReaderTest {
 		
 		// read the first data row
 		assertTrue(csvReader.readRow());
-		List<String> line = csvReader.getColumns(); // John , Smith, 23 , \"1 Sesame St\nNew York\" 
+		List<String> line = csvReader.getColumns(); // John , Smith, 23 , \"1 Sesame St\nNew York\"
 		assertEquals(4, csvReader.length());
 		assertEquals("John", line.get(0));
 		assertEquals("Smith", line.get(1));
 		assertEquals("23", line.get(2));
-		assertEquals("1 Sesame St\nNew York", line.get(3));
+		assertNull(line.get(3));
 		
 		// get() should return the same values as the List from read()
 		assertTrue(Arrays.equals(line.toArray(), new Object[] { csvReader.get(1), csvReader.get(2), csvReader.get(3),
 			csvReader.get(4) }));
 		
-		assertEquals(3, csvReader.getLineNumber()); // newline in john's address
+		assertEquals(2, csvReader.getLineNumber()); 
 		assertEquals(2, csvReader.getRowNumber());
-		assertEquals(" John , Smith, 23 , \"1 Sesame St\nNew York\" ", csvReader.getUntokenizedRow());
+		assertEquals(" John , Smith, 23 , ", csvReader.getUntokenizedRow());
 		assertEquals(4, csvReader.length());
 		
 		// read the second data row
@@ -246,21 +245,21 @@ public class AbstractCsvReaderTest {
 		assertEquals(4, csvReader.length());
 		assertEquals("Harry", line.get(0));
 		assertEquals("Potter", line.get(1));
-		assertEquals("13", line.get(2));
+		assertNull(line.get(2));
 		assertEquals("Gryffindor\nHogwarts Castle\nUK", line.get(3));
 		
 		// get() should return the same values as the List from read()
 		assertTrue(Arrays.equals(line.toArray(), new Object[] { csvReader.get(1), csvReader.get(2), csvReader.get(3),
 			csvReader.get(4) }));
 		
-		assertEquals(6, csvReader.getLineNumber()); // 2 newlines in harry's address
+		assertEquals(5, csvReader.getLineNumber()); // 2 newlines in harry's address
 		assertEquals(3, csvReader.getRowNumber());
-		assertEquals("Harry, Potter, 13, \"Gryffindor\nHogwarts Castle\nUK\"", csvReader.getUntokenizedRow());
+		assertEquals("Harry, Potter, , \"Gryffindor\nHogwarts Castle\nUK\" ", csvReader.getUntokenizedRow());
 		assertEquals(4, csvReader.length());
 		
 		// read again (should be EOF)
 		assertFalse(csvReader.readRow());
-		assertEquals(6, csvReader.getLineNumber());
+		assertEquals(5, csvReader.getLineNumber());
 		assertEquals(3, csvReader.getRowNumber());
 		assertEquals("", csvReader.getUntokenizedRow());
 		assertEquals(0, csvReader.length());

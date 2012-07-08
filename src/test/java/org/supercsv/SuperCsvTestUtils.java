@@ -20,7 +20,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import org.supercsv.cellprocessor.ConvertNullTo;
 import org.supercsv.cellprocessor.FmtBool;
 import org.supercsv.cellprocessor.FmtDate;
 import org.supercsv.cellprocessor.Optional;
@@ -59,7 +58,7 @@ public class SuperCsvTestUtils {
 	
 	/** the processors to use for CSV writing tests */
 	public static final CellProcessor[] WRITE_PROCESSORS = new CellProcessor[] { null, null, null,
-		new FmtDate("dd/MM/yyyy"), null, new ConvertNullTo("", new FmtBool("Y", "N")), null, null, null, null };
+		new FmtDate("dd/MM/yyyy"), null, new Optional(new FmtBool("Y", "N")), null, null, null, null };
 	
 	// each line in the CSV file and it's corresponding CustomerBean/CustomerStringBeans for testing
 	public static final String JOHN_CSV = "1,John,Dunbar,13/06/1945,\"1600 Amphitheatre Parkway\r\nMountain View, CA 94043\r\nUnited States\","

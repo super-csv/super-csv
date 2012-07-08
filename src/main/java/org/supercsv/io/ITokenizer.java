@@ -52,7 +52,8 @@ public interface ITokenizer extends Closeable {
 	
 	/**
 	 * Reads a CSV row into the supplied List of columns (which can potentially span multiple lines in the file). The
-	 * columns list is cleared as the first operation in the method.
+	 * columns list is cleared as the first operation in the method. Any empty columns ("") will be added to the list as
+	 * <tt>null</tt>.
 	 * 
 	 * @param columns
 	 *            the List of columns to read into

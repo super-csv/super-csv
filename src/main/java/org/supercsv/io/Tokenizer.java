@@ -110,146 +110,138 @@ public class Tokenizer extends AbstractTokenizer {
 			
 			final char c = line.charAt(charIndex);
 			
-			switch( state ) {
-			
-				case NORMAL:
-					
+			if( TokenizerState.NORMAL.equals(state) ) {
+				
+				/*
+				 * NORMAL mode (not within quotes).
+				 */
+				
+				if( quoteScopeStartingLine > 0 && c != NEWLINE ) {
 					/*
 					 * Transitioned from QUOTE_MODE to NORMAL (left a double-quoted section) and more data is remaining.
 					 * In non-trim mode, only a delimiter may follow a quoted field. In trim mode, trailing spaces are
 					 * allowed as well.
 					 */
-					if( quoteScopeStartingLine > 0 && c != NEWLINE ) {
+					if( (!trimMode && c != delimeterChar) || (trimMode && c != delimeterChar && c != SPACE) ) {
+						throw new SuperCSVException(String.format(
+							"illegal character [%c] following quoted field on line: %d, char: %d", c, getLineNumber(),
+							charIndex + 1));
 						
-						if( (!trimMode && c != delimeterChar) || (trimMode && c != delimeterChar && c != SPACE) ) {
-							throw new SuperCSVException(String.format(
-								"illegal character [%c] following quoted field on line: %d, char: %d", c,
-								getLineNumber(), charIndex + 1));
-							
-						}
-						
-						quoteScopeStartingLine = -1; // reset ready for next multi-line cell
 					}
 					
-					if( c == delimeterChar ) {
-						/*
-						 * Delimiter. Save the column (trim trailing space if required) then continue to next character.
-						 */
-						if( !trimMode ) {
-							appendSpaces(currentColumn, potentialSpaces);
-						}
-						columns.add(currentColumn.toString());
-						potentialSpaces = 0;
-						currentColumn.setLength(0);
-						break;
+					quoteScopeStartingLine = -1; // reset ready for next multi-line cell
+				}
+				
+				if( c == delimeterChar ) {
+					/*
+					 * Delimiter. Save the column (trim trailing space if required) then continue to next character.
+					 */
+					if( !trimMode ) {
+						appendSpaces(currentColumn, potentialSpaces);
+					}
+					columns.add(currentColumn.length() > 0 ? currentColumn.toString() : null); // "" -> null
+					potentialSpaces = 0;
+					currentColumn.setLength(0);
+					
+				} else if( c == SPACE ) {
+					/*
+					 * Space. Remember it, then continue to next character.
+					 */
+					potentialSpaces++;
+					
+				} else if( c == NEWLINE ) {
+					/*
+					 * Newline. Add any required spaces (if not in trim mode) and return (we've read a line!).
+					 */
+					if( !trimMode ) {
+						appendSpaces(currentColumn, potentialSpaces);
+					}
+					columns.add(currentColumn.length() > 0 ? currentColumn.toString() : null); // "" -> null
+					return true;
+					
+				} else if( c == quoteChar ) {
+					
+					/*
+					 * Ensures that a quote is the first char (or is only preceded by spaces in trim mode).
+					 */
+					if( currentColumn.length() > 0 || (!trimMode && potentialSpaces > 0) ) {
+						throw new SuperCSVException(String.format(
+							"the quoteChar [%c] must be the first character in a field, line: %d, char: %d", c,
+							getLineNumber(), charIndex + 1));
 						
-					} else if( c == SPACE ) {
-						/*
-						 * Space. Remember it, then continue to next character.
-						 */
-						potentialSpaces++;
-						break;
-						
-					} else if( c == NEWLINE ) {
-						/*
-						 * Newline. Add any required spaces (if not in trim mode) and return (we've read a line!).
-						 */
-						if( !trimMode ) {
-							appendSpaces(currentColumn, potentialSpaces);
-						}
-						columns.add(currentColumn.toString());
-						return true;
-						
-					} else if( c == quoteChar ) {
-						
-						/*
-						 * Ensures that a quote is the first char (or is only preceded by spaces in trim mode).
-						 */
-						if( currentColumn.length() > 0 || (!trimMode && potentialSpaces > 0) ) {
-							throw new SuperCSVException(String.format(
-								"the quoteChar [%c] must be the first character in a field, line: %d, char: %d", c,
-								getLineNumber(), charIndex + 1));
-							
-						} else {
-							/*
-							 * A single quote ("). Update to QUOTESCOPE (but don't save quote), then continue to next
-							 * character.
-							 */
-							state = TokenizerState.QUOTE_MODE;
-							quoteScopeStartingLine = getLineNumber();
-							break;
-						}
 					} else {
 						/*
-						 * Just a normal character. Add any required spaces (but trim any leading spaces in trim mode),
-						 * add the character, then continue to next character.
+						 * A single quote ("). Update to QUOTESCOPE (but don't save quote), then continue to next
+						 * character.
 						 */
-						if( !trimMode || currentColumn.length() > 0 ) {
-							appendSpaces(currentColumn, potentialSpaces);
-						}
-						
-						potentialSpaces = 0;
-						currentColumn.append(c);
-						break;
+						state = TokenizerState.QUOTE_MODE;
+						quoteScopeStartingLine = getLineNumber();
+					}
+				} else {
+					/*
+					 * Just a normal character. Add any required spaces (but trim any leading spaces in trim mode), add
+					 * the character, then continue to next character.
+					 */
+					if( !trimMode || currentColumn.length() > 0 ) {
+						appendSpaces(currentColumn, potentialSpaces);
 					}
 					
-				case QUOTE_MODE:
+					potentialSpaces = 0;
+					currentColumn.append(c);
+				}
+				
+			} else {
+				
+				/*
+				 * QUOTE_MODE (within quotes).
+				 */
+				
+				if( c == NEWLINE ) {
 					
-					if( c == NEWLINE ) {
-						
+					/*
+					 * Newline. Doesn't count as newline while in QUOTESCOPE. Add the newline char, reset the charIndex
+					 * (will update to 0 for next iteration), read in the next line, then then continue to next
+					 * character.
+					 */
+					currentColumn.append(NEWLINE);
+					currentRow.append(NEWLINE); // specific line terminator lost, but \n should be good enough??
+					
+					charIndex = -1;
+					line = readLine();
+					if( line == null ) {
+						throw new SuperCSVException(
+							String
+								.format(
+									"unexpected end of file while reading quoted column beginning on line %d and ending on line %d",
+									quoteScopeStartingLine, getLineNumber()));
+					}
+					
+					currentRow.append(line); // update untokenized CSV row
+					line += NEWLINE; // add newline to simplify parsing
+					
+				} else if( c == quoteChar ) {
+					
+					if( line.charAt(charIndex + 1) == quoteChar ) {
 						/*
-						 * Newline. Doesn't count as newline while in QUOTESCOPE. Add the newline char, reset the
-						 * charIndex (will update to 0 for next iteration), read in the next line, then then continue to
-						 * next character.
+						 * An escaped quote (""). Add a single quote, then move the cursor so the next iteration of the
+						 * loop will read the character following the escaped quote.
 						 */
-						currentColumn.append(NEWLINE);
-						currentRow.append(NEWLINE); // specific line terminator lost, but \n should be good enough??
+						currentColumn.append(c);
+						charIndex++;
 						
-						charIndex = -1;
-						line = readLine();
-						if( line == null ) {
-							throw new SuperCSVException(
-								String
-									.format(
-										"unexpected end of file while reading quoted column beginning on line %d and ending on line %d",
-										quoteScopeStartingLine, getLineNumber()));
-						}
-						
-						currentRow.append(line); // update untokenized CSV row
-						
-						line += NEWLINE; // add newline to simplify parsing
-						break;
-						
-					} else if( c == quoteChar ) {
-						
-						if( line.charAt(charIndex + 1) == quoteChar ) {
-							/*
-							 * An escaped quote (""). Add a single quote, then move the cursor so the next iteration of
-							 * the loop will read the character following the escaped quote.
-							 */
-							currentColumn.append(c);
-							charIndex++;
-							break;
-							
-						} else {
-							/*
-							 * A single quote ("). Update to NORMAL (but don't save quote), then continue to next
-							 * character.
-							 */
-							state = TokenizerState.NORMAL;
-							break;
-						}
 					} else {
 						/*
-						 * Just a normal character, delimiter (they don't count in QUOTESCOPE) or space. Add the
-						 * character, then continue to next character.
+						 * A single quote ("). Update to NORMAL (but don't save quote), then continue to next character.
 						 */
-						currentColumn.append(c);
-						break;
+						state = TokenizerState.NORMAL;
 					}
-				default:
-					throw new AssertionError(); // this can never happen
-					
+				} else {
+					/*
+					 * Just a normal character, delimiter (they don't count in QUOTESCOPE) or space. Add the character,
+					 * then continue to next character.
+					 */
+					currentColumn.append(c);
+				}
 			}
 			
 			charIndex++; // read next char of the line

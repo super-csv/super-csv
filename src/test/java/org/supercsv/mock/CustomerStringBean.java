@@ -55,12 +55,12 @@ public class CustomerStringBean {
 		if( customerBean.getMarried() != null ) {
 			this.married = customerBean.getMarried() ? "Y" : "N";
 		} else {
-			this.married = ""; // TODO should this be null instead?
+			this.married = null;
 		}
 		if( customerBean.getNumberOfKids() != null ) {
 			this.numberOfKids = customerBean.getNumberOfKids().toString();
 		} else {
-			this.numberOfKids = ""; // TODO should this be null instead?
+			this.numberOfKids = null;
 		}
 		this.favouriteQuote = customerBean.getFavouriteQuote();
 		this.email = customerBean.getEmail();

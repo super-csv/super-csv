@@ -29,7 +29,7 @@
 	<artifactId>super-csv</artifactId>
 	<packaging>jar</packaging>
 	<url>http://supercsv.sourceforge.net</url>
-	<description>Super CSV is the next generation CSV reader/writer</description>
+	<description>Super CSV is a fast, programmer-friendly, free CSV package for Java</description>
 	<version>2.0.0-SNAPSHOT</version>
 	<name>Super CSV</name>
 	<inceptionYear>2007</inceptionYear>
@@ -224,6 +224,9 @@
 		</contributor>
 		<contributor>
 			<name>Lubor Vágenknecht (lubor)</name>
+		</contributor>
+		<contributor>
+			<name>Pete Lichten (boneshaker335)</name>
 		</contributor>
 		<contributor>
 			<name>Thor Michael Støre (thormick)</name>

@@ -111,7 +111,6 @@ public abstract class AbstractCsvReader implements ICsvReader {
 		}
 		
 		if( readRow() ) {
-			// TODO trim header columns when !trimMode?
 			return columns.toArray(new String[columns.size()]);
 		}
 		

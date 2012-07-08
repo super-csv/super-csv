@@ -220,8 +220,7 @@ public abstract class AbstractCsvWriter implements ICsvWriter {
 			}
 			
 			if( columns[i] != null ) {
-				// TODO this new null check means you can have a null column turn into "" - what's the impact of this???
-				writer.write(escapeString(columns[i])); // escaped column
+				writer.write(escapeString(columns[i])); // escaped column (a null column implies "")
 			}
 			
 		}

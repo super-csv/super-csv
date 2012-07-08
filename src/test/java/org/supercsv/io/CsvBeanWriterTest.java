@@ -97,7 +97,7 @@ public class CsvBeanWriterTest {
 		beanWriter.flush();
 		assertEquals(CSV_FILE, writer.toString());
 	}
-
+	
 	/**
 	 * Tests the write() method with processors.
 	 */
@@ -126,13 +126,20 @@ public class CsvBeanWriterTest {
 	public void testWriteWithNullNameMappingArray() throws IOException {
 		beanWriter.write(customer, (String[]) null);
 	}
-
+	
 	/**
-	 * Tests the write() method with a null name mapping.
+	 * Tests the write() method with a a name mapping containing nulls (should be empty columns).
 	 */
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void testWriteWithNullNameMapping() throws IOException {
-		beanWriter.write(customer, (String) null);
+		
+		final String[] headerWithNulls = new String[] { "customerNo", null, "firstName", null, "lastName" };
+		final String expectedCsv = JOHN.getCustomerNo() + ",," + JOHN.getFirstName() + ",," + JOHN.getLastName()
+			+ "\r\n";
+		
+		beanWriter.write(JOHN, headerWithNulls);
+		beanWriter.flush();
+		assertEquals(expectedCsv, writer.toString());
 	}
 	
 	/**
