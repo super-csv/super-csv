@@ -22,8 +22,8 @@ import java.util.List;
 import org.supercsv.cellprocessor.CellProcessorAdaptor;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
-import org.supercsv.exception.NullInputException;
-import org.supercsv.exception.SuperCSVException;
+import org.supercsv.exception.SuperCsvCellProcessorException;
+import org.supercsv.exception.SuperCsvConstraintViolationException;
 import org.supercsv.util.CsvContext;
 
 /**
@@ -97,7 +97,7 @@ public class RequireSubStr extends CellProcessorAdaptor implements StringCellPro
 	 *            the List of required substrings
 	 * @param next
 	 *            the next processor in the chain
-	 * @throws NullInputException
+	 * @throws NullPointerException
 	 *             if requiredSubStrings, one of its elements or next is null
 	 * @throws IllegalArgumentException
 	 *             if requiredSubStrings is empty
@@ -176,9 +176,9 @@ public class RequireSubStr extends CellProcessorAdaptor implements StringCellPro
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @throws NullInputException
+	 * @throws SuperCsvCellProcessorException
 	 *             if value is null
-	 * @throws SuperCSVException
+	 * @throws SuperCsvConstraintViolationException
 	 *             if value doesn't contain any of the required substrings
 	 */
 	public Object execute(final Object value, final CsvContext context) {
@@ -192,7 +192,7 @@ public class RequireSubStr extends CellProcessorAdaptor implements StringCellPro
 			}
 		}
 		
-		throw new SuperCSVException(String.format("'%s' does not contain any of the required substrings", value),
+		throw new SuperCsvConstraintViolationException(String.format("'%s' does not contain any of the required substrings", value),
 			context, this);
 	}
 }

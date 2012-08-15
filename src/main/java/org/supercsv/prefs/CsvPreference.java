@@ -56,21 +56,20 @@ package org.supercsv.prefs;
  * </tbody>
  * </table>
  * <p>
- * By default, spaces surrounding an unquoted column are treated as part of the data. In versions of Super CSV prior to
+ * By default, spaces surrounding an unquoted cell are treated as part of the data. In versions of Super CSV prior to
  * 2.0.0 this wasn't the case, and any surrounding spaces that weren't within quotes were ignored when reading (and
  * quotes were automatically added to Strings containing surrounding spaces when writing).
  * <p>
- * If you wish enable this functionality again, then you can create a CsvPreference with the <tt>trimMode</tt> set to
- * true. This means that surrounding spaces without quotes will be trimmed when reading, and quotes will automatically
- * be added for Strings containing surrounding spaces when writing. 
+ * If you wish enable this functionality again, then you can create a CsvPreference with the
+ * <tt>surroundingSpacesNeedQuotes</tt> flag set to true (the default is false). This means that surrounding spaces without
+ * quotes will be trimmed when reading, and quotes will automatically be added for Strings containing surrounding spaces
+ * when writing.
  * <p>
- * You can apply trimMode to an
- * existing preference as follows:<br/>
- * {@code final CsvPreference excelWithTrimMode = new CsvPreference.Builder(CsvPreference.EXCEL_PREFERENCE).trimMode(true).build();}
+ * You can apply the surroundingSpacesNeedQuotes property to an existing preference as follows:<br/>
+ * {@code private static final CsvPreference STANDARD_SURROUNDING_SPACES_NEED_QUOTES = new CsvPreference.Builder(CsvPreference.STANDARD_PREFERENCE).surroundingSpacesNeedQuotes(true).build();}
  * <p>
- * You can also create your own preferences. For example if your file was pipe-delimited, you could use the
- * following:<br/>
- * {@code final CsvPreference pipeDelimited = new CsvPreference.Builder('"', '|', "\n").build();}
+ * You can also create your own preferences. For example if your file was pipe-delimited, you could use the following:<br/>
+ * {@code private static final CsvPreference PIPE_DELIMITED = new CsvPreference.Builder('"', '|', "\n").build();}
  * 
  * @author Kasper B. Graversen
  * @author James Bassett
@@ -83,7 +82,7 @@ public final class CsvPreference {
 	public static final CsvPreference STANDARD_PREFERENCE = new CsvPreference.Builder('"', ',', "\r\n").build();
 	
 	/**
-	 * Ready to use configuration for reading Windows Excel exported CSV files.
+	 * Ready to use configuration for Windows Excel exported CSV files.
 	 */
 	public static final CsvPreference EXCEL_PREFERENCE = new CsvPreference.Builder('"', ',', "\n").build();
 	
@@ -103,7 +102,7 @@ public final class CsvPreference {
 	
 	private final String endOfLineSymbols;
 	
-	private final boolean trimMode;
+	private final boolean surroundingSpacesNeedQuotes;
 	
 	/**
 	 * Constructs a new <tt>CsvPreference</tt> from a Builder.
@@ -112,7 +111,7 @@ public final class CsvPreference {
 		this.quoteChar = builder.quoteChar;
 		this.delimiterChar = builder.delimiterChar;
 		this.endOfLineSymbols = builder.endOfLineSymbols;
-		this.trimMode = builder.trimMode;
+		this.surroundingSpacesNeedQuotes = builder.surroundingSpacesNeedQuotes;
 	}
 	
 	/**
@@ -143,12 +142,12 @@ public final class CsvPreference {
 	}
 	
 	/**
-	 * Returns the trimMode flag.
+	 * Returns the surroundingSpacesNeedQuotes flag.
 	 * 
-	 * @return the trimMode flag
+	 * @return the surroundingSpacesNeedQuotes flag
 	 */
-	public boolean isTrimMode() {
-		return trimMode;
+	public boolean isSurroundingSpacesNeedQuotes() {
+		return surroundingSpacesNeedQuotes;
 	}
 	
 	/**
@@ -163,7 +162,7 @@ public final class CsvPreference {
 		
 		private final String endOfLineSymbols;
 		
-		private boolean trimMode = false;
+		private boolean surroundingSpacesNeedQuotes = false;
 		
 		/**
 		 * Constructs a Builder with all of the values from an existing <tt>CsvPreference</tt> instance. Useful if you
@@ -176,7 +175,7 @@ public final class CsvPreference {
 			this.quoteChar = preference.quoteChar;
 			this.delimiterChar = preference.delimiterChar;
 			this.endOfLineSymbols = preference.endOfLineSymbols;
-			this.trimMode = preference.trimMode;
+			this.surroundingSpacesNeedQuotes = preference.surroundingSpacesNeedQuotes;
 		}
 		
 		/**
@@ -206,16 +205,17 @@ public final class CsvPreference {
 		}
 		
 		/**
-		 * Flag indicating whether spaces at the beginning or end of a column should be trimmed (applicable to both
-		 * reading and writing CSV). The default is <tt>false</tt>, as spaces
+		 * Flag indicating whether spaces at the beginning or end of a cell should be ignored if they're not surrounded
+		 * by quotes (applicable to both reading and writing CSV). The default is <tt>false</tt>, as spaces
 		 * "are considered part of a field and should not be ignored" according to RFC 4180.
 		 * 
-		 * @param trimMode
-		 *            flag indicating whether spaces at the beginning or end of a column should be trimmed
+		 * @param surroundingSpacesNeedQuotes
+		 *            flag indicating whether spaces at the beginning or end of a cell should be ignored if they're not
+		 *            surrounded by quotes
 		 * @return the updated Builder
 		 */
-		public Builder trimMode(final boolean trimMode) {
-			this.trimMode = trimMode;
+		public Builder surroundingSpacesNeedQuotes(final boolean surroundingSpacesNeedQuotes) {
+			this.surroundingSpacesNeedQuotes = surroundingSpacesNeedQuotes;
 			return this;
 		}
 		

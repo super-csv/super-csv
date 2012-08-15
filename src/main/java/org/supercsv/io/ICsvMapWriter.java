@@ -19,7 +19,8 @@ import java.io.IOException;
 import java.util.Map;
 
 import org.supercsv.cellprocessor.ift.CellProcessor;
-import org.supercsv.exception.SuperCSVException;
+import org.supercsv.exception.SuperCsvConstraintViolationException;
+import org.supercsv.exception.SuperCsvException;
 
 /**
  * The interface for writers that write from Maps.
@@ -43,7 +44,7 @@ public interface ICsvMapWriter extends ICsvWriter {
 	 *             if an I/O error occurred
 	 * @throws NullPointerException
 	 *             if values or nameMapping are null
-	 * @throws SuperCSVException
+	 * @throws SuperCsvException
 	 *             if there was a general exception while writing
 	 * @since 1.0
 	 */
@@ -68,7 +69,9 @@ public interface ICsvMapWriter extends ICsvWriter {
 	 *             if an I/O error occurred
 	 * @throws NullPointerException
 	 *             if values or nameMapping are null
-	 * @throws SuperCSVException
+	 * @throws SuperCsvConstraintViolationException
+	 *             if a CellProcessor constraint failed
+	 * @throws SuperCsvException
 	 *             if there was a general exception while writing
 	 * @since 1.20
 	 */

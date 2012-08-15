@@ -21,7 +21,7 @@ import static org.supercsv.SuperCsvTestUtils.ANONYMOUS_CSVCONTEXT;
 import org.junit.Before;
 import org.junit.Test;
 import org.supercsv.cellprocessor.ift.CellProcessor;
-import org.supercsv.exception.NullInputException;
+import org.supercsv.exception.SuperCsvCellProcessorException;
 import org.supercsv.mock.IdentityTransform;
 
 /**
@@ -79,7 +79,7 @@ public class TrimTest {
 	/**
 	 * Tests execution with a null input (should throw an Exception).
 	 */
-	@Test(expected = NullInputException.class)
+	@Test(expected = SuperCsvCellProcessorException.class)
 	public void testWithNull() {
 		processor.execute(null, ANONYMOUS_CSVCONTEXT);
 	}

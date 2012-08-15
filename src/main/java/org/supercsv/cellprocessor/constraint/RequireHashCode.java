@@ -25,8 +25,8 @@ import org.supercsv.cellprocessor.ift.DateCellProcessor;
 import org.supercsv.cellprocessor.ift.DoubleCellProcessor;
 import org.supercsv.cellprocessor.ift.LongCellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
-import org.supercsv.exception.NullInputException;
-import org.supercsv.exception.SuperCSVException;
+import org.supercsv.exception.SuperCsvCellProcessorException;
+import org.supercsv.exception.SuperCsvConstraintViolationException;
 import org.supercsv.util.CsvContext;
 
 /**
@@ -123,9 +123,9 @@ public class RequireHashCode extends CellProcessorAdaptor implements BoolCellPro
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @throws NullInputException
+	 * @throws SuperCsvCellProcessorException
 	 *             if value is null
-	 * @throws SuperCSVException
+	 * @throws SuperCsvConstraintViolationException
 	 *             if value isn't one of the required hash codes
 	 */
 	public Object execute(final Object value, final CsvContext context) {
@@ -133,7 +133,7 @@ public class RequireHashCode extends CellProcessorAdaptor implements BoolCellPro
 		
 		int hash = value.hashCode();
 		if( !requiredHashCodes.contains(hash) ) {
-			throw new SuperCSVException(String.format(
+			throw new SuperCsvConstraintViolationException(String.format(
 				"the hashcode of %d for value '%s' does not match any of the required hashcodes", hash, value),
 				context, this);
 		}

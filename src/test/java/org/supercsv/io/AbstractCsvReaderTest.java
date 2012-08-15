@@ -30,7 +30,7 @@ import java.util.List;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.supercsv.exception.SuperCSVException;
+import org.supercsv.exception.SuperCsvException;
 import org.supercsv.prefs.CsvPreference;
 
 /**
@@ -43,18 +43,18 @@ public class AbstractCsvReaderTest {
 	
 	private static final CsvPreference PREFS = CsvPreference.STANDARD_PREFERENCE;
 	
-	private static final CsvPreference TRIM_PREFS = new CsvPreference.Builder(CsvPreference.STANDARD_PREFERENCE)
-		.trimMode(true).build();
+	private static final CsvPreference SURROUNDING_SPACES_NEED_QUOTES_PREFS = new CsvPreference.Builder(
+		CsvPreference.STANDARD_PREFERENCE).surroundingSpacesNeedQuotes(true).build();
 	
 	private Reader reader;
 	
-	private Reader trimModeReader;
+	private Reader surroundingSpacesNeedQuotesReader;
 	
 	private AbstractCsvReader abstractReader;
 	
 	private AbstractCsvReader tokenizerAbstractReader;
 	
-	private AbstractCsvReader trimModeAbstractReader;
+	private AbstractCsvReader surroundingSpacesNeedQuotesAbstractReader;
 	
 	private ITokenizer tokenizer;
 	
@@ -85,10 +85,10 @@ public class AbstractCsvReaderTest {
 		tokenizer = new Tokenizer(reader, PREFS);
 		tokenizerAbstractReader = new MockCsvReader(tokenizer, PREFS);
 		
-		trimModeReader = new StringReader("firstName, lastName, age, address\n"
-			+ " John , Smith, 23 , \n"
-			+ "Harry, Potter, , \"Gryffindor\nHogwarts Castle\nUK\" ");
-		trimModeAbstractReader = new MockCsvReader(trimModeReader, TRIM_PREFS);
+		surroundingSpacesNeedQuotesReader = new StringReader("firstName, lastName, age, address\n"
+			+ " John , Smith, 23 , \n" + "Harry, Potter, , \"Gryffindor\nHogwarts Castle\nUK\" ");
+		surroundingSpacesNeedQuotesAbstractReader = new MockCsvReader(surroundingSpacesNeedQuotesReader,
+			SURROUNDING_SPACES_NEED_QUOTES_PREFS);
 	}
 	
 	/**
@@ -98,7 +98,7 @@ public class AbstractCsvReaderTest {
 	public void tearDown() throws IOException {
 		abstractReader.close();
 		tokenizerAbstractReader.close();
-		trimModeAbstractReader.close();
+		surroundingSpacesNeedQuotesAbstractReader.close();
 	}
 	
 	/**
@@ -189,19 +189,21 @@ public class AbstractCsvReaderTest {
 	}
 	
 	/**
-	 * Tests a normal reading scenario (with trim mode enabled), asserting all of the properties available each time.
+	 * Tests a normal reading scenario (with surroundingSpacesNeedQuotes enabled), asserting all of the properties available
+	 * each time.
 	 */
 	@Test
-	public void testReadingWithTrimModeReader() throws IOException {
-		assertTrimModeReading(trimModeAbstractReader);
+	public void testReadingWithSurroundingSpacesNeedQuotesReader() throws IOException {
+		assertReadingWithSurroundingSpacesNeedQuotesEnabled(surroundingSpacesNeedQuotesAbstractReader);
 	}
 	
 	/**
-	 * Reusable method to test a trim mode reading scenario, asserting all of the properties are available each time.
+	 * Reusable method to test a reading scenario (with surroundingSpacesNeedQuotes enabled), asserting all of the
+	 * properties are available each time.
 	 */
-	private void assertTrimModeReading(final AbstractCsvReader csvReader) throws IOException {
+	private void assertReadingWithSurroundingSpacesNeedQuotesEnabled(final AbstractCsvReader csvReader) throws IOException {
 		
-		assertEquals(TRIM_PREFS, csvReader.getPreferences());
+		assertEquals(SURROUNDING_SPACES_NEED_QUOTES_PREFS, csvReader.getPreferences());
 		
 		assertEquals(0, csvReader.getLineNumber());
 		assertEquals(0, csvReader.getRowNumber());
@@ -234,7 +236,7 @@ public class AbstractCsvReaderTest {
 		assertTrue(Arrays.equals(line.toArray(), new Object[] { csvReader.get(1), csvReader.get(2), csvReader.get(3),
 			csvReader.get(4) }));
 		
-		assertEquals(2, csvReader.getLineNumber()); 
+		assertEquals(2, csvReader.getLineNumber());
 		assertEquals(2, csvReader.getRowNumber());
 		assertEquals(" John , Smith, 23 , ", csvReader.getUntokenizedRow());
 		assertEquals(4, csvReader.length());
@@ -278,7 +280,7 @@ public class AbstractCsvReaderTest {
 			abstractReader.getCsvHeader(true);
 			fail("should have thrown SuperCsvException");
 		}
-		catch(SuperCSVException e) {
+		catch(SuperCsvException e) {
 			assertEquals("CSV header must be fetched as the first read operation, but 1 lines have already been read",
 				e.getMessage());
 		}

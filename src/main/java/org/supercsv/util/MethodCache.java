@@ -17,7 +17,7 @@ package org.supercsv.util;
 
 import java.lang.reflect.Method;
 
-import org.supercsv.exception.SuperCSVReflectionException;
+import org.supercsv.exception.SuperCsvReflectionException;
 
 /**
  * This class cache's method lookups. Hence first time it introspects the instance's class, while subsequent method
@@ -47,7 +47,7 @@ public class MethodCache {
 	 * @return the getter associated with the field on the object
 	 * @throws NullPointerException
 	 *             if object or fieldName is null
-	 * @throws SuperCSVReflectionException
+	 * @throws SuperCsvReflectionException
 	 *             if the getter doesn't exist or is not visible
 	 */
 	public Method getGetMethod(final Object object, final String fieldName) {
@@ -78,7 +78,7 @@ public class MethodCache {
 	 * @return the setter method associated with the field on the object
 	 * @throws NullPointerException
 	 *             if object, fieldName or fieldType is null
-	 * @throws SuperCSVReflectionException
+	 * @throws SuperCsvReflectionException
 	 *             if the setter doesn't exist or is not visible
 	 */
 	public <T> Method getSetMethod(final Object object, final String fieldName, final Class<?> argumentType) {

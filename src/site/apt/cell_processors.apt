@@ -1,0 +1,112 @@
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~ Copyright 2007 Kasper B. Graversen
+~~ 
+~~ Licensed under the Apache License, Version 2.0 (the "License");
+~~ you may not use this file except in compliance with the License.
+~~ You may obtain a copy of the License at
+~~ 
+~~     http://www.apache.org/licenses/LICENSE-2.0
+~~ 
+~~ Unless required by applicable law or agreed to in writing, software
+~~ distributed under the License is distributed on an "AS IS" BASIS,
+~~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~~ See the License for the specific language governing permissions and
+~~ limitations under the License.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                                    ---------------
+                                    Cell Processors
+                                    ---------------
+
+Cell processors
+
+  Cell processors are an integral part of reading and writing with Super CSV - they automate the data type conversions, and enforce constraints.
+  They implement the <chain of responsibility> design pattern - each processor has a single, well-defined purpose and can be chained
+  together with other processors to fully automate all of the required conversions and constraint validation for a single CSV column.
+  
+  A typical CellProcessor configuration for reading the following CSV file
+  
++-----------------------------------+
+name,birthDate,weight
+John,25/12/1946,83.5
+Alice,06/08/1958,
+Bob,01/03/1984,65.0,
++-----------------------------------+
+  
+  might look like the following:
+  
++---------------------------------------------------------------------------------------------------------------------------------------------+
+public static final CellProcessor[] PROCESSORS = new CellProcessor[] { 
+    null, 
+    new ParseDate("dd/MM/yyyy"), 
+    new Optional(new ParseDouble()) };
++---------------------------------------------------------------------------------------------------------------------------------------------+
+  
+  The number of elements in the CellProcessor array must match up with the number of columns to be processed - the file has 3 columns,
+  so the CellProcessor array has 3 elements.
+  
+  [[1]] The first processor (for the name column) is <<<null>>>, which indicates that <no processing is required> (the String is used unchanged).
+  Semantically, it might have been better to replace that with <<<new Optional()>>>, which means the same thing.
+  If we wanted to guarantee that name was supplied (i.e. it's mandatory), then we could have used <<<new NotNull()>>> instead
+  (which works because empty String (<<<"">>>) is converted to <<<null>>> when reading).
+  
+  [[2]] The second processor (for the birthDate column) is <<<new ParseDate("dd/MM/yyyy")>>>, which indicates that that column is mandatory,
+  and should be parsed as a Date using the supplied format.
+  
+  [[3]] The third processor (for the weight column) is <<<new Optional(new ParseDouble())>>>, which indicates that the column is optional
+  (the value will be <<<null>>> if the column is empty), but if it's supplied then parse it as a Double.
+  
+* Cell processor overview
+
+  * processors are similar to servlet filters in JEE - they can be chained together, and they can modify the data that's passed along the chain
+
+  * processors are executed from <left to right> (but yes, the processor's constructors are invoked from right to left!)
+
+  * the number of elements in the CellProcessor array must match up with the number of columns to be processed
+  
+  * a <<<null>>> processor means <no processing is required>
+  
+  * most processors expect input to be non-null - if it's an optional column then chain an <<<Optional()>>> processor before it, e.g.
+  <<<new Optional(new ParseDouble))>>>. Further processing (processors chained after <<<Optional>>>) will be skipped if the value to be read/written is <<<null>>>.
+  
+  * all processors throw <<<SuperCsvCellProcessorException>>> if they encounter data they cannot process (this shouldn't normally happen if your processor configuration is correct)
+  
+  * constraint-validating processors throw <<<SuperCsvConstraintViolationException>>> if the value does not satisfy the constraint 
+
+* Available cell processors
+
+  The examples above just touch the surface of what's possible with cell processors.
+  The following table shows all of the processors available for reading, writing, and constraint validation.
+
+*----------------------------------------------------------------------------------*---------------------------------------------------------------------*-----------------------------------------------------------------------------*-----------------------------------------------------------------------------------------------*
+ <<Reading>>                                                                       || Writing                                                            || Reading / Writing                                                          || Constraints                                                                                  
+*----------------------------------------------------------------------------------*---------------------------------------------------------------------*-----------------------------------------------------------------------------*-----------------------------------------------------------------------------------------------*
+  {{{../apidocs/org/supercsv/cellprocessor/ParseBigDecimal.html}ParseBigDecimal}}  | {{{../apidocs/org/supercsv/cellprocessor/FmtBool.html}FmtBool}}     | {{{../apidocs/org/supercsv/cellprocessor/ConvertNullTo.html}ConvertNullTo}} | {{{../apidocs/org/supercsv/cellprocessor/constraint/DMinMax.html}DMinMax}}                    
+*----------------------------------------------------------------------------------*---------------------------------------------------------------------*-----------------------------------------------------------------------------*-----------------------------------------------------------------------------------------------*
+  {{{../apidocs/org/supercsv/cellprocessor/ParseBool.html}ParseBool}}              | {{{../apidocs/org/supercsv/cellprocessor/FmtDate.html}FmtDate}}     | {{{../apidocs/org/supercsv/cellprocessor/HashMapper.html}HashMapper}}       | {{{../apidocs/org/supercsv/cellprocessor/constraint/Equals.html}Equals}}                      
+*----------------------------------------------------------------------------------*---------------------------------------------------------------------*-----------------------------------------------------------------------------*-----------------------------------------------------------------------------------------------*
+  {{{../apidocs/org/supercsv/cellprocessor/ParseChar.html}ParseChar}}              | {{{../apidocs/org/supercsv/cellprocessor/FmtNumber.html}FmtNumber}} | {{{../apidocs/org/supercsv/cellprocessor/Optional.html}Optional}}           | {{{../apidocs/org/supercsv/cellprocessor/constraint/ForbidSubStr.html}ForbidSubStr}}          
+*----------------------------------------------------------------------------------*---------------------------------------------------------------------*-----------------------------------------------------------------------------*-----------------------------------------------------------------------------------------------*
+  {{{../apidocs/org/supercsv/cellprocessor/ParseDate.html}ParseDate}}              |                                                                     | {{{../apidocs/org/supercsv/cellprocessor/StrReplace.html}StrReplace}}       | {{{../apidocs/org/supercsv/cellprocessor/constraint/IsIncludedIn.html}IsIncludedIn}}          
+*----------------------------------------------------------------------------------*---------------------------------------------------------------------*-----------------------------------------------------------------------------*-----------------------------------------------------------------------------------------------*
+  {{{../apidocs/org/supercsv/cellprocessor/ParseDouble.html}ParseDouble}}          |                                                                     | {{{../apidocs/org/supercsv/cellprocessor/Token.html}Token}}                 | {{{../apidocs/org/supercsv/cellprocessor/constraint/LMinMax.html}LMinMax}}                    
+*----------------------------------------------------------------------------------*---------------------------------------------------------------------*-----------------------------------------------------------------------------*-----------------------------------------------------------------------------------------------*
+  {{{../apidocs/org/supercsv/cellprocessor/ParseInt.html}ParseInt}}                |                                                                     | {{{../apidocs/org/supercsv/cellprocessor/Trim.html}Trim}}                   | {{{../apidocs/org/supercsv/cellprocessor/constraint/NotNull.html}NotNull}}                    
+*----------------------------------------------------------------------------------*---------------------------------------------------------------------*-----------------------------------------------------------------------------*-----------------------------------------------------------------------------------------------*
+  {{{../apidocs/org/supercsv/cellprocessor/ParseLong.html}ParseLong}}              |                                                                     | {{{../apidocs/org/supercsv/cellprocessor/Truncate.html}Truncate}}           | {{{../apidocs/org/supercsv/cellprocessor/constraint/RequireHashCode.html}RequireHashCode}}    
+*----------------------------------------------------------------------------------*---------------------------------------------------------------------*-----------------------------------------------------------------------------*-----------------------------------------------------------------------------------------------*
+                                                                                   |                                                                     |                                                                             | {{{../apidocs/org/supercsv/cellprocessor/constraint/RequireSubStr.html}RequireSubStr}}        
+*----------------------------------------------------------------------------------*---------------------------------------------------------------------*-----------------------------------------------------------------------------*-----------------------------------------------------------------------------------------------*
+                                                                                   |                                                                     |                                                                             | {{{../apidocs/org/supercsv/cellprocessor/constraint/Strlen.html}Strlen}}                      
+*----------------------------------------------------------------------------------*---------------------------------------------------------------------*-----------------------------------------------------------------------------*-----------------------------------------------------------------------------------------------*
+                                                                                   |                                                                     |                                                                             | {{{../apidocs/org/supercsv/cellprocessor/constraint/StrMinMax.html}StrMinMax}}                
+*----------------------------------------------------------------------------------*---------------------------------------------------------------------*-----------------------------------------------------------------------------*-----------------------------------------------------------------------------------------------*
+                                                                                   |                                                                     |                                                                             | {{{../apidocs/org/supercsv/cellprocessor/constraint/StrNotNullOrEmpty.html}StrNotNullOrEmpty}}
+*----------------------------------------------------------------------------------*---------------------------------------------------------------------*-----------------------------------------------------------------------------*-----------------------------------------------------------------------------------------------*
+                                                                                   |                                                                     |                                                                             | {{{../apidocs/org/supercsv/cellprocessor/constraint/StrRegEx.html}StrRegEx}}                  
+*----------------------------------------------------------------------------------*---------------------------------------------------------------------*-----------------------------------------------------------------------------*-----------------------------------------------------------------------------------------------*
+                                                                                   |                                                                     |                                                                             | {{{../apidocs/org/supercsv/cellprocessor/constraint/Unique.html}Unique}}                      
+*----------------------------------------------------------------------------------*---------------------------------------------------------------------*-----------------------------------------------------------------------------*-----------------------------------------------------------------------------------------------*
+                                                                                   |                                                                     |                                                                             | {{{../apidocs/org/supercsv/cellprocessor/constraint/UniqueHashCode.html}UniqueHashCode}}      
+*----------------------------------------------------------------------------------*---------------------------------------------------------------------*-----------------------------------------------------------------------------*-----------------------------------------------------------------------------------------------*
+
+  	

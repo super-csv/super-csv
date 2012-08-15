@@ -21,9 +21,7 @@ import java.util.Set;
 
 import org.supercsv.cellprocessor.ift.BoolCellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
-import org.supercsv.exception.ClassCastInputCSVException;
-import org.supercsv.exception.NullInputException;
-import org.supercsv.exception.SuperCSVException;
+import org.supercsv.exception.SuperCsvCellProcessorException;
 import org.supercsv.util.CsvContext;
 
 /**
@@ -199,18 +197,14 @@ public class ParseBool extends CellProcessorAdaptor implements StringCellProcess
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @throws ClassCastInputCSVException
-	 *             if value is not a String
-	 * @throws NullInputException
-	 *             if value is null
-	 * @throws SuperCSVException
-	 *             if value can't be parsed to a Boolean
+	 * @throws SuperCsvCellProcessorException
+	 *             if value is null, not a String, or can't be parsed to a Boolean
 	 */
 	public Object execute(final Object value, final CsvContext context) {
 		validateInputNotNull(value, context);
 		
 		if( !(value instanceof String) ) {
-			throw new ClassCastInputCSVException(value, String.class, context, this);
+			throw new SuperCsvCellProcessorException(String.class, value, context, this);
 		}
 		
 		final String stringValue = ((String) value).toLowerCase();
@@ -220,7 +214,8 @@ public class ParseBool extends CellProcessorAdaptor implements StringCellProcess
 		} else if( falseValues.contains(stringValue) ) {
 			result = Boolean.FALSE;
 		} else {
-			throw new SuperCSVException(String.format("'%s' could not be parsed as a Boolean", value), context, this);
+			throw new SuperCsvCellProcessorException(String.format("'%s' could not be parsed as a Boolean", value),
+				context, this);
 		}
 		
 		return next.execute(result, context);

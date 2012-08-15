@@ -17,9 +17,7 @@ package org.supercsv.cellprocessor;
 
 import org.supercsv.cellprocessor.ift.LongCellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
-import org.supercsv.exception.ClassCastInputCSVException;
-import org.supercsv.exception.NullInputException;
-import org.supercsv.exception.SuperCSVException;
+import org.supercsv.exception.SuperCsvCellProcessorException;
 import org.supercsv.util.CsvContext;
 
 /**
@@ -52,12 +50,8 @@ public class ParseLong extends CellProcessorAdaptor implements StringCellProcess
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @throws ClassCastInputCSVException
-	 *             if value isn't a Long or String
-	 * @throws NullInputException
-	 *             if value is null
-	 * @throws SuperCSVException
-	 *             if value can't be parsed as a Long
+	 * @throws SuperCsvCellProcessorException
+	 *             if value is null, isn't a Long or String, or can't be parsed as a Long
 	 */
 	public Object execute(final Object value, final CsvContext context) {
 		validateInputNotNull(value, context);
@@ -70,12 +64,12 @@ public class ParseLong extends CellProcessorAdaptor implements StringCellProcess
 				result = Long.parseLong((String) value);
 			}
 			catch(final NumberFormatException e) {
-				throw new SuperCSVException(String.format("'%s' could not be parsed as an Long", value), context, this,
-					e);
+				throw new SuperCsvCellProcessorException(String.format("'%s' could not be parsed as an Long", value),
+					context, this, e);
 			}
 		} else {
 			final String actualClassName = value.getClass().getName();
-			throw new ClassCastInputCSVException(String.format(
+			throw new SuperCsvCellProcessorException(String.format(
 				"the input value should be of type Long or String but is of type %s", actualClassName), context, this);
 		}
 		

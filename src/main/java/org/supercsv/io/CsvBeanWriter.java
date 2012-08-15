@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.supercsv.cellprocessor.ift.CellProcessor;
-import org.supercsv.exception.SuperCSVReflectionException;
+import org.supercsv.exception.SuperCsvReflectionException;
 import org.supercsv.prefs.CsvPreference;
 import org.supercsv.util.MethodCache;
 import org.supercsv.util.Util;
@@ -69,10 +69,10 @@ public class CsvBeanWriter extends AbstractCsvWriter implements ICsvBeanWriter {
 	 *            the name mapping
 	 * @throws NullPointerException
 	 *             if source or nameMapping are null
-	 * @throws SuperCSVReflectionException
+	 * @throws SuperCsvReflectionException
 	 *             if there was a reflection exception extracting the bean value
 	 */
-	private void extractBeanValues(final Object source, final String[] nameMapping) throws SuperCSVReflectionException {
+	private void extractBeanValues(final Object source, final String[] nameMapping) throws SuperCsvReflectionException {
 		
 		if( source == null ) {
 			throw new NullPointerException("the bean to write should not be null");
@@ -96,7 +96,7 @@ public class CsvBeanWriter extends AbstractCsvWriter implements ICsvBeanWriter {
 					beanValues.add(getMethod.invoke(source));
 				}
 				catch(final Exception e) {
-					throw new SuperCSVReflectionException(String.format("error extracting bean value for field %s",
+					throw new SuperCsvReflectionException(String.format("error extracting bean value for field %s",
 						fieldName), e);
 				}
 			}

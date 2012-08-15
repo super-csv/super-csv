@@ -21,8 +21,8 @@ import static org.supercsv.SuperCsvTestUtils.ANONYMOUS_CSVCONTEXT;
 import org.junit.Before;
 import org.junit.Test;
 import org.supercsv.cellprocessor.ift.CellProcessor;
-import org.supercsv.exception.NullInputException;
-import org.supercsv.exception.SuperCSVException;
+import org.supercsv.exception.SuperCsvCellProcessorException;
+import org.supercsv.exception.SuperCsvConstraintViolationException;
 import org.supercsv.mock.IdentityTransform;
 
 /**
@@ -92,7 +92,7 @@ public class StrMinMaxTest {
 	/**
 	 * Tests execution with a length less than the minimum (should throw an Exception).
 	 */
-	@Test(expected = SuperCSVException.class)
+	@Test(expected = SuperCsvConstraintViolationException.class)
 	public void testLessThanMin() {
 		String input = "12";
 		processor.execute(input, ANONYMOUS_CSVCONTEXT);
@@ -101,7 +101,7 @@ public class StrMinMaxTest {
 	/**
 	 * Tests execution with a length greater than the maximum (should throw an Exception).
 	 */
-	@Test(expected = SuperCSVException.class)
+	@Test(expected = SuperCsvConstraintViolationException.class)
 	public void testGreaterThanMax() {
 		String input = "1234567";
 		processor.execute(input, ANONYMOUS_CSVCONTEXT);
@@ -126,7 +126,7 @@ public class StrMinMaxTest {
 	/**
 	 * Tests execution with a null input (should throw an Exception).
 	 */
-	@Test(expected = NullInputException.class)
+	@Test(expected = SuperCsvCellProcessorException.class)
 	public void testWithNull() {
 		processor.execute(null, ANONYMOUS_CSVCONTEXT);
 	}

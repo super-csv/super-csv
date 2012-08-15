@@ -20,9 +20,7 @@ import java.text.DecimalFormat;
 import org.supercsv.cellprocessor.ift.DoubleCellProcessor;
 import org.supercsv.cellprocessor.ift.LongCellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
-import org.supercsv.exception.ClassCastInputCSVException;
-import org.supercsv.exception.NullInputException;
-import org.supercsv.exception.SuperCSVException;
+import org.supercsv.exception.SuperCsvCellProcessorException;
 import org.supercsv.util.CsvContext;
 
 /**
@@ -156,18 +154,14 @@ public class FmtNumber extends CellProcessorAdaptor implements DoubleCellProcess
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @throws ClassCastInputCSVException
-	 *             if value is not a Number
-	 * @throws NullInputException
-	 *             if value is null
-	 * @throws SuperCSVException
-	 *             if an invalid decimalFormat String was supplied
+	 * @throws SuperCsvCellProcessorException
+	 *             if value is null or not a Number, or if an invalid decimalFormat String was supplied
 	 */
 	public Object execute(final Object value, final CsvContext context) {
 		validateInputNotNull(value, context);
 		
 		if( !(value instanceof Number) ) {
-			throw new ClassCastInputCSVException(value, Number.class, context, this);
+			throw new SuperCsvCellProcessorException(Number.class, value, context, this);
 		}
 		
 		// create a new DecimalFormat if one is not supplied
@@ -176,8 +170,8 @@ public class FmtNumber extends CellProcessorAdaptor implements DoubleCellProcess
 			decimalFormatter = formatter != null ? formatter : new DecimalFormat(decimalFormat);
 		}
 		catch(IllegalArgumentException e) {
-			throw new SuperCSVException(String.format("'%s' is not a valid decimal format", decimalFormat), context,
-				this, e);
+			throw new SuperCsvCellProcessorException(
+				String.format("'%s' is not a valid decimal format", decimalFormat), context, this, e);
 		}
 		
 		final String result = decimalFormatter.format(value);

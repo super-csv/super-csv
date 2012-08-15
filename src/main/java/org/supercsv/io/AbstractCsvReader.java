@@ -20,7 +20,7 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.supercsv.exception.SuperCSVException;
+import org.supercsv.exception.SuperCsvException;
 import org.supercsv.prefs.CsvPreference;
 
 /**
@@ -105,7 +105,7 @@ public abstract class AbstractCsvReader implements ICsvReader {
 	public String[] getCsvHeader(final boolean firstLineCheck) throws IOException {
 		
 		if( firstLineCheck && tokenizer.getLineNumber() != 0 ) {
-			throw new SuperCSVException(String.format(
+			throw new SuperCsvException(String.format(
 				"CSV header must be fetched as the first read operation, but %d lines have already been read",
 				tokenizer.getLineNumber()));
 		}
@@ -169,7 +169,7 @@ public abstract class AbstractCsvReader implements ICsvReader {
 	 * @return true if something was read, and false if EOF
 	 * @throws IOException
 	 *             when an IOException occurs
-	 * @throws SuperCSVException
+	 * @throws SuperCsvException
 	 *             on errors in parsing the input
 	 */
 	protected boolean readRow() throws IOException {

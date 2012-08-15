@@ -63,7 +63,7 @@ public class CsvPreferenceTest {
 		assertEquals('"', custom.getQuoteChar());
 		assertEquals(',', custom.getDelimiterChar());
 		assertEquals("\n", custom.getEndOfLineSymbols());
-		assertFalse(custom.isTrimMode());
+		assertFalse(custom.isSurroundingSpacesNeedQuotes());
 	}
 	
 	/**
@@ -71,11 +71,11 @@ public class CsvPreferenceTest {
 	 */
 	@Test
 	public void testCustomPreference() {
-		final CsvPreference custom = new CsvPreference.Builder('"', ',', "\n").trimMode(true).build();
+		final CsvPreference custom = new CsvPreference.Builder('"', ',', "\n").surroundingSpacesNeedQuotes(true).build();
 		assertEquals('"', custom.getQuoteChar());
 		assertEquals(',', custom.getDelimiterChar());
 		assertEquals("\n", custom.getEndOfLineSymbols());
-		assertTrue(custom.isTrimMode());
+		assertTrue(custom.isSurroundingSpacesNeedQuotes());
 	}
 	
 	/**
@@ -87,7 +87,7 @@ public class CsvPreferenceTest {
 		assertEquals(EXCEL_PREFERENCE.getQuoteChar(), custom.getQuoteChar());
 		assertEquals(EXCEL_PREFERENCE.getDelimiterChar(), custom.getDelimiterChar());
 		assertEquals(EXCEL_PREFERENCE.getEndOfLineSymbols(), custom.getEndOfLineSymbols());
-		assertEquals(EXCEL_PREFERENCE.isTrimMode(), custom.isTrimMode());
+		assertEquals(EXCEL_PREFERENCE.isSurroundingSpacesNeedQuotes(), custom.isSurroundingSpacesNeedQuotes());
 	}
 	
 	/**
@@ -95,11 +95,11 @@ public class CsvPreferenceTest {
 	 */
 	@Test
 	public void testCustomPreferenceBasedOnExisting() {
-		final CsvPreference custom = new CsvPreference.Builder(EXCEL_PREFERENCE).trimMode(true).build();
+		final CsvPreference custom = new CsvPreference.Builder(EXCEL_PREFERENCE).surroundingSpacesNeedQuotes(true).build();
 		assertEquals(EXCEL_PREFERENCE.getQuoteChar(), custom.getQuoteChar());
 		assertEquals(EXCEL_PREFERENCE.getDelimiterChar(), custom.getDelimiterChar());
 		assertEquals(EXCEL_PREFERENCE.getEndOfLineSymbols(), custom.getEndOfLineSymbols());
-		assertTrue(custom.isTrimMode());
+		assertTrue(custom.isSurroundingSpacesNeedQuotes());
 	}
 	
 	/**

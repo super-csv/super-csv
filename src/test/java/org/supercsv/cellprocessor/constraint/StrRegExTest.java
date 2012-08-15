@@ -26,8 +26,8 @@ import java.util.regex.PatternSyntaxException;
 import org.junit.Before;
 import org.junit.Test;
 import org.supercsv.cellprocessor.ift.CellProcessor;
-import org.supercsv.exception.NullInputException;
-import org.supercsv.exception.SuperCSVException;
+import org.supercsv.exception.SuperCsvCellProcessorException;
+import org.supercsv.exception.SuperCsvConstraintViolationException;
 import org.supercsv.mock.IdentityTransform;
 
 /**
@@ -71,9 +71,9 @@ public class StrRegExTest {
 		String input = "12345";
 		try {
 			processor.execute(input, ANONYMOUS_CSVCONTEXT);
-			fail("should have thrown SuperCSVException");
+			fail("should have thrown SuperCsvConstraintViolationException");
 		}
-		catch(SuperCSVException e) {
+		catch(SuperCsvConstraintViolationException e) {
 			// exception msg should contain registered message
 			assertTrue(e.getMessage().contains(MSG));
 		}
@@ -88,9 +88,9 @@ public class StrRegExTest {
 		String input = "12345";
 		try {
 			processor.execute(input, ANONYMOUS_CSVCONTEXT);
-			fail("should have thrown SuperCSVException");
+			fail("should have thrown SuperCsvConstraintViolationException");
 		}
-		catch(SuperCSVException e) {
+		catch(SuperCsvConstraintViolationException e) {
 			// exception msg should not contain the registered message (it's a different regex)
 			assertFalse(e.getMessage().contains(MSG));
 		}
@@ -123,7 +123,7 @@ public class StrRegExTest {
 	/**
 	 * Tests execution with a null input (should throw an Exception).
 	 */
-	@Test(expected = NullInputException.class)
+	@Test(expected = SuperCsvCellProcessorException.class)
 	public void testWithNull() {
 		processor.execute(null, ANONYMOUS_CSVCONTEXT);
 	}

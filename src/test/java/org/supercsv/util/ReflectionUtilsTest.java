@@ -26,7 +26,7 @@ import java.security.Permission;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.supercsv.exception.SuperCSVReflectionException;
+import org.supercsv.exception.SuperCsvReflectionException;
 import org.supercsv.mock.ReflectionBean;
 
 /**
@@ -213,7 +213,7 @@ public class ReflectionUtilsTest {
 	/**
 	 * Tests the findGetter() method with an invalid field name (should throw an exception).
 	 */
-	@Test(expected = SuperCSVReflectionException.class)
+	@Test(expected = SuperCsvReflectionException.class)
 	public void testFindGetterWithInvalidFieldName() {
 		findGetter(bean, "invalid");
 	}
@@ -221,7 +221,7 @@ public class ReflectionUtilsTest {
 	/**
 	 * Tests the findGetter() method when a SecurityException is thrown (should throw an exception).
 	 */
-	@Test(expected = SuperCSVReflectionException.class)
+	@Test(expected = SuperCsvReflectionException.class)
 	public void testFindGetterWithSecurityException() {
 		try {
 			initSecurityManager(0);
@@ -260,7 +260,7 @@ public class ReflectionUtilsTest {
 	/**
 	 * Tests the findSetter() method with an invalid field name (should throw an exception).
 	 */
-	@Test(expected = SuperCSVReflectionException.class)
+	@Test(expected = SuperCsvReflectionException.class)
 	public void testFindSetterWithInvalidFieldName() {
 		findSetter(bean, "invalid", String.class);
 	}
@@ -269,7 +269,7 @@ public class ReflectionUtilsTest {
 	 * Tests the findSetter() method with an invalid field name with a primitive parameter type (should throw an
 	 * exception after trying both primitive and wrapper method signatures).
 	 */
-	@Test(expected = SuperCSVReflectionException.class)
+	@Test(expected = SuperCsvReflectionException.class)
 	public void testFindSetterWithInvalidFieldNameAndPrimitiveType() {
 		findSetter(bean, "invalid", int.class);
 	}

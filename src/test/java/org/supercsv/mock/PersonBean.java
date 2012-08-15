@@ -250,4 +250,12 @@ public class PersonBean {
 		return true;
 	}
 	
+	@Override
+	public String toString() {
+		return String
+			.format(
+				"PersonBean [firstName=%s, lastName=%s, birthDate=%s, married=%s, numberOfKids=%s, favouriteQuote=%s, email=%s]",
+				firstName, lastName, birthDate, married, numberOfKids, favouriteQuote, email);
+	}
+	
 }

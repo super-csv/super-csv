@@ -20,7 +20,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.supercsv.cellprocessor.ift.CellProcessor;
-import org.supercsv.exception.SuperCSVException;
+import org.supercsv.exception.SuperCsvConstraintViolationException;
+import org.supercsv.exception.SuperCsvException;
 
 /**
  * Useful utility methods.
@@ -53,11 +54,13 @@ public final class Util {
 	 *            the current row number
 	 * @throws NullPointerException
 	 *             if destination, source or processors is null
-	 * @throws SuperCSVException
+	 * @throws SuperCsvConstraintViolationException
+	 *             if a CellProcessor constraint failed
+	 * @throws SuperCsvException
 	 *             if source.size() != processors.length, or CellProcessor execution failed
 	 */
 	public static void executeCellProcessors(final List<Object> destination, final List<?> source,
-		final CellProcessor[] processors, final int lineNo, final int rowNo) throws SuperCSVException {
+		final CellProcessor[] processors, final int lineNo, final int rowNo) {
 		
 		if( destination == null ) {
 			throw new NullPointerException("destination should not be null");
@@ -72,7 +75,7 @@ public final class Util {
 		context.setRowSource(new ArrayList<Object>(source));
 		
 		if( source.size() != processors.length ) {
-			throw new SuperCSVException(String.format(
+			throw new SuperCsvException(String.format(
 				"The number of columns to be processed (%d) must match the number of CellProcessors (%d): check that the number"
 					+ " of CellProcessors you have defined matches the expected number of columns being read/written",
 				source.size(), processors.length), context);
@@ -103,7 +106,7 @@ public final class Util {
 	 *            the List to convert
 	 * @throws NullPointerException
 	 *             if destinationMap, nameMapping or sourceList are null
-	 * @throws SuperCSVException
+	 * @throws SuperCsvException
 	 *             if nameMapping and sourceList are not the same size
 	 */
 	public static <T> void filterListToMap(final Map<String, T> destinationMap, final String[] nameMapping,
@@ -115,7 +118,7 @@ public final class Util {
 		} else if( sourceList == null ) {
 			throw new NullPointerException("sourceList should not be null");
 		} else if( nameMapping.length != sourceList.size() ) {
-			throw new SuperCSVException(
+			throw new SuperCsvException(
 				String
 					.format(
 						"the nameMapping array and the sourceList should be the same size (nameMapping length = %d, sourceList size = %d)",
@@ -133,7 +136,7 @@ public final class Util {
 			
 			// no duplicates allowed
 			if( destinationMap.containsKey(key) ) {
-				throw new SuperCSVException(String.format("duplicate nameMapping '%s' at index %d", key, i));
+				throw new SuperCsvException(String.format("duplicate nameMapping '%s' at index %d", key, i));
 			}
 			
 			destinationMap.put(key, sourceList.get(i));

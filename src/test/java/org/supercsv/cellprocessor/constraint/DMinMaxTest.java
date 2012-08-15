@@ -21,8 +21,8 @@ import static org.supercsv.SuperCsvTestUtils.ANONYMOUS_CSVCONTEXT;
 import org.junit.Before;
 import org.junit.Test;
 import org.supercsv.cellprocessor.ift.CellProcessor;
-import org.supercsv.exception.NullInputException;
-import org.supercsv.exception.SuperCSVException;
+import org.supercsv.exception.SuperCsvCellProcessorException;
+import org.supercsv.exception.SuperCsvConstraintViolationException;
 import org.supercsv.mock.IdentityTransform;
 
 /**
@@ -69,7 +69,7 @@ public class DMinMaxTest {
 	/**
 	 * Tests an input above the max.
 	 */
-	@Test(expected = SuperCSVException.class)
+	@Test(expected = SuperCsvConstraintViolationException.class)
 	public void testAboveMax() {
 		processor.execute(11, ANONYMOUS_CSVCONTEXT);
 	}
@@ -77,7 +77,7 @@ public class DMinMaxTest {
 	/**
 	 * Tests an input below the min.
 	 */
-	@Test(expected = SuperCSVException.class)
+	@Test(expected = SuperCsvConstraintViolationException.class)
 	public void testBelowMin() {
 		processor.execute(-6, ANONYMOUS_CSVCONTEXT);
 	}
@@ -93,7 +93,7 @@ public class DMinMaxTest {
 	/**
 	 * Tests execution with a null input (should throw an Exception).
 	 */
-	@Test(expected = NullInputException.class)
+	@Test(expected = SuperCsvCellProcessorException.class)
 	public void testWithNull() {
 		processor.execute(null, ANONYMOUS_CSVCONTEXT);
 	}
@@ -101,7 +101,7 @@ public class DMinMaxTest {
 	/**
 	 * Tests execution with a non-Number input (should throw an Exception).
 	 */
-	@Test(expected = SuperCSVException.class)
+	@Test(expected = SuperCsvCellProcessorException.class)
 	public void testWithNonNumber() {
 		processor.execute("abc", ANONYMOUS_CSVCONTEXT);
 	}

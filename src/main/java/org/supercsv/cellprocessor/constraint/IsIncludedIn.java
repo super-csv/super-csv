@@ -26,8 +26,8 @@ import org.supercsv.cellprocessor.ift.DateCellProcessor;
 import org.supercsv.cellprocessor.ift.DoubleCellProcessor;
 import org.supercsv.cellprocessor.ift.LongCellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
-import org.supercsv.exception.NullInputException;
-import org.supercsv.exception.SuperCSVException;
+import org.supercsv.exception.SuperCsvCellProcessorException;
+import org.supercsv.exception.SuperCsvConstraintViolationException;
 import org.supercsv.util.CsvContext;
 
 /**
@@ -153,16 +153,16 @@ public class IsIncludedIn extends CellProcessorAdaptor implements BoolCellProces
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @throws NullInputException
+	 * @throws SuperCsvCellProcessorException
 	 *             if value is null
-	 * @throws SuperCSVException
+	 * @throws SuperCsvConstraintViolationException
 	 *             if value isn't one of the possible values
 	 */
 	public Object execute(final Object value, final CsvContext context) {
 		validateInputNotNull(value, context);
 		
 		if( !possibleValues.contains(value) ) {
-			throw new SuperCSVException(String.format("'%s' is not included in the allowed set of values", value),
+			throw new SuperCsvConstraintViolationException(String.format("'%s' is not included in the allowed set of values", value),
 				context, this);
 		}
 		

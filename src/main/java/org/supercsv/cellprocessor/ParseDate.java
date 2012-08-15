@@ -21,9 +21,7 @@ import java.util.Date;
 
 import org.supercsv.cellprocessor.ift.DateCellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
-import org.supercsv.exception.ClassCastInputCSVException;
-import org.supercsv.exception.NullInputException;
-import org.supercsv.exception.SuperCSVException;
+import org.supercsv.exception.SuperCsvCellProcessorException;
 import org.supercsv.util.CsvContext;
 
 /**
@@ -130,18 +128,14 @@ public class ParseDate extends CellProcessorAdaptor implements StringCellProcess
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @throws ClassCastInputCSVException
-	 *             if value isn't a String
-	 * @throws NullInputException
-	 *             if value is null
-	 * @throws SuperCSVException
-	 *             if value can't be parsed to a Date
+	 * @throws SuperCsvCellProcessorException
+	 *             if value is null, isn't a String, or can't be parsed to a Date
 	 */
 	public Object execute(final Object value, final CsvContext context) {
 		validateInputNotNull(value, context);
 		
 		if( !(value instanceof String) ) {
-			throw new ClassCastInputCSVException(value, String.class, context, this);
+			throw new SuperCsvCellProcessorException(String.class, value, context, this);
 		}
 		
 		try {
@@ -151,7 +145,8 @@ public class ParseDate extends CellProcessorAdaptor implements StringCellProcess
 			return next.execute(result, context);
 		}
 		catch(final ParseException e) {
-			throw new SuperCSVException(String.format("'%s' could not be parsed as a Date", value), context, this, e);
+			throw new SuperCsvCellProcessorException(String.format("'%s' could not be parsed as a Date", value),
+				context, this, e);
 		}
 	}
 }

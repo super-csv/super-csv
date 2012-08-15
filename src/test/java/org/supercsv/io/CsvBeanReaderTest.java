@@ -18,7 +18,7 @@ package org.supercsv.io;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.supercsv.SuperCsvTestUtils.*;
+import static org.supercsv.SuperCsvTestUtils.ADA;
 import static org.supercsv.SuperCsvTestUtils.ADA_STRING;
 import static org.supercsv.SuperCsvTestUtils.ALICE;
 import static org.supercsv.SuperCsvTestUtils.ALICE_STRING;
@@ -37,11 +37,13 @@ import static org.supercsv.SuperCsvTestUtils.LARRY;
 import static org.supercsv.SuperCsvTestUtils.LARRY_STRING;
 import static org.supercsv.SuperCsvTestUtils.MIRANDA;
 import static org.supercsv.SuperCsvTestUtils.MIRANDA_STRING;
+import static org.supercsv.SuperCsvTestUtils.PARTIAL_HEADER;
 import static org.supercsv.SuperCsvTestUtils.READ_PROCESSORS;
 import static org.supercsv.SuperCsvTestUtils.SERGEI;
 import static org.supercsv.SuperCsvTestUtils.SERGEI_STRING;
 import static org.supercsv.SuperCsvTestUtils.STEVE;
 import static org.supercsv.SuperCsvTestUtils.STEVE_STRING;
+import static org.supercsv.SuperCsvTestUtils.STRING_CUSTOMERS;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -51,7 +53,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.supercsv.cellprocessor.ift.CellProcessor;
-import org.supercsv.exception.SuperCSVReflectionException;
+import org.supercsv.exception.SuperCsvReflectionException;
 import org.supercsv.mock.Customer;
 import org.supercsv.mock.CustomerBean;
 import org.supercsv.mock.CustomerStringBean;
@@ -232,7 +234,7 @@ public class CsvBeanReaderTest {
 	/**
 	 * Tests the read() method with an class that has no default no-arg constructor.
 	 */
-	@Test(expected = SuperCSVReflectionException.class)
+	@Test(expected = SuperCsvReflectionException.class)
 	public void testReadWithNonJavabean() throws IOException {
 		beanReader.read(Integer.class, HEADER);
 	}
@@ -316,7 +318,7 @@ public class CsvBeanReaderTest {
 	/**
 	 * Tests the read() method when invoking the bean's constructor throws IllegalAccessException.
 	 */
-	@Test(expected = SuperCSVReflectionException.class)
+	@Test(expected = SuperCsvReflectionException.class)
 	public void testBeanInstantationThrowingIllegalAccessException() throws IOException {
 		beanReader.read(IllegalAccessBean.class, HEADER);
 	}
@@ -325,7 +327,7 @@ public class CsvBeanReaderTest {
 	 * Tests the read() method when invoking a setter throws an Exception.
 	 */
 	@SuppressWarnings("resource")
-	@Test(expected = SuperCSVReflectionException.class)
+	@Test(expected = SuperCsvReflectionException.class)
 	public void testSetterThrowingException() throws IOException {
 		new CsvBeanReader(new StringReader("value"), PREFS).read(ExceptionBean.class, "illegalArgument");
 	}

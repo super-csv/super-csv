@@ -18,8 +18,8 @@ package org.supercsv.cellprocessor.constraint;
 import org.supercsv.cellprocessor.CellProcessorAdaptor;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
-import org.supercsv.exception.NullInputException;
-import org.supercsv.exception.SuperCSVException;
+import org.supercsv.exception.SuperCsvCellProcessorException;
+import org.supercsv.exception.SuperCsvConstraintViolationException;
 import org.supercsv.util.CsvContext;
 
 /**
@@ -97,9 +97,9 @@ public class StrMinMax extends CellProcessorAdaptor implements StringCellProcess
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @throws NullInputException
+	 * @throws SuperCsvCellProcessorException
 	 *             if value is null
-	 * @throws SuperCSVException
+	 * @throws SuperCsvConstraintViolationException
 	 *             if length is < min or length > max
 	 */
 	public Object execute(final Object value, final CsvContext context) {
@@ -108,7 +108,7 @@ public class StrMinMax extends CellProcessorAdaptor implements StringCellProcess
 		final String stringValue = value.toString();
 		final int length = stringValue.length();
 		if( length < min || length > max ) {
-			throw new SuperCSVException(String.format(
+			throw new SuperCsvConstraintViolationException(String.format(
 				"the length (%d) of value '%s' does not lie between the min (%d) and max (%d) values (inclusive)",
 				length, stringValue, min, max), context, this);
 		}

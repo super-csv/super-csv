@@ -22,7 +22,7 @@ import org.supercsv.cellprocessor.ift.DateCellProcessor;
 import org.supercsv.cellprocessor.ift.DoubleCellProcessor;
 import org.supercsv.cellprocessor.ift.LongCellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
-import org.supercsv.exception.SuperCSVException;
+import org.supercsv.exception.SuperCsvConstraintViolationException;
 import org.supercsv.util.CsvContext;
 
 /**
@@ -96,7 +96,7 @@ public class Equals extends CellProcessorAdaptor implements BoolCellProcessor, D
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @throws SuperCSVException
+	 * @throws SuperCsvConstraintViolationException
 	 *             if value isn't equal to the constant value (or previously encountered value if a constant wasn't
 	 *             supplied)
 	 */
@@ -106,10 +106,10 @@ public class Equals extends CellProcessorAdaptor implements BoolCellProcessor, D
 		} else {
 			if( !equals(constantValue, value) ) {
 				if( constantSupplied ) {
-					throw new SuperCSVException(String.format("'%s' is not equal to the supplied constant '%s'", value,
+					throw new SuperCsvConstraintViolationException(String.format("'%s' is not equal to the supplied constant '%s'", value,
 						constantValue), context, this);
 				} else {
-					throw new SuperCSVException(String.format("'%s' is not equal to the previous value(s) of '%s'",
+					throw new SuperCsvConstraintViolationException(String.format("'%s' is not equal to the previous value(s) of '%s'",
 						value, constantValue), context, this);
 				}
 			}

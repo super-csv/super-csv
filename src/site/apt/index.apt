@@ -13,52 +13,64 @@
 ~~ See the License for the specific language governing permissions and
 ~~ limitations under the License.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                                    -------
+                                    Welcome
+                                    -------
+
 Super CSV
 
 * Motivation
 
-  The main motivation for Super CSV is to be the <<foremost, fastest, most programmer-friendly free CSV package for Java>>.
+  The main motivation for Super CSV is to be the <foremost, fastest, and most programmer-friendly, free CSV package for Java>.
   
 * Features
 
   Super CSV offers the following features not found together in other CSV packages
+  
+      [POJO support] Read or write using any old Javabean. 
+      You can even use an interface and Super CSV will generate an on-the-fly implementation for you!
+      For the old-fashioned, you can read or write with Lists and Maps as well.
+      
+      []
+  
+      [Automatic CSV encoding] Forget about handling special characters such as commas and double-quotes - Super CSV will take care of that for you!
+      All content is properly escaped/un-escaped according to the {{{./csv_specification.html}RFC 4180}} CSV specification.
+      
+      []
+      
+      [Highly configurable] Choose your own delimiter, quote character and line separator - or just use one of the predefined configurations.
+      Comma-separated, tab-separated, semicolon-separated (Germany/Denmark) - it's all possible.
+      
+      []
+      
+      [Data conversion] Powerful cell processors make it simple to convert parse input (to Booleans, Integers, Dates, etc),
+      transform values (trimming Strings, doing regex replacement, etc) and format output like Dates and Numbers.
+      
+      []
+      
+      [Constraint validation] Verify that your data conforms to one or more constraints, such as number ranges, string lengths or uniqueness.
+      
+      []
+      
+      [Stream-based I/O] Operates on streams rather than filenames, and gives you the control to flush or close the streams when you want.
+      Write to a file, over the network, to a zip file, whatever!
 
-    * The ability to read/write <<POJO beans>>, Maps and String lists.
-    
-    * <<Automatic "CSV encoding">> of output on a per need basis. Thus when you write special characters such as <<<,>>> or <<<">>> Super CSV ensures the content is properly escaped (according to my {{{./csv_specification.html} CSV specification}}).
-    
-    * The ability to <<easily convert>> input/output to Integers, Dates, BigDecimals, trimming strings, etc.
-    
-    * The ability to easily <<verify data>> conforms to constraints, such as number ranges, string sizes, uniqueness and even optional columns.
-    
-    * The ability to read/write data from <<anywhere>> in <<any encoding>>. As long as you provide a <<<Reader>>> or a <<<Writer>>>.
-    
-    * Support for Windows, MAC and Linux line breaks.
-    
-    * Configurable separation character, space character and end of line character (for writing files to different platforms)
-    
-    * Operates on streams rather than filenames, enabling you to read/write CSV files e.g. over a network connection.
-    
-    * Supporting <<partial reading and writing>> of objects, maps and arrays with easy setting of default values.
-    
-    * Supporting <<on-the-fly generation implementations>> of bean interfaces when using the <<<CsvBeanReader>>>
-
-  When combined, these features enables you to express clear and robust code for handling CSV files.
+* Message from the author
 
   My years in industry dealing with  CSV files (among other things ;-), has enabled me to identify a number of limitations with existing CSV packages.
   These limitations led me to write Super CSV.
-  My main critisism of existing CSV packages is that reading and writing takes outset in operating on lists of strings.
-  What you really needed is the ability to operate on a range of different types of objects. 
-  Moreover, often you need to restrict input/output data such as minimum and maximum sizes, or numeric ranges. 
+  My main criticism of existing CSV packages is that reading and writing operates on lists of strings.
+  What you really need is the ability to operate on a range of different types of objects. 
+  Moreover, you often need to restrict input/output data with constraints such as minimum and maximum sizes, or numeric ranges. 
   Or maybe you are reading image names, and want to ensure you do not read names contain the characters ":", " ", "/", "^", "%".
   
   Super CSV deals with all these and many other issues. 
   And should you have a constraint not readily expressible in the package, new cell processors can easily be constructed. 
-  Furthermore, you don't want to "CSV encode" strings you write. Should they happen to contain characters that needs escaping, then the CSV package should take care of this automatically!
+  Furthermore, you don't want to "CSV encode" strings you write. If they happen to contain characters that needs escaping, then the CSV package should take care of this automatically!
 
-  The underlying implementation of Super CSV has been written in an extendible fashion, hence new readers/writers and cell processors can easily be supported.
-  The IoC (Inversion of Control) implementation pattern has been enforced, eradicating long-lived mistakes such as using
-  filenames as arguments rather than <<<Reader>>> and <<<Writer>>> objects. Design patterns such as "Chain of responsibility" and the
-  "Null object pattern" can also be found in the code. Feel free to have a look!
+  The underlying implementation of Super CSV has been written in an extensible fashion, hence new readers/writers and cell processors can easily be supported.
+  The <inversion of control> implementation pattern has been enforced, eradicating long-lived mistakes such as using
+  filenames as arguments rather than Reader and Writer objects. Design patterns such as <chain of responsibility> and the
+  <null object pattern> can also be found in the code. Feel free to have a look!
   
   <Kasper>

@@ -22,7 +22,7 @@ import static org.supercsv.SuperCsvTestUtils.ANONYMOUS_CSVCONTEXT;
 import org.junit.Before;
 import org.junit.Test;
 import org.supercsv.cellprocessor.ift.CellProcessor;
-import org.supercsv.exception.SuperCSVException;
+import org.supercsv.exception.SuperCsvConstraintViolationException;
 import org.supercsv.mock.IdentityTransform;
 
 /**
@@ -83,7 +83,7 @@ public class EqualsTest {
 	/**
 	 * Tests execution with a null expected value, but a non-null input (should throw an exception).
 	 */
-	@Test(expected = SuperCSVException.class)
+	@Test(expected = SuperCsvConstraintViolationException.class)
 	public void testNullConstantWithNonNull() {
 		CellProcessor equalsWithNullConstant = new Equals((Object) null);
 		equalsWithNullConstant.execute(EXPECTED_VALUE, ANONYMOUS_CSVCONTEXT);
@@ -92,7 +92,7 @@ public class EqualsTest {
 	/**
 	 * Tests a value that's not equal to the first value encountered (should throw an exception).
 	 */
-	@Test(expected = SuperCSVException.class)
+	@Test(expected = SuperCsvConstraintViolationException.class)
 	public void testNotEqual() {
 		assertEquals(EXPECTED_VALUE, processor.execute(EXPECTED_VALUE, ANONYMOUS_CSVCONTEXT));
 		processor.execute("something else", ANONYMOUS_CSVCONTEXT);
@@ -101,7 +101,7 @@ public class EqualsTest {
 	/**
 	 * Tests a value that's not equal to the constant value (should throw an exception).
 	 */
-	@Test(expected = SuperCSVException.class)
+	@Test(expected = SuperCsvConstraintViolationException.class)
 	public void testNotEqualWithConstant() {
 		processor2.execute("something else", ANONYMOUS_CSVCONTEXT);
 	}

@@ -146,4 +146,13 @@ public class CustomerBean extends PersonBean implements Customer {
 		return true;
 	}
 	
+	@Override
+	public String toString() {
+		return String
+			.format(
+				"CustomerBean [customerNo=%s, firstName=%s, lastName=%s, birthDate=%s, mailingAddress=%s, married=%s, numberOfKids=%s, favouriteQuote=%s, email=%s, loyaltyPoints=%s]",
+				customerNo, getFirstName(), getLastName(), getBirthDate(), mailingAddress, getMarried(),
+				getNumberOfKids(), getFavouriteQuote(), getEmail(), loyaltyPoints);
+	}
+	
 }

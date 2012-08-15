@@ -21,8 +21,8 @@ import java.util.Set;
 import org.supercsv.cellprocessor.CellProcessorAdaptor;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
-import org.supercsv.exception.NullInputException;
-import org.supercsv.exception.SuperCSVException;
+import org.supercsv.exception.SuperCsvCellProcessorException;
+import org.supercsv.exception.SuperCsvConstraintViolationException;
 import org.supercsv.util.CsvContext;
 
 /**
@@ -129,9 +129,9 @@ public class Strlen extends CellProcessorAdaptor implements StringCellProcessor 
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @throws NullInputException
+	 * @throws SuperCsvCellProcessorException
 	 *             if value is null
-	 * @throws SuperCSVException
+	 * @throws SuperCsvConstraintViolationException
 	 *             if the length of value isn't one of the required lengths
 	 */
 	public Object execute(final Object value, final CsvContext context) {
@@ -140,7 +140,7 @@ public class Strlen extends CellProcessorAdaptor implements StringCellProcessor 
 		final String stringValue = value.toString();
 		final int length = stringValue.length();
 		if( !requiredLengths.contains(length) ) {
-			throw new SuperCSVException(String.format("the length (%d) of value '%s' not any of the required lengths",
+			throw new SuperCsvConstraintViolationException(String.format("the length (%d) of value '%s' not any of the required lengths",
 				length, stringValue), context, this);
 		}
 		

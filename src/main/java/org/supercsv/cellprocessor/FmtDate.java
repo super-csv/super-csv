@@ -20,9 +20,7 @@ import java.util.Date;
 
 import org.supercsv.cellprocessor.ift.DateCellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
-import org.supercsv.exception.ClassCastInputCSVException;
-import org.supercsv.exception.NullInputException;
-import org.supercsv.exception.SuperCSVException;
+import org.supercsv.exception.SuperCsvCellProcessorException;
 import org.supercsv.util.CsvContext;
 
 /**
@@ -92,18 +90,14 @@ public class FmtDate extends CellProcessorAdaptor implements DateCellProcessor {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @throws ClassCastInputCSVException
-	 *             if value is not a Date
-	 * @throws NullInputException
-	 *             if value is null
-	 * @throws SuperCSVException
-	 *             is dateFormat is not a valid date format
+	 * @throws SuperCsvCellProcessorException
+	 *             if value is null or is not a Date, or if dateFormat is not a valid date format
 	 */
 	public Object execute(final Object value, final CsvContext context) {
 		validateInputNotNull(value, context);
 		
 		if( !(value instanceof Date) ) {
-			throw new ClassCastInputCSVException(value, Date.class, context, this);
+			throw new SuperCsvCellProcessorException(Date.class, value, context, this);
 		}
 		
 		final SimpleDateFormat formatter;
@@ -111,7 +105,8 @@ public class FmtDate extends CellProcessorAdaptor implements DateCellProcessor {
 			formatter = new SimpleDateFormat(dateFormat);
 		}
 		catch(IllegalArgumentException e) {
-			throw new SuperCSVException(String.format("'%s' is not a valid date format", dateFormat), context, this, e);
+			throw new SuperCsvCellProcessorException(String.format("'%s' is not a valid date format", dateFormat),
+				context, this, e);
 		}
 		
 		String result = formatter.format((Date) value);

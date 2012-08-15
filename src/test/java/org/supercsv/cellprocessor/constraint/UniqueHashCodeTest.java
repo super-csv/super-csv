@@ -23,8 +23,8 @@ import java.util.Arrays;
 import org.junit.Before;
 import org.junit.Test;
 import org.supercsv.cellprocessor.ift.CellProcessor;
-import org.supercsv.exception.NullInputException;
-import org.supercsv.exception.SuperCSVException;
+import org.supercsv.exception.SuperCsvCellProcessorException;
+import org.supercsv.exception.SuperCsvConstraintViolationException;
 import org.supercsv.mock.IdentityTransform;
 import org.supercsv.mock.PersonBean;
 
@@ -84,7 +84,7 @@ public class UniqueHashCodeTest {
 	/**
 	 * Tests execution with String inputs that have the same hash code (should throw an Exception).
 	 */
-	@Test(expected = SuperCSVException.class)
+	@Test(expected = SuperCsvConstraintViolationException.class)
 	public void testInvalidStringInput() {
 		assertEquals("a", processor.execute("a", ANONYMOUS_CSVCONTEXT));
 		assertEquals("b", processor.execute("b", ANONYMOUS_CSVCONTEXT));
@@ -95,7 +95,7 @@ public class UniqueHashCodeTest {
 	/**
 	 * Tests execution with Object inputs that have the same hash code (should throw an Exception).
 	 */
-	@Test(expected = SuperCSVException.class)
+	@Test(expected = SuperCsvConstraintViolationException.class)
 	public void testInvalidObjectInput() {
 		
 		PersonBean p1 = new PersonBean();
@@ -117,7 +117,7 @@ public class UniqueHashCodeTest {
 	/**
 	 * Tests execution with a null input (should throw an Exception).
 	 */
-	@Test(expected = NullInputException.class)
+	@Test(expected = SuperCsvCellProcessorException.class)
 	public void testWithNull() {
 		processor.execute(null, ANONYMOUS_CSVCONTEXT);
 	}

@@ -22,8 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.supercsv.cellprocessor.ift.CellProcessor;
-import org.supercsv.exception.SuperCSVException;
-import org.supercsv.exception.SuperCSVReflectionException;
+import org.supercsv.exception.SuperCsvException;
+import org.supercsv.exception.SuperCsvReflectionException;
 import org.supercsv.prefs.CsvPreference;
 import org.supercsv.util.BeanInterfaceProxy;
 import org.supercsv.util.MethodCache;
@@ -83,7 +83,7 @@ public class CsvBeanReader extends AbstractCsvReader implements ICsvBeanReader {
 	 *            the bean class to instantiate (a proxy will be created if an interface is supplied), using the default
 	 *            (no argument) constructor
 	 * @return the instantiated bean
-	 * @throws SuperCSVReflectionException
+	 * @throws SuperCsvReflectionException
 	 *             if there was a reflection exception when instantiating the bean
 	 */
 	private static <T> T instantiateBean(final Class<T> clazz) {
@@ -95,11 +95,11 @@ public class CsvBeanReader extends AbstractCsvReader implements ICsvBeanReader {
 				bean = clazz.newInstance();
 			}
 			catch(InstantiationException e) {
-				throw new SuperCSVReflectionException(String.format(
+				throw new SuperCsvReflectionException(String.format(
 					"error instantiating bean, check that %s has a default no-args constructor", clazz.getName()), e);
 			}
 			catch(IllegalAccessException e) {
-				throw new SuperCSVReflectionException("error instantiating bean", e);
+				throw new SuperCsvReflectionException("error instantiating bean", e);
 			}
 		}
 		
@@ -115,7 +115,7 @@ public class CsvBeanReader extends AbstractCsvReader implements ICsvBeanReader {
 	 *            the setter method for the field
 	 * @param fieldValue
 	 *            the field value to set
-	 * @throws SuperCSVException
+	 * @throws SuperCsvException
 	 *             if there was an exception invoking the setter
 	 */
 	private static void invokeSetter(final Object bean, final Method setMethod, final Object fieldValue) {
@@ -123,7 +123,7 @@ public class CsvBeanReader extends AbstractCsvReader implements ICsvBeanReader {
 			setMethod.invoke(bean, fieldValue);
 		}
 		catch(final Exception e) {
-			throw new SuperCSVReflectionException(String.format("error invoking method %s()", setMethod.getName()), e);
+			throw new SuperCsvReflectionException(String.format("error invoking method %s()", setMethod.getName()), e);
 		}
 	}
 	
@@ -137,7 +137,7 @@ public class CsvBeanReader extends AbstractCsvReader implements ICsvBeanReader {
 	 * @param nameMapping
 	 *            the name mappings
 	 * @return the populated bean
-	 * @throws SuperCSVReflectionException
+	 * @throws SuperCsvReflectionException
 	 *             if there was a reflection exception while populating the bean
 	 */
 	private <T> T populateBean(final Class<T> clazz, final String[] nameMapping) {

@@ -18,8 +18,9 @@ package org.supercsv.io;
 import java.io.IOException;
 
 import org.supercsv.cellprocessor.ift.CellProcessor;
-import org.supercsv.exception.SuperCSVException;
-import org.supercsv.exception.SuperCSVReflectionException;
+import org.supercsv.exception.SuperCsvConstraintViolationException;
+import org.supercsv.exception.SuperCsvException;
+import org.supercsv.exception.SuperCsvReflectionException;
 
 /**
  * Interface for all CSV writers writing to beans.
@@ -42,9 +43,9 @@ public interface ICsvBeanWriter extends ICsvWriter {
 	 *             if an I/O error occurred
 	 * @throws NullPointerException
 	 *             if source or nameMapping are null
-	 * @throws SuperCSVException
+	 * @throws SuperCsvException
 	 *             if there was a general exception while writing
-	 * @throws SuperCSVReflectionException
+	 * @throws SuperCsvReflectionException
 	 *             if there was an reflection exception while mapping the values from the bean
 	 * @since 1.0
 	 */
@@ -69,9 +70,11 @@ public interface ICsvBeanWriter extends ICsvWriter {
 	 *             if an I/O error occurred
 	 * @throws NullPointerException
 	 *             if source, nameMapping or processors are null
-	 * @throws SuperCSVException
+	 * @throws SuperCsvConstraintViolationException
+	 *             if a CellProcessor constraint failed
+	 * @throws SuperCsvException
 	 *             if there was a general exception while writing/processing
-	 * @throws SuperCSVReflectionException
+	 * @throws SuperCsvReflectionException
 	 *             if there was an reflection exception while mapping the values from the bean
 	 * @since 1.29
 	 */

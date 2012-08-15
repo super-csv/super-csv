@@ -23,9 +23,7 @@ import java.text.DecimalFormat;
 import org.junit.Before;
 import org.junit.Test;
 import org.supercsv.cellprocessor.ift.CellProcessor;
-import org.supercsv.exception.ClassCastInputCSVException;
-import org.supercsv.exception.NullInputException;
-import org.supercsv.exception.SuperCSVException;
+import org.supercsv.exception.SuperCsvCellProcessorException;
 import org.supercsv.mock.IdentityTransform;
 
 /**
@@ -94,7 +92,7 @@ public class FmtNumberTest {
 	/**
 	 * Tests execution with a null input (should throw an Exception).
 	 */
-	@Test(expected = NullInputException.class)
+	@Test(expected = SuperCsvCellProcessorException.class)
 	public void testWithNull() {
 		processor.execute(null, ANONYMOUS_CSVCONTEXT);
 	}
@@ -102,7 +100,7 @@ public class FmtNumberTest {
 	/**
 	 * Tests execution with a non-Number input (should throw an Exception).
 	 */
-	@Test(expected = ClassCastInputCSVException.class)
+	@Test(expected = SuperCsvCellProcessorException.class)
 	public void testWithNonNumber() {
 		processor.execute("abc", ANONYMOUS_CSVCONTEXT);
 	}
@@ -110,7 +108,7 @@ public class FmtNumberTest {
 	/**
 	 * Tests execution with a invalid number format (should throw an Exception).
 	 */
-	@Test(expected = SuperCSVException.class)
+	@Test(expected = SuperCsvCellProcessorException.class)
 	public void testWithInvalidNumberFormat() {
 		double number = 12.34;
 		CellProcessor invalidNumberFormatProcessor = new FmtNumber("%%%");

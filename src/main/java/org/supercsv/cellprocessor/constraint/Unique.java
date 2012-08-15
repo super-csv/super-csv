@@ -20,8 +20,8 @@ import java.util.Set;
 
 import org.supercsv.cellprocessor.CellProcessorAdaptor;
 import org.supercsv.cellprocessor.ift.CellProcessor;
-import org.supercsv.exception.NullInputException;
-import org.supercsv.exception.SuperCSVException;
+import org.supercsv.exception.SuperCsvCellProcessorException;
+import org.supercsv.exception.SuperCsvConstraintViolationException;
 import org.supercsv.util.CsvContext;
 
 /**
@@ -64,16 +64,16 @@ public class Unique extends CellProcessorAdaptor {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @throws NullInputException
+	 * @throws SuperCsvCellProcessorException
 	 *             if value is null
-	 * @throws SuperCSVException
+	 * @throws SuperCsvConstraintViolationException
 	 *             if a non-unique value is encountered
 	 */
 	public Object execute(final Object value, final CsvContext context) {
 		validateInputNotNull(value, context);
 		
 		if( !encounteredElements.add(value) ) {
-			throw new SuperCSVException(String.format("duplicate value '%s' encountered", value), context, this);
+			throw new SuperCsvConstraintViolationException(String.format("duplicate value '%s' encountered", value), context, this);
 		}
 		
 		return next.execute(value, context);

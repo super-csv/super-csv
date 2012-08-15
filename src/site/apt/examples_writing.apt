@@ -13,48 +13,265 @@
 ~~ See the License for the specific language governing permissions and
 ~~ limitations under the License.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Writing a CSV file with a header
+                                    -----------------
+                                    Writing CSV files
+                                    -----------------
+                                    
+Writing CSV files
 
-  Writing a file is as easy as reading one. You decide on the column format and start writing. 
-  You can still enjoy the cell processor functionality, however, you will most likely only use the constraint <<<CellProcessors>>>. 
-  All values are written to the output stream using the <<<toString()>>> method on each object, 
-  thus reducing the need for the cell processors that convert data.
+  This page contains some examples of writing CSV files using Super CSV.
+  You can view the full source of the examples {{{./xref-test/org/supercsv/example/Writing.html}here}}.
+
+* Example cell processor configuration
+
+  All of the examples on this page use the following {{{./cell_processors.html}cell processor}} configuration.
   
-  <<Notice that data is automatically "CSV encoded">>. This means that when you write the string <<<Hello, world>>>, the actual data
-  written will be <<<"Hello, world">>> as the comma must be escaped since you are only writing one column of data. 
-  Similarly, the string <<<"Hello" world>>> becomes <<<"""Hello"" world">>>. 
-  In other words, <<you can safely leave it up to Super CSV to properly write your data>>.
+  It demonstrates:
+  
+  * mandatory columns (<<<new NotNull()>>>)
+  
+  * optional columns (<<<new Optional()>>>), with further processing
+  
+  * formatting of Dates (<<<new FmtDate()>>>) and Booleans (<<<new FmtBool()>>>)
+  
+  * constraint validation of numeric ranges (<<<new LMinMax()>>>) and uniqueness (<<<new UniqueHashCode()>>>)
+  
+  []
+  
+  Don't forget that you can {{{./examples_new_cell_processor.html}write your own cell processors}} if you want!
 
-+------------------------------------------------------------------------------------------------+
-import java.util.HashMap;
-import org.supercsv.io.*;
-import org.supercsv.prefs.CsvPreference;
-
-class WritingMaps {
-  main(String[] args) throws Exception {
-    ICsvMapWriter writer = new CsvMapWriter(new FileWriter(...), CsvPreference.EXCEL_PREFERENCE);
-    try {
-      final String[] header = new String[] { "name", "city", "zip" };
-      // set up some data to write
-      final HashMap<String, ? super Object> data1 = new HashMap<String, Object>();
-      data1.put(header[0], "Karl");
-      data1.put(header[1], "Tent city");
-      data1.put(header[2], 5565);
-      final HashMap<String, ? super Object> data2 = new HashMap<String, Object>();
-      data2.put(header[0], "Banjo");
-      data2.put(header[1], "River side");
-      data2.put(header[2], 5551);
-      // the actual writing
-      writer.writeHeader(header);
-      writer.write(data1, header);
-      writer.write(data2, header);
-    } finally {
-      writer.close();
-    }
-  }
++-------------------------------------------------------------------------------------------------------------+
+/**
+ * Sets up the processors used for the examples. There are 10 CSV columns, so 10 processors are defined. All values
+ * are converted to Strings before writing (there's no need to convert them), and null values will be written as
+ * empty columns (no need to convert them to "").
+ * 
+ * @return the cell processors
+ */
+private static CellProcessor[] getProcessors() {
+	
+	final CellProcessor[] processors = new CellProcessor[] { new UniqueHashCode(), // customerNo (must be unique)
+		new NotNull(), // firstName
+		new NotNull(), // lastName
+		new FmtDate("dd/MM/yyyy"), // birthDate
+		new NotNull(), // mailingAddress
+		new Optional(new FmtBool("Y", "N")), // married
+		new Optional(), // numberOfKids
+		new NotNull(), // favouriteQuote
+		new NotNull(), // email
+		new LMinMax(0L, LMinMax.MAX_LONG) // loyaltyPoints
+	};
+	
+	return processors;
 }
-+------------------------------------------------------------------------------------------------+
++-------------------------------------------------------------------------------------------------------------+
 
-  Notice that even though we are writing numbers, we do not need any cell processors, as the number's <<<toString()>>> method is called
-  prior to writing. We could have added a cell processor to ensure that the numbers were above a certain threshold, and the string
-  lengths were > 0 if we wanted.
+* Writing with CsvBeanWriter
+
+  {{{../apidocs/org/supercsv/io/CsvBeanWriter.html}CsvBeanWriter}} is the easiest writer to work with.
+  The example writes a List of {{{./xref-test/org/supercsv/mock/CustomerBean.html}CustomerBean}}s (which extend
+  from {{{./xref-test/org/supercsv/mock/PersonBean.html}PersonBean}}) to a CSV file.
+  
+  This relies on the fact that the bean's field names match up exactly with the column names in the header of the CSV file
+  
+---------------------------------------------------------------------------------------------------------------
+customerNo,firstName,lastName,birthDate,mailingAddress,married,numberOfKids,favouriteQuote,email,loyaltyPoints
+---------------------------------------------------------------------------------------------------------------
+  
+  and the bean has the appropriate getters defined for each field.
+  
+  If your header doesn't match (the column names have spaces, for example), then you can simply define your own name mapping array that <does> match the field names.
+  
+  Note that the cell processors are compatible with their associated field types in the bean 
+  (e.g. <<<birthDate>>> is a <<<java.util.Date>>> in the bean, and uses the <<<FmtDate>>> cell processor).
+
++-------------------------------------------------------------------------------------------------------------+
+/**
+ * An example of writing using CsvBeanWriter.
+ */
+private static void writeWithCsvBeanWriter() throws Exception {
+	
+	// create the customer beans
+	final CustomerBean john = new CustomerBean("1", "John", "Dunbar",
+		new GregorianCalendar(1945, Calendar.JUNE, 13).getTime(),
+		"1600 Amphitheatre Parkway\nMountain View, CA 94043\nUnited States", null, null,
+		"\"May the Force be with you.\" - Star Wars", "jdunbar@gmail.com", 0L);
+	final CustomerBean bob = new CustomerBean("2", "Bob", "Down",
+		new GregorianCalendar(1919, Calendar.FEBRUARY, 25).getTime(),
+		"1601 Willow Rd.\nMenlo Park, CA 94025\nUnited States", true, 0,
+		"\"Frankly, my dear, I don't give a damn.\" - Gone With The Wind", "bobdown@hotmail.com", 123456L);
+	final List<CustomerBean> customers = Arrays.asList(john, bob);
+	
+	ICsvBeanWriter beanWriter = null;
+	try {
+		beanWriter = new CsvBeanWriter(new FileWriter("target/writeWithCsvBeanWriter.csv"),
+			CsvPreference.STANDARD_PREFERENCE);
+		
+		// the header elements are used to map the bean values to each column (names must match)
+		final String[] header = new String[] { "customerNo", "firstName", "lastName", "birthDate",
+			"mailingAddress", "married", "numberOfKids", "favouriteQuote", "email", "loyaltyPoints" };
+		final CellProcessor[] processors = getProcessors();
+		
+		// write the header
+		beanWriter.writeHeader(header);
+		
+		// write the beans
+		for( final CustomerBean customer : customers ) {
+			beanWriter.write(customer, header, processors);
+		}
+		
+	}
+	finally {
+		if( beanWriter != null ) {
+			beanWriter.close();
+		}
+	}
+}
++-------------------------------------------------------------------------------------------------------------+
+
+  Output:
+
+---------------------------------------------------------------------------------------------------------------
+customerNo,firstName,lastName,birthDate,mailingAddress,married,numberOfKids,favouriteQuote,email,loyaltyPoints
+1,John,Dunbar,13/06/1945,"1600 Amphitheatre Parkway
+Mountain View, CA 94043
+United States",,,"""May the Force be with you."" - Star Wars",jdunbar@gmail.com,0
+2,Bob,Down,25/02/1919,"1601 Willow Rd.
+Menlo Park, CA 94025
+United States",Y,0,"""Frankly, my dear, I don't give a damn."" - Gone With The Wind",bobdown@hotmail.com,123456
+---------------------------------------------------------------------------------------------------------------
+
+* Writing with CsvListWriter
+
+  {{{../apidocs/org/supercsv/io/CsvListWriter.html}CsvListWriter}} is the most primitive writer and should only be used if it's not possible
+  to use the other implementations.
+  
+  On the other hand, it is the only writer that can be used for writing CSV files with an arbitrary number of columns (which is not technically valid CSV, but still happens),
+  and it's a quick and dirty way to write CSV from a List or array of Strings.
+
++-------------------------------------------------------------------------------------------------------------+
+/**
+ * An example of reading using CsvListWriter.
+ */
+private static void writeWithCsvListWriter() throws Exception {
+	
+	// create the customer Lists (CsvListWriter also accepts arrays!)
+	final List<Object> john = Arrays.asList(new Object[] { "1", "John", "Dunbar",
+		new GregorianCalendar(1945, Calendar.JUNE, 13).getTime(),
+		"1600 Amphitheatre Parkway\nMountain View, CA 94043\nUnited States", null, null,
+		"\"May the Force be with you.\" - Star Wars", "jdunbar@gmail.com", 0L });
+	
+	final List<Object> bob = Arrays.asList(new Object[] { "2", "Bob", "Down",
+		new GregorianCalendar(1919, Calendar.FEBRUARY, 25).getTime(),
+		"1601 Willow Rd.\nMenlo Park, CA 94025\nUnited States", true, 0,
+		"\"Frankly, my dear, I don't give a damn.\" - Gone With The Wind", "bobdown@hotmail.com", 123456L });
+	
+	ICsvListWriter listWriter = null;
+	try {
+		listWriter = new CsvListWriter(new FileWriter("target/writeWithCsvListWriter.csv"),
+			CsvPreference.STANDARD_PREFERENCE);
+		
+		final CellProcessor[] processors = getProcessors();
+		final String[] header = new String[] { "customerNo", "firstName", "lastName", "birthDate",
+			"mailingAddress", "married", "numberOfKids", "favouriteQuote", "email", "loyaltyPoints" };
+		
+		// write the header
+		listWriter.writeHeader(header);
+		
+		// write the customer lists
+		listWriter.write(john, processors);
+		listWriter.write(bob, processors);
+		
+	}
+	finally {
+		if( listWriter != null ) {
+			listWriter.close();
+		}
+	}
+}
++-------------------------------------------------------------------------------------------------------------+
+
+  Output:
+
+---------------------------------------------------------------------------------------------------------------
+customerNo,firstName,lastName,birthDate,mailingAddress,married,numberOfKids,favouriteQuote,email,loyaltyPoints
+1,John,Dunbar,13/06/1945,"1600 Amphitheatre Parkway
+Mountain View, CA 94043
+United States",,,"""May the Force be with you."" - Star Wars",jdunbar@gmail.com,0
+2,Bob,Down,25/02/1919,"1601 Willow Rd.
+Menlo Park, CA 94025
+United States",Y,0,"""Frankly, my dear, I don't give a damn."" - Gone With The Wind",bobdown@hotmail.com,123456
+---------------------------------------------------------------------------------------------------------------
+
+* Writing with CsvMapWriter
+
+  {{{../apidocs/org/supercsv/io/CsvMapWriter.html}CsvMapWriter}} is a good compromise if you can't use {{{../apidocs/org/supercsv/io/CsvBeanWriter.html}CsvBeanWriter}}.
+
++-------------------------------------------------------------------------------------------------------------+
+/**
+ * An example of reading using CsvMapWriter.
+ */
+private static void writeWithCsvMapWriter() throws Exception {
+	
+	final String[] header = new String[] { "customerNo", "firstName", "lastName", "birthDate", "mailingAddress",
+		"married", "numberOfKids", "favouriteQuote", "email", "loyaltyPoints" };
+	
+	// create the customer Maps (using the header elements for the column keys)
+	final Map<String, Object> john = new HashMap<String, Object>();
+	john.put(header[0], "1");
+	john.put(header[1], "John");
+	john.put(header[2], "Dunbar");
+	john.put(header[3], new GregorianCalendar(1945, Calendar.JUNE, 13).getTime());
+	john.put(header[4], "1600 Amphitheatre Parkway\nMountain View, CA 94043\nUnited States");
+	john.put(header[5], null);
+	john.put(header[6], null);
+	john.put(header[7], "\"May the Force be with you.\" - Star Wars");
+	john.put(header[8], "jdunbar@gmail.com");
+	john.put(header[9], 0L);
+	
+	final Map<String, Object> bob = new HashMap<String, Object>();
+	bob.put(header[0], "2");
+	bob.put(header[1], "Bob");
+	bob.put(header[2], "Down");
+	bob.put(header[3], new GregorianCalendar(1919, Calendar.FEBRUARY, 25).getTime());
+	bob.put(header[4], "1601 Willow Rd.\nMenlo Park, CA 94025\nUnited States");
+	bob.put(header[5], true);
+	bob.put(header[6], 0);
+	bob.put(header[7], "\"Frankly, my dear, I don't give a damn.\" - Gone With The Wind");
+	bob.put(header[8], "bobdown@hotmail.com");
+	bob.put(header[9], 123456L);
+	
+	ICsvMapWriter mapWriter = null;
+	try {
+		mapWriter = new CsvMapWriter(new FileWriter("target/writeWithCsvMapWriter.csv"),
+			CsvPreference.STANDARD_PREFERENCE);
+		
+		final CellProcessor[] processors = getProcessors();
+		
+		// write the header
+		mapWriter.writeHeader(header);
+		
+		// write the customer maps
+		mapWriter.write(john, header, processors);
+		mapWriter.write(bob, header, processors);
+		
+	}
+	finally {
+		if( mapWriter != null ) {
+			mapWriter.close();
+		}
+	}
+}
++-------------------------------------------------------------------------------------------------------------+
+
+  Output:
+
+---------------------------------------------------------------------------------------------------------------
+customerNo,firstName,lastName,birthDate,mailingAddress,married,numberOfKids,favouriteQuote,email,loyaltyPoints
+1,John,Dunbar,13/06/1945,"1600 Amphitheatre Parkway
+Mountain View, CA 94043
+United States",,,"""May the Force be with you."" - Star Wars",jdunbar@gmail.com,0
+2,Bob,Down,25/02/1919,"1601 Willow Rd.
+Menlo Park, CA 94025
+United States",Y,0,"""Frankly, my dear, I don't give a damn."" - Gone With The Wind",bobdown@hotmail.com,123456
+---------------------------------------------------------------------------------------------------------------

@@ -22,9 +22,7 @@ import static org.supercsv.SuperCsvTestUtils.ANONYMOUS_CSVCONTEXT;
 import org.junit.Before;
 import org.junit.Test;
 import org.supercsv.cellprocessor.ift.CellProcessor;
-import org.supercsv.exception.ClassCastInputCSVException;
-import org.supercsv.exception.NullInputException;
-import org.supercsv.exception.SuperCSVException;
+import org.supercsv.exception.SuperCsvCellProcessorException;
 import org.supercsv.mock.IdentityTransform;
 
 /**
@@ -92,7 +90,7 @@ public class ParseBoolTest {
 	/**
 	 * Tests execution with an non-boolean String input (should throw an exception).
 	 */
-	@Test(expected = SuperCSVException.class)
+	@Test(expected = SuperCsvCellProcessorException.class)
 	public void testWithNonBooleanString() {
 		processor.execute("not a boolean!", ANONYMOUS_CSVCONTEXT);
 	}
@@ -100,7 +98,7 @@ public class ParseBoolTest {
 	/**
 	 * Tests execution with a non-String input (should throw an exception).
 	 */
-	@Test(expected = ClassCastInputCSVException.class)
+	@Test(expected = SuperCsvCellProcessorException.class)
 	public void testWithNonString() {
 		processor.execute(1, ANONYMOUS_CSVCONTEXT);
 	}
@@ -108,7 +106,7 @@ public class ParseBoolTest {
 	/**
 	 * Tests execution with a null input (should throw an Exception).
 	 */
-	@Test(expected = NullInputException.class)
+	@Test(expected = SuperCsvCellProcessorException.class)
 	public void testWithNull() {
 		processor.execute(null, ANONYMOUS_CSVCONTEXT);
 	}
@@ -116,7 +114,7 @@ public class ParseBoolTest {
 	/**
 	 * Tests execution with an empty-String input (should throw an exception).
 	 */
-	@Test(expected = SuperCSVException.class)
+	@Test(expected = SuperCsvCellProcessorException.class)
 	public void testWithEmptyString() {
 		processor.execute("", ANONYMOUS_CSVCONTEXT);
 	}

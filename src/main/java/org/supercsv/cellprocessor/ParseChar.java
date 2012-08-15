@@ -17,9 +17,7 @@ package org.supercsv.cellprocessor;
 
 import org.supercsv.cellprocessor.ift.DoubleCellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
-import org.supercsv.exception.ClassCastInputCSVException;
-import org.supercsv.exception.NullInputException;
-import org.supercsv.exception.SuperCSVException;
+import org.supercsv.exception.SuperCsvCellProcessorException;
 import org.supercsv.util.CsvContext;
 
 /**
@@ -53,12 +51,8 @@ public class ParseChar extends CellProcessorAdaptor implements StringCellProcess
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @throws ClassCastInputCSVException
-	 *             if value isn't a Character or String
-	 * @throws NullInputException
-	 *             if value is null
-	 * @throws SuperCSVException
-	 *             if value is a String of multiple characters
+	 * @throws SuperCsvCellProcessorException
+	 *             if value is null, isn't a Character or String, or is a String of multiple characters
 	 */
 	public Object execute(final Object value, final CsvContext context) {
 		validateInputNotNull(value, context);
@@ -71,13 +65,13 @@ public class ParseChar extends CellProcessorAdaptor implements StringCellProcess
 			if( stringValue.length() == 1 ) {
 				result = Character.valueOf(stringValue.charAt(0));
 			} else {
-				throw new SuperCSVException(String.format(
+				throw new SuperCsvCellProcessorException(String.format(
 					"'%s' cannot be parsed as a char as it is a String longer than 1 character", stringValue), context,
 					this);
 			}
 		} else {
 			final String actualClassName = value.getClass().getName();
-			throw new ClassCastInputCSVException(String.format(
+			throw new SuperCsvCellProcessorException(String.format(
 				"the input value should be of type Character or String but is of type %s", actualClassName), context,
 				this);
 		}

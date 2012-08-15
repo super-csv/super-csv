@@ -29,13 +29,13 @@ import java.util.List;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.supercsv.exception.SuperCSVException;
+import org.supercsv.exception.SuperCsvException;
 import org.supercsv.prefs.CsvPreference;
 
 public class TokenizerTest {
 	
 	private static final CsvPreference NORMAL_PREFERENCE = EXCEL_PREFERENCE;
-	private static final CsvPreference TRIM_PREFERENCE = new CsvPreference.Builder(EXCEL_PREFERENCE).trimMode(true)
+	private static final CsvPreference SPACES_REQUIRE_QUOTES_PREFERENCE = new CsvPreference.Builder(EXCEL_PREFERENCE).surroundingSpacesNeedQuotes(true)
 		.build();
 	
 	private Tokenizer tokenizer;
@@ -110,7 +110,7 @@ public class TokenizerTest {
 		assertEquals(NORMAL_PREFERENCE.getDelimiterChar(), prefs.getDelimiterChar());
 		assertEquals(NORMAL_PREFERENCE.getEndOfLineSymbols(), prefs.getEndOfLineSymbols());
 		assertEquals(NORMAL_PREFERENCE.getQuoteChar(), prefs.getQuoteChar());
-		assertEquals(NORMAL_PREFERENCE.isTrimMode(), prefs.isTrimMode());
+		assertEquals(NORMAL_PREFERENCE.isSurroundingSpacesNeedQuotes(), prefs.isSurroundingSpacesNeedQuotes());
 	}
 	
 	/**
@@ -151,9 +151,9 @@ public class TokenizerTest {
 		tokenizer = createTokenizer(input, NORMAL_PREFERENCE);
 		try {
 			tokenizer.readColumns(columns);
-			fail("should have thrown SuperCSVException");
+			fail("should have thrown SuperCsvException");
 		}
-		catch(SuperCSVException e) {
+		catch(SuperCsvException e) {
 			assertEquals("the quoteChar [\"] must be the first character in a field, line: 1, char: 9", e.getMessage());
 		}
 	}
@@ -169,19 +169,19 @@ public class TokenizerTest {
 		tokenizer = createTokenizer(input, NORMAL_PREFERENCE);
 		try {
 			tokenizer.readColumns(columns);
-			fail("should have thrown SuperCSVException");
+			fail("should have thrown SuperCsvException");
 		}
-		catch(SuperCSVException e) {
+		catch(SuperCsvException e) {
 			assertEquals("illegal character [i] following quoted field on line: 2, char: 25", e.getMessage());
 		}
 		
-		// trim mode should have exactly the same error
-		tokenizer = createTokenizer(input, TRIM_PREFERENCE);
+		// should have exactly the same error when surrounding spaces are ignored
+		tokenizer = createTokenizer(input, SPACES_REQUIRE_QUOTES_PREFERENCE);
 		try {
 			tokenizer.readColumns(columns);
-			fail("should have thrown SuperCSVException");
+			fail("should have thrown SuperCsvException");
 		}
-		catch(SuperCSVException e) {
+		catch(SuperCsvException e) {
 			assertEquals("illegal character [i] following quoted field on line: 2, char: 25", e.getMessage());
 		}
 	}
@@ -197,9 +197,9 @@ public class TokenizerTest {
 		tokenizer = createTokenizer(input, NORMAL_PREFERENCE);
 		try {
 			tokenizer.readColumns(columns);
-			fail("should have thrown SuperCSVException");
+			fail("should have thrown SuperCsvException");
 		}
-		catch(SuperCSVException e) {
+		catch(SuperCsvException e) {
 			assertEquals("unexpected end of file while reading quoted column beginning on line 1 and ending on line 2", e.getMessage());
 		}
 	}
@@ -215,14 +215,14 @@ public class TokenizerTest {
 		tokenizer = createTokenizer(input, NORMAL_PREFERENCE);
 		try {
 			tokenizer.readColumns(columns);
-			fail("should have thrown SuperCSVException");
+			fail("should have thrown SuperCsvException");
 		}
-		catch(SuperCSVException e) {
+		catch(SuperCsvException e) {
 			assertEquals("the quoteChar [\"] must be the first character in a field, line: 1, char: 3", e.getMessage());
 		}
 		
-		// same input in trim mode (should work!)
-		tokenizer = createTokenizer(input, TRIM_PREFERENCE);
+		// same input when surrounding spaces require quotes (should work!)
+		tokenizer = createTokenizer(input, SPACES_REQUIRE_QUOTES_PREFERENCE);
 		tokenizer.readColumns(columns);
 		assertTrue(columns.size() == 2);
 		assertEquals("quoted with leading spaces", columns.get(0));
@@ -241,14 +241,14 @@ public class TokenizerTest {
 		tokenizer = createTokenizer(input, NORMAL_PREFERENCE);
 		try {
 			tokenizer.readColumns(columns);
-			fail("should have thrown SuperCSVException");
+			fail("should have thrown SuperCsvException");
 		}
-		catch(SuperCSVException e) {
+		catch(SuperCsvException e) {
 			assertEquals("the quoteChar [\"] must be the first character in a field, line: 1, char: 11", e.getMessage());
 		}
 		
-		// same input in trim mode (should work!)
-		tokenizer = createTokenizer(input, TRIM_PREFERENCE);
+		// same input when surrounding spaces require quotes (should work!)
+		tokenizer = createTokenizer(input, SPACES_REQUIRE_QUOTES_PREFERENCE);
 		tokenizer.readColumns(columns);
 		assertTrue(columns.size() == 3);
 		assertEquals("one", columns.get(0));
@@ -268,14 +268,14 @@ public class TokenizerTest {
 		tokenizer = createTokenizer(input, NORMAL_PREFERENCE);
 		try {
 			tokenizer.readColumns(columns);
-			fail("should have thrown SuperCSVException");
+			fail("should have thrown SuperCsvException");
 		}
-		catch(SuperCSVException e) {
+		catch(SuperCsvException e) {
 			assertEquals("illegal character [ ] following quoted field on line: 1, char: 30", e.getMessage());
 		}
 		
-		// same input in trim mode (should work!)
-		tokenizer = createTokenizer(input, TRIM_PREFERENCE);
+		// same input when surrounding spaces require quotes (should work!)
+		tokenizer = createTokenizer(input, SPACES_REQUIRE_QUOTES_PREFERENCE);
 		tokenizer.readColumns(columns);
 		assertTrue(columns.size() == 2);
 		assertEquals("quoted with trailing spaces", columns.get(0));
@@ -294,14 +294,14 @@ public class TokenizerTest {
 		tokenizer = createTokenizer(input, NORMAL_PREFERENCE);
 		try {
 			tokenizer.readColumns(columns);
-			fail("should have thrown SuperCSVException");
+			fail("should have thrown SuperCsvException");
 		}
-		catch(SuperCSVException e) {
+		catch(SuperCsvException e) {
 			assertEquals("illegal character [ ] following quoted field on line: 1, char: 38", e.getMessage());
 		}
 		
-		// same input in trim mode (should work!)
-		tokenizer = createTokenizer(input, TRIM_PREFERENCE);
+		// same input when surrounding spaces require quotes (should work!)
+		tokenizer = createTokenizer(input, SPACES_REQUIRE_QUOTES_PREFERENCE);
 		tokenizer.readColumns(columns);
 		assertTrue(columns.size() == 3);
 		assertEquals("one", columns.get(0));
@@ -325,8 +325,8 @@ public class TokenizerTest {
 		assertEquals("   three   ", columns.get(2));
 		assertEquals(input, tokenizer.getUntokenizedRow());
 		
-		// same input in trim mode (results should be identical to non-trim mode)
-		tokenizer = createTokenizer(input, TRIM_PREFERENCE);
+		// same input when surrounding spaces require quotes (results should be identical)
+		tokenizer = createTokenizer(input, SPACES_REQUIRE_QUOTES_PREFERENCE);
 		tokenizer.readColumns(columns);
 		assertTrue(columns.size() == 3);
 		assertEquals(" one ", columns.get(0));
@@ -350,8 +350,8 @@ public class TokenizerTest {
 		assertEquals("   three   ", columns.get(2));
 		assertEquals(input, tokenizer.getUntokenizedRow());
 		
-		// same input in trim mode
-		tokenizer = createTokenizer(input, TRIM_PREFERENCE);
+		// same input when surrounding spaces require quotes
+		tokenizer = createTokenizer(input, SPACES_REQUIRE_QUOTES_PREFERENCE);
 		tokenizer.readColumns(columns);
 		assertTrue(columns.size() == 3);
 		assertEquals("one", columns.get(0));
@@ -377,8 +377,8 @@ public class TokenizerTest {
 		assertEquals("   \tthree\t   ", columns.get(3));
 		assertEquals(input, tokenizer.getUntokenizedRow());
 		
-		// same input in trim mode
-		tokenizer = createTokenizer(input, TRIM_PREFERENCE);
+		// same input when surrounding spaces require quotes
+		tokenizer = createTokenizer(input, SPACES_REQUIRE_QUOTES_PREFERENCE);
 		tokenizer.readColumns(columns);
 		assertTrue(columns.size() == 4);
 		assertEquals("\t", columns.get(0));
@@ -403,8 +403,8 @@ public class TokenizerTest {
 		assertEquals("   three french hens   ", columns.get(2));
 		assertEquals(input, tokenizer.getUntokenizedRow());
 		
-		// same input in trim mode
-		tokenizer = createTokenizer(input, TRIM_PREFERENCE);
+		// same input when surrounding spaces require quotes
+		tokenizer = createTokenizer(input, SPACES_REQUIRE_QUOTES_PREFERENCE);
 		tokenizer.readColumns(columns);
 		assertTrue(columns.size() == 3);
 		assertEquals("one partridge", columns.get(0));

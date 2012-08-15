@@ -17,8 +17,7 @@ package org.supercsv.cellprocessor;
 
 import org.supercsv.cellprocessor.ift.BoolCellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
-import org.supercsv.exception.ClassCastInputCSVException;
-import org.supercsv.exception.NullInputException;
+import org.supercsv.exception.SuperCsvCellProcessorException;
 import org.supercsv.util.CsvContext;
 
 /**
@@ -69,16 +68,14 @@ public class FmtBool extends CellProcessorAdaptor implements BoolCellProcessor {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @throws ClassCastInputCSVException
-	 *             if value is not a Boolean
-	 * @throws NullInputException
-	 *             if value is null
+	 * @throws SuperCsvCellProcessorException
+	 *             if value is null or is not a Boolean
 	 */
 	public Object execute(final Object value, final CsvContext context) {
 		validateInputNotNull(value, context);
 		
 		if( !(value instanceof Boolean) ) {
-			throw new ClassCastInputCSVException(value, Boolean.class, context, this);
+			throw new SuperCsvCellProcessorException(Boolean.class, value, context, this);
 		}
 		
 		final String result = ((Boolean) value).booleanValue() ? trueValue : falseValue;

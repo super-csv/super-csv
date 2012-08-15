@@ -17,8 +17,8 @@ package org.supercsv.cellprocessor.constraint;
 
 import org.supercsv.cellprocessor.CellProcessorAdaptor;
 import org.supercsv.cellprocessor.ift.LongCellProcessor;
-import org.supercsv.exception.NullInputException;
-import org.supercsv.exception.SuperCSVException;
+import org.supercsv.exception.SuperCsvCellProcessorException;
+import org.supercsv.exception.SuperCsvConstraintViolationException;
 import org.supercsv.util.CsvContext;
 
 /**
@@ -130,10 +130,10 @@ public class LMinMax extends CellProcessorAdaptor {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @throws NullInputException
-	 *             if value is null
-	 * @throws SuperCSVException
-	 *             if value can't be parsed as a Long, or doesn't lie between min and max (inclusive)
+	 * @throws SuperCsvCellProcessorException
+	 *             if value is null or  can't be parsed as a Long
+	 * @throws SuperCsvConstraintViolationException
+	 *             if value, or doesn't lie between min and max (inclusive)
 	 */
 	public Object execute(final Object value, final CsvContext context) {
 		validateInputNotNull(value, context);
@@ -146,13 +146,13 @@ public class LMinMax extends CellProcessorAdaptor {
 				result = Long.parseLong(value.toString());
 			}
 			catch(final NumberFormatException e) {
-				throw new SuperCSVException(String.format("'%s' could not be parsed as a Long", value), context, this,
+				throw new SuperCsvCellProcessorException(String.format("'%s' could not be parsed as a Long", value), context, this,
 					e);
 			}
 		}
 		
 		if( result < min || result > max ) {
-			throw new SuperCSVException(String.format(
+			throw new SuperCsvConstraintViolationException(String.format(
 				"%d does not lie between the min (%d) and max (%d) values (inclusive)", result, min, max), context,
 				this);
 		}

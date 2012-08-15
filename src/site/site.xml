@@ -28,22 +28,29 @@
 			<facebookLike />
 		</fluidoSkin>
 	</custom>
+	<publishDate position="right"/>
 	<body>
 		<menu name="About Super CSV">
 			<item name="Super CSV" href="index.html" />
 			<item name="What is CSV?" href="csv_specification.html" />
 			<item name="Release notes" href="release_notes.html" />
 			<item name="Roadmap" href="roadmap.html" />
-			<item name="Speed" href="speed.html" />
 			<item name="License" href="license.html" />
+		</menu>
+		<menu name="Getting Started">
+			<item name="Where to begin?" href="getting_started.html" />
 			<item name="Downloading" href="downloading.html" />
-			<item name="Getting started" href="getting_started.html" />
+			<item name="Readers" href="readers.html" />
+			<item name="Writers" href="writers.html" />
+			<item name="Preferences" href="preferences.html" />
+			<item name="Cell processors" href="cell_processors.html" />
 		</menu>
 		<menu name="Examples">
 			<item name="Reading CSV files" href="examples_reading.html" />
 			<item name="Writing CSV files" href="examples_writing.html" />
-			<item name="New CellProcessors" href="examples_new_cell_processor.html" />
-			<item name="Partial reading/writing" href="examples_partial_reading_writing.html" />
+			<item name="Partial reading" href="examples_partial_reading.html" />
+			<item name="Partial writing" href="examples_partial_writing.html" />
+			<item name="Custom cell processors" href="examples_new_cell_processor.html" />
 		</menu>
 		<menu ref="reports" />
 	</body>

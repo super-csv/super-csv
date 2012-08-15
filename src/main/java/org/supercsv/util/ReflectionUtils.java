@@ -19,7 +19,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.supercsv.exception.SuperCSVReflectionException;
+import org.supercsv.exception.SuperCsvReflectionException;
 
 /**
  * Provides useful utility methods for reflection.
@@ -69,7 +69,7 @@ public final class ReflectionUtils {
 	 * @return the getter method
 	 * @throws NullPointerException
 	 *             if object or fieldName is null
-	 * @throws SuperCSVReflectionException
+	 * @throws SuperCsvReflectionException
 	 *             if the getter doesn't exist or is not visible
 	 */
 	public static Method findGetter(final Object object, final String fieldName) {
@@ -84,11 +84,11 @@ public final class ReflectionUtils {
 		try {
 			return clazz.getMethod(getterName);
 		}
-		catch(final NoSuchMethodException e) {
-			throw assembleExceptionForFindGetter(clazz, getterName, e);
-		}
-		catch(final SecurityException e) {
-			throw assembleExceptionForFindGetter(clazz, getterName, e);
+		catch(final Exception e) {
+			throw new SuperCsvReflectionException(
+				String.format(
+					"unable to find method %s() in class %s - check that the corresponding nameMapping element matches the field name in the bean",
+					getterName, clazz.getName()), e);
 		}
 		
 	}
@@ -100,8 +100,8 @@ public final class ReflectionUtils {
 	 * primitive {@code int} but the argument passed to the setter is an {@code Integer}) by looking for a setter with
 	 * the same type, and failing that checking for a setter with the corresponding primitive/wrapper type.
 	 * <p>
-	 * It also allows for an argument type that is a subclass or implementation of the setter type (when
-	 * the setter type is an {@code Object} or {@code interface} respectively).
+	 * It also allows for an argument type that is a subclass or implementation of the setter type (when the setter type
+	 * is an {@code Object} or {@code interface} respectively).
 	 * 
 	 * @param object
 	 *            the object
@@ -112,7 +112,7 @@ public final class ReflectionUtils {
 	 * @return the setter method
 	 * @throws NullPointerException
 	 *             if object, fieldName or fieldType is null
-	 * @throws SuperCSVReflectionException
+	 * @throws SuperCsvReflectionException
 	 *             if the setter doesn't exist or is not visible
 	 */
 	public static Method findSetter(final Object object, final String fieldName, final Class<?> argumentType) {
@@ -131,16 +131,17 @@ public final class ReflectionUtils {
 		Method setter = findSetterWithCompatibleParamType(clazz, setterName, argumentType);
 		
 		// if that failed, try the corresponding primitive/wrapper if it's a type that can be autoboxed/unboxed
-		if (setter == null && AUTOBOXING_CONVERTER.containsKey(argumentType)){
+		if( setter == null && AUTOBOXING_CONVERTER.containsKey(argumentType) ) {
 			setter = findSetterWithCompatibleParamType(clazz, setterName, AUTOBOXING_CONVERTER.get(argumentType));
 		}
 		
-		if (setter == null){
-			throw new SuperCSVReflectionException(
-				String.format(
-					"unable to find method %s(%s) in class %s - check that the corresponding nameMapping element matches the field name in the bean, "
-						+ "and the cell processor returns a type compatible with the field", setterName,
-					argumentType.getName(), clazz.getName()));
+		if( setter == null ) {
+			throw new SuperCsvReflectionException(
+				String
+					.format(
+						"unable to find method %s(%s) in class %s - check that the corresponding nameMapping element matches the field name in the bean, "
+							+ "and the cell processor returns a type compatible with the field", setterName,
+						argumentType.getName(), clazz.getName()));
 		}
 		
 		return setter;
@@ -182,26 +183,6 @@ public final class ReflectionUtils {
 		}
 		
 		return compatibleSetter;
-	}
-	
-	/**
-	 * Assembles a generic SuperCSVReflectionException with the details of what went wrong when trying to find the
-	 * getter.
-	 * 
-	 * @param clazz
-	 *            the class on which the reflection was being performed
-	 * @param getterName
-	 *            the name of the getter that couldn't be located
-	 * @param e
-	 *            the reflection exception
-	 * @return the assembled SuperCSVReflectionException
-	 */
-	private static SuperCSVReflectionException assembleExceptionForFindGetter(final Class<?> clazz,
-		final String getterName, Throwable e) {
-		return new SuperCSVReflectionException(
-			String.format(
-				"unable to find method %s() in class %s - check that the corresponding nameMapping element matches the field name in the bean",
-				getterName, clazz.getName()), e);
 	}
 	
 	/**

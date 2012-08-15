@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.util.List;
 
 import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.exception.SuperCsvConstraintViolationException;
+import org.supercsv.exception.SuperCsvException;
 
 /**
  * Interface for writers that write to a List.
@@ -40,6 +42,8 @@ public interface ICsvListWriter extends ICsvWriter {
 	 *             If an I/O error occurs
 	 * @throws NullPointerException
 	 *             if columns is null
+	 * @throws SuperCsvException
+	 *             if there was a general exception while writing
 	 * @since 1.0
 	 */
 	void write(List<?> columns) throws IOException;
@@ -61,6 +65,10 @@ public interface ICsvListWriter extends ICsvWriter {
 	 *             If an I/O error occurs
 	 * @throws NullPointerException
 	 *             if columns or processors is null
+	 * @throws SuperCsvConstraintViolationException
+	 *             if a CellProcessor constraint failed
+	 * @throws SuperCsvException
+	 *             if there was a general exception while writing/processing
 	 * @since 1.0
 	 */
 	void write(List<?> columns, CellProcessor[] processors) throws IOException;
@@ -77,6 +85,8 @@ public interface ICsvListWriter extends ICsvWriter {
 	 *             If an I/O error occurs
 	 * @throws NullPointerException
 	 *             if columns is null
+	 * @throws SuperCsvException
+	 *             if there was a general exception while writing
 	 * @since 1.0
 	 */
 	void write(Object... columns) throws IOException;
@@ -92,6 +102,8 @@ public interface ICsvListWriter extends ICsvWriter {
 	 *             If an I/O error occurs
 	 * @throws NullPointerException
 	 *             if columns is null
+	 * @throws SuperCsvException
+	 *             if there was a general exception while writing
 	 * @since 1.0
 	 */
 	void write(String... columns) throws IOException;

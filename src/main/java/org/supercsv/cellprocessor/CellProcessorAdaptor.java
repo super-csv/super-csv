@@ -21,7 +21,7 @@ import org.supercsv.cellprocessor.ift.DateCellProcessor;
 import org.supercsv.cellprocessor.ift.DoubleCellProcessor;
 import org.supercsv.cellprocessor.ift.LongCellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
-import org.supercsv.exception.NullInputException;
+import org.supercsv.exception.SuperCsvCellProcessorException;
 import org.supercsv.util.CsvContext;
 
 /**
@@ -68,13 +68,13 @@ public abstract class CellProcessorAdaptor implements CellProcessor {
 	 *            the input value
 	 * @param context
 	 *            the CSV context
-	 * @throws NullInputException
+	 * @throws SuperCsvCellProcessorException
 	 *             if value is null
 	 * @since 2.0.0
 	 */
 	protected final void validateInputNotNull(final Object value, final CsvContext context) {
 		if( value == null ) {
-			throw new NullInputException(
+			throw new SuperCsvCellProcessorException(
 				"this processor does not accept null input - if the column is optional then chain an Optional() processor before this one",
 				context, this);
 		}

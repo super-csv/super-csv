@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.List;
 
-import org.supercsv.exception.SuperCSVException;
+import org.supercsv.exception.SuperCsvException;
 import org.supercsv.prefs.CsvPreference;
 
 /**
@@ -45,7 +45,7 @@ public class Tokenizer extends AbstractTokenizer {
 	
 	private final int delimeterChar;
 	
-	private final boolean trimMode;
+	private final boolean surroundingSpacesNeedQuotes;
 	
 	/**
 	 * Enumeration of tokenizer states. QUOTE_MODE is activated between quotes.
@@ -68,7 +68,7 @@ public class Tokenizer extends AbstractTokenizer {
 		super(reader, preferences);
 		this.quoteChar = preferences.getQuoteChar();
 		this.delimeterChar = preferences.getDelimiterChar();
-		this.trimMode = preferences.isTrimMode();
+		this.surroundingSpacesNeedQuotes = preferences.isSurroundingSpacesNeedQuotes();
 	}
 	
 	/**
@@ -104,7 +104,7 @@ public class Tokenizer extends AbstractTokenizer {
 		// process each character in the line, catering for surrounding quotes (QUOTE_MODE)
 		TokenizerState state = TokenizerState.NORMAL;
 		int quoteScopeStartingLine = -1; // the line number where a potential multi-line cell starts
-		int potentialSpaces = 0; // keep track of spaces (so leading/trailing space can be removed in trim mode)
+		int potentialSpaces = 0; // keep track of spaces (so leading/trailing space can be removed if required)
 		int charIndex = 0;
 		while( true ) {
 			
@@ -119,11 +119,12 @@ public class Tokenizer extends AbstractTokenizer {
 				if( quoteScopeStartingLine > 0 && c != NEWLINE ) {
 					/*
 					 * Transitioned from QUOTE_MODE to NORMAL (left a double-quoted section) and more data is remaining.
-					 * In non-trim mode, only a delimiter may follow a quoted field. In trim mode, trailing spaces are
-					 * allowed as well.
+					 * If surrounding spaces don't need quotes, only a delimiter may follow a quoted field. If surrounding
+					 * spaces do require quotes, trailing spaces are allowed as well (they'll be ignored).
 					 */
-					if( (!trimMode && c != delimeterChar) || (trimMode && c != delimeterChar && c != SPACE) ) {
-						throw new SuperCSVException(String.format(
+					if( (!surroundingSpacesNeedQuotes && c != delimeterChar)
+						|| (surroundingSpacesNeedQuotes && c != delimeterChar && c != SPACE) ) {
+						throw new SuperCsvException(String.format(
 							"illegal character [%c] following quoted field on line: %d, char: %d", c, getLineNumber(),
 							charIndex + 1));
 						
@@ -136,7 +137,7 @@ public class Tokenizer extends AbstractTokenizer {
 					/*
 					 * Delimiter. Save the column (trim trailing space if required) then continue to next character.
 					 */
-					if( !trimMode ) {
+					if( !surroundingSpacesNeedQuotes ) {
 						appendSpaces(currentColumn, potentialSpaces);
 					}
 					columns.add(currentColumn.length() > 0 ? currentColumn.toString() : null); // "" -> null
@@ -151,9 +152,10 @@ public class Tokenizer extends AbstractTokenizer {
 					
 				} else if( c == NEWLINE ) {
 					/*
-					 * Newline. Add any required spaces (if not in trim mode) and return (we've read a line!).
+					 * Newline. Add any required spaces (if surrounding spaces don't need quotes) and return (we've read
+					 * a line!).
 					 */
-					if( !trimMode ) {
+					if( !surroundingSpacesNeedQuotes ) {
 						appendSpaces(currentColumn, potentialSpaces);
 					}
 					columns.add(currentColumn.length() > 0 ? currentColumn.toString() : null); // "" -> null
@@ -162,10 +164,11 @@ public class Tokenizer extends AbstractTokenizer {
 				} else if( c == quoteChar ) {
 					
 					/*
-					 * Ensures that a quote is the first char (or is only preceded by spaces in trim mode).
+					 * Ensures that a quote is the first char (or is only preceded by spaces if surrounding spaces need
+					 * quotes).
 					 */
-					if( currentColumn.length() > 0 || (!trimMode && potentialSpaces > 0) ) {
-						throw new SuperCSVException(String.format(
+					if( currentColumn.length() > 0 || (!surroundingSpacesNeedQuotes && potentialSpaces > 0) ) {
+						throw new SuperCsvException(String.format(
 							"the quoteChar [%c] must be the first character in a field, line: %d, char: %d", c,
 							getLineNumber(), charIndex + 1));
 						
@@ -179,10 +182,10 @@ public class Tokenizer extends AbstractTokenizer {
 					}
 				} else {
 					/*
-					 * Just a normal character. Add any required spaces (but trim any leading spaces in trim mode), add
-					 * the character, then continue to next character.
+					 * Just a normal character. Add any required spaces (but trim any leading spaces if surrounding
+					 * spaces need quotes), add the character, then continue to next character.
 					 */
-					if( !trimMode || currentColumn.length() > 0 ) {
+					if( !surroundingSpacesNeedQuotes || currentColumn.length() > 0 ) {
 						appendSpaces(currentColumn, potentialSpaces);
 					}
 					
@@ -209,7 +212,7 @@ public class Tokenizer extends AbstractTokenizer {
 					charIndex = -1;
 					line = readLine();
 					if( line == null ) {
-						throw new SuperCSVException(
+						throw new SuperCsvException(
 							String
 								.format(
 									"unexpected end of file while reading quoted column beginning on line %d and ending on line %d",

@@ -29,7 +29,7 @@ import java.util.Map;
 import org.junit.Test;
 import org.supercsv.cellprocessor.ParseInt;
 import org.supercsv.cellprocessor.ift.CellProcessor;
-import org.supercsv.exception.SuperCSVException;
+import org.supercsv.exception.SuperCsvException;
 import org.supercsv.mock.IdentityTransform;
 
 /**
@@ -124,7 +124,7 @@ public class UtilTest {
 	/**
 	 * Tests the filterListToMap() method with a name mapping array with too few elements (should throw an exception).
 	 */
-	@Test(expected = SuperCSVException.class)
+	@Test(expected = SuperCsvException.class)
 	public void testFilterListToMapWithSizeMismatch() {
 		Util.filterListToMap(new HashMap<String, String>(), new String[] { "notEnoughColumns" }, LIST);
 	}
@@ -132,7 +132,7 @@ public class UtilTest {
 	/**
 	 * Tests the filterListToMap() method with a name mapping array with duplicate elements (should throw an exception).
 	 */
-	@Test(expected = SuperCSVException.class)
+	@Test(expected = SuperCsvException.class)
 	public void testFilterListToMapWithDuplicateNameMapping() {
 		Util.filterListToMap(new HashMap<String, String>(), new String[] { "name", "name", "city" }, LIST);
 	}
@@ -178,7 +178,7 @@ public class UtilTest {
 	 * Tests the executeCellProcessors() method with a source List whose size doesn't match the number of CellProcessors
 	 * (should throw an Exception).
 	 */
-	@Test(expected = SuperCSVException.class)
+	@Test(expected = SuperCsvException.class)
 	public void testExecuteCellProcessorsWithSizeMismatch() {
 		final List<Object> invalidSizeList = new ArrayList<Object>();
 		Util.executeCellProcessors(new ArrayList<Object>(), invalidSizeList, PROCESSORS, LINE_NO, ROW_NO);

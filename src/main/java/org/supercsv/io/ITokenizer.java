@@ -19,7 +19,7 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.util.List;
 
-import org.supercsv.exception.SuperCSVException;
+import org.supercsv.exception.SuperCsvException;
 
 /**
  * The interface for tokenizers, which are responsible for reading the CSV file, line by line.
@@ -62,7 +62,7 @@ public interface ITokenizer extends Closeable {
 	 *             when an IOException occurs
 	 * @throws NullPointerException
 	 *             if columns is null
-	 * @throws SuperCSVException
+	 * @throws SuperCsvException
 	 *             on errors in parsing the input
 	 * @since 2.0.0 (was previously called readStringList)
 	 */

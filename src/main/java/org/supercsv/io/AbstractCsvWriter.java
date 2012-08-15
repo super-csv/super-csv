@@ -97,11 +97,11 @@ public abstract class AbstractCsvWriter implements ICsvWriter {
 		final char quote = (char) preference.getQuoteChar();
 		final char space = ' ';
 		final String eolSymbols = preference.getEndOfLineSymbols();
-		final boolean trimMode = preference.isTrimMode();
+		final boolean surroundingSpacesNeedQuotes = preference.isSurroundingSpacesNeedQuotes();
 		final int lastCharIndex = csvElement.length() - 1;
 		
-		// elements with leading/trailing spaces require surrounding quotes if in trimMode
-		boolean needForEscape = trimMode
+		// elements with leading/trailing spaces require surrounding quotes if surroundingSpacesNeedQuotes is enabled
+		boolean needForEscape = surroundingSpacesNeedQuotes
 			&& (csvElement.charAt(0) == space || csvElement.charAt(lastCharIndex) == space);
 		
 		for( int i = 0; i <= lastCharIndex; i++ ) {

@@ -25,8 +25,8 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.supercsv.cellprocessor.ift.CellProcessor;
-import org.supercsv.exception.NullInputException;
-import org.supercsv.exception.SuperCSVException;
+import org.supercsv.exception.SuperCsvCellProcessorException;
+import org.supercsv.exception.SuperCsvConstraintViolationException;
 import org.supercsv.mock.IdentityTransform;
 
 /**
@@ -75,7 +75,7 @@ public class ForbidSubStrTest {
 	/**
 	 * Tests input that contains the first forbidden String (should throw an Exception).
 	 */
-	@Test(expected = SuperCSVException.class)
+	@Test(expected = SuperCsvConstraintViolationException.class)
 	public void testForbidden() {
 		String input = "I think C++ is an awesome language"; // blasphemy!
 		processor.execute(input, ANONYMOUS_CSVCONTEXT);
@@ -84,7 +84,7 @@ public class ForbidSubStrTest {
 	/**
 	 * Tests input that contains the second forbidden String (should throw an Exception).
 	 */
-	@Test(expected = SuperCSVException.class)
+	@Test(expected = SuperCsvConstraintViolationException.class)
 	public void testForbidden2() {
 		String input = "I love Microsoft";
 		processor.execute(input, ANONYMOUS_CSVCONTEXT);
@@ -93,7 +93,7 @@ public class ForbidSubStrTest {
 	/**
 	 * Tests execution with a null input (should throw an Exception).
 	 */
-	@Test(expected = NullInputException.class)
+	@Test(expected = SuperCsvCellProcessorException.class)
 	public void testWithNull() {
 		processor.execute(null, ANONYMOUS_CSVCONTEXT);
 	}

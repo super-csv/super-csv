@@ -13,20 +13,20 @@
 ~~ See the License for the specific language governing permissions and
 ~~ limitations under the License.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                                    --------
+                                    Road map
+                                    --------
+
 Road map
 
-  * v1.60 - nested property support is being released soon.
+  There's nothing definitively planned for future releases at this stage, so please let us know if you have any {{{https://sourceforge.net/tracker/?group_id=201724&atid=978710}feature requests}}.
   
-  * v2.00 - fancy cell processors, completely new configurable readers and writers as an alternative to the existing. should cater for most usages.
+  Possible ideas for the future:
+  
+    * Nested property support for POJOs
 
-Other ideas for the future
-
-  * Comment character support (is anyone using this anyway??)
+    * Comment character support (ignoring comments)
   
-  * More cell processors
+    * Batch reading and writing, delaying errors
   
-  * Batch reading and writing, delaying errors
-  
-  * Internationalization of error messages
-  
-  * (Row ?) processors dealing with more than one column (to deal, for example, with composite keys)
+    * Internationalization of error messages

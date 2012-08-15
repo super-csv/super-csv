@@ -24,9 +24,7 @@ import java.util.Date;
 import org.junit.Before;
 import org.junit.Test;
 import org.supercsv.cellprocessor.ift.CellProcessor;
-import org.supercsv.exception.ClassCastInputCSVException;
-import org.supercsv.exception.NullInputException;
-import org.supercsv.exception.SuperCSVException;
+import org.supercsv.exception.SuperCsvCellProcessorException;
 import org.supercsv.mock.IdentityTransform;
 
 /**
@@ -65,7 +63,7 @@ public class FmtDateTest {
 	/**
 	 * Tests execution with a null input (should throw an Exception).
 	 */
-	@Test(expected = NullInputException.class)
+	@Test(expected = SuperCsvCellProcessorException.class)
 	public void testWithNull() {
 		processor.execute(null, ANONYMOUS_CSVCONTEXT);
 	}
@@ -73,7 +71,7 @@ public class FmtDateTest {
 	/**
 	 * Tests execution with a non-Date input (should throw an Exception).
 	 */
-	@Test(expected = ClassCastInputCSVException.class)
+	@Test(expected = SuperCsvCellProcessorException.class)
 	public void testWithNonDate() {
 		processor.execute(123, ANONYMOUS_CSVCONTEXT);
 	}
@@ -81,7 +79,7 @@ public class FmtDateTest {
 	/**
 	 * Tests execution with a invalid date format (should throw an Exception).
 	 */
-	@Test(expected = SuperCSVException.class)
+	@Test(expected = SuperCsvCellProcessorException.class)
 	public void testWithInvalidDateFormat() {
 		CellProcessor invalidDateFormatProcessor = new FmtDate("abcd");
 		invalidDateFormatProcessor.execute(DATE, ANONYMOUS_CSVCONTEXT);

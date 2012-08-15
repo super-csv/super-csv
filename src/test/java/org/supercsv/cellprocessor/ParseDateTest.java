@@ -26,9 +26,7 @@ import java.util.Date;
 import org.junit.Before;
 import org.junit.Test;
 import org.supercsv.cellprocessor.ift.CellProcessor;
-import org.supercsv.exception.ClassCastInputCSVException;
-import org.supercsv.exception.NullInputException;
-import org.supercsv.exception.SuperCSVException;
+import org.supercsv.exception.SuperCsvCellProcessorException;
 import org.supercsv.mock.IdentityTransform;
 
 /**
@@ -97,7 +95,7 @@ public class ParseDateTest {
 	/**
 	 * Tests execution with an invalid date (doesn't match format), should throw an exception.
 	 */
-	@Test(expected = SuperCSVException.class)
+	@Test(expected = SuperCsvCellProcessorException.class)
 	public void testBadlyFormattedDate() {
 		processor.execute("2011-12-25", ANONYMOUS_CSVCONTEXT);
 	}
@@ -112,9 +110,9 @@ public class ParseDateTest {
 		for( CellProcessor cp : Arrays.asList(processor, processor3, processorChain, processorChain3) ) {
 			try {
 				cp.execute(dodgyDate, ANONYMOUS_CSVCONTEXT);
-				fail("should have thrown a SuperCSVException");
+				fail("should have thrown a SuperCsvCellProcessorException");
 			}
-			catch(SuperCSVException e) {}
+			catch(SuperCsvCellProcessorException e) {}
 		}
 	}
 	
@@ -132,7 +130,7 @@ public class ParseDateTest {
 	/**
 	 * Tests execution with a non String input (should throw an exception).
 	 */
-	@Test(expected = ClassCastInputCSVException.class)
+	@Test(expected = SuperCsvCellProcessorException.class)
 	public void testWithNonCharInput() {
 		processor.execute(1, ANONYMOUS_CSVCONTEXT);
 	}
@@ -140,7 +138,7 @@ public class ParseDateTest {
 	/**
 	 * Tests execution with a null input (should throw an Exception).
 	 */
-	@Test(expected = NullInputException.class)
+	@Test(expected = SuperCsvCellProcessorException.class)
 	public void testWithNull() {
 		processor.execute(null, ANONYMOUS_CSVCONTEXT);
 	}

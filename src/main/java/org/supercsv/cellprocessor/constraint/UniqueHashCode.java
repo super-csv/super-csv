@@ -20,8 +20,8 @@ import java.util.Set;
 
 import org.supercsv.cellprocessor.CellProcessorAdaptor;
 import org.supercsv.cellprocessor.ift.CellProcessor;
-import org.supercsv.exception.NullInputException;
-import org.supercsv.exception.SuperCSVException;
+import org.supercsv.exception.SuperCsvCellProcessorException;
+import org.supercsv.exception.SuperCsvConstraintViolationException;
 import org.supercsv.util.CsvContext;
 
 /**
@@ -64,9 +64,9 @@ public class UniqueHashCode extends CellProcessorAdaptor {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @throws NullInputException
+	 * @throws SuperCsvCellProcessorException
 	 *             if value is null
-	 * @throws SuperCSVException
+	 * @throws SuperCsvConstraintViolationException
 	 *             if a non-unique value is encountered
 	 */
 	public Object execute(final Object value, final CsvContext context) {
@@ -74,7 +74,7 @@ public class UniqueHashCode extends CellProcessorAdaptor {
 		
 		int hash = value.hashCode();
 		if( !uniqueSet.add(hash) ) {
-			throw new SuperCSVException(
+			throw new SuperCsvConstraintViolationException(
 				String.format("duplicate value '%s' encountered with hashcode %d", value, hash), context, this);
 		}
 		

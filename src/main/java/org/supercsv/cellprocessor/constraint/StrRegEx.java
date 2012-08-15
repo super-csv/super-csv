@@ -22,8 +22,8 @@ import java.util.regex.PatternSyntaxException;
 
 import org.supercsv.cellprocessor.CellProcessorAdaptor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
-import org.supercsv.exception.NullInputException;
-import org.supercsv.exception.SuperCSVException;
+import org.supercsv.exception.SuperCsvCellProcessorException;
+import org.supercsv.exception.SuperCsvConstraintViolationException;
 import org.supercsv.util.CsvContext;
 
 /**
@@ -103,22 +103,22 @@ public class StrRegEx extends CellProcessorAdaptor implements StringCellProcesso
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @throws NullInputException
+	 * @throws SuperCsvCellProcessorException
 	 *             if value is null
-	 * @throws SuperCSVException
+	 * @throws SuperCsvConstraintViolationException
 	 *             if value doesn't match the regular expression
 	 */
 	public Object execute(final Object value, final CsvContext context) {
 		validateInputNotNull(value, context);
 		
-		final boolean found = regexPattern.matcher((String) value).find();
-		if( !found ) {
+		final boolean matches = regexPattern.matcher((String) value).matches();
+		if( !matches ) {
 			final String msg = REGEX_MSGS.get(regex);
 			if( msg == null ) {
-				throw new SuperCSVException(String.format("'%s' does not match the regular expression '%s'", value,
-					regex), context, this);
+				throw new SuperCsvConstraintViolationException(String.format(
+					"'%s' does not match the regular expression '%s'", value, regex), context, this);
 			} else {
-				throw new SuperCSVException(
+				throw new SuperCsvConstraintViolationException(
 					String.format("'%s' does not match the constraint '%s' defined by the regular expression '%s'",
 						value, msg, regex), context, this);
 			}

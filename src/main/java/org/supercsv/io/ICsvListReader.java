@@ -19,7 +19,8 @@ import java.io.IOException;
 import java.util.List;
 
 import org.supercsv.cellprocessor.ift.CellProcessor;
-import org.supercsv.exception.SuperCSVException;
+import org.supercsv.exception.SuperCsvConstraintViolationException;
+import org.supercsv.exception.SuperCsvException;
 
 /**
  * Interface for readers that read into Lists.
@@ -35,7 +36,7 @@ public interface ICsvListReader extends ICsvReader {
 	 * @return the List of columns, or null if EOF
 	 * @throws IOException
 	 *             if an I/O error occurred
-	 * @throws SuperCSVException
+	 * @throws SuperCsvException
 	 *             if there was a general exception while reading/processing
 	 * @since 1.0
 	 */
@@ -57,7 +58,9 @@ public interface ICsvListReader extends ICsvReader {
 	 *             if an I/O error occurred
 	 * @throws NullPointerException
 	 *             if processors is null
-	 * @throws SuperCSVException
+	 * @throws SuperCsvConstraintViolationException
+	 *             if a CellProcessor constraint failed
+	 * @throws SuperCsvException
 	 *             if there was a general exception while reading/processing
 	 * @since 1.0
 	 */

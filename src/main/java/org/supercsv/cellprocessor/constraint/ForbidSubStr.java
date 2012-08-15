@@ -22,8 +22,8 @@ import java.util.List;
 import org.supercsv.cellprocessor.CellProcessorAdaptor;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
-import org.supercsv.exception.NullInputException;
-import org.supercsv.exception.SuperCSVException;
+import org.supercsv.exception.SuperCsvCellProcessorException;
+import org.supercsv.exception.SuperCsvConstraintViolationException;
 import org.supercsv.util.CsvContext;
 
 /**
@@ -193,10 +193,10 @@ public class ForbidSubStr extends CellProcessorAdaptor implements StringCellProc
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @throws NullInputException
+	 * @throws SuperCsvCellProcessorException
 	 *             if value is null
-	 * @throws SuperCSVException
-	 *             if value is in the list of forbidden
+	 * @throws SuperCsvConstraintViolationException
+	 *             if value is in the forbidden list
 	 */
 	public Object execute(final Object value, final CsvContext context) {
 		validateInputNotNull(value, context);
@@ -205,8 +205,8 @@ public class ForbidSubStr extends CellProcessorAdaptor implements StringCellProc
 		
 		for( String forbidden : forbiddenSubStrings ) {
 			if( stringValue.contains(forbidden) ) {
-				throw new SuperCSVException(String.format("'%s' contains the forbidden substring '%s'", value,
-					forbidden), context, this);
+				throw new SuperCsvConstraintViolationException(String.format(
+					"'%s' contains the forbidden substring '%s'", value, forbidden), context, this);
 			}
 		}
 		

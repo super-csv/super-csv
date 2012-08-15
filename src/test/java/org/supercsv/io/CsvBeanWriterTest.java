@@ -19,8 +19,9 @@ import static org.junit.Assert.assertEquals;
 import static org.supercsv.SuperCsvTestUtils.CSV_FILE;
 import static org.supercsv.SuperCsvTestUtils.CUSTOMERS;
 import static org.supercsv.SuperCsvTestUtils.HEADER;
+import static org.supercsv.SuperCsvTestUtils.JOHN;
 import static org.supercsv.SuperCsvTestUtils.STRING_CUSTOMERS;
-import static org.supercsv.SuperCsvTestUtils.*;
+import static org.supercsv.SuperCsvTestUtils.WRITE_PROCESSORS;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -29,7 +30,7 @@ import java.io.Writer;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.supercsv.exception.SuperCSVReflectionException;
+import org.supercsv.exception.SuperCsvReflectionException;
 import org.supercsv.mock.CustomerBean;
 import org.supercsv.mock.CustomerStringBean;
 import org.supercsv.prefs.CsvPreference;
@@ -170,7 +171,7 @@ public class CsvBeanWriterTest {
 	/**
 	 * Tests the write() method when a getter throws an Exception.
 	 */
-	@Test(expected = SuperCSVReflectionException.class)
+	@Test(expected = SuperCsvReflectionException.class)
 	public void testGetterThrowingException() throws IOException {
 		beanWriter.write(new ExceptionBean(), "exception");
 	}

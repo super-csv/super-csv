@@ -15,8 +15,9 @@
  */
 package org.supercsv.util;
 
-import static org.supercsv.util.ReflectionUtils.SET_PREFIX;
 import static org.supercsv.util.ReflectionUtils.GET_PREFIX;
+import static org.supercsv.util.ReflectionUtils.SET_PREFIX;
+
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;

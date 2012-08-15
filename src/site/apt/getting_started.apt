@@ -13,32 +13,19 @@
 ~~ See the License for the specific language governing permissions and
 ~~ limitations under the License.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Getting started
+                                    ---------------
+                                    Where to begin?
+                                    ---------------
 
-  Assuming you've already {{{./downloading.html}downloaded}} Super CSV, you will now have to make five decisions:
-  
-    [[1]] Will I read or write? Depending on choice use a reader or a writer
+Where to begin?
 
-    [[2]] What data structure will I read/write the data to/from? For example,
+    [[1]] {{{./downloading.html}Download}} Super CSV
+    
+    [[2]] Choose a {{{./readers.html}Reader}} or {{{./writers.html}Writer}} - there are 3 of each to choose from!
+    
+    [[3]] Choose your {{{./preferences.html}preferences}} for reading/writing (including choice of delimiter, quote character, and end of line symbols)
 
-            * To read CSV into a bean use {{{./apidocs/org/supercsv/io/CsvBeanReader.html}CSVBeanReader}}
-            
-            * To write from a bean to CSV use {{{./apidocs/org/supercsv/io/CsvBeanWriter.html}CSVBeanWriter}}
-            
-            * To read CSV into a <<<Map>>> use {{{./apidocs/org/supercsv/io/CsvMapReader.html}CSVMapReader}}
-            
-            * To write from a <<<Map>>> to CSV use {{{./apidocs/org/supercsv/io/CsvMapWriter.html}CSVMapWriter}}
-            
-            * To read CSV into a <<<List<String>>>> use {{{./apidocs/org/supercsv/io/CsvListReader.html}CSVListReader}}
-            
-            * To write from a <<<List<String>>>> to CSV use {{{./apidocs/org/supercsv/io/CsvListWriter.html}CSVListWriter}}
-            
-    [[3]] If reading into maps or beans, either define a list of column names or utilize an existing header from the CSV file (if any).
-          Use <<<getCSVHeader()>>> to easily retrieve the header
+    [[4]] Choose from a wide variety of {{{./cell_processors.html}CellProcessors}} to apply conversions or constraints to your data
           
-    [[4]] Decide on what {{{./apidocs/org/supercsv/cellprocessor/package-summary.html}conversions}} and 
-          {{{./apidocs/org/supercsv/cellprocessor/constraint/package-summary.html}constraints}} you want for each column.
-          
-    [[5]] Specify {{{./apidocs/org/supercsv/prefs/CsvPreference.html}preferences}} for separation character, newline character, etc.
+    [[5]] Check out the {{{./examples_reading.html}reading}} and {{{./examples_writing.html}writing}} examples to see how it's all put together!
 
-  That's all there is to it. It really is easy. Just take a look at the code examples...

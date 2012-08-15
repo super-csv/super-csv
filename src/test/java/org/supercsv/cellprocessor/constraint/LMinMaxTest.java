@@ -23,8 +23,8 @@ import static org.supercsv.cellprocessor.constraint.LMinMax.MIN_INTEGER;
 import org.junit.Before;
 import org.junit.Test;
 import org.supercsv.cellprocessor.ift.CellProcessor;
-import org.supercsv.exception.NullInputException;
-import org.supercsv.exception.SuperCSVException;
+import org.supercsv.exception.SuperCsvCellProcessorException;
+import org.supercsv.exception.SuperCsvConstraintViolationException;
 import org.supercsv.mock.IdentityTransform;
 
 /**
@@ -91,7 +91,7 @@ public class LMinMaxTest {
 	/**
 	 * Tests execution with a value less than the minimum (should throw an Exception).
 	 */
-	@Test(expected = SuperCSVException.class)
+	@Test(expected = SuperCsvConstraintViolationException.class)
 	public void testLessThanMin() {
 		long lessThanMin = MIN_INTEGER - 1L;
 		processor.execute(lessThanMin, ANONYMOUS_CSVCONTEXT);
@@ -100,7 +100,7 @@ public class LMinMaxTest {
 	/**
 	 * Tests execution with a value greater than the maximum (should throw an Exception).
 	 */
-	@Test(expected = SuperCSVException.class)
+	@Test(expected = SuperCsvConstraintViolationException.class)
 	public void testGreaterThanMax() {
 		long greaterThanMax = MAX_INTEGER + 1L;
 		processor.execute(greaterThanMax, ANONYMOUS_CSVCONTEXT);
@@ -109,7 +109,7 @@ public class LMinMaxTest {
 	/**
 	 * Tests execution with a String that can't be parsed to a Long (should throw an Exception).
 	 */
-	@Test(expected = SuperCSVException.class)
+	@Test(expected = SuperCsvCellProcessorException.class)
 	public void testWithNonLongString() {
 		processor.execute("not long!", ANONYMOUS_CSVCONTEXT);
 	}
@@ -125,7 +125,7 @@ public class LMinMaxTest {
 	/**
 	 * Tests execution with a null input (should throw an Exception).
 	 */
-	@Test(expected = NullInputException.class)
+	@Test(expected = SuperCsvCellProcessorException.class)
 	public void testWithNull() {
 		processor.execute(null, ANONYMOUS_CSVCONTEXT);
 	}

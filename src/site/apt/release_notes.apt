@@ -13,35 +13,196 @@
 ~~ See the License for the specific language governing permissions and
 ~~ limitations under the License.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Release Notes
+                                    -------------
+                                    Release notes
+                                    -------------
+
+Release notes
+
+* 2.0.0
+
+  <08/2012>
+  
+  <<New features>>
+
+    * 100% {{{http://tools.ietf.org/html/rfc4180}RFC 4180}} compliance
+
+    * {{{https://sourceforge.net/tracker/?func=detail&aid=2925345&group_id=201724&atid=978710}2925345}} - CsvBeanReader now supports any compatible setter method (as long as the parameter type - interface or object - is compatible with the object being set).
+    Previously, the parameter type had to be an exact match on the object's type.
+    
+    * {{{https://sourceforge.net/tracker/?func=detail&aid=3036427&group_id=201724&atid=978710}3036427}} - All Writers implement <<<Flushable>>>
+
+    * {{{https://sourceforge.net/tracker/?func=detail&aid=3098240&group_id=201724&atid=978710}3098240}} - OSGi support
+    
+    * {{{https://sourceforge.net/tracker/?func=detail&aid=3153091&group_id=201724&atid=978709}3153091}} - All Readers and Writers now implement <<<Closeable>>>
+
+    * {{{https://sourceforge.net/tracker/?func=detail&aid=3188115&group_id=201724&atid=978710}3188115}} - Maven support (see details on the {{{./downloading.html}download}} page)
+    
+    * {{{https://sourceforge.net/tracker/?func=detail&aid=3437909&group_id=201724&atid=978710}3437909}} - All Readers now have a <<<getUntokenizedRow()>>> method for retrieving the raw String of the row just
+      read (before it's been tokenized). 
+      All Readers and Writers now have a <<<getRowNumber()>>> method for getting the number of CSV rows read/written (including the header).
+      This is different from <<<getLineNumber()>>>, which returns the physical line number, as rows may span more than one line (the CSV
+      format allows for multiline fields, as long as they're within double-quotes).
+    
+  <<Bug fixes>>
+
+    * {{{https://sourceforge.net/tracker/?func=detail&aid=2211601&group_id=201724&atid=978707}2211601}} - Fixed NPE in CsvBeanReader when value to set is null
+    
+    * {{{https://sourceforge.net/tracker/?func=detail&aid=2310443&group_id=201724&atid=978707}2310443}} - AbstractCsvWriter now escapes for trailing spaces
+    
+    * {{{https://sourceforge.net/tracker/?func=detail&aid=2879921&group_id=201724&atid=978707}2879921}} - Refactored Readers/Writers so it's no longer possible to modify preferences
+    
+    * {{{https://sourceforge.net/tracker/?func=detail&aid=2926982&group_id=201724&atid=978707}2926982}} - Fixed NPE in SuperCsvException constructor
+
+    * {{{https://sourceforge.net/tracker/?func=detail&aid=2970657&group_id=201724&atid=978707}2970657}} - New <<<surroundingSpacesNeedQuotes>>> preference allows the disabling of quoting for leading spaces
+
+    * {{{https://sourceforge.net/tracker/?func=detail&aid=2988385&group_id=201724&atid=978707}2988385}} - CsvListWriter now allows all cell processors (not just String processors)
+    
+    * {{{https://sourceforge.net/tracker/?func=detail&aid=3493560&group_id=201724&atid=978707}3493560}} - Column numbers now start at 1 (instead of 0)
+    
+    * {{{https://sourceforge.net/tracker/?func=detail&aid=3500005&group_id=201724&atid=978707}3500005}} - All writers now allow null in the nameMapping array
+
+  <<General enhancements>>
+  
+    * Complete overhaul of javadoc
+    
+    * Improved test coverage (now 100%!)
+    
+    * More defensive programming (à la Josh Bloch's <Effective Java>). 
+    It's a lot harder to do silly stuff with the API now - for example CellProcessors will fail fast during construction if not set up correctly, instead of during execution.
+    
+    * A new and improved maven site (please like/+1 us!)
+    
+    * Removed dependency on the Spiffy library - Super CSV is now completely standalone!
+    
+  <<Upgrade notes>>
+  
+  As this is a major release and it's been 4 years since the last release, there have been numerous changes that are not backwards-compatible with older versions.
+  Here's an overview of things to be aware of when upgrading from version 1.52:
+  
+  * General changes
+  
+    * The treatment of spaces surrounding a cell has changed
+    
+      * All spaces are now considered important (to conform to RFC 4180), and surrounding spaces won't be trimmed by default
+      
+      * A new preference has been added to enable/disable this functionality (see the section on <<<surroundingSpacesNeedQuotes>>> on the {{{./preferences.html}preferences}} page).
+
+    * Line number, row number (a new property of both readers and writers) and column number all start from 1. This means:
+  
+      * the <<<get(int n)>>> method of all Readers now expects the column number to begin at 1 (it was previously 0)
+    
+      * the column number reported in Exceptions (via the CsvContext object) begins at 1
+    
+      * the new row number property refers to one record of CSV (which may span multiple physical lines) - this number begins at 1 and includes the header
+    
+      * line number refers to the physical line of CSV being read/written and begins at 1 (same as before).
+    
+    * CsvPreference is now immutable, and must be constructed using its internal builder (see the {{{./preferences.html}preferences}} page)
+  
+    * All classes with <<<CSV>>> in their name have been renamed to <<<Csv>>>. The new names are:
+  
+      * <<<SuperCsvException>>>
+    
+      * <<<SuperCsvReflectionException>>>
+    
+      * <<<CsvContext>>>
+      
+    * Exceptions have been tidied up
+    
+      * <<<ClassCastInputCSVException>>> and <<<NullInputException>>> have been removed 
+      (<<<SuperCsvCellProcessorException>>> is now used when an unexpected type or null input is encountered in a cell processor).
+  
+      * <<<SuperCsvException>>> has been updated. It no longer contains the offending processor, as there's a new exception (<<<SuperCsvCellProcessorException>>>) for this.
+    
+      * <<<SuperCsvCellProcessorException>>> has been added as a general exception for anything that goes wrong during cell processor execution.
+    
+      * <<<SuperCsvConstraintViolationException>>> has been added. 
+      This exception is <only> thrown when the processor can accept the input (it's of the expected type and not null), but it doesn't satisfy the constraint. 
+      For example, if <<<LMinMax>>> encounters a Long value, but it is outside the required range then a <<<SuperCsvConstraintViolationException>>> will be thrown.
+      If the <<<LMinMax>>> processor encounters a decimal value (e.g. 1.5), then a general <<<SuperCsvCellProcessorException>>> will be thrown. 
+  
+  * Changes related to reading
+  
+    * The <<<getCSVHeader()>>> on all Readers has been renamed to <<<getCsvHeader()>>>
+  
+    * All Readers will now read empty columns (i.e. <<<"">>>) as <<<null>>> (previously they would be read as <<<"">>>).
+      The <<<Optional>>> processor has been updated to cater for this.
+    
+    * All Readers now implement <<<Closeable>>>
+    
+    * All Readers now have a <<<getUntokenizedRow()>>> method which returns the untokenized CSV row that was just read
+    
+    * All Readers now have a <<<getRowNumber()>>> method which returns the number of the CSV row just read (essentially the number of records, including the header)
+    
+    * <<<CsvListReader>>> now returns a List of Objects (not Strings) when CellProcessors are used
+    
+    * <<<CsvMapReader>>> read() methods no longer have wildcards in their return type
+    
+    * <<<CsvBeanReader>>> now allows any compatible setter method to be used 
+    (e.g. if the value to map to the bean is a Double, then a setter that expects a Number will now work - 
+    previously the setter would have to expect a Double as well).
+    
+  * Changes related to writing
+  
+    * All Writers will now write null columns as <<<"">>> (previously this would have caused an Exception).
+  
+    * All Writers now implement <<<Closeable>>>
+  
+    * All Writers now implement <<<Flushable>>> - so you can flush the stream without closing.
+    
+    * All Writers now have a <<<getRowNumber()>>> method which returns the number of the CSV row just written (essentially the number of records, including the header)
+    
+  * Changes related to CellProcessors
+  
+    * The Optional processor now matches on <<<null>>> instead of <<<"">>>. This means it can now be used for reading <and> writing.
+    
+    * The <<<Required>>>, <<<StrForbidden>>>, and <<<StrRegExReplace>>> processors have been removed. 
+      Instead, you should use <<<RequireHashCode>>>, <<<ForbidSubStr>>>, and <<<StrReplace>>> respectively.
+      
+    * The <<<Trim>>> processor now trims whitespace (i.e. <<<String.trim()>>>). The new <<<Truncate>>> processor contains the old Trim functionality.
+    
+    * The min/max constants in <<<DMinMax>>> and <<<LMinMax>>> have all been renamed, and extra constants added to distinguish between signed/unsigned 8-bit min/max values.
+    
+    * <<<StrRegEx>>> now uses <<<Matcher.matches()>>> instead of <<<Matcher.find()>>>, so the regular expression must match the whole field
+    
+    * All processors have been updated to use the new exception classes <<<SuperCsvCellProcessorException>>> and <<<SuperCsvConstraintViolationException>>> 
+  
+=========================================================================================================
 
 * 1.52
 
   <09/2008>
 
-  Bug Fixes
+  <<Bug fixes>>
 
     * Bug in CsvListWriter on null inputs
+
+=========================================================================================================
   
 * 1.51
 
   <08/2008>
 
-  New Features
+  <<New features>>
 
     * Improved processors. Extended auto boxing types to include boolean, float and double.
-  
+
+=========================================================================================================
+
 * 1.50
 
   <08/2008>
 
-  Bug Fixes
-
-    * Minor bug fixes
-    
-  New Features
+  <<New features>>
 
     * Improved processors.
+    
+  <<Bug fixes>>
+
+    * Minor bug fixes
+
+=========================================================================================================
 
 * 1.50 Beta
 
@@ -80,6 +241,7 @@ Release Notes
   Added the following exceptions
   
     * ClassCastInputCSVException
+    
     * NullInputException: this exception is raised now for unexpected 'null' input value for processor. 
       Numerous processors have been modified to use that exception class.
 
@@ -93,6 +255,7 @@ Release Notes
   
     * Just copy over the .jar file and notice the deprecated classes...
 
+=========================================================================================================
 
 * 1.30
 

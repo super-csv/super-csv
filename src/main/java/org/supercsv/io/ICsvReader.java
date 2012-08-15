@@ -18,7 +18,7 @@ package org.supercsv.io;
 import java.io.Closeable;
 import java.io.IOException;
 
-import org.supercsv.exception.SuperCSVException;
+import org.supercsv.exception.SuperCsvException;
 
 /**
  * The interface for CSV readers.
@@ -43,8 +43,7 @@ public interface ICsvReader extends Closeable {
 	/**
 	 * This method is used to get an optional header of the CSV file and move the file cursor to the first row
 	 * containing data (the second row from the top). The header can subsequently be used as the
-	 * <code>nameMapping</code> array for read operations. For this reason, the trimMode CsvPreference is ignored and
-	 * surrounding whitespace is always trimmed from each header.
+	 * <code>nameMapping</code> array for read operations.
 	 * 
 	 * @param firstLineCheck
 	 *            if true, ensures that this method is only called when reading the first line (as that's where the
@@ -52,7 +51,7 @@ public interface ICsvReader extends Closeable {
 	 * @return the array of header fields, or null if EOF is encountered
 	 * @throws IOException
 	 *             if an I/O exception occurs
-	 * @throws SuperCSVException
+	 * @throws SuperCsvException
 	 *             if firstLineCheck == true and it's not the first line being read
 	 * @since 1.0
 	 */

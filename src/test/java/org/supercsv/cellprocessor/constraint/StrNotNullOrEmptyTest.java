@@ -21,9 +21,8 @@ import static org.supercsv.SuperCsvTestUtils.ANONYMOUS_CSVCONTEXT;
 import org.junit.Before;
 import org.junit.Test;
 import org.supercsv.cellprocessor.ift.CellProcessor;
-import org.supercsv.exception.ClassCastInputCSVException;
-import org.supercsv.exception.NullInputException;
-import org.supercsv.exception.SuperCSVException;
+import org.supercsv.exception.SuperCsvCellProcessorException;
+import org.supercsv.exception.SuperCsvConstraintViolationException;
 import org.supercsv.mock.IdentityTransform;
 
 /**
@@ -59,7 +58,7 @@ public class StrNotNullOrEmptyTest {
 	/**
 	 * Tests execution with a empty String (should throw an Exception).
 	 */
-	@Test(expected = SuperCSVException.class)
+	@Test(expected = SuperCsvCellProcessorException.class)
 	public void testEmptyString() {
 		String input = "";
 		assertEquals(input, processor.execute(input, ANONYMOUS_CSVCONTEXT));
@@ -68,7 +67,7 @@ public class StrNotNullOrEmptyTest {
 	/**
 	 * Tests execution with a non-String input (should throw an Exception).
 	 */
-	@Test(expected = ClassCastInputCSVException.class)
+	@Test(expected = SuperCsvCellProcessorException.class)
 	public void testNonStringInput() {
 		processor.execute(123, ANONYMOUS_CSVCONTEXT);
 	}
@@ -76,7 +75,7 @@ public class StrNotNullOrEmptyTest {
 	/**
 	 * Tests execution with a null input (should throw an Exception).
 	 */
-	@Test(expected = NullInputException.class)
+	@Test(expected = SuperCsvConstraintViolationException.class)
 	public void testWithNull() {
 		processor.execute(null, ANONYMOUS_CSVCONTEXT);
 	}

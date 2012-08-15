@@ -333,6 +333,7 @@
 	<scm>
 		<connection>scm:svn:https://supercsv.svn.sourceforge.net/svnroot/supercsv/trunk
 		</connection>
+		<developerConnection>scm:svn:https://supercsv.svn.sourceforge.net/svnroot/supercsv/trunk</developerConnection>
 		<tag>HEAD</tag>
 		<url>http://supercsv.svn.sourceforge.net/viewvc/supercsv/</url>
 	</scm>

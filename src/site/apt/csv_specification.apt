@@ -13,23 +13,22 @@
 ~~ See the License for the specific language governing permissions and
 ~~ limitations under the License.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                                    ------------
+                                    What is CSV?
+                                    ------------
+
 What is CSV?
 
-  The comma-separated values (CSV) format is a widely-used text-file format often used to exchange data between applications.
+  The comma-separated values (CSV) format is a widely used text file format often used to exchange data between applications.
+  It contains multiple records (one per line), and each field is delimited by a comma.
+  {{{http://en.wikipedia.org/wiki/Comma-separated_values}Wikipedia}} has a good explanation of the CSV format and its history.
   
-  It contains multiple records (one per line), with each field being delimited by a comma.
-  
-  Further useful information about the CSV format can be found on {{{http://en.wikipedia.org/wiki/Comma-separated_values}Wikipedia}} and 
-  {{{http://www.creativyst.com/Doc/Articles/CSV/CSV01.htm}www.creativyst.com}}.
-  
-* Super CSV and RFC 4180
-
   There is no definitive standard for CSV, however the most commonly accepted definition is {{{http://tools.ietf.org/html/rfc4180}RFC 4180}} - 
-  the definition used by Super CSV. 
+  the MIME type definition for CSV. Super CSV is 100% compliant with RFC 4180, while still allowing some flexibility where CSV files deviate from the definition.
 
   The following shows each rule defined in RFC 4180, and how it is treated by Super CSV.
 
-** Rule 1
+* Rule 1
   
 -----------------------------------------------------------------------------------
 1. Each record is located on a separate line, delimited by a line
@@ -39,9 +38,10 @@ What is CSV?
    zzz,yyy,xxx CRLF
 -----------------------------------------------------------------------------------
 
-  The line break is configurable in Super CSV through the <<<CsvPreference>>> object, which is supplied to a Reader or Writer.
+  Super CSV accepts all line breaks (Windows, Mac or Unix) when reading CSV files, 
+  and uses the end of line symbols specified by the user (via the {{{../apidocs/org/supercsv/prefs/CsvPreference.html}CsvPreference}} object) when writing CSV files.
 
-** Rule 2
+* Rule 2
 
 -----------------------------------------------------------------------------------
 2. The last record in the file may or may not have an ending line
@@ -51,9 +51,9 @@ What is CSV?
    zzz,yyy,xxx
 -----------------------------------------------------------------------------------
 
-  Super CSV <will> use a line break when writing the last line of a CSV file, but a line break on the last line is optional when reading.
+  Super CSV <will> add a line break when writing the last line of a CSV file, but a line break on the last line is optional when reading.
   
-** Rule 3
+* Rule 3
 
 -----------------------------------------------------------------------------------
 3. There maybe an optional header line appearing as the first line
@@ -69,9 +69,10 @@ What is CSV?
    zzz,yyy,xxx CRLF
 -----------------------------------------------------------------------------------
 
-  Super CSV accepts an optional header when reading or writing. In fact it typically uses the header for mapping between CSV and POJOs.
+  Super CSV provides methods for reading and writing headers, if required. 
+  It also makes use of the header for mapping between CSV and POJOs (see {{{../apidocs/org/supercsv/io/CsvBeanReader.html}CsvBeanReader}}/{{{../apidocs/org/supercsv/io/CsvBeanWriter.html}CsvBeanWriter}}).
   
-** Rule 4
+* Rule 4
 
 -----------------------------------------------------------------------------------
 4. Within the header and each record, there may be one or more
@@ -83,13 +84,16 @@ What is CSV?
    aaa,bbb,ccc
 -----------------------------------------------------------------------------------
 
-  The delimiter in Super CSV is configurable via the <<<CsvPreference>>> object, though it is typically a comma.
+  The delimiter in Super CSV is configurable via the {{{../apidocs/org/supercsv/prefs/CsvPreference.html}CsvPreference}} object, though it is typically a comma.
   
-  Super CSV expects each line to contain the same number of fields (including the header).
+  Super CSV expects each line to contain the same number of fields (including the header). 
+  In cases where the number of fields varies, {{{../apidocs/org/supercsv/io/CsvListReader.html}CsvListReader}}/{{{../apidocs/org/supercsv/io/CsvListWriter.html}CsvListWriter}} should be used, as they contain methods for reading/writing lines of arbitary length.
 
-  Super CSV trims leading and trailing spaces (fields that require leading or trailing spaces must be quoted). 
+  By default, Super CSV considers spaces part of a field. However, if you require that surrounding spaces should not be part of the field 
+  (unless within double quotes), then you can enable <surroundingSpacesNeedQuotes> in your {{{../apidocs/org/supercsv/prefs/CsvPreference.html}CsvPreference}} object. This will ensure that surrounding spaces are trimmed when reading
+  (if not within double quotes), and that quotes are applied to a field with surrounding spaces when writing. 
   
-** Rule 5
+* Rule 5
 
 -----------------------------------------------------------------------------------
 5. Each field may or may not be enclosed in double quotes (however
@@ -103,9 +107,9 @@ What is CSV?
 
   Super CSV only encloses fields in double quotes when they require escaping (see next item).
   
-  The quote character is configurable via the <<<CsvPreference>>> object.
+  The quote character is configurable via the {{{../apidocs/org/supercsv/prefs/CsvPreference.html}CsvPreference}} object, though is typically a double quote (<<<">>>).
 
-** Rule 6
+* Rule 6
 
 -----------------------------------------------------------------------------------
 6. Fields containing line breaks (CRLF), double quotes, and commas
@@ -116,9 +120,10 @@ What is CSV?
    zzz,yyy,xxx
 -----------------------------------------------------------------------------------
 
-  Super CSV encloses a field in quotes if it contains a line break, double quote or comma.
+  Super CSV handles multi-line fields (as long as they're enclosed in quotes) when reading,
+  and encloses a field in quotes when writing if it contains a newline, quote character or delimiter (defined in the {{{../apidocs/org/supercsv/prefs/CsvPreference.html}CsvPreference}} object).
 
-** Rule 7
+* Rule 7
 
 -----------------------------------------------------------------------------------
 7. If double-quotes are used to enclose fields, then a double-quote
@@ -128,5 +133,6 @@ What is CSV?
    "aaa","b""bb","ccc"
 -----------------------------------------------------------------------------------
 
-  Super CSV escapes double-quotes with a preceding double-quote.
+  Super CSV escapes double-quotes with a preceding double-quote. Please note that the sometimes-used convention of escaping double-quotes as <<<\">>> (instead of <<<"">>>)
+  is <<not supported>>.
  

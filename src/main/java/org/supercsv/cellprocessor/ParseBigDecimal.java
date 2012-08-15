@@ -20,9 +20,7 @@ import java.text.DecimalFormatSymbols;
 
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
-import org.supercsv.exception.ClassCastInputCSVException;
-import org.supercsv.exception.NullInputException;
-import org.supercsv.exception.SuperCSVException;
+import org.supercsv.exception.SuperCsvCellProcessorException;
 import org.supercsv.util.CsvContext;
 
 /**
@@ -114,12 +112,8 @@ public class ParseBigDecimal extends CellProcessorAdaptor implements StringCellP
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @throws NullInputException
-	 *             if value is null
-	 * @throws SuperCSVException
-	 *             if the value can't be parsed as a BigDecimal
-	 * @throws ClassCastInputCSVException
-	 *             if the value isn't a String
+	 * @throws SuperCsvCellProcessorException
+	 *             if value is null, isn't a String, or can't be parsed as a BigDecimal
 	 */
 	public Object execute(final Object value, final CsvContext context) {
 		validateInputNotNull(value, context);
@@ -135,11 +129,11 @@ public class ParseBigDecimal extends CellProcessorAdaptor implements StringCellP
 				}
 			}
 			catch(final NumberFormatException e) {
-				throw new SuperCSVException(String.format("'%s' could not be parsed as a BigDecimal", value), context,
+				throw new SuperCsvCellProcessorException(String.format("'%s' could not be parsed as a BigDecimal", value), context,
 					this, e);
 			}
 		} else {
-			throw new ClassCastInputCSVException(value, String.class, context, this);
+			throw new SuperCsvCellProcessorException(String.class, value, context, this);
 		}
 		
 		return next.execute(result, context);

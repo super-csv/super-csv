@@ -18,9 +18,8 @@ package org.supercsv.cellprocessor.constraint;
 import org.supercsv.cellprocessor.CellProcessorAdaptor;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
-import org.supercsv.exception.ClassCastInputCSVException;
-import org.supercsv.exception.NullInputException;
-import org.supercsv.exception.SuperCSVException;
+import org.supercsv.exception.SuperCsvCellProcessorException;
+import org.supercsv.exception.SuperCsvConstraintViolationException;
 import org.supercsv.util.CsvContext;
 
 /**
@@ -61,23 +60,23 @@ public class StrNotNullOrEmpty extends CellProcessorAdaptor implements StringCel
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @throws ClassCastInputCSVException
-	 *             if value isn't a String
-	 * @throws NullInputException
-	 *             if value is null
-	 * @throws SuperCSVException
+	 * @throws SuperCsvCellProcessorException
+	 *             if value is null or isn't a String
+	 * @throws SuperCsvConstraintViolationException
 	 *             if value is an empty String
 	 */
 	public Object execute(final Object value, final CsvContext context) {
-		validateInputNotNull(value, context);
+		if (value == null){
+			throw new SuperCsvConstraintViolationException("the String should not be null", context, this);
+		}
 		
 		if( value instanceof String ) {
 			final String stringValue = (String) value;
 			if( stringValue.isEmpty() ) {
-				throw new SuperCSVException("the String should not be empty", context, this);
+				throw new SuperCsvConstraintViolationException("the String should not be empty", context, this);
 			}
 		} else {
-			throw new ClassCastInputCSVException(value, String.class, context, this);
+			throw new SuperCsvCellProcessorException(String.class, value, context, this);
 		}
 		
 		return next.execute(value, context);

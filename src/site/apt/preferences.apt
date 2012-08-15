@@ -1,0 +1,90 @@
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~ Copyright 2007 Kasper B. Graversen
+~~ 
+~~ Licensed under the Apache License, Version 2.0 (the "License");
+~~ you may not use this file except in compliance with the License.
+~~ You may obtain a copy of the License at
+~~ 
+~~     http://www.apache.org/licenses/LICENSE-2.0
+~~ 
+~~ Unless required by applicable law or agreed to in writing, software
+~~ distributed under the License is distributed on an "AS IS" BASIS,
+~~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~~ See the License for the specific language governing permissions and
+~~ limitations under the License.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                                    ---------------
+                                    CSV Preferences
+                                    ---------------
+                                    
+CSV Preferences
+
+  Readers and Writers in Super CSV are configured using the {{{../apidocs/org/supercsv/prefs/CsvPreference.html}CsvPreference}} class.
+  This class is immutable and is assembled using the {{{http://en.wikipedia.org/wiki/Builder_pattern}Builder pattern}}.
+  
+  The preferences available are:
+  
+    [quoteChar] The quote character (used when a cell contains special characters, such as the delimiter char, a quote char, or spans multiple lines).
+    
+    []
+    
+    [delimiterChar] The delimiter character (separates each cell in a row).
+    
+    []
+    
+    [endOfLineSymbols] The end of line symbols to use when <writing> (Windows, Mac and Linux style line breaks are all supported when reading, so this preference won't be used at all for reading).
+    
+    []
+    
+    [surroundingSpacesNeedQuotes] Whether spaces surrounding a cell need quotes in order to be preserved (see below). The default value is false (quotes aren't required).
+
+* Predefined preferences
+
+  There are four 'ready to use' configurations for typical scenarios.
+
+*------------------------------------------------------------------------------------------------------------------+------------------*----------------------*-----------------------------------------*------------------------------------*
+ <<Constant>>                                                                                                      || Quote character || Delimiter character || End of line symbols (for writing only) || Surrounding spaces require quotes  
+*------------------------------------------------------------------------------------------------------------------+------------------*----------------------*-----------------------------------------*------------------------------------*
+ {{{../apidocs/org/supercsv/prefs/CsvPreference.html#STANDARD_PREFERENCE}STANDARD_PREFERENCE}}                     |        "         |           ,          |       \\r\\n                            |            false                    
+*------------------------------------------------------------------------------------------------------------------+------------------*----------------------*-----------------------------------------*------------------------------------*
+ {{{../apidocs/org/supercsv/prefs/CsvPreference.html#EXCEL_PREFERENCE}EXCEL_PREFERENCE}}                           |        "         |           ,          |        \\n                              |            false                    
+*------------------------------------------------------------------------------------------------------------------+------------------*----------------------*-----------------------------------------*------------------------------------*
+ {{{../apidocs/org/supercsv/prefs/CsvPreference.html#EXCEL_NORTH_EUROPE_PREFERENCE}EXCEL_NORTH_EUROPE_PREFERENCE}} |        "         |           ;          |        \\n                              |            false                    
+*------------------------------------------------------------------------------------------------------------------+------------------*----------------------*-----------------------------------------*------------------------------------*
+ {{{../apidocs/org/supercsv/prefs/CsvPreference.html#TAB_PREFERENCE}TAB_PREFERENCE}}                               |        "         |          \\t         |        \\n                              |            false                   
+*------------------------------------------------------------------------------------------------------------------+------------------*----------------------*-----------------------------------------*------------------------------------*
+
+* Create your own preference
+
+  If none of the predefined preferences suit your purposes, you can easily create your own (you're not just limited to CSV files!).
+  For example, the following code snippet creates preferences suitable for reading/writing pipe-delimited files.
+
++----------------------------------------------------------------------------------------------------+
+private static final CsvPreference PIPE_DELIMITED = new CsvPreference.Builder('"', '|', "\n").build();
++----------------------------------------------------------------------------------------------------+
+
+* Ignoring surrounding spaces if they're not within quotes
+
+  In accordance with {{{http://tools.ietf.org/html/rfc4180}RFC 4180}}, the default behaviour of Super CSV is to treat all spaces as important,
+  <including spaces surrounding the text in a cell>.
+  
+  This means for reading, a cell with contents <<<\ \ \ surrounded by spaces\ \ \ >>> is read with surrounding spaces preserved.
+  And for writing, the same String is written with surrounding spaces and no surrounding quotes (they're not required, as spaces are considered important).
+  
+  There are some scenarios where this restriction must be relaxed, in particular when the CSV file you're working with assumes that
+  <surrounding spaces must be surrounded by quotes, otherwise will be ignored>. For this reason, Super CSV allows you
+  to enable the <<<surroundingSpacesNeedQuotes>>> preference.
+  
+  With <<<surroundingSpacesNeedQuotes>>> enabled, it means that for reading, a cell with contents <<<\ \ \ surrounded by spaces\ \ \ >>>\ would be read as <<<surrounded by spaces>>> (surrounding spaces are trimmed),
+  unless the String has surrounding quotes, e.g. <<<"\ \ \ surrounded by spaces\ \ \ ">>>, in which case the spaces are preserved.
+  And for writing, any String containing surrounding spaces will automatically be given surrounding quotes when written in order to preserve the spaces.
+  
+  You can enable this behaviour by calling <<<surroundingSpacesNeedQuotes(true)>>> on the Builder. You can do this with your own custom preference, or customize an existing preference as shown below.
+
++------------------------------------------------------------------------------------------------------------------------------------------------+
+private static final CsvPreference STANDARD_SURROUNDING_SPACES_NEED_QUOTES = 
+    new CsvPreference.Builder(CsvPreference.STANDARD_PREFERENCE).surroundingSpacesNeedQuotes(true).build();
++------------------------------------------------------------------------------------------------------------------------------------------------+
+  
+  Prior to Super CSV 2.0.0, this behaviour wasn't configurable and surrounding spaces were always trimmed.
+  

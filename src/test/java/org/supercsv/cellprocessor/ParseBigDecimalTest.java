@@ -25,8 +25,7 @@ import java.util.Locale;
 import org.junit.Before;
 import org.junit.Test;
 import org.supercsv.cellprocessor.ift.CellProcessor;
-import org.supercsv.exception.NullInputException;
-import org.supercsv.exception.SuperCSVException;
+import org.supercsv.exception.SuperCsvCellProcessorException;
 import org.supercsv.mock.IdentityTransform;
 
 /**
@@ -105,7 +104,7 @@ public class ParseBigDecimalTest {
 	/**
 	 * Tests execution with a non-String input (should throw an exception).
 	 */
-	@Test(expected = SuperCSVException.class)
+	@Test(expected = SuperCsvCellProcessorException.class)
 	public void testWithNonString() {
 		processor.execute(1234, ANONYMOUS_CSVCONTEXT);
 	}
@@ -113,7 +112,7 @@ public class ParseBigDecimalTest {
 	/**
 	 * Tests execution with a null input (should throw an Exception).
 	 */
-	@Test(expected = NullInputException.class)
+	@Test(expected = SuperCsvCellProcessorException.class)
 	public void testWithNull() {
 		processor.execute(null, ANONYMOUS_CSVCONTEXT);
 	}
@@ -121,7 +120,7 @@ public class ParseBigDecimalTest {
 	/**
 	 * Tests execution with an empty-String input (should throw an Exception).
 	 */
-	@Test(expected = SuperCSVException.class)
+	@Test(expected = SuperCsvCellProcessorException.class)
 	public void testWithEmptyString() {
 		processor.execute("", ANONYMOUS_CSVCONTEXT);
 	}
