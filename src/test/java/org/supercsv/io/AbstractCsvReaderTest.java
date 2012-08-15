@@ -131,7 +131,7 @@ public class AbstractCsvReaderTest {
 		assertEquals(0, csvReader.length());
 		
 		// read the header
-		final String[] header = csvReader.getCsvHeader(true);
+		final String[] header = csvReader.getHeader(true);
 		assertEquals(4, header.length);
 		assertEquals("firstName", header[0]);
 		assertEquals("lastName", header[1]);
@@ -211,7 +211,7 @@ public class AbstractCsvReaderTest {
 		assertEquals(0, csvReader.length());
 		
 		// read the header
-		final String[] header = csvReader.getCsvHeader(true);
+		final String[] header = csvReader.getHeader(true);
 		assertEquals(4, header.length);
 		assertEquals("firstName", header[0]);
 		assertEquals("lastName", header[1]);
@@ -274,10 +274,10 @@ public class AbstractCsvReaderTest {
 	@Test
 	public void testIllegalGetHeader() throws IOException {
 		
-		abstractReader.getCsvHeader(true);
+		abstractReader.getHeader(true);
 		
 		try {
-			abstractReader.getCsvHeader(true);
+			abstractReader.getHeader(true);
 			fail("should have thrown SuperCsvException");
 		}
 		catch(SuperCsvException e) {
@@ -292,10 +292,10 @@ public class AbstractCsvReaderTest {
 	 */
 	@Test
 	public void testGetHeaderNoCheck() throws IOException {
-		assertEquals(4, abstractReader.getCsvHeader(false).length);
-		assertEquals(4, abstractReader.getCsvHeader(false).length);
-		assertEquals(4, abstractReader.getCsvHeader(false).length);
-		assertNull(abstractReader.getCsvHeader(false)); // should be EOF
+		assertEquals(4, abstractReader.getHeader(false).length);
+		assertEquals(4, abstractReader.getHeader(false).length);
+		assertEquals(4, abstractReader.getHeader(false).length);
+		assertNull(abstractReader.getHeader(false)); // should be EOF
 	}
 	
 	/**

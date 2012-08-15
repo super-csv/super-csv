@@ -102,7 +102,7 @@ public abstract class AbstractCsvReader implements ICsvReader {
 	/**
 	 * {@inheritDoc}
 	 */
-	public String[] getCsvHeader(final boolean firstLineCheck) throws IOException {
+	public String[] getHeader(final boolean firstLineCheck) throws IOException {
 		
 		if( firstLineCheck && tokenizer.getLineNumber() != 0 ) {
 			throw new SuperCsvException(String.format(

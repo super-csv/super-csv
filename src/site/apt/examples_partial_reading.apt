@@ -43,7 +43,7 @@ private static void partialReadWithCsvBeanReader() throws Exception {
 	try {
 		beanReader = new CsvBeanReader(new FileReader(CSV_FILENAME), CsvPreference.STANDARD_PREFERENCE);
 		
-		beanReader.getCsvHeader(true); // skip past the header (we're defining our own)
+		beanReader.getHeader(true); // skip past the header (we're defining our own)
 		
 		// only map the first 3 columns - setting header elements to null means those columns are ignored
 		final String[] header = new String[] { "customerNo", "firstName", "lastName", null, null, null, null, null,
@@ -94,7 +94,7 @@ private static void partialReadWithCsvMapReader() throws Exception {
 	try {
 		mapReader = new CsvMapReader(new FileReader(CSV_FILENAME), CsvPreference.STANDARD_PREFERENCE);
 		
-		mapReader.getCsvHeader(true); // skip past the header (we're defining our own)
+		mapReader.getHeader(true); // skip past the header (we're defining our own)
 		
 		// only map the first 3 columns - setting header elements to null means those columns are ignored
 		final String[] header = new String[] { "customerNo", "firstName", "lastName", null, null, null, null, null,

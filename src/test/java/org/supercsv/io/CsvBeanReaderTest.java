@@ -102,7 +102,7 @@ public class CsvBeanReaderTest {
 	@Test
 	public void testReadWithProcessors() throws IOException {
 		
-		final String[] header = beanReader.getCsvHeader(true);
+		final String[] header = beanReader.getHeader(true);
 		assertArrayEquals(HEADER, header);
 		
 		assertEquals(JOHN, beanReader.read(CustomerBean.class, header, READ_PROCESSORS));
@@ -124,7 +124,7 @@ public class CsvBeanReaderTest {
 	@Test
 	public void testPartialReadWithProcessors() throws IOException {
 		
-		assertArrayEquals(HEADER, beanReader.getCsvHeader(true));
+		assertArrayEquals(HEADER, beanReader.getHeader(true));
 		
 		final String[] header = PARTIAL_HEADER;
 		for (CustomerBean fullCustomer : CUSTOMERS){
@@ -146,7 +146,7 @@ public class CsvBeanReaderTest {
 	@Test
 	public void testRead() throws IOException {
 		
-		final String[] header = beanReader.getCsvHeader(true);
+		final String[] header = beanReader.getHeader(true);
 		assertArrayEquals(HEADER, header);
 		
 		assertEquals(JOHN_STRING, beanReader.read(CustomerStringBean.class, header));
@@ -168,7 +168,7 @@ public class CsvBeanReaderTest {
 	@Test
 	public void testPartialRead() throws IOException {
 		
-		assertArrayEquals(HEADER, beanReader.getCsvHeader(true));
+		assertArrayEquals(HEADER, beanReader.getHeader(true));
 		
 		final String[] header = PARTIAL_HEADER;
 		for (CustomerStringBean fullCustomer : STRING_CUSTOMERS){
@@ -191,7 +191,7 @@ public class CsvBeanReaderTest {
 	@Test
 	public void testReadUsingTokenizerReader() throws IOException {
 		
-		final String[] header = tokenizerBeanReader.getCsvHeader(true);
+		final String[] header = tokenizerBeanReader.getHeader(true);
 		assertArrayEquals(HEADER, header);
 		
 		assertEquals(JOHN_STRING, tokenizerBeanReader.read(CustomerStringBean.class, header));
@@ -212,7 +212,7 @@ public class CsvBeanReaderTest {
 	 */
 	@Test
 	public void testReadWithProcessorsUsingInterface() throws IOException {
-		assertArrayEquals(HEADER, beanReader.getCsvHeader(true));
+		assertArrayEquals(HEADER, beanReader.getHeader(true));
 		
 		// only map the fields relevant to the interface
 		final String[] header = new String[] { "customerNo", null, null, null, "mailingAddress", null, null, null,

@@ -34,7 +34,7 @@ Super CSV
       []
   
       [Automatic CSV encoding] Forget about handling special characters such as commas and double-quotes - Super CSV will take care of that for you!
-      All content is properly escaped/un-escaped according to the {{{./csv_specification.html}RFC 4180}} CSV specification.
+      All content is properly escaped/un-escaped according to the {{{./csv_specification.html}CSV specification}}.
       
       []
       

@@ -124,7 +124,7 @@ Release notes
   
   * Changes related to reading
   
-    * The <<<getCSVHeader()>>> on all Readers has been renamed to <<<getCsvHeader()>>>
+    * The <<<getCSVHeader()>>> on all Readers has been renamed to <<<getHeader()>>> (to match <<<writeHeader()>>> on Writers)
   
     * All Readers will now read empty columns (i.e. <<<"">>>) as <<<null>>> (previously they would be read as <<<"">>>).
       The <<<Optional>>> processor has been updated to cater for this.
@@ -272,9 +272,99 @@ Release notes
        
     *  An overloaded read() has been removed entirely
     
-    * Added the following new cell processors: ParseBigDecimal
+    * Added the following new cell processors: <<<ParseBigDecimal>>>
     
-    * A new exception SuperCSVReflectionException replaces annoying Java checked exceptions 
+    * A new exception <<<SuperCSVReflectionException>>> replaces annoying Java checked exceptions 
       <<<ClassNotFoundException, IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException>>>
       
     * More methods now use the var-args ("...") notation for easy use.
+    
+=========================================================================================================
+
+* 1.20
+
+  <11/2007>
+
+  Improved processors and partial writing
+
+    * Added the ConvertNullTo cell processor which enables better support for writing partial objects, maps and lists.
+
+    * Changed method signatures to use the var-args ("...") notation to make the programming more natural. This has been done for:
+
+      * <<<writeHeader()>>> on all Writers
+      
+      * <<<ForbidSubStr>>>, <<<Required>>>, and <<<StrLen>>>
+      
+    * Small bugfix in processor StrLen
+    
+    * More documentation on the web
+    
+=========================================================================================================
+
+* 1.15
+
+  <10/2007>
+  
+  Improved robustness and speed
+  
+    * Made the CSV Encoder more robust (used when writing CSV files)
+    
+    * Made the CSV encoder faster. Around 25% faster!
+    
+    * Added a lot of tests.
+    
+    * Set up an environment in dir slow_tests to enable future development to easily compare efficiency with older versions of the same functionality
+
+=========================================================================================================
+
+* 1.10
+
+  <10/2007>
+  
+  Faster and better
+  
+    * Introduced new cell processors <<<ParseChar>>>, <<<ForbidSubStr>>>, <<<RequireSubStr>>>
+    
+    * Made the tokenizer 5% faster (the thing that reads and interprets the CSV files)! Reading files has never been faster!
+    
+    * The framework now support plugging in new tokenizers onto readers. Feel free to author your own fast tokenizer
+    
+    * Improved the Javadoc for some processors
+    
+    * Added source branch specifically for tokenizer speed testing and comparison. It is now easy to experiment with various tokenizing strategies.
+
+=========================================================================================================
+
+* 1.02
+
+  <09/2007>
+  
+  Small bugfixes
+  
+    * Empty cells with value <<<"">>> was mistakenly interpreted as an escaped quoted char rather than the empty line
+    
+    * No longer removes trailing spaces inside quotes so <<<" hello ">>> is read as <<<" hello ">>> rather than <<<" hello">>>
+    
+    * Renamed the cell processor <<<MagicToken>>> to <<<Token>>>
+    
+    * TABs are not regarded as whitespace anymore
+
+=========================================================================================================
+
+* 1.01
+
+  <09/2007>
+  
+  Small bugfixes
+
+    * Inherited properties are now supported by the bean reader/writer
+    
+    * JAR file is now compiled for JDK 5.
+    
+=========================================================================================================
+
+* 1.0
+
+  <09/2007>
+ 
+  Initial release

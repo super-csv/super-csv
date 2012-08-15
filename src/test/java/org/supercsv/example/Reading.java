@@ -88,7 +88,7 @@ public class Reading {
 			beanReader = new CsvBeanReader(new FileReader(CSV_FILENAME), CsvPreference.STANDARD_PREFERENCE);
 			
 			// the header elements are used to map the values to the bean (names must match)
-			final String[] header = beanReader.getCsvHeader(true);
+			final String[] header = beanReader.getHeader(true);
 			final CellProcessor[] processors = getProcessors();
 			
 			CustomerBean customer;
@@ -114,7 +114,7 @@ public class Reading {
 		try {
 			listReader = new CsvListReader(new FileReader(CSV_FILENAME), CsvPreference.STANDARD_PREFERENCE);
 			
-			listReader.getCsvHeader(true); // skip the header (can't be used with CsvListReader)
+			listReader.getHeader(true); // skip the header (can't be used with CsvListReader)
 			final CellProcessor[] processors = getProcessors();
 			
 			List<Object> customerList;
@@ -141,7 +141,7 @@ public class Reading {
 			mapReader = new CsvMapReader(new FileReader(CSV_FILENAME), CsvPreference.STANDARD_PREFERENCE);
 			
 			// the header columns are used as the keys to the Map
-			final String[] header = mapReader.getCsvHeader(true);
+			final String[] header = mapReader.getHeader(true);
 			final CellProcessor[] processors = getProcessors();
 			
 			Map<String, Object> customerMap;
@@ -167,7 +167,7 @@ public class Reading {
 		try {
 			beanReader = new CsvBeanReader(new FileReader(CSV_FILENAME), CsvPreference.STANDARD_PREFERENCE);
 			
-			beanReader.getCsvHeader(true); // skip past the header (we're defining our own)
+			beanReader.getHeader(true); // skip past the header (we're defining our own)
 			
 			// only map the first 3 columns - setting header elements to null means those columns are ignored
 			final String[] header = new String[] { "customerNo", "firstName", "lastName", null, null, null, null, null,
@@ -200,7 +200,7 @@ public class Reading {
 		try {
 			mapReader = new CsvMapReader(new FileReader(CSV_FILENAME), CsvPreference.STANDARD_PREFERENCE);
 			
-			mapReader.getCsvHeader(true); // skip past the header (we're defining our own)
+			mapReader.getHeader(true); // skip past the header (we're defining our own)
 			
 			// only map the first 3 columns - setting header elements to null means those columns are ignored
 			final String[] header = new String[] { "customerNo", "firstName", "lastName", null, null, null, null, null,

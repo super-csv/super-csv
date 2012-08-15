@@ -77,7 +77,7 @@ public class CsvMapReaderTest {
 	@Test
 	public void testRead() throws IOException {
 		
-		final String[] header = mapReader.getCsvHeader(true);
+		final String[] header = mapReader.getHeader(true);
 		assertArrayEquals(HEADER, header);
 		
 		int i = 0;
@@ -105,7 +105,7 @@ public class CsvMapReaderTest {
 	@Test
 	public void testPartialRead() throws IOException {
 		
-		assertArrayEquals(HEADER, mapReader.getCsvHeader(true));
+		assertArrayEquals(HEADER, mapReader.getHeader(true));
 		
 		int i = 0;
 		Map<String, String> customer;
@@ -132,7 +132,7 @@ public class CsvMapReaderTest {
 	@Test
 	public void testReadWithProcessors() throws IOException {
 		
-		final String[] header = mapReader.getCsvHeader(true);
+		final String[] header = mapReader.getHeader(true);
 		assertArrayEquals(HEADER, header);
 		
 		int i = 0;
@@ -160,7 +160,7 @@ public class CsvMapReaderTest {
 	@Test
 	public void testPartialReadWithProcessors() throws IOException {
 		
-		assertArrayEquals(HEADER, mapReader.getCsvHeader(true));
+		assertArrayEquals(HEADER, mapReader.getHeader(true));
 		
 		int i = 0;
 		Map<String, Object> customer;
@@ -188,7 +188,7 @@ public class CsvMapReaderTest {
 	@Test
 	public void testReadUsingTokenizerReader() throws IOException {
 		
-		final String[] header = tokenizerMapReader.getCsvHeader(true);
+		final String[] header = tokenizerMapReader.getHeader(true);
 		assertArrayEquals(HEADER, header);
 		
 		int i = 0;

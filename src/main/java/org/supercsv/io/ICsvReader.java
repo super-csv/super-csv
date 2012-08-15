@@ -55,7 +55,7 @@ public interface ICsvReader extends Closeable {
 	 *             if firstLineCheck == true and it's not the first line being read
 	 * @since 1.0
 	 */
-	String[] getCsvHeader(boolean firstLineCheck) throws IOException;
+	String[] getHeader(boolean firstLineCheck) throws IOException;
 	
 	/**
 	 * Gets the current position in the file. The first line of the file is line number 1.

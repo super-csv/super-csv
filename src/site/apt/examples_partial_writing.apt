@@ -29,7 +29,7 @@ Partial writing
   
   This example demonstrates the two options you have when writing optional fields:
   
-  [[1]] specifying a default value if the value is <<<null>>> by using <<<new ConvertNullTo()>>> - in this case <<<no response>>> is written when <<<married>>> is <<<null>>>.
+  [[1]] specifying a default value if the value is <<<null>>> by using <<<new ConvertNullTo()>>> - in this case <<<"no response">>> is written when <<<married>>> is <<<null>>>.
 
   [[2]] writing an empty column if the value is <<<null>>> - as is done by specifying <<<new Optional()>>> for <<<numberOfKids>>> 
   (<<<null>>> would have the same effect as <<<new Optional()>>>, but it's not as meaningful)

@@ -76,7 +76,7 @@ public class CsvListReaderTest {
 	@Test
 	public void testRead() throws IOException {
 		
-		final String[] header = listReader.getCsvHeader(true);
+		final String[] header = listReader.getHeader(true);
 		assertArrayEquals(HEADER, header);
 		
 		int i = 0;
@@ -104,7 +104,7 @@ public class CsvListReaderTest {
 	@Test
 	public void testReadWithProcessors() throws IOException {
 		
-		final String[] header = listReader.getCsvHeader(true);
+		final String[] header = listReader.getHeader(true);
 		assertArrayEquals(HEADER, header);
 		
 		int i = 0;
@@ -133,7 +133,7 @@ public class CsvListReaderTest {
 	@Test
 	public void testReadUsingTokenizerReader() throws IOException {
 		
-		final String[] header = tokenizerListReader.getCsvHeader(true);
+		final String[] header = tokenizerListReader.getHeader(true);
 		assertArrayEquals(HEADER, header);
 		
 		int i = 0;

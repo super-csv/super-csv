@@ -50,7 +50,8 @@ Writing CSV files
  */
 private static CellProcessor[] getProcessors() {
 	
-	final CellProcessor[] processors = new CellProcessor[] { new UniqueHashCode(), // customerNo (must be unique)
+	final CellProcessor[] processors = new CellProcessor[] { 
+		new UniqueHashCode(), // customerNo (must be unique)
 		new NotNull(), // firstName
 		new NotNull(), // lastName
 		new FmtDate("dd/MM/yyyy"), // birthDate

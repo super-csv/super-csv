@@ -87,7 +87,7 @@ What is CSV?
   The delimiter in Super CSV is configurable via the {{{../apidocs/org/supercsv/prefs/CsvPreference.html}CsvPreference}} object, though it is typically a comma.
   
   Super CSV expects each line to contain the same number of fields (including the header). 
-  In cases where the number of fields varies, {{{../apidocs/org/supercsv/io/CsvListReader.html}CsvListReader}}/{{{../apidocs/org/supercsv/io/CsvListWriter.html}CsvListWriter}} should be used, as they contain methods for reading/writing lines of arbitary length.
+  In cases where the number of fields varies, {{{../apidocs/org/supercsv/io/CsvListReader.html}CsvListReader}}/{{{../apidocs/org/supercsv/io/CsvListWriter.html}CsvListWriter}} should be used, as they contain methods for reading/writing lines of arbitrary length.
 
   By default, Super CSV considers spaces part of a field. However, if you require that surrounding spaces should not be part of the field 
   (unless within double quotes), then you can enable <surroundingSpacesNeedQuotes> in your {{{../apidocs/org/supercsv/prefs/CsvPreference.html}CsvPreference}} object. This will ensure that surrounding spaces are trimmed when reading
