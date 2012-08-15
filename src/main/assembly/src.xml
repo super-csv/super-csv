@@ -27,25 +27,31 @@
   </fileSets>
   <files>
     <file>
-      <source>release-notes.txt</source>
-    </file>
-    <file>
       <source>LICENSE.txt</source>
     </file>
     <file>
       <source>pom.xml</source>
     </file>    
     <file>
+      <source>build.xml</source>
+    </file>    
+    <file>
+      <source>maven-build.properties</source>
+    </file>    
+    <file>
+      <source>maven-build.xml</source>
+    </file>    
+    <file>
       <source>target/${project.artifactId}-${project.version}.jar</source>
-      <outputDirectory>dist</outputDirectory>
+      <outputDirectory>jars</outputDirectory>
     </file>    
     <file>
       <source>target/${project.artifactId}-${project.version}-javadoc.jar</source>
-      <outputDirectory>dist</outputDirectory>
+      <outputDirectory>jars</outputDirectory>
     </file>    
     <file>
       <source>target/${project.artifactId}-${project.version}-sources.jar</source>
-      <outputDirectory>dist</outputDirectory>
+      <outputDirectory>jars</outputDirectory>
     </file>    
   </files> 
 </assembly>
