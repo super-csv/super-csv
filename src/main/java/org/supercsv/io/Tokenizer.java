@@ -116,23 +116,6 @@ public class Tokenizer extends AbstractTokenizer {
 				 * NORMAL mode (not within quotes).
 				 */
 				
-				if( quoteScopeStartingLine > 0 && c != NEWLINE ) {
-					/*
-					 * Transitioned from QUOTE_MODE to NORMAL (left a double-quoted section) and more data is remaining.
-					 * If surrounding spaces don't need quotes, only a delimiter may follow a quoted field. If surrounding
-					 * spaces do require quotes, trailing spaces are allowed as well (they'll be ignored).
-					 */
-					if( (!surroundingSpacesNeedQuotes && c != delimeterChar)
-						|| (surroundingSpacesNeedQuotes && c != delimeterChar && c != SPACE) ) {
-						throw new SuperCsvException(String.format(
-							"illegal character [%c] following quoted field on line: %d, char: %d", c, getLineNumber(),
-							charIndex + 1));
-						
-					}
-					
-					quoteScopeStartingLine = -1; // reset ready for next multi-line cell
-				}
-				
 				if( c == delimeterChar ) {
 					/*
 					 * Delimiter. Save the column (trim trailing space if required) then continue to next character.
@@ -162,24 +145,18 @@ public class Tokenizer extends AbstractTokenizer {
 					return true;
 					
 				} else if( c == quoteChar ) {
-					
 					/*
-					 * Ensures that a quote is the first char (or is only preceded by spaces if surrounding spaces need
-					 * quotes).
+					 * A single quote ("). Update to QUOTESCOPE (but don't save quote), then continue to next character.
 					 */
-					if( currentColumn.length() > 0 || (!surroundingSpacesNeedQuotes && potentialSpaces > 0) ) {
-						throw new SuperCsvException(String.format(
-							"the quoteChar [%c] must be the first character in a field, line: %d, char: %d", c,
-							getLineNumber(), charIndex + 1));
-						
-					} else {
-						/*
-						 * A single quote ("). Update to QUOTESCOPE (but don't save quote), then continue to next
-						 * character.
-						 */
-						state = TokenizerState.QUOTE_MODE;
-						quoteScopeStartingLine = getLineNumber();
+					state = TokenizerState.QUOTE_MODE;
+					quoteScopeStartingLine = getLineNumber();
+					
+					// cater for spaces before a quoted section (be lenient!)
+					if( !surroundingSpacesNeedQuotes || currentColumn.length() > 0 ) {
+						appendSpaces(currentColumn, potentialSpaces);
 					}
+					potentialSpaces = 0;
+					
 				} else {
 					/*
 					 * Just a normal character. Add any required spaces (but trim any leading spaces if surrounding
@@ -204,10 +181,12 @@ public class Tokenizer extends AbstractTokenizer {
 					/*
 					 * Newline. Doesn't count as newline while in QUOTESCOPE. Add the newline char, reset the charIndex
 					 * (will update to 0 for next iteration), read in the next line, then then continue to next
-					 * character.
+					 * character. For a large file with an unterminated quoted section (no trailing quote), this could
+					 * cause memory issues as it will keep reading lines looking for the trailing quote. Maybe there
+					 * should be a configurable limit on max lines to read in quoted mode?
 					 */
 					currentColumn.append(NEWLINE);
-					currentRow.append(NEWLINE); // specific line terminator lost, but \n should be good enough??
+					currentRow.append(NEWLINE); // specific line terminator lost, \n will have to suffice
 					
 					charIndex = -1;
 					line = readLine();
@@ -237,6 +216,7 @@ public class Tokenizer extends AbstractTokenizer {
 						 * A single quote ("). Update to NORMAL (but don't save quote), then continue to next character.
 						 */
 						state = TokenizerState.NORMAL;
+						quoteScopeStartingLine = -1; // reset ready for next multi-line cell
 					}
 				} else {
 					/*

@@ -35,8 +35,8 @@ import org.supercsv.prefs.CsvPreference;
 public class TokenizerTest {
 	
 	private static final CsvPreference NORMAL_PREFERENCE = EXCEL_PREFERENCE;
-	private static final CsvPreference SPACES_REQUIRE_QUOTES_PREFERENCE = new CsvPreference.Builder(EXCEL_PREFERENCE).surroundingSpacesNeedQuotes(true)
-		.build();
+	private static final CsvPreference SPACES_NEED_QUOTES_PREFERENCE = new CsvPreference.Builder(EXCEL_PREFERENCE)
+		.surroundingSpacesNeedQuotes(true).build();
 	
 	private Tokenizer tokenizer;
 	private List<String> columns;
@@ -56,7 +56,7 @@ public class TokenizerTest {
 	 */
 	@After
 	public void tearDown() throws IOException {
-		if (tokenizer != null){
+		if( tokenizer != null ) {
 			tokenizer.close();
 		}
 	}
@@ -131,59 +131,62 @@ public class TokenizerTest {
 	@Test
 	public void testBlankLinesAtStart() throws Exception {
 		
-		// EOF reached within quote scope
 		final String input = "\n\nthis is the third line\n";
 		tokenizer = createTokenizer(input, NORMAL_PREFERENCE);
 		tokenizer.readColumns(columns);
 		assertTrue(columns.size() == 1);
 		assertEquals("this is the third line", columns.get(0));
 		assertEquals(3, tokenizer.getLineNumber());
+		assertEquals("this is the third line", tokenizer.getUntokenizedRow());
 	}
 	
 	/**
-	 * Tests the readColumns() method when a quote is not the first character.
+	 * Tests the readColumns() method a quoted section has text surrounding it. This is not technically valid CSV, but
+	 * the tokenizer is lenient enough to allow it (it will just unescape the quoted section).
 	 */
 	@Test
-	public void testQuoteNotFirstChar() throws Exception {
+	public void testQuotedFieldWithSurroundingText() throws Exception {
 		
-		// EOF reached within quote scope
-		final String input = "invalid \"quoted\" section";
+		final String input = "surrounding \"quoted\" text";
 		tokenizer = createTokenizer(input, NORMAL_PREFERENCE);
-		try {
-			tokenizer.readColumns(columns);
-			fail("should have thrown SuperCsvException");
-		}
-		catch(SuperCsvException e) {
-			assertEquals("the quoteChar [\"] must be the first character in a field, line: 1, char: 9", e.getMessage());
-		}
+		tokenizer.readColumns(columns);
+		assertTrue(columns.size() == 1);
+		assertEquals("surrounding quoted text", columns.get(0));
+		assertEquals(1, tokenizer.getLineNumber());
+		assertEquals(input, tokenizer.getUntokenizedRow());
+		
+		// same result when surrounding spaces require quotes
+		tokenizer = createTokenizer(input, SPACES_NEED_QUOTES_PREFERENCE);
+		tokenizer.readColumns(columns);
+		assertTrue(columns.size() == 1);
+		assertEquals("surrounding quoted text", columns.get(0));
+		assertEquals(1, tokenizer.getLineNumber());
+		assertEquals(input, tokenizer.getUntokenizedRow());
 	}
 	
 	/**
-	 * Tests the readColumns() method when a quoted section has an illegal character after it.
+	 * Tests the readColumns() method when a quoted section with text after it. This is not technically valid CSV, but
+	 * the tokenizer is lenient enough to allow it (it will just unescape the quoted section).
 	 */
 	@Test
-	public void testQuotedFieldWithIllegalCharAfter() throws Exception {
+	public void testQuotedFieldWithTextAfter() throws Exception {
 		
 		// illegal char after quoted section
-		final String input = "\"quoted on 2 lines\nwith illegal char after\"illegal";
+		final String input = "\"quoted on 2 lines\nand afterward some\" text";
 		tokenizer = createTokenizer(input, NORMAL_PREFERENCE);
-		try {
-			tokenizer.readColumns(columns);
-			fail("should have thrown SuperCsvException");
-		}
-		catch(SuperCsvException e) {
-			assertEquals("illegal character [i] following quoted field on line: 2, char: 25", e.getMessage());
-		}
+		tokenizer.readColumns(columns);
+		assertEquals(1, columns.size());
+		assertEquals("quoted on 2 lines\nand afterward some text", columns.get(0));
+		assertEquals(2, tokenizer.getLineNumber());
+		assertEquals(input, tokenizer.getUntokenizedRow());
 		
-		// should have exactly the same error when surrounding spaces are ignored
-		tokenizer = createTokenizer(input, SPACES_REQUIRE_QUOTES_PREFERENCE);
-		try {
-			tokenizer.readColumns(columns);
-			fail("should have thrown SuperCsvException");
-		}
-		catch(SuperCsvException e) {
-			assertEquals("illegal character [i] following quoted field on line: 2, char: 25", e.getMessage());
-		}
+		// should have exactly the same result when surrounding spaces need quotes
+		tokenizer = createTokenizer(input, SPACES_NEED_QUOTES_PREFERENCE);
+		tokenizer.readColumns(columns);
+		assertEquals(1, columns.size());
+		assertEquals("quoted on 2 lines\nand afterward some text", columns.get(0));
+		assertEquals(2, tokenizer.getLineNumber());
+		assertEquals(input, tokenizer.getUntokenizedRow());
 	}
 	
 	/**
@@ -200,29 +203,30 @@ public class TokenizerTest {
 			fail("should have thrown SuperCsvException");
 		}
 		catch(SuperCsvException e) {
-			assertEquals("unexpected end of file while reading quoted column beginning on line 1 and ending on line 2", e.getMessage());
+			assertEquals("unexpected end of file while reading quoted column beginning on line 1 and ending on line 2",
+				e.getMessage());
 		}
 	}
 	
 	/**
-	 * Tests the readColumns() method with a leading space before the first quoted field.
+	 * Tests the readColumns() method with a leading space before the first quoted field. This is not technically valid
+	 * CSV, but the tokenizer is lenient enough to allow it. The leading spaces will be trimmed off when surrounding
+	 * spaces require quotes, otherwise they will be part of the field.
 	 */
 	@Test
 	public void testQuotedFirstFieldWithLeadingSpace() throws Exception {
 		
-		// first field has a leading space before quote
+		// leading spaces should be preserved
 		final String input = "  \"quoted with leading spaces\",two";
 		tokenizer = createTokenizer(input, NORMAL_PREFERENCE);
-		try {
-			tokenizer.readColumns(columns);
-			fail("should have thrown SuperCsvException");
-		}
-		catch(SuperCsvException e) {
-			assertEquals("the quoteChar [\"] must be the first character in a field, line: 1, char: 3", e.getMessage());
-		}
+		tokenizer.readColumns(columns);
+		assertTrue(columns.size() == 2);
+		assertEquals("  quoted with leading spaces", columns.get(0));
+		assertEquals("two", columns.get(1));
+		assertEquals(input, tokenizer.getUntokenizedRow());
 		
-		// same input when surrounding spaces require quotes (should work!)
-		tokenizer = createTokenizer(input, SPACES_REQUIRE_QUOTES_PREFERENCE);
+		// same input when surrounding spaces require quotes (leading spaces trimmed)
+		tokenizer = createTokenizer(input, SPACES_NEED_QUOTES_PREFERENCE);
 		tokenizer.readColumns(columns);
 		assertTrue(columns.size() == 2);
 		assertEquals("quoted with leading spaces", columns.get(0));
@@ -231,24 +235,25 @@ public class TokenizerTest {
 	}
 	
 	/**
-	 * Tests the readColumns() method with a leading space before the last quoted field.
+	 * Tests the readColumns() method with a leading space before the last quoted field. This is not technically valid
+	 * CSV, but the tokenizer is lenient enough to allow it. The leading spaces will be trimmed off when surrounding
+	 * spaces require quotes, otherwise they will be part of the field.
 	 */
 	@Test
 	public void testQuotedLastFieldWithLeadingSpace() throws Exception {
 		
-		// last field has a leading space before quote
+		// last field has a leading space before quote (should be preserved)
 		final String input = "one,two,  \"quoted with leading spaces\"";
 		tokenizer = createTokenizer(input, NORMAL_PREFERENCE);
-		try {
-			tokenizer.readColumns(columns);
-			fail("should have thrown SuperCsvException");
-		}
-		catch(SuperCsvException e) {
-			assertEquals("the quoteChar [\"] must be the first character in a field, line: 1, char: 11", e.getMessage());
-		}
+		tokenizer.readColumns(columns);
+		assertTrue(columns.size() == 3);
+		assertEquals("one", columns.get(0));
+		assertEquals("two", columns.get(1));
+		assertEquals("  quoted with leading spaces", columns.get(2));
+		assertEquals(input, tokenizer.getUntokenizedRow());
 		
-		// same input when surrounding spaces require quotes (should work!)
-		tokenizer = createTokenizer(input, SPACES_REQUIRE_QUOTES_PREFERENCE);
+		// leading space should be trimmed off
+		tokenizer = createTokenizer(input, SPACES_NEED_QUOTES_PREFERENCE);
 		tokenizer.readColumns(columns);
 		assertTrue(columns.size() == 3);
 		assertEquals("one", columns.get(0));
@@ -258,24 +263,24 @@ public class TokenizerTest {
 	}
 	
 	/**
-	 * Tests the readColumns() method with a trailing space after the first quoted field.
+	 * Tests the readColumns() method with a trailing space after the first quoted field. This is not technically valid
+	 * CSV, but the tokenizer is lenient enough to allow it. The trailing spaces will be trimmed off when surrounding
+	 * spaces require quotes, otherwise they will be part of the field.
 	 */
 	@Test
 	public void testQuotedFirstFieldWithTrailingSpace() throws Exception {
 		
-		// first field has a leading space before quote
+		// first field has a leading space before quote (should be preserved)
 		final String input = "\"quoted with trailing spaces\"  ,two";
 		tokenizer = createTokenizer(input, NORMAL_PREFERENCE);
-		try {
-			tokenizer.readColumns(columns);
-			fail("should have thrown SuperCsvException");
-		}
-		catch(SuperCsvException e) {
-			assertEquals("illegal character [ ] following quoted field on line: 1, char: 30", e.getMessage());
-		}
+		tokenizer.readColumns(columns);
+		assertTrue(columns.size() == 2);
+		assertEquals("quoted with trailing spaces  ", columns.get(0));
+		assertEquals("two", columns.get(1));
+		assertEquals(input, tokenizer.getUntokenizedRow());
 		
-		// same input when surrounding spaces require quotes (should work!)
-		tokenizer = createTokenizer(input, SPACES_REQUIRE_QUOTES_PREFERENCE);
+		// trailing spaces should be trimmed
+		tokenizer = createTokenizer(input, SPACES_NEED_QUOTES_PREFERENCE);
 		tokenizer.readColumns(columns);
 		assertTrue(columns.size() == 2);
 		assertEquals("quoted with trailing spaces", columns.get(0));
@@ -284,24 +289,25 @@ public class TokenizerTest {
 	}
 	
 	/**
-	 * Tests the readColumns() method with a trailing space after the last quoted field.
+	 * Tests the readColumns() method with a trailing space after the last quoted field. This is not technically valid
+	 * CSV, but the tokenizer is lenient enough to allow it. The trailing spaces will be trimmed off when surrounding
+	 * spaces require quotes, otherwise they will be part of the field.
 	 */
 	@Test
 	public void testQuotedLastFieldWithTrailingSpace() throws Exception {
 		
-		// last field has a leading space before quote
+		// last field has a leading space before quote (should be preserved)
 		final String input = "one,two,\"quoted with trailing spaces\"  ";
 		tokenizer = createTokenizer(input, NORMAL_PREFERENCE);
-		try {
-			tokenizer.readColumns(columns);
-			fail("should have thrown SuperCsvException");
-		}
-		catch(SuperCsvException e) {
-			assertEquals("illegal character [ ] following quoted field on line: 1, char: 38", e.getMessage());
-		}
+		tokenizer.readColumns(columns);
+		assertTrue(columns.size() == 3);
+		assertEquals("one", columns.get(0));
+		assertEquals("two", columns.get(1));
+		assertEquals("quoted with trailing spaces  ", columns.get(2));
+		assertEquals(input, tokenizer.getUntokenizedRow());
 		
-		// same input when surrounding spaces require quotes (should work!)
-		tokenizer = createTokenizer(input, SPACES_REQUIRE_QUOTES_PREFERENCE);
+		// trailing spaces should be trimmed off
+		tokenizer = createTokenizer(input, SPACES_NEED_QUOTES_PREFERENCE);
 		tokenizer.readColumns(columns);
 		assertTrue(columns.size() == 3);
 		assertEquals("one", columns.get(0));
@@ -326,7 +332,7 @@ public class TokenizerTest {
 		assertEquals(input, tokenizer.getUntokenizedRow());
 		
 		// same input when surrounding spaces require quotes (results should be identical)
-		tokenizer = createTokenizer(input, SPACES_REQUIRE_QUOTES_PREFERENCE);
+		tokenizer = createTokenizer(input, SPACES_NEED_QUOTES_PREFERENCE);
 		tokenizer.readColumns(columns);
 		assertTrue(columns.size() == 3);
 		assertEquals(" one ", columns.get(0));
@@ -351,7 +357,7 @@ public class TokenizerTest {
 		assertEquals(input, tokenizer.getUntokenizedRow());
 		
 		// same input when surrounding spaces require quotes
-		tokenizer = createTokenizer(input, SPACES_REQUIRE_QUOTES_PREFERENCE);
+		tokenizer = createTokenizer(input, SPACES_NEED_QUOTES_PREFERENCE);
 		tokenizer.readColumns(columns);
 		assertTrue(columns.size() == 3);
 		assertEquals("one", columns.get(0));
@@ -378,7 +384,7 @@ public class TokenizerTest {
 		assertEquals(input, tokenizer.getUntokenizedRow());
 		
 		// same input when surrounding spaces require quotes
-		tokenizer = createTokenizer(input, SPACES_REQUIRE_QUOTES_PREFERENCE);
+		tokenizer = createTokenizer(input, SPACES_NEED_QUOTES_PREFERENCE);
 		tokenizer.readColumns(columns);
 		assertTrue(columns.size() == 4);
 		assertEquals("\t", columns.get(0));
@@ -404,7 +410,7 @@ public class TokenizerTest {
 		assertEquals(input, tokenizer.getUntokenizedRow());
 		
 		// same input when surrounding spaces require quotes
-		tokenizer = createTokenizer(input, SPACES_REQUIRE_QUOTES_PREFERENCE);
+		tokenizer = createTokenizer(input, SPACES_NEED_QUOTES_PREFERENCE);
 		tokenizer.readColumns(columns);
 		assertTrue(columns.size() == 3);
 		assertEquals("one partridge", columns.get(0));
@@ -412,5 +418,5 @@ public class TokenizerTest {
 		assertEquals("three french hens", columns.get(2));
 		assertEquals(input, tokenizer.getUntokenizedRow());
 	}
-
+	
 }
