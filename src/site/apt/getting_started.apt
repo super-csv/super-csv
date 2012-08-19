@@ -21,11 +21,11 @@ Where to begin?
 
     [[1]] {{{./downloading.html}Download}} Super CSV
     
-    [[2]] Choose a {{{./readers.html}Reader}} or {{{./writers.html}Writer}} - there are 3 of each to choose from!
+    [[2]] Choose a {{{./readers.html}reader}} or {{{./writers.html}writer}} - there are 3 of each to choose from!
     
     [[3]] Choose your {{{./preferences.html}preferences}} for reading/writing (including choice of delimiter, quote character, and end of line symbols)
 
-    [[4]] Choose from a wide variety of {{{./cell_processors.html}CellProcessors}} to apply conversions or constraints to your data
+    [[4]] Choose from a wide variety of {{{./cell_processors.html}cell processors}} to apply conversions or constraints to your data
           
     [[5]] Check out the {{{./examples_reading.html}reading}} and {{{./examples_writing.html}writing}} examples to see how it's all put together!
 

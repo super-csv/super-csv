@@ -1,0 +1,39 @@
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~ Copyright 2007 Kasper B. Graversen
+~~ 
+~~ Licensed under the Apache License, Version 2.0 (the "License");
+~~ you may not use this file except in compliance with the License.
+~~ You may obtain a copy of the License at
+~~ 
+~~     http://www.apache.org/licenses/LICENSE-2.0
+~~ 
+~~ Unless required by applicable law or agreed to in writing, software
+~~ distributed under the License is distributed on an "AS IS" BASIS,
+~~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~~ See the License for the specific language governing permissions and
+~~ limitations under the License.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                                    -----
+                                    Help!
+                                    -----
+
+Help!
+
+* General help
+
+  If you've read the documentation and examples and you still need help 
+  then don't hesitate to ask on the Super CSV {{{https://sourceforge.net/projects/supercsv/forums/forum/718795}Help forum}}.
+  
+  The Super CSV developers also maintain an active presence on {{{http://stackoverflow.com/questions/tagged/supercsv}StackOverflow}} - 
+  just be sure to use the <<<supercsv>>> tag.
+  
+* Found a bug?
+
+  If you believe you've genuinely found a bug that hasn't been previously raised, then please report it on the
+  {{{https://sourceforge.net/tracker/?atid=978707&group_id=201724}bug tracker}}. Make sure you include:
+  
+  * the version of Super CSV you're using
+  
+  * sample code/CSV that demonstrates how to reproduce the bug
+  
+  * any other details that might help

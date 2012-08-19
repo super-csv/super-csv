@@ -44,6 +44,7 @@
 			<item name="Writers" href="writers.html" />
 			<item name="Preferences" href="preferences.html" />
 			<item name="Cell processors" href="cell_processors.html" />
+			<item name="Help!" href="help.html" />
 		</menu>
 		<menu name="Examples">
 			<item name="Reading CSV files" href="examples_reading.html" />

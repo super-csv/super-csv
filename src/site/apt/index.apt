@@ -25,35 +25,37 @@ Super CSV
   
 * Features
 
-  Super CSV offers the following features not found together in other CSV packages
+  Super CSV offers the following features not found together in other CSV packages:
   
-      [POJO support] Read or write using any old Javabean. 
-      You can even use an interface and Super CSV will generate an on-the-fly implementation for you!
-      For the old-fashioned, you can read or write with Lists and Maps as well.
+** POJO support
+
+  Read or write using any old Javabean. 
+  You can even use an interface when reading and Super CSV will generate an on-the-fly implementation for you!
+  For the old-fashioned, you can read or write with Lists and Maps as well.
       
-      []
-  
-      [Automatic CSV encoding] Forget about handling special characters such as commas and double-quotes - Super CSV will take care of that for you!
-      All content is properly escaped/un-escaped according to the {{{./csv_specification.html}CSV specification}}.
+** Automatic CSV encoding
+
+  Forget about handling special characters such as commas and double-quotes - Super CSV will take care of that for you!
+  All content is properly escaped/un-escaped according to the {{{./csv_specification.html}CSV specification}}.
       
-      []
+** Highly configurable
+
+  Choose your own delimiter, quote character and line separator - or just use one of the predefined configurations.
+  Comma-separated, tab-separated, semicolon-separated (Germany/Denmark) - it's all possible.
       
-      [Highly configurable] Choose your own delimiter, quote character and line separator - or just use one of the predefined configurations.
-      Comma-separated, tab-separated, semicolon-separated (Germany/Denmark) - it's all possible.
+** Data conversion
+
+  Powerful cell processors make it simple to parse input (to Booleans, Integers, Dates, etc),
+  transform values (trimming Strings, doing regular expression replacement, etc) and format output like Dates and Numbers.
       
-      []
+** Constraint validation
+
+  Verify that your data conforms to one or more constraints, such as number ranges, string lengths or uniqueness.
       
-      [Data conversion] Powerful cell processors make it simple to convert parse input (to Booleans, Integers, Dates, etc),
-      transform values (trimming Strings, doing regex replacement, etc) and format output like Dates and Numbers.
-      
-      []
-      
-      [Constraint validation] Verify that your data conforms to one or more constraints, such as number ranges, string lengths or uniqueness.
-      
-      []
-      
-      [Stream-based I/O] Operates on streams rather than filenames, and gives you the control to flush or close the streams when you want.
-      Write to a file, over the network, to a zip file, whatever!
+** Stream-based I/O
+
+  Operates on streams rather than filenames, and gives you the control to flush or close the streams when you want.
+  Write to a file, over the network, to a zip file, whatever!
 
 * Message from the author
 

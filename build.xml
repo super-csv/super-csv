@@ -16,6 +16,11 @@
 -->
 <!-- ====================================================================== -->
 <!-- Ant build file (http://ant.apache.org/) for Ant 1.6.2 or above.        -->
+<!--                                                                        -->
+<!-- Super CSV uses Maven 3, but this Ant build file is provided to support -->
+<!-- basic Ant builds for those who don't use Maven.                        -->
+<!-- ant jar     - builds the jar                                           -->
+<!-- ant javadoc - generates the javadoc                                    -->
 <!-- ====================================================================== -->
 
 <project name="%PROJECT_ARTIFACT_ID%" default="package" basedir=".">
@@ -30,6 +35,18 @@
 	<!-- ====================================================================== -->
 	<target name="junit-missing">
 		<echo>Skipping check for Junit as it's a project dependency and already on classpath</echo>
+	</target>
+	
+	<!-- ====================================================================== -->
+	<!-- Override - no OSGi manifest available in Ant build                     -->
+	<!-- ====================================================================== -->
+	<target name="package" depends="compile,test" description="Package the application">
+		<echo>Creating jar with default manifest (OSGi manifest not supported in Ant build)</echo>
+		<jar jarfile="${maven.build.dir}/${maven.build.finalName}.jar" 
+			compress="true" 
+			index="false" 
+			basedir="${maven.build.outputDir}" 
+			excludes="**/package.html"/>
 	</target>
 
 </project>
