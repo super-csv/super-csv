@@ -53,6 +53,11 @@
 			<item name="Partial writing" href="examples_partial_writing.html" />
 			<item name="Custom cell processors" href="examples_new_cell_processor.html" />
 		</menu>
-		<menu ref="reports" />
+		<menu name="Documentation">
+			<item name="Javadoc" href="./apidocs/index.html" />
+			<item name="Source xref" href="./xref/index.html" />
+			<item name="Test xref" href="./xref-test/index.html" />
+		</menu>
+        <menu ref="modules" />
 	</body>
 </project>

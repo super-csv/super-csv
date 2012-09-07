@@ -39,7 +39,7 @@ What is CSV?
 -----------------------------------------------------------------------------------
 
   Super CSV accepts all line breaks (Windows, Mac or Unix) when reading CSV files, 
-  and uses the end of line symbols specified by the user (via the {{{../apidocs/org/supercsv/prefs/CsvPreference.html}CsvPreference}} object) when writing CSV files.
+  and uses the end of line symbols specified by the user (via the {{{./apidocs/org/supercsv/prefs/CsvPreference.html}CsvPreference}} object) when writing CSV files.
 
 * Rule 2
 
@@ -70,7 +70,7 @@ What is CSV?
 -----------------------------------------------------------------------------------
 
   Super CSV provides methods for reading and writing headers, if required. 
-  It also makes use of the header for mapping between CSV and POJOs (see {{{../apidocs/org/supercsv/io/CsvBeanReader.html}CsvBeanReader}}/{{{../apidocs/org/supercsv/io/CsvBeanWriter.html}CsvBeanWriter}}).
+  It also makes use of the header for mapping between CSV and POJOs (see {{{./apidocs/org/supercsv/io/CsvBeanReader.html}CsvBeanReader}}/{{{./apidocs/org/supercsv/io/CsvBeanWriter.html}CsvBeanWriter}}).
   
 * Rule 4
 
@@ -84,13 +84,13 @@ What is CSV?
    aaa,bbb,ccc
 -----------------------------------------------------------------------------------
 
-  The delimiter in Super CSV is configurable via the {{{../apidocs/org/supercsv/prefs/CsvPreference.html}CsvPreference}} object, though it is typically a comma.
+  The delimiter in Super CSV is configurable via the {{{./apidocs/org/supercsv/prefs/CsvPreference.html}CsvPreference}} object, though it is typically a comma.
   
   Super CSV expects each line to contain the same number of fields (including the header). 
-  In cases where the number of fields varies, {{{../apidocs/org/supercsv/io/CsvListReader.html}CsvListReader}}/{{{../apidocs/org/supercsv/io/CsvListWriter.html}CsvListWriter}} should be used, as they contain methods for reading/writing lines of arbitrary length.
+  In cases where the number of fields varies, {{{./apidocs/org/supercsv/io/CsvListReader.html}CsvListReader}}/{{{./apidocs/org/supercsv/io/CsvListWriter.html}CsvListWriter}} should be used, as they contain methods for reading/writing lines of arbitrary length.
 
   By default, Super CSV considers spaces part of a field. However, if you require that surrounding spaces should not be part of the field 
-  (unless within double quotes), then you can enable <surroundingSpacesNeedQuotes> in your {{{../apidocs/org/supercsv/prefs/CsvPreference.html}CsvPreference}} object. This will ensure that surrounding spaces are trimmed when reading
+  (unless within double quotes), then you can enable <surroundingSpacesNeedQuotes> in your {{{./apidocs/org/supercsv/prefs/CsvPreference.html}CsvPreference}} object. This will ensure that surrounding spaces are trimmed when reading
   (if not within double quotes), and that quotes are applied to a field with surrounding spaces when writing. 
   
 * Rule 5
@@ -107,7 +107,7 @@ What is CSV?
 
   Super CSV only encloses fields in double quotes when they require escaping (see Rule 6).
   
-  The quote character is configurable via the {{{../apidocs/org/supercsv/prefs/CsvPreference.html}CsvPreference}} object, though is typically a double quote (<<<">>>).
+  The quote character is configurable via the {{{./apidocs/org/supercsv/prefs/CsvPreference.html}CsvPreference}} object, though is typically a double quote (<<<">>>).
 
 * Rule 6
 
@@ -121,7 +121,7 @@ What is CSV?
 -----------------------------------------------------------------------------------
 
   Super CSV handles multi-line fields (as long as they're enclosed in quotes) when reading,
-  and encloses a field in quotes when writing if it contains a newline, quote character or delimiter (defined in the {{{../apidocs/org/supercsv/prefs/CsvPreference.html}CsvPreference}} object).
+  and encloses a field in quotes when writing if it contains a newline, quote character or delimiter (defined in the {{{./apidocs/org/supercsv/prefs/CsvPreference.html}CsvPreference}} object).
 
 * Rule 7
 

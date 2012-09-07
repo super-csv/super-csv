@@ -93,7 +93,7 @@ private static CellProcessor[] getProcessors() {
 
 * Reading with CsvBeanReader
 
-  {{{../apidocs/org/supercsv/io/CsvBeanReader.html}CsvBeanReader}} is the easiest reader to work with.
+  {{{./apidocs/org/supercsv/io/CsvBeanReader.html}CsvBeanReader}} is the easiest reader to work with.
   The example reads each row from the example CSV file into a {{{./xref-test/org/supercsv/mock/CustomerBean.html}CustomerBean}} (which extends
   from {{{./xref-test/org/supercsv/mock/PersonBean.html}PersonBean}}).
   
@@ -158,7 +158,7 @@ United States, married=true, numberOfKids=3, favouriteQuote="You've got to ask y
 
 * Reading with CsvListReader
 
-  {{{../apidocs/org/supercsv/io/CsvListReader.html}CsvListReader}} is the most primitive reader and should only be used if it's not possible
+  {{{./apidocs/org/supercsv/io/CsvListReader.html}CsvListReader}} is the most primitive reader and should only be used if it's not possible
   to use the other implementations.
   
   On the other hand, it is the only reader that can be used for reading CSV files with an arbitrary number of columns (which is not technically valid CSV, but still happens),
@@ -211,7 +211,7 @@ United States, true, 3, "You've got to ask yourself one question: "Do I feel luc
 
 * Reading with CsvMapReader
 
-  {{{../apidocs/org/supercsv/io/CsvMapReader.html}CsvMapReader}} is a good compromise if you can't use {{{../apidocs/org/supercsv/io/CsvBeanReader.html}CsvBeanReader}}.
+  {{{./apidocs/org/supercsv/io/CsvMapReader.html}CsvMapReader}} is a good compromise if you can't use {{{./apidocs/org/supercsv/io/CsvBeanReader.html}CsvBeanReader}}.
   It allows you to retrieve each column by name from the resulting Map, though you'll have to cast each column to it's appropriate type.
 
 +-------------------------------------------------------------------------------------------------------------+

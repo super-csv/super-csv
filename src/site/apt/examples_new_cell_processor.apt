@@ -83,7 +83,7 @@ public class ParseDay extends CellProcessorAdaptor {
 
   The important things to note above are:
   
-  * the processor must extend {{{../apidocs/org/supercsv/cellprocessor/CellProcessorAdaptor.html}CellProcessorAdaptor}} - 
+  * the processor must extend {{{./apidocs/org/supercsv/cellprocessor/CellProcessorAdaptor.html}CellProcessorAdaptor}} - 
   this ensures it implements the <<<CellProcessor>>> interface and can be chained to other processors
   
   * it has a no-args constructor (for when this is the last or only processor in the chain)

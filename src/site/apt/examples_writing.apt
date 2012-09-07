@@ -69,7 +69,7 @@ private static CellProcessor[] getProcessors() {
 
 * Writing with CsvBeanWriter
 
-  {{{../apidocs/org/supercsv/io/CsvBeanWriter.html}CsvBeanWriter}} is the easiest writer to work with.
+  {{{./apidocs/org/supercsv/io/CsvBeanWriter.html}CsvBeanWriter}} is the easiest writer to work with.
   The example writes a List of {{{./xref-test/org/supercsv/mock/CustomerBean.html}CustomerBean}}s (which extend
   from {{{./xref-test/org/supercsv/mock/PersonBean.html}PersonBean}}) to a CSV file.
   
@@ -144,7 +144,7 @@ United States",Y,0,"""Frankly, my dear, I don't give a damn."" - Gone With The W
 
 * Writing with CsvListWriter
 
-  {{{../apidocs/org/supercsv/io/CsvListWriter.html}CsvListWriter}} is the most primitive writer and should only be used if it's not possible
+  {{{./apidocs/org/supercsv/io/CsvListWriter.html}CsvListWriter}} is the most primitive writer and should only be used if it's not possible
   to use the other implementations.
   
   On the other hand, it is the only writer that can be used for writing CSV files with an arbitrary number of columns (which is not technically valid CSV, but still happens),
@@ -206,7 +206,7 @@ United States",Y,0,"""Frankly, my dear, I don't give a damn."" - Gone With The W
 
 * Writing with CsvMapWriter
 
-  {{{../apidocs/org/supercsv/io/CsvMapWriter.html}CsvMapWriter}} is a good compromise if you can't use {{{../apidocs/org/supercsv/io/CsvBeanWriter.html}CsvBeanWriter}}.
+  {{{./apidocs/org/supercsv/io/CsvMapWriter.html}CsvMapWriter}} is a good compromise if you can't use {{{./apidocs/org/supercsv/io/CsvBeanWriter.html}CsvBeanWriter}}.
 
 +-------------------------------------------------------------------------------------------------------------+
 /**

@@ -19,7 +19,7 @@
                                     
 CSV Preferences
 
-  Readers and Writers in Super CSV are configured using the {{{../apidocs/org/supercsv/prefs/CsvPreference.html}CsvPreference}} class.
+  Readers and Writers in Super CSV are configured using the {{{./apidocs/org/supercsv/prefs/CsvPreference.html}CsvPreference}} class.
   This class is immutable and is assembled using the {{{http://en.wikipedia.org/wiki/Builder_pattern}Builder pattern}}.
   
   The preferences available are:
@@ -45,13 +45,13 @@ CSV Preferences
 *------------------------------------------------------------------------------------------------------------------+------------------*----------------------*-----------------------------------------*------------------------------------*
  <<Constant>>                                                                                                      || Quote character || Delimiter character || End of line symbols (for writing only) || Surrounding spaces require quotes  
 *------------------------------------------------------------------------------------------------------------------+------------------*----------------------*-----------------------------------------*------------------------------------*
- {{{../apidocs/org/supercsv/prefs/CsvPreference.html#STANDARD_PREFERENCE}STANDARD_PREFERENCE}}                     |        "         |           ,          |       \\r\\n                            |            false                    
+ {{{./apidocs/org/supercsv/prefs/CsvPreference.html#STANDARD_PREFERENCE}STANDARD_PREFERENCE}}                      |        "         |           ,          |       \\r\\n                            |            false                    
 *------------------------------------------------------------------------------------------------------------------+------------------*----------------------*-----------------------------------------*------------------------------------*
- {{{../apidocs/org/supercsv/prefs/CsvPreference.html#EXCEL_PREFERENCE}EXCEL_PREFERENCE}}                           |        "         |           ,          |        \\n                              |            false                    
+ {{{./apidocs/org/supercsv/prefs/CsvPreference.html#EXCEL_PREFERENCE}EXCEL_PREFERENCE}}                            |        "         |           ,          |        \\n                              |            false                    
 *------------------------------------------------------------------------------------------------------------------+------------------*----------------------*-----------------------------------------*------------------------------------*
- {{{../apidocs/org/supercsv/prefs/CsvPreference.html#EXCEL_NORTH_EUROPE_PREFERENCE}EXCEL_NORTH_EUROPE_PREFERENCE}} |        "         |           ;          |        \\n                              |            false                    
+ {{{./apidocs/org/supercsv/prefs/CsvPreference.html#EXCEL_NORTH_EUROPE_PREFERENCE}EXCEL_NORTH_EUROPE_PREFERENCE}}  |        "         |           ;          |        \\n                              |            false                    
 *------------------------------------------------------------------------------------------------------------------+------------------*----------------------*-----------------------------------------*------------------------------------*
- {{{../apidocs/org/supercsv/prefs/CsvPreference.html#TAB_PREFERENCE}TAB_PREFERENCE}}                               |        "         |          \\t         |        \\n                              |            false                   
+ {{{./apidocs/org/supercsv/prefs/CsvPreference.html#TAB_PREFERENCE}TAB_PREFERENCE}}                                |        "         |          \\t         |        \\n                              |            false                   
 *------------------------------------------------------------------------------------------------------------------+------------------*----------------------*-----------------------------------------*------------------------------------*
 
 * Create your own preference

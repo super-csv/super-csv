@@ -30,7 +30,7 @@ Downloading Super CSV
 +-------------------------------------+
 <dependency>
     <groupId>${project.groupId}</groupId>
-    <artifactId>${project.artifactId}</artifactId>
+    <artifactId>super-csv</artifactId>
     <version>${project.version}</version>
 </dependency>
 +-------------------------------------+
@@ -45,9 +45,9 @@ Downloading Super CSV
 *------------------------------------------------------+---------------------------------------------------------------------+
  <<File>>                                              || Description                                                           
 *------------------------------------------------------+---------------------------------------------------------------------+
-  ${project.artifactId}-${project.version}.jar         | Super CSV ${project.version} (compiled classes only)                 
+  super-csv-${project.version}.jar                     | Super CSV ${project.version} (compiled classes only)                 
 *------------------------------------------------------+---------------------------------------------------------------------+
-  ${project.artifactId}-${project.version}-sources.jar | The Java source code                                                 
+  super-csv-${project.version}-sources.jar             | The Java source code                                                 
 *------------------------------------------------------+---------------------------------------------------------------------+
-  ${project.artifactId}-${project.version}-javadoc.jar | The Javadoc documentation. Can be integrated with your favourite IDE 
+  super-csv-${project.version}-javadoc.jar             | The Javadoc documentation. Can be integrated with your favourite IDE 
 *------------------------------------------------------+---------------------------------------------------------------------+
