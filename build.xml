@@ -22,34 +22,18 @@
 <!-- ant jar     - builds the jar                                           -->
 <!-- ant javadoc - generates the javadoc                                    -->
 <!-- ====================================================================== -->
-<project name="super-csv" default="package" basedir=".">
+<project name="super-csv-parent" default="package" basedir=".">
 
 	<!-- ================================================================== -->
 	<!-- Import maven-build.xml into the current project                    -->
 	<!-- ================================================================== -->
-	<import file="maven-build.xml" />
-	
-	<!-- ================================================================== -->
-	<!-- Override - Junit is already on classpath                           -->
-	<!-- ================================================================== -->
-	<target name="junit-missing">
-		<echo>Skipping check for Junit as it's a project dependency and already on classpath</echo>
-	</target>
-
-	<!-- ================================================================== -->
-	<!-- Override - no OSGi manifest available in Ant build                 -->
-	<!-- ================================================================== -->
-	<target name="package" depends="compile,test" description="Package the application">
-		<echo>Creating jar with default manifest (OSGi manifest not supported in Ant build)</echo>
-		<jar jarfile="${maven.build.dir}/${maven.build.finalName}.jar" compress="true" 
-			 index="false" basedir="${maven.build.outputDir}" excludes="**/package.html" />
-	</target>
+	<import file="maven-build.xml"/>
 
 	<!-- ================================================================== -->
 	<!-- Help target                                                        -->
 	<!-- ================================================================== -->
 	<target name="help">
-		<echo message="Please run: $ant -projecthelp" />
+		<echo message="Please run: $ant -projecthelp"/>
 	</target>
 
 </project>

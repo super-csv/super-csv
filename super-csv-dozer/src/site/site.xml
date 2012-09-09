@@ -13,13 +13,13 @@
 	See the License for the specific language governing permissions and
 	limitations under the License.
 -->
-<project name="Super CSV Core">
+<project name="Super CSV Dozer Extension">
 	<body>
 		<breadcrumbs>
 			<item name="Super CSV" href="http://supercsv.sourceforge.net/index.html" />
-			<item name="Super CSV Core" href="http://supercsv.sourceforge.net/super-csv/index.html" />
+			<item name="Super CSV Dozer Extension" href="http://supercsv.sourceforge.net/super-csv-dozer/index.html" />
 		</breadcrumbs>
-        <menu ref="parent" />
-        <menu ref="reports" />
+		<menu ref="parent" />
+		<menu ref="reports" />
 	</body>
 </project>

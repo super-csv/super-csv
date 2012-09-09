@@ -51,7 +51,7 @@ public class CsvMapReaderTest {
 	private CsvMapReader tokenizerMapReader;
 	
 	/**
-	 * Sets up the reader for the tests (loading the CSV file from the classpath).
+	 * Sets up the reader for the tests.
 	 */
 	@Before
 	public void setUp() {

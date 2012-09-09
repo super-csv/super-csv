@@ -22,13 +22,13 @@
 <!-- ant jar     - builds the jar                                           -->
 <!-- ant javadoc - generates the javadoc                                    -->
 <!-- ====================================================================== -->
-<project name="super-csv" default="package" basedir=".">
+<project name="super-csv-dozer" default="package" basedir=".">
 
 	<!-- ================================================================== -->
 	<!-- Import maven-build.xml into the current project                    -->
 	<!-- ================================================================== -->
 	<import file="maven-build.xml" />
-	
+
 	<!-- ================================================================== -->
 	<!-- Override - Junit is already on classpath                           -->
 	<!-- ================================================================== -->

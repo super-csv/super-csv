@@ -76,7 +76,7 @@ public class CsvBeanReaderTest {
 	private CsvBeanReader tokenizerBeanReader;
 	
 	/**
-	 * Sets up the reader for the tests (loading the CSV file from the classpath).
+	 * Sets up the reader for the tests.
 	 */
 	@Before
 	public void setUp() {

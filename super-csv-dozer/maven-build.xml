@@ -15,7 +15,7 @@
 <!--                                                                        -->
 <!-- ====================================================================== -->
 
-<project name="super-csv-from-maven" default="package" basedir=".">
+<project name="super-csv-dozer-from-maven" default="package" basedir=".">
 
   <!-- ====================================================================== -->
   <!-- Build environment properties                                           -->
@@ -24,7 +24,7 @@
   <property file="${user.home}/.m2/maven.properties"/>
   <property file="maven-build.properties"/>
 
-  <property name="maven.build.finalName" value="super-csv-2.0.0-SNAPSHOT"/>
+  <property name="maven.build.finalName" value="super-csv-dozer-2.0.0-SNAPSHOT"/>
   <property name="maven.build.dir" value="target"/>
   <property name="maven.build.outputDir" value="${maven.build.dir}/classes"/>
   <property name="maven.build.srcDir.0" value="src/main/java"/>
@@ -43,8 +43,22 @@
   <!-- Defining classpaths                                                    -->
   <!-- ====================================================================== -->
 
-  <path id="build.classpath"/>
+  <path id="build.classpath">
+    <pathelement location="${maven.repo.local}/net/sf/supercsv/super-csv/2.0.0-SNAPSHOT/super-csv-2.0.0-SNAPSHOT.jar"/>
+    <pathelement location="${maven.repo.local}/net/sf/dozer/dozer/5.3.2/dozer-5.3.2.jar"/>
+    <pathelement location="${maven.repo.local}/commons-beanutils/commons-beanutils/1.8.3/commons-beanutils-1.8.3.jar"/>
+    <pathelement location="${maven.repo.local}/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1.jar"/>
+    <pathelement location="${maven.repo.local}/commons-lang/commons-lang/2.5/commons-lang-2.5.jar"/>
+  </path>
   <path id="build.test.classpath">
+    <pathelement location="${maven.repo.local}/net/sf/supercsv/super-csv/2.0.0-SNAPSHOT/super-csv-2.0.0-SNAPSHOT.jar"/>
+    <pathelement location="${maven.repo.local}/net/sf/dozer/dozer/5.3.2/dozer-5.3.2.jar"/>
+    <pathelement location="${maven.repo.local}/commons-beanutils/commons-beanutils/1.8.3/commons-beanutils-1.8.3.jar"/>
+    <pathelement location="${maven.repo.local}/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1.jar"/>
+    <pathelement location="${maven.repo.local}/commons-lang/commons-lang/2.5/commons-lang-2.5.jar"/>
+    <pathelement location="${maven.repo.local}/org/slf4j/slf4j-api/1.6.6/slf4j-api-1.6.6.jar"/>
+    <pathelement location="${maven.repo.local}/ch/qos/logback/logback-classic/1.0.7/logback-classic-1.0.7.jar"/>
+    <pathelement location="${maven.repo.local}/ch/qos/logback/logback-core/1.0.7/logback-core-1.0.7.jar"/>
     <pathelement location="${maven.repo.local}/junit/junit/4.10/junit-4.10.jar"/>
     <pathelement location="${maven.repo.local}/org/hamcrest/hamcrest-core/1.1/hamcrest-core-1.1.jar"/>
   </path>
@@ -77,6 +91,9 @@
       </src>
       <classpath refid="build.classpath"/>
     </javac>
+    <copy todir="${maven.build.outputDir}">
+      <fileset dir="${maven.build.resourceDir.0}"/>
+    </copy>
   </target>
 
   <!-- ====================================================================== -->
@@ -210,7 +227,7 @@
     <jar jarfile="${maven.build.dir}/${maven.build.finalName}.jar" 
          compress="true" 
          index="false" 
-         manifest="F:\Java\super-csv\super-csv\target\classes/META-INF/MANIFEST.MF" 
+         manifest="F:\Java\super-csv\super-csv-dozer\target\classes/META-INF/MANIFEST.MF" 
          basedir="${maven.build.outputDir}" 
          excludes="**/package.html"/>
   </target>
@@ -236,6 +253,78 @@
           description="Download all dependencies" 
           unless="maven.mode.offline">
     <mkdir dir="${maven.repo.local}"/>
+    <mkdir dir="${maven.repo.local}/net/sf/supercsv/super-csv/2.0.0-SNAPSHOT"/>
+    <get src="https://oss.sonatype.org/content/repositories/snapshots/net/sf/supercsv/super-csv/2.0.0-SNAPSHOT/super-csv-2.0.0-SNAPSHOT.jar" 
+         dest="${maven.repo.local}/net/sf/supercsv/super-csv/2.0.0-SNAPSHOT/super-csv-2.0.0-SNAPSHOT.jar" 
+         usetimestamp="false" 
+         ignoreerrors="true"/>
+    <get src="http://repo.maven.apache.org/maven2/net/sf/supercsv/super-csv/2.0.0-SNAPSHOT/super-csv-2.0.0-SNAPSHOT.jar" 
+         dest="${maven.repo.local}/net/sf/supercsv/super-csv/2.0.0-SNAPSHOT/super-csv-2.0.0-SNAPSHOT.jar" 
+         usetimestamp="false" 
+         ignoreerrors="true"/>
+    <mkdir dir="${maven.repo.local}/net/sf/dozer/dozer/5.3.2"/>
+    <get src="https://oss.sonatype.org/content/repositories/snapshots/net/sf/dozer/dozer/5.3.2/dozer-5.3.2.jar" 
+         dest="${maven.repo.local}/net/sf/dozer/dozer/5.3.2/dozer-5.3.2.jar" 
+         usetimestamp="false" 
+         ignoreerrors="true"/>
+    <get src="http://repo.maven.apache.org/maven2/net/sf/dozer/dozer/5.3.2/dozer-5.3.2.jar" 
+         dest="${maven.repo.local}/net/sf/dozer/dozer/5.3.2/dozer-5.3.2.jar" 
+         usetimestamp="false" 
+         ignoreerrors="true"/>
+    <mkdir dir="${maven.repo.local}/commons-beanutils/commons-beanutils/1.8.3"/>
+    <get src="https://oss.sonatype.org/content/repositories/snapshots/commons-beanutils/commons-beanutils/1.8.3/commons-beanutils-1.8.3.jar" 
+         dest="${maven.repo.local}/commons-beanutils/commons-beanutils/1.8.3/commons-beanutils-1.8.3.jar" 
+         usetimestamp="false" 
+         ignoreerrors="true"/>
+    <get src="http://repo.maven.apache.org/maven2/commons-beanutils/commons-beanutils/1.8.3/commons-beanutils-1.8.3.jar" 
+         dest="${maven.repo.local}/commons-beanutils/commons-beanutils/1.8.3/commons-beanutils-1.8.3.jar" 
+         usetimestamp="false" 
+         ignoreerrors="true"/>
+    <mkdir dir="${maven.repo.local}/commons-logging/commons-logging/1.1.1"/>
+    <get src="https://oss.sonatype.org/content/repositories/snapshots/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1.jar" 
+         dest="${maven.repo.local}/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1.jar" 
+         usetimestamp="false" 
+         ignoreerrors="true"/>
+    <get src="http://repo.maven.apache.org/maven2/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1.jar" 
+         dest="${maven.repo.local}/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1.jar" 
+         usetimestamp="false" 
+         ignoreerrors="true"/>
+    <mkdir dir="${maven.repo.local}/commons-lang/commons-lang/2.5"/>
+    <get src="https://oss.sonatype.org/content/repositories/snapshots/commons-lang/commons-lang/2.5/commons-lang-2.5.jar" 
+         dest="${maven.repo.local}/commons-lang/commons-lang/2.5/commons-lang-2.5.jar" 
+         usetimestamp="false" 
+         ignoreerrors="true"/>
+    <get src="http://repo.maven.apache.org/maven2/commons-lang/commons-lang/2.5/commons-lang-2.5.jar" 
+         dest="${maven.repo.local}/commons-lang/commons-lang/2.5/commons-lang-2.5.jar" 
+         usetimestamp="false" 
+         ignoreerrors="true"/>
+    <mkdir dir="${maven.repo.local}/org/slf4j/slf4j-api/1.6.6"/>
+    <get src="https://oss.sonatype.org/content/repositories/snapshots/org/slf4j/slf4j-api/1.6.6/slf4j-api-1.6.6.jar" 
+         dest="${maven.repo.local}/org/slf4j/slf4j-api/1.6.6/slf4j-api-1.6.6.jar" 
+         usetimestamp="false" 
+         ignoreerrors="true"/>
+    <get src="http://repo.maven.apache.org/maven2/org/slf4j/slf4j-api/1.6.6/slf4j-api-1.6.6.jar" 
+         dest="${maven.repo.local}/org/slf4j/slf4j-api/1.6.6/slf4j-api-1.6.6.jar" 
+         usetimestamp="false" 
+         ignoreerrors="true"/>
+    <mkdir dir="${maven.repo.local}/ch/qos/logback/logback-classic/1.0.7"/>
+    <get src="https://oss.sonatype.org/content/repositories/snapshots/ch/qos/logback/logback-classic/1.0.7/logback-classic-1.0.7.jar" 
+         dest="${maven.repo.local}/ch/qos/logback/logback-classic/1.0.7/logback-classic-1.0.7.jar" 
+         usetimestamp="false" 
+         ignoreerrors="true"/>
+    <get src="http://repo.maven.apache.org/maven2/ch/qos/logback/logback-classic/1.0.7/logback-classic-1.0.7.jar" 
+         dest="${maven.repo.local}/ch/qos/logback/logback-classic/1.0.7/logback-classic-1.0.7.jar" 
+         usetimestamp="false" 
+         ignoreerrors="true"/>
+    <mkdir dir="${maven.repo.local}/ch/qos/logback/logback-core/1.0.7"/>
+    <get src="https://oss.sonatype.org/content/repositories/snapshots/ch/qos/logback/logback-core/1.0.7/logback-core-1.0.7.jar" 
+         dest="${maven.repo.local}/ch/qos/logback/logback-core/1.0.7/logback-core-1.0.7.jar" 
+         usetimestamp="false" 
+         ignoreerrors="true"/>
+    <get src="http://repo.maven.apache.org/maven2/ch/qos/logback/logback-core/1.0.7/logback-core-1.0.7.jar" 
+         dest="${maven.repo.local}/ch/qos/logback/logback-core/1.0.7/logback-core-1.0.7.jar" 
+         usetimestamp="false" 
+         ignoreerrors="true"/>
     <mkdir dir="${maven.repo.local}/junit/junit/4.10"/>
     <get src="https://oss.sonatype.org/content/repositories/snapshots/junit/junit/4.10/junit-4.10.jar" 
          dest="${maven.repo.local}/junit/junit/4.10/junit-4.10.jar" 
