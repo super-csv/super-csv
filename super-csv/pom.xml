@@ -29,6 +29,28 @@
 	<name>Super CSV Core</name>
 	<description>Super CSV is a fast, programmer-friendly, free CSV package for Java</description>
 	<packaging>jar</packaging>
+	
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>create-assembly</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+						<configuration>
+							<descriptors>
+								<descriptor>src/assembly/assembly.xml</descriptor>
+							</descriptors>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 
 	<dependencies/>
 

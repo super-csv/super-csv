@@ -37,6 +37,7 @@
 	<modules>
 		<module>super-csv</module>
 		<module>super-csv-dozer</module>
+		<module>super-csv-distribution</module>
 	</modules>
 
 	<properties>
@@ -256,17 +257,6 @@
 				</executions>
 			</plugin>
 
-			<!-- Creates the distribution jar (source, binary, site) -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<configuration>
-					<descriptors>
-						<descriptor>src/main/assembly/src.xml</descriptor>
-					</descriptors>
-				</configuration>
-			</plugin>
-
 			<!-- Performs the release to SVN and Maven -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -284,6 +274,11 @@
 			<dependency>
 				<groupId>net.sf.supercsv</groupId>
 				<artifactId>super-csv</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>net.sf.supercsv</groupId>
+				<artifactId>super-csv-dozer</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 		</dependencies>
