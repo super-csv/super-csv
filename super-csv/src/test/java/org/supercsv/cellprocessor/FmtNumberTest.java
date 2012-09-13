@@ -27,7 +27,9 @@ import org.supercsv.exception.SuperCsvCellProcessorException;
 import org.supercsv.mock.IdentityTransform;
 
 /**
- * Tests the FmtNumber processor.
+ * Tests the FmtNumber processor. As FmtNumber uses the default locale, this test must be written in a locale
+ * independent way (so the test will pass). The test can be run in a different local by specifying the
+ * <tt>user.language</tt> and <tt>user.country</tt> JVM properties (i.e. <tt>-Duser.language=de -Duser.country=DE</tt>).
  * 
  * @author Kasper B. Graversen
  * @author James Bassett
@@ -35,7 +37,9 @@ import org.supercsv.mock.IdentityTransform;
 public class FmtNumberTest {
 	
 	private static final String DECIMAL_FORMAT = "00.00";
-	private static final String FORMATTED_NUMBER = "12.34";
+	
+	// locale-independent
+	private static final String FORMATTED_NUMBER = new DecimalFormat(DECIMAL_FORMAT).format(12.34);
 	
 	private CellProcessor processor;
 	private CellProcessor processor2;
@@ -58,7 +62,7 @@ public class FmtNumberTest {
 	 */
 	@Test
 	public void testFormat() {
-		double number = 12.34;
+		final double number = 12.34;
 		assertEquals(FORMATTED_NUMBER, processor.execute(number, ANONYMOUS_CSVCONTEXT));
 		assertEquals(FORMATTED_NUMBER, processor2.execute(number, ANONYMOUS_CSVCONTEXT));
 		assertEquals(FORMATTED_NUMBER, processorChain.execute(number, ANONYMOUS_CSVCONTEXT));
@@ -70,7 +74,7 @@ public class FmtNumberTest {
 	 */
 	@Test
 	public void testRoundUp() {
-		double toRoundUp = 12.339;
+		final double toRoundUp = 12.339;
 		assertEquals(FORMATTED_NUMBER, processor.execute(toRoundUp, ANONYMOUS_CSVCONTEXT));
 		assertEquals(FORMATTED_NUMBER, processor2.execute(toRoundUp, ANONYMOUS_CSVCONTEXT));
 		assertEquals(FORMATTED_NUMBER, processorChain.execute(toRoundUp, ANONYMOUS_CSVCONTEXT));
@@ -82,7 +86,7 @@ public class FmtNumberTest {
 	 */
 	@Test
 	public void testRoundDown() {
-		double toRoundDown = 12.341;
+		final double toRoundDown = 12.341;
 		assertEquals(FORMATTED_NUMBER, processor.execute(toRoundDown, ANONYMOUS_CSVCONTEXT));
 		assertEquals(FORMATTED_NUMBER, processor2.execute(toRoundDown, ANONYMOUS_CSVCONTEXT));
 		assertEquals(FORMATTED_NUMBER, processorChain.execute(toRoundDown, ANONYMOUS_CSVCONTEXT));
@@ -110,7 +114,7 @@ public class FmtNumberTest {
 	 */
 	@Test(expected = SuperCsvCellProcessorException.class)
 	public void testWithInvalidNumberFormat() {
-		double number = 12.34;
+		final double number = 12.34;
 		CellProcessor invalidNumberFormatProcessor = new FmtNumber("%%%");
 		invalidNumberFormatProcessor.execute(number, ANONYMOUS_CSVCONTEXT);
 	}
@@ -120,7 +124,7 @@ public class FmtNumberTest {
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testWithNullNumberFormatString() {
-		double number = 12.34;
+		final double number = 12.34;
 		CellProcessor invalidNumberFormatProcessor = new FmtNumber((String) null);
 		invalidNumberFormatProcessor.execute(number, ANONYMOUS_CSVCONTEXT);
 	}
@@ -130,7 +134,7 @@ public class FmtNumberTest {
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testWithNullNumberFormat() {
-		double number = 12.34;
+		final double number = 12.34;
 		CellProcessor invalidNumberFormatProcessor = new FmtNumber((DecimalFormat) null);
 		invalidNumberFormatProcessor.execute(number, ANONYMOUS_CSVCONTEXT);
 	}

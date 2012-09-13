@@ -20,6 +20,7 @@ import static org.junit.Assert.fail;
 import static org.supercsv.SuperCsvTestUtils.ANONYMOUS_CSVCONTEXT;
 import static org.supercsv.SuperCsvTestUtils.date;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -30,7 +31,9 @@ import org.supercsv.exception.SuperCsvCellProcessorException;
 import org.supercsv.mock.IdentityTransform;
 
 /**
- * Tests the ParseDate processor.
+ * Tests the ParseDate processor. As ParseDate uses the default locale, this test must be written in a locale
+ * independent way (so the test will pass). The test can be run in a different local by specifying the
+ * <tt>user.language</tt> and <tt>user.country</tt> JVM properties (i.e. <tt>-Duser.language=de -Duser.country=DE</tt>).
  * 
  * @author Kasper B. Graversen
  * @author James Bassett
@@ -41,7 +44,9 @@ public class ParseDateTest {
 	private static final String DATE_FORMAT = "dd/MM/yyyy";
 	private static final String FORMATTED_DATE = "25/12/2011";
 	private static final String DATE_FORMAT2 = "EEE, MMM d, ''yy";
-	private static final String FORMATTED_DATE2 = "Sun, Dec 25, '11";
+	
+	// locale-independent ("Sun, Dec 25, '11" in en)
+	private static final String FORMATTED_DATE2 = new SimpleDateFormat(DATE_FORMAT2).format(DATE);
 	
 	private CellProcessor processor;
 	private CellProcessor processor2;
@@ -84,8 +89,8 @@ public class ParseDateTest {
 	@Test
 	public void testValidDateDifferentFormat() {
 		
-		CellProcessor differentFormat = new ParseDate(DATE_FORMAT2);
-		CellProcessor differentFormatChain = new ParseDate(DATE_FORMAT2, new IdentityTransform());
+		final CellProcessor differentFormat = new ParseDate(DATE_FORMAT2);
+		final CellProcessor differentFormatChain = new ParseDate(DATE_FORMAT2, new IdentityTransform());
 		
 		// try a different date format
 		assertEquals(DATE, differentFormat.execute(FORMATTED_DATE2, ANONYMOUS_CSVCONTEXT));
@@ -106,8 +111,8 @@ public class ParseDateTest {
 	 */
 	@Test
 	public void testInvalidDateWithNonLenient() {
-		String dodgyDate = "30/02/2012";
-		for( CellProcessor cp : Arrays.asList(processor, processor3, processorChain, processorChain3) ) {
+		final String dodgyDate = "30/02/2012";
+		for( final CellProcessor cp : Arrays.asList(processor, processor3, processorChain, processorChain3) ) {
 			try {
 				cp.execute(dodgyDate, ANONYMOUS_CSVCONTEXT);
 				fail("should have thrown a SuperCsvCellProcessorException");
@@ -121,8 +126,8 @@ public class ParseDateTest {
 	 */
 	@Test
 	public void testInvalidDateWithLenient() {
-		String dodgyDate = "30/02/2012";
-		Date expectedDate = date(2012, 3, 1);
+		final String dodgyDate = "30/02/2012";
+		final Date expectedDate = date(2012, 3, 1);
 		assertEquals(expectedDate, processor2.execute(dodgyDate, ANONYMOUS_CSVCONTEXT));
 		assertEquals(expectedDate, processorChain2.execute(dodgyDate, ANONYMOUS_CSVCONTEXT));
 	}
