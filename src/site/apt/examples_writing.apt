@@ -21,6 +21,7 @@ Writing CSV files
 
   This page contains some examples of writing CSV files using Super CSV.
   You can view the full source of the examples {{{./xref-test/org/supercsv/example/Writing.html}here}}.
+  For examples of writing CSV files with Dozer (using CsvDozerBeanWriter), click {{{./examples_dozer.html}here}}.
 
 * Example cell processor configuration
 

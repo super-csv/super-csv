@@ -1,0 +1,189 @@
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~ Copyright 2007 Kasper B. Graversen
+~~ 
+~~ Licensed under the Apache License, Version 2.0 (the "License");
+~~ you may not use this file except in compliance with the License.
+~~ You may obtain a copy of the License at
+~~ 
+~~     http://www.apache.org/licenses/LICENSE-2.0
+~~ 
+~~ Unless required by applicable law or agreed to in writing, software
+~~ distributed under the License is distributed on an "AS IS" BASIS,
+~~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~~ See the License for the specific language governing permissions and
+~~ limitations under the License.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                                    ----------------------------------------
+                                    Reading and writing CSV files with Dozer
+                                    ----------------------------------------
+                                    
+Reading and writing CSV files with Dozer
+
+  This page contains some examples of reading and writing CSV files using Super CSV and Dozer.
+  For a closer look, refer to the {{{./xref-test/org/supercsv/example/dozer/Reading.html}reading}} and 
+  {{{./xref-test/org/supercsv/example/dozer/Writing.html}writing}} example source.
+  
+  If you haven't already, check out the {{{./dozer.html}background}} on the Super CSV Dozer extension.
+  
+* Example CSV file
+
+  Here is an example CSV file that represents responses to a survey (we'll be using this in the following reading examples). 
+  It has a header and 3 rows of data, all with 8 columns. 
+
+---------------------------------------------------------------------------------------------------------------
+age,consentGiven,questionNo1,answer1,questionNo2,answer2,questionNo3,answer3
+18,Y,1,Twelve,2,Albert Einstein,3,Big Bang Theory
+,Y,1,Thirteen,2,Nikola Tesla,3,Stargate
+42,N,1,,2,Carl Sagan,3,Star Wars
+---------------------------------------------------------------------------------------------------------------
+  
+* Reading with CsvDozerBeanReader
+
+  {{{./apidocs/org/supercsv/io/dozer/CsvDozerBeanReader.html}CsvDozerBeanReader}} is the most powerful CSV reader.
+  The example reads each row from the example CSV file into a {{{./xref-test/org/supercsv/mock/dozer/SurveyResponse.html}SurveyResponse}} bean
+  , which has a Collection of {{{./xref-test/org/supercsv/mock/dozer/Answer.html}Answer}}s.
+  
+  To do this requires the following field mapping (notice that the first two mappings are the same as you'd have for
+  CsvBeanReader, but the rest use indexed and deep mapping).
+  
++-------------------------------------------------------------------------------------------------------------+
+private static final String[] FIELD_MAPPING = new String[] { 
+	"age",                   // simple field mapping (like CsvBeanReader)
+	"consentGiven",          // as above
+	"answers[0].questionNo", // indexed (first element) + deep mapping
+	"answers[0].answer", 
+	"answers[1].questionNo", // indexed (second element) + deep mapping
+	"answers[1].answer", 
+	"answers[2].questionNo", 
+	"answers[2].answer" };
++-------------------------------------------------------------------------------------------------------------+
+  
+  If you are familiar with the standard CsvBeanReader, you'll notice that using CsvDozerBeanReader is very similar.
+  The main difference is that CsvDozerBeanReader requires you to configure it (with the <<<configureBeanMapping()>>> method)
+  prior to reading. You can still use the result of <<<getHeader()>>> as your field mapping, but you'll have to supply
+  your own if you want to use deep mapping or index-based mapping.
+  
++-------------------------------------------------------------------------------------------------------------+
+/**
+ * An example of reading using CsvDozerBeanReader.
+ */
+private static void readWithCsvDozerBeanReader() throws Exception {
+	
+	final CellProcessor[] processors = new CellProcessor[] { 
+		new Optional(new ParseInt()), // age
+		new ParseBool(),              // consent
+		new ParseInt(),               // questionNo 1
+		new Optional(),               // answer 1
+		new ParseInt(),               // questionNo 2
+		new Optional(),               // answer 2
+		new ParseInt(),               // questionNo 3
+		new Optional()                // answer 3
+	};
+	
+	ICsvDozerBeanReader beanReader = null;
+	try {
+		beanReader = new CsvDozerBeanReader(new FileReader(CSV_FILENAME), CsvPreference.STANDARD_PREFERENCE);
+		
+		beanReader.getHeader(true); // ignore the header
+		beanReader.configureBeanMapping(SurveyResponse.class, FIELD_MAPPING);
+		
+		SurveyResponse surveyResponse;
+		while( (surveyResponse = beanReader.read(SurveyResponse.class, processors)) != null ) {
+			System.out.println(String.format("lineNo=%s, rowNo=%s, surveyResponse=%s", beanReader.getLineNumber(),
+				beanReader.getRowNumber(), surveyResponse));
+		}
+		
+	}
+	finally {
+		if( beanReader != null ) {
+			beanReader.close();
+		}
+	}
+}
++-------------------------------------------------------------------------------------------------------------+
+
+  Output:
+  
+---------------------------------------------------------------------------------------------------------------
+lineNo=2, rowNo=2, surveyResponse=SurveyResponse [age=18, consentGiven=true, answers=[Answer [questionNo=1, answer=Twelve], Answer [questionNo=2, answer=Albert Einstein], Answer [questionNo=3, answer=Big Bang Theory]]]
+lineNo=3, rowNo=3, surveyResponse=SurveyResponse [age=null, consentGiven=true, answers=[Answer [questionNo=1, answer=Thirteen], Answer [questionNo=2, answer=Nikola Tesla], Answer [questionNo=3, answer=Stargate]]]
+lineNo=4, rowNo=4, surveyResponse=SurveyResponse [age=42, consentGiven=false, answers=[Answer [questionNo=1, answer=null], Answer [questionNo=2, answer=Carl Sagan], Answer [questionNo=3, answer=Star Wars]]]
+---------------------------------------------------------------------------------------------------------------
+
+* Partial reading with CsvDozerBeanReader
+
+  Partial reading with CsvDozerBeanReader is virtually identical to CsvBeanReader. 
+  See the partial reading example in the {{{./xref-test/org/supercsv/example/dozer/Reading.html}reading example source}}.
+  
+* Writing with CsvDozerBeanWriter
+
+  {{{./apidocs/org/supercsv/io/dozer/CsvDozerBeanWriter.html}CsvDozerBeanWriter}} is the most powerful CSV writer.
+  The example writes each CSV row from a {{{./xref-test/org/supercsv/mock/dozer/SurveyResponse.html}SurveyResponse}} bean
+  , which has a Collection of {{{./xref-test/org/supercsv/mock/dozer/Answer.html}Answer}}s.
+  
+  It uses exactly the same field mapping as the reading example above, and once again you'll notice that CsvDozerBeanWriter 
+  requires you to configure it (with the <<<configureBeanMapping()>>> method) prior to writing. 
+  
++-------------------------------------------------------------------------------------------------------------+
+/**
+ * An example of writing using CsvDozerBeanWriter.
+ */
+private static void writeWithDozerCsvBeanWriter() throws Exception {
+	
+	final CellProcessor[] processors = new CellProcessor[] { 
+		new Optional(),         // age
+		new FmtBool("Y", "N"),  // consent
+		new NotNull(),          // questionNo 1
+		new Optional(),         // answer 1
+		new NotNull(),          // questionNo 2
+		new Optional(),         // answer 2
+		new NotNull(),          // questionNo 3
+		new Optional() };       // answer 4
+	
+	// create the survey responses to write
+	SurveyResponse response1 = new SurveyResponse(18, true, Arrays.asList(new Answer(1, "Twelve"), new Answer(2,
+		"Albert Einstein"), new Answer(3, "Big Bang Theory")));
+	SurveyResponse response2 = new SurveyResponse(null, true, Arrays.asList(new Answer(1, "Thirteen"), new Answer(2,
+		"Nikola Tesla"), new Answer(3, "Stargate")));
+	SurveyResponse response3 = new SurveyResponse(42, false, Arrays.asList(new Answer(1, null), new Answer(2,
+		"Carl Sagan"), new Answer(3, "Star Wars")));
+	final List<SurveyResponse> surveyResponses = Arrays.asList(response1, response2, response3);
+	
+	ICsvDozerBeanWriter beanWriter = null;
+	try {
+		beanWriter = new CsvDozerBeanWriter(new FileWriter("target/writeWithCsvDozerBeanWriter.csv"),
+			CsvPreference.STANDARD_PREFERENCE);
+		
+		// configure the mapping from the fields to the CSV columns
+		beanWriter.configureBeanMapping(SurveyResponse.class, FIELD_MAPPING);
+		
+		// write the header
+		beanWriter.writeHeader("age", "consentGiven", "questionNo1", "answer1", "questionNo2", "answer2",
+			"questionNo3", "answer3");
+		
+		// write the beans
+		for( final SurveyResponse surveyResponse : surveyResponses ) {
+			beanWriter.write(surveyResponse, processors);
+		}
+		
+	}
+	finally {
+		if( beanWriter != null ) {
+			beanWriter.close();
+		}
+	}
+}
++-------------------------------------------------------------------------------------------------------------+
+
+  Output:
+  
+---------------------------------------------------------------------------------------------------------------
+lineNo=2, rowNo=2, surveyResponse=SurveyResponse [age=18, consentGiven=true, answers=[Answer [questionNo=1, answer=Twelve], Answer [questionNo=2, answer=Albert Einstein], Answer [questionNo=3, answer=Big Bang Theory]]]
+lineNo=3, rowNo=3, surveyResponse=SurveyResponse [age=null, consentGiven=true, answers=[Answer [questionNo=1, answer=Thirteen], Answer [questionNo=2, answer=Nikola Tesla], Answer [questionNo=3, answer=Stargate]]]
+lineNo=4, rowNo=4, surveyResponse=SurveyResponse [age=42, consentGiven=false, answers=[Answer [questionNo=1, answer=null], Answer [questionNo=2, answer=Carl Sagan], Answer [questionNo=3, answer=Star Wars]]]
+---------------------------------------------------------------------------------------------------------------
+  
+* Partial writing with CsvDozerBeanWriter
+
+  Partial writing with CsvDozerBeanWriter is virtually identical to CsvBeanWriter. 
+  See the partial writing example in the {{{./xref-test/org/supercsv/example/dozer/Writing.html}writing example source}}.

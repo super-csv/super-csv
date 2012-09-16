@@ -41,6 +41,7 @@
 			<item name="What is CSV?" href="csv_specification.html" />
 			<item name="Release notes" href="release_notes.html" />
 			<item name="Roadmap" href="roadmap.html" />
+			<item name="Team list" href="team-list.html" />
 			<item name="License" href="license.html" />
 		</menu>
 		<menu name="Getting Started">
@@ -50,6 +51,7 @@
 			<item name="Writers" href="writers.html" />
 			<item name="Preferences" href="preferences.html" />
 			<item name="Cell processors" href="cell_processors.html" />
+			<item name="Dozer extension" href="dozer.html" />
 			<item name="Help!" href="help.html" />
 		</menu>
 		<menu name="Examples">
@@ -57,6 +59,7 @@
 			<item name="Writing CSV files" href="examples_writing.html" />
 			<item name="Partial reading" href="examples_partial_reading.html" />
 			<item name="Partial writing" href="examples_partial_writing.html" />
+			<item name="Reading and writing CSV files with Dozer" href="examples_dozer.html" />
 			<item name="Custom cell processors" href="examples_new_cell_processor.html" />
 		</menu>
 		<menu name="Documentation">

@@ -22,6 +22,7 @@ import static org.junit.Assert.fail;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.Arrays;
 
 import org.dozer.DozerBeanMapper;
 import org.junit.After;
@@ -49,10 +50,12 @@ public class CsvDozerBeanReaderTest {
 	
 	private CsvDozerBeanReader beanReader;
 	private CsvDozerBeanReader beanReaderWithMapper;
+	private CsvDozerBeanReader beanReaderWithConfiguredMapper;
 	private CsvDozerBeanReader tokenizerBeanReader;
 	private CsvDozerBeanReader tokenizerBeanReaderWithMapper;
 	private ITokenizer tokenizer;
 	private DozerBeanMapper beanMapper;
+	private DozerBeanMapper configuredBeanMapper;
 	
 	private static final String[] FIELD_MAPPING = new String[] { "age", "consentGiven", "answers[0].questionNo",
 		"answers[0].answer", "answers[1].questionNo", "answers[1].answer", "answers[2].questionNo", "answers[2].answer" };
@@ -79,6 +82,9 @@ public class CsvDozerBeanReaderTest {
 		beanMapper = new DozerBeanMapper();
 		beanReaderWithMapper = new CsvDozerBeanReader(reader, PREFS, beanMapper);
 		
+		configuredBeanMapper = new DozerBeanMapper(Arrays.asList("reference.xml"));
+		beanReaderWithConfiguredMapper = new CsvDozerBeanReader(reader, PREFS, configuredBeanMapper);
+		
 		tokenizerBeanReaderWithMapper = new CsvDozerBeanReader(tokenizer, PREFS, beanMapper);
 	}
 	
@@ -90,6 +96,7 @@ public class CsvDozerBeanReaderTest {
 		beanReader.close();
 		tokenizerBeanReader.close();
 		beanReaderWithMapper.close();
+		beanReaderWithConfiguredMapper.close();
 		tokenizerBeanReaderWithMapper.close();
 	}
 	
@@ -98,7 +105,7 @@ public class CsvDozerBeanReaderTest {
 	 */
 	@Test
 	public void testReadForBeanReader() throws IOException {
-		testRead(beanReader, false);
+		testRead(beanReader, false, false);
 	}
 	
 	/**
@@ -106,7 +113,7 @@ public class CsvDozerBeanReaderTest {
 	 */
 	@Test
 	public void testReadForBeanReaderUsingProcessors() throws IOException {
-		testRead(beanReader, true);
+		testRead(beanReader, true, false);
 	}
 	
 	/**
@@ -114,7 +121,7 @@ public class CsvDozerBeanReaderTest {
 	 */
 	@Test
 	public void testReadForTokenizerBeanReader() throws IOException {
-		testRead(tokenizerBeanReader, false);
+		testRead(tokenizerBeanReader, false, false);
 	}
 	
 	/**
@@ -122,7 +129,7 @@ public class CsvDozerBeanReaderTest {
 	 */
 	@Test
 	public void testReadForTokenizerBeanReaderUsingProcessors() throws IOException {
-		testRead(tokenizerBeanReader, true);
+		testRead(tokenizerBeanReader, true, false);
 	}
 	
 	/**
@@ -130,7 +137,7 @@ public class CsvDozerBeanReaderTest {
 	 */
 	@Test
 	public void testReadForBeanReaderWithMapper() throws IOException {
-		testRead(beanReaderWithMapper, false);
+		testRead(beanReaderWithMapper, false, false);
 	}
 	
 	/**
@@ -138,7 +145,25 @@ public class CsvDozerBeanReaderTest {
 	 */
 	@Test
 	public void testReadForBeanReaderWithMapperUsingProcessors() throws IOException {
-		testRead(beanReaderWithMapper, true);
+		testRead(beanReaderWithMapper, true, false);
+	}
+	
+	/**
+	 * Tests the read() method without any processors for a bean reader with a pre-configured DozerBeanMapper (no need
+	 * to call configureBeanMapping() at all).
+	 */
+	@Test
+	public void testReadForBeanReaderWithConfiguredMapper() throws IOException {
+		testRead(beanReaderWithConfiguredMapper, false, true);
+	}
+	
+	/**
+	 * Tests the read() method using processors for a bean reader with a pre-configured DozerBeanMapper (no need to call
+	 * configureBeanMapping() at all).
+	 */
+	@Test
+	public void testReadForBeanReaderWithConfiguredMapperUsingProcessors() throws IOException {
+		testRead(beanReaderWithConfiguredMapper, true, true);
 	}
 	
 	/**
@@ -146,7 +171,7 @@ public class CsvDozerBeanReaderTest {
 	 */
 	@Test
 	public void testReadForTokenizerBeanReaderWithMapper() throws IOException {
-		testRead(tokenizerBeanReaderWithMapper, false);
+		testRead(tokenizerBeanReaderWithMapper, false, false);
 	}
 	
 	/**
@@ -154,7 +179,7 @@ public class CsvDozerBeanReaderTest {
 	 */
 	@Test
 	public void testReadForTokenizerBeanReaderWithMapperUsingProcessors() throws IOException {
-		testRead(tokenizerBeanReaderWithMapper, true);
+		testRead(tokenizerBeanReaderWithMapper, true, false);
 	}
 	
 	/**
@@ -165,13 +190,18 @@ public class CsvDozerBeanReaderTest {
 	 *            the bean reader to use for the test
 	 * @param useProcessors
 	 *            whether processors should be used for the test
+	 * @param configured
+	 *            whether the reader is already configured
 	 * @throws IOException
 	 */
-	private void testRead(final CsvDozerBeanReader beanReader, final boolean useProcessors) throws IOException {
+	private void testRead(final CsvDozerBeanReader beanReader, final boolean useProcessors, final boolean configured)
+		throws IOException {
 		
 		beanReader.getHeader(true);
 		
-		beanReader.configureBeanMapping(SurveyResponse.class, FIELD_MAPPING);
+		if( !configured ) {
+			beanReader.configureBeanMapping(SurveyResponse.class, FIELD_MAPPING);
+		}
 		
 		SurveyResponse response1 = useProcessors ? beanReader.read(SurveyResponse.class, PROCESSORS) : beanReader
 			.read(SurveyResponse.class);

@@ -20,6 +20,7 @@ import java.io.IOException;
 import org.dozer.MappingException;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.exception.SuperCsvException;
+import org.supercsv.io.ICsvReader;
 
 /**
  * Interface for CSV readers reading into objects/beans using Dozer.
@@ -27,7 +28,7 @@ import org.supercsv.exception.SuperCsvException;
  * @author James Bassett
  * @since 2.0.0
  */
-public interface ICsvDozerBeanReader {
+public interface ICsvDozerBeanReader extends ICsvReader {
 	
 	/**
 	 * Configures the underlying DozerBeanMapper with the mappings required to map from the CSV file to the specified

@@ -55,14 +55,17 @@ public class CsvDozerBeanWriterTest {
 		+ "19,true,1,\"Um, how am I supposed to know?\",2,Me,3,\"Last question, can I go now?\"\n" + "4,false,,,,,,\n";
 	
 	private static final String PROCESSORS_CSV = "age,consentGiven,questionNo1,answer1,questionNo2,answer2,questionNo3,answer3\n"
-		+ "66,Y,1,Twelve,2,Albert Einstein?,3,Big Bang Theory\n" + "32,Y,1,,2,Superman,3,Stargate\n"
+		+ "66,Y,1,Twelve,2,Albert Einstein?,3,Big Bang Theory\n"
+		+ "32,Y,1,,2,Superman,3,Stargate\n"
 		+ "19,Y,1,\"Um, how am I supposed to know?\",2,Me,3,\"Last question, can I go now?\"\n" + "4,N,,,,,,\n";
 	
 	private Writer writer;
 	
 	private CsvDozerBeanWriter beanWriter;
 	private CsvDozerBeanWriter beanWriterWithMapper;
+	private CsvDozerBeanWriter beanWriterWithConfiguredMapper;
 	private DozerBeanMapper beanMapper;
+	private DozerBeanMapper configuredBeanMapper;
 	
 	private SurveyResponse response1;
 	private SurveyResponse response2;
@@ -79,6 +82,19 @@ public class CsvDozerBeanWriterTest {
 		
 		beanMapper = new DozerBeanMapper();
 		beanWriterWithMapper = new CsvDozerBeanWriter(writer, PREFS, beanMapper);
+		
+		configuredBeanMapper = new DozerBeanMapper(Arrays.asList("reference.xml"));
+		beanWriterWithConfiguredMapper = new CsvDozerBeanWriter(writer, PREFS, configuredBeanMapper);
+	}
+	
+	/**
+	 * Closes the bean writers after the test.
+	 */
+	@After
+	public void tearDown() throws IOException {
+		beanWriter.close();
+		beanWriterWithMapper.close();
+		beanWriterWithConfiguredMapper.close();
 	}
 	
 	/**
@@ -100,7 +116,7 @@ public class CsvDozerBeanWriterTest {
 	 */
 	@Test
 	public void testWriteWithBeanWriter() throws IOException {
-		testWrite(beanWriter, false);
+		testWrite(beanWriter, false, false);
 	}
 	
 	/**
@@ -108,7 +124,7 @@ public class CsvDozerBeanWriterTest {
 	 */
 	@Test
 	public void testWriteWithBeanWriterUsingProcessors() throws IOException {
-		testWrite(beanWriter, true);
+		testWrite(beanWriter, true, false);
 	}
 	
 	/**
@@ -116,7 +132,7 @@ public class CsvDozerBeanWriterTest {
 	 */
 	@Test
 	public void testWriteWithBeanWriterCustomMapper() throws IOException {
-		testWrite(beanWriterWithMapper, false);
+		testWrite(beanWriterWithMapper, false, false);
 	}
 	
 	/**
@@ -124,7 +140,23 @@ public class CsvDozerBeanWriterTest {
 	 */
 	@Test
 	public void testWriteWithBeanWriterCustomMapperUsingProcessors() throws IOException {
-		testWrite(beanWriterWithMapper, true);
+		testWrite(beanWriterWithMapper, true, false);
+	}
+	
+	/**
+	 * Tests the write() method with a bean writer using a custom DozerBeanMapper and no processors.
+	 */
+	@Test
+	public void testWriteWithBeanWriterConfiguredMapper() throws IOException {
+		testWrite(beanWriterWithConfiguredMapper, false, true);
+	}
+	
+	/**
+	 * Tests the write() method with a bean writer using a custom DozerBeanMapper and processors.
+	 */
+	@Test
+	public void testWriteWithBeanWriterConfiguredMapperUsingProcessors() throws IOException {
+		testWrite(beanWriterWithConfiguredMapper, true, true);
 	}
 	
 	/**
@@ -134,11 +166,16 @@ public class CsvDozerBeanWriterTest {
 	 *            the dozer bean writer to use for the tests
 	 * @param useProcessors
 	 *            whether to use processors for the test
+	 * @param configured
+	 *            whether the writer is already configured
 	 * @throws IOException
 	 */
-	private void testWrite(final CsvDozerBeanWriter beanWriter, final boolean useProcessors) throws IOException {
+	private void testWrite(final CsvDozerBeanWriter beanWriter, final boolean useProcessors, final boolean configured)
+		throws IOException {
 		
-		beanWriter.configureBeanMapping(SurveyResponse.class, FIELD_MAPPING);
+		if (!configured){
+			beanWriter.configureBeanMapping(SurveyResponse.class, FIELD_MAPPING);
+		}
 		
 		beanWriter.writeHeader("age", "consentGiven", "questionNo1", "answer1", "questionNo2", "answer2",
 			"questionNo3", "answer3");
@@ -160,15 +197,6 @@ public class CsvDozerBeanWriterTest {
 			assertEquals(CSV, writer.toString());
 		}
 		
-	}
-	
-	/**
-	 * Closes the bean writers after the test.
-	 */
-	@After
-	public void tearDown() throws IOException {
-		beanWriter.close();
-		beanWriterWithMapper.close();
 	}
 	
 	/**

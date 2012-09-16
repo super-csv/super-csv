@@ -27,10 +27,10 @@ Super CSV
 
   Super CSV offers the following features not found together in other CSV packages:
   
-** POJO support
+** POJO support (new and improved!)
 
-  Read or write using any old Javabean. 
-  You can even use an interface when reading and Super CSV will generate an on-the-fly implementation for you!
+  Read or write using any old Javabean.
+  Perform deep mapping and index-based mapping using the new Dozer extension!
   For the old-fashioned, you can read or write with Lists and Maps as well.
       
 ** Automatic CSV encoding

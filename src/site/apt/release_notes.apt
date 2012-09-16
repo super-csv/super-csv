@@ -19,7 +19,7 @@
 
 Release notes
 
-* 2.0.0
+* 2.0.0-beta-1
 
   <09/2012>
   
@@ -27,18 +27,21 @@ Release notes
 
     * 100% {{{http://tools.ietf.org/html/rfc4180}RFC 4180}} compliance
 
-    * {{{https://sourceforge.net/tracker/?func=detail&aid=2925345&group_id=201724&atid=978710}2925345}} - CsvBeanReader now supports any compatible setter method (as long as the parameter type - interface or object - is compatible with the object being set).
+    * {{{https://sourceforge.net/p/supercsv/feature-requests/3/}3}} - Super CSV now supports mapping nested properties (deep mapping and index-based mapping)
+    with the new CsvDozerBeanReader and CsvDozerBeanWriter (included in the super-csv-dozer-extension project).
+
+    * {{{https://sourceforge.net/p/supercsv/feature-requests/12/}12}} - CsvBeanReader now supports any compatible setter method (as long as the parameter type - interface or object - is compatible with the object being set).
     Previously, the parameter type had to be an exact match on the object's type.
     
-    * {{{https://sourceforge.net/tracker/?func=detail&aid=3036427&group_id=201724&atid=978710}3036427}} - All Writers implement <<<Flushable>>>
+    * {{{https://sourceforge.net/p/supercsv/feature-requests/17/}17}} - All Writers implement <<<Flushable>>>
 
-    * {{{https://sourceforge.net/tracker/?func=detail&aid=3098240&group_id=201724&atid=978710}3098240}} - OSGi support
+    * {{{https://sourceforge.net/p/supercsv/feature-requests/18/}18}} - OSGi support
     
-    * {{{https://sourceforge.net/tracker/?func=detail&aid=3153091&group_id=201724&atid=978709}3153091}} - All Readers and Writers now implement <<<Closeable>>>
+    * {{{https://sourceforge.net/p/supercsv/feature-requests/19/}19}} - All Readers and Writers now implement <<<Closeable>>>
 
-    * {{{https://sourceforge.net/tracker/?func=detail&aid=3188115&group_id=201724&atid=978710}3188115}} - Maven support (see details on the {{{./downloading.html}download}} page)
+    * {{{https://sourceforge.net/p/supercsv/feature-requests/20/}20}} - Maven support (see details on the {{{./downloading.html}download}} page)
     
-    * {{{https://sourceforge.net/tracker/?func=detail&aid=3437909&group_id=201724&atid=978710}3437909}} - All Readers now have a <<<getUntokenizedRow()>>> method for retrieving the raw String of the row just
+    * {{{https://sourceforge.net/p/supercsv/feature-requests/21/}21}} - All Readers now have a <<<getUntokenizedRow()>>> method for retrieving the raw String of the row just
       read (before it's been tokenized). 
       All Readers and Writers now have a <<<getRowNumber()>>> method for getting the number of CSV rows read/written (including the header).
       This is different from <<<getLineNumber()>>>, which returns the physical line number, as rows may span more than one line (the CSV
@@ -46,21 +49,21 @@ Release notes
     
   <<Bug fixes>>
 
-    * {{{https://sourceforge.net/tracker/?func=detail&aid=2211601&group_id=201724&atid=978707}2211601}} - Fixed NPE in CsvBeanReader when value to set is null
+    * {{{https://sourceforge.net/p/supercsv/bugs/12/}12}} - Fixed NPE in CsvBeanReader when value to set is null
     
-    * {{{https://sourceforge.net/tracker/?func=detail&aid=2310443&group_id=201724&atid=978707}2310443}} - AbstractCsvWriter now escapes for trailing spaces
+    * {{{https://sourceforge.net/p/supercsv/bugs/14/}14}} - AbstractCsvWriter now escapes for trailing spaces
     
-    * {{{https://sourceforge.net/tracker/?func=detail&aid=2879921&group_id=201724&atid=978707}2879921}} - Refactored Readers/Writers so it's no longer possible to modify preferences
+    * {{{https://sourceforge.net/p/supercsv/bugs/16/}16}} - Refactored Readers/Writers so it's no longer possible to modify preferences
     
-    * {{{https://sourceforge.net/tracker/?func=detail&aid=2926982&group_id=201724&atid=978707}2926982}} - Fixed NPE in SuperCsvException constructor
+    * {{{https://sourceforge.net/p/supercsv/bugs/19/}19}} - Fixed NPE in SuperCsvException constructor
 
-    * {{{https://sourceforge.net/tracker/?func=detail&aid=2970657&group_id=201724&atid=978707}2970657}} - New <<<surroundingSpacesNeedQuotes>>> preference allows the disabling of quoting for leading spaces
+    * {{{https://sourceforge.net/p/supercsv/bugs/21/}21}} - New <<<surroundingSpacesNeedQuotes>>> preference allows the disabling of quoting for leading spaces
 
-    * {{{https://sourceforge.net/tracker/?func=detail&aid=2988385&group_id=201724&atid=978707}2988385}} - CsvListWriter now allows all cell processors (not just String processors)
+    * {{{https://sourceforge.net/p/supercsv/bugs/23/}23}} - CsvListWriter now allows all cell processors (not just String processors)
     
-    * {{{https://sourceforge.net/tracker/?func=detail&aid=3493560&group_id=201724&atid=978707}3493560}} - Column numbers now start at 1 (instead of 0)
+    * {{{https://sourceforge.net/p/supercsv/bugs/29/}29}} - Column numbers now start at 1 (instead of 0)
     
-    * {{{https://sourceforge.net/tracker/?func=detail&aid=3500005&group_id=201724&atid=978707}3500005}} - All writers now allow null in the nameMapping array
+    * {{{https://sourceforge.net/p/supercsv/bugs/30/}30}} - All writers now allow null in the nameMapping array (except CsvDozerBeanWriter)
 
   <<General enhancements>>
   
@@ -73,7 +76,7 @@ Release notes
     
     * A new and improved maven site (please like/+1 us!)
     
-    * Removed dependency on the Spiffy library - Super CSV is now completely standalone!
+    * Removed dependency on the Spiffy library - Super CSV (excluding the new Dozer extension) is now completely standalone!
     
   <<Upgrade notes>>
   

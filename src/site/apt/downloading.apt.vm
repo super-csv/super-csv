@@ -26,6 +26,7 @@ Downloading Super CSV
 * Maven users
 
   If you are using Maven, simply copy the following dependency into your pom.xml file. 
+  The artifact is hosted at {{{http://search.maven.org}Maven Central}}, and is standalone (no dependencies).
   
 +-------------------------------------+
 <dependency>
@@ -35,19 +36,36 @@ Downloading Super CSV
 </dependency>
 +-------------------------------------+
 
-  The artifact is hosted at {{{http://search.maven.org}Maven Central}}, and is standalone (no dependencies).
+  If you wish to use the new Dozer extension (with deep mapping and index-based mapping support),
+  then you will also need the following:
   
++-------------------------------------+
+<dependency>
+    <groupId>${project.groupId}</groupId>
+    <artifactId>super-csv-dozer</artifactId>
+    <version>${project.version}</version>
+</dependency>
++-------------------------------------+
+
 * Everyone else
 
   You can download the latest distribution zip file from {{{https://sourceforge.net/projects/supercsv/files/latest/download?source=files}SourceForge}}, 
   which contains:
 
-*------------------------------------------------------+---------------------------------------------------------------------+
- <<File>>                                              || Description                                                           
-*------------------------------------------------------+---------------------------------------------------------------------+
-  super-csv-${project.version}.jar                     | Super CSV ${project.version} (compiled classes only)                 
-*------------------------------------------------------+---------------------------------------------------------------------+
-  super-csv-${project.version}-sources.jar             | The Java source code                                                 
-*------------------------------------------------------+---------------------------------------------------------------------+
-  super-csv-${project.version}-javadoc.jar             | The Javadoc documentation. Can be integrated with your favourite IDE 
-*------------------------------------------------------+---------------------------------------------------------------------+
+*----------------------------------------------------------------+---------------------------------------------------------------------+
+ <<File>>                                                        || Description                                                           
+*----------------------------------------------------------------+---------------------------------------------------------------------+
+  super-csv/super-csv-${project.version}.jar                     | Super CSV ${project.version} (compiled classes only)                 
+*----------------------------------------------------------------+---------------------------------------------------------------------+
+  super-csv/super-csv-${project.version}-sources.jar             | The Super CSV source code                                                 
+*----------------------------------------------------------------+---------------------------------------------------------------------+
+  super-csv/super-csv-${project.version}-javadoc.jar             | The Super CSV Javadoc documentation
+*----------------------------------------------------------------+---------------------------------------------------------------------+
+  super-csv-dozer/super-csv-dozer-${project.version}.jar         | Super CSV Dozer extension ${project.version} (compiled classes only)                 
+*----------------------------------------------------------------+---------------------------------------------------------------------+
+  super-csv-dozer/super-csv-dozer-${project.version}-sources.jar | The Super CSV Dozer extension source code                                                 
+*----------------------------------------------------------------+---------------------------------------------------------------------+
+  super-csv-dozer/super-csv-dozer-${project.version}-javadoc.jar | The Super CSV Dozer extension Javadoc documentation 
+*----------------------------------------------------------------+---------------------------------------------------------------------+
+  super-csv-dozer/lib                                            | The Super CSV Dozer extension's dependencies (including Dozer)
+*----------------------------------------------------------------+---------------------------------------------------------------------+

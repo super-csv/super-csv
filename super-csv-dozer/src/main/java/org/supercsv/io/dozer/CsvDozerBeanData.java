@@ -46,7 +46,6 @@ public class CsvDozerBeanData {
 	 *            the List of columns
 	 */
 	public void setColumns(final List<Object> columns) {
-		// TODO Dozer replaces the List every damn time - is there a better way??
 		this.columns = columns;
 	}
 	

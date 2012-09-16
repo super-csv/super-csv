@@ -21,6 +21,7 @@ import org.dozer.MappingException;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.exception.SuperCsvConstraintViolationException;
 import org.supercsv.exception.SuperCsvException;
+import org.supercsv.io.ICsvWriter;
 
 /**
  * Interface for CSV writers writing objects/beans to CSV using Dozer.
@@ -28,7 +29,7 @@ import org.supercsv.exception.SuperCsvException;
  * @author James Bassett
  * @since 2.0.0
  */
-public interface ICsvDozerBeanWriter {
+public interface ICsvDozerBeanWriter extends ICsvWriter {
 	
 	/**
 	 * Configures the underlying DozerBeanMapper with the mappings required to map from the specified class to the CSV

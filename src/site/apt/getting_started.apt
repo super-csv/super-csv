@@ -21,7 +21,7 @@ Where to begin?
 
     [[1]] {{{./downloading.html}Download}} Super CSV
     
-    [[2]] Choose a {{{./readers.html}reader}} or {{{./writers.html}writer}} - there are 3 of each to choose from!
+    [[2]] Choose a {{{./readers.html}reader}} or {{{./writers.html}writer}} - there are 4 of each to choose from!
     
     [[3]] Choose your {{{./preferences.html}preferences}} for reading/writing (including choice of delimiter, quote character, and end of line symbols)
 

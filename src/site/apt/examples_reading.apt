@@ -21,6 +21,7 @@ Reading CSV files
 
   This page contains some examples of reading CSV files using Super CSV.
   You can view the full source of the examples {{{./xref-test/org/supercsv/example/Reading.html}here}}.
+  For examples of reading CSV files with Dozer (using CsvDozerBeanReader), click {{{./examples_dozer.html}here}}.
   
 * Example CSV file
 

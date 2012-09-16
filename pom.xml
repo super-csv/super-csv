@@ -27,7 +27,7 @@
 
 	<groupId>net.sf.supercsv</groupId>
 	<artifactId>super-csv-parent</artifactId>
-	<version>2.0.0-SNAPSHOT</version>
+	<version>2.0.0-beta-1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<url>http://supercsv.sourceforge.net</url>
 	<name>Super CSV</name>
@@ -105,7 +105,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-project-info-reports-plugin</artifactId>
-					<version>2.5</version>
+					<version>2.5.1</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -133,12 +133,12 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
-					<version>2.12.1</version>
+					<version>2.12.3</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-report-plugin</artifactId>
-					<version>2.12.1</version>
+					<version>2.12.3</version>
 				</plugin>
 
 			</plugins>
@@ -198,8 +198,11 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-eclipse-plugin</artifactId>
 				<configuration>
-					<!-- Use J2SE 1.5 -->
+					<downloadJavadocs>true</downloadJavadocs>
+					<downloadSources>true</downloadSources>
+					<testSourcesLast>true</testSourcesLast>
 					<classpathContainers>
+						<!-- Use J2SE 1.5 -->
 						<classpathContainer>org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5</classpathContainer>
 					</classpathContainers>
 				</configuration>
@@ -262,8 +265,10 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-release-plugin</artifactId>
 				<configuration>
-					<preparationGoals>clean verify ant:ant</preparationGoals>
-					<goals>deploy site:site assembly:single</goals>
+					<autoVersionSubmodules>true</autoVersionSubmodules>
+					<preparationGoals>clean verify</preparationGoals>
+					<goals>deploy site:site</goals>
+					<tagNameFormat>v@{project.version}</tagNameFormat>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -324,6 +329,9 @@
 	<!-- List of contributors is in alphabetical order -->
 	<contributors>
 		<contributor>
+			<name>Alf Richter (Haskell2000)</name>
+		</contributor>
+		<contributor>
 			<name>John Gibson (noredshadow)</name>
 		</contributor>
 		<contributor>
@@ -357,7 +365,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-project-info-reports-plugin</artifactId>
-				<version>2.5</version>
+				<version>2.5.1</version>
 				<reportSets>
 					<reportSet>
 						<reports>
@@ -383,7 +391,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-report-plugin</artifactId>
-				<version>2.12.1</version>
+				<version>2.12.3</version>
 			</plugin>
 
 			<!-- Adds the javadoc to the site -->
@@ -434,7 +442,7 @@
 
 	<issueManagement>
 		<system>Sourceforge</system>
-		<url>http://sourceforge.net/tracker/?group_id=201724</url>
+		<url>https://sourceforge.net/p/supercsv/bugs/</url>
 	</issueManagement>
 
 	<distributionManagement>

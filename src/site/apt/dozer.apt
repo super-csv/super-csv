@@ -1,0 +1,158 @@
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~ Copyright 2007 Kasper B. Graversen
+~~ 
+~~ Licensed under the Apache License, Version 2.0 (the "License");
+~~ you may not use this file except in compliance with the License.
+~~ You may obtain a copy of the License at
+~~ 
+~~     http://www.apache.org/licenses/LICENSE-2.0
+~~ 
+~~ Unless required by applicable law or agreed to in writing, software
+~~ distributed under the License is distributed on an "AS IS" BASIS,
+~~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~~ See the License for the specific language governing permissions and
+~~ limitations under the License.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                                    -------------------------
+                                    Super CSV Dozer extension
+                                    -------------------------
+                                    
+Super CSV Dozer extension
+
+  The {{{./super-csv-dozer/index.html}Super CSV Dozer extension}} integrates Super CSV with {{{http://dozer.sourceforge.net}Dozer}}, 
+  a powerful Javabean mapping library.
+  Typically, Dozer requires lots of XML configuration but the addition of 
+  {{{http://dozer.sourceforge.net/documentation/apimappings.html}API mapping}} allows Super CSV to set up Dozer mappings dynamically.
+  
+  The use of Dozer allows {{{./apidocs/org/supercsv/io/dozer/CsvDozerBeanReader.html}CsvDozerBeanReader}} and
+  {{{./apidocs/org/supercsv/io/dozer/CsvDozerBeanWriter.html}CsvDozerBeanWriter}} to map simple fields
+  (the same as {{{./apidocs/org/supercsv/io/CsvBeanReader.html}CsvBeanReader}} and
+  {{{./apidocs/org/supercsv/io/CsvBeanWriter.html}CsvBeanWriter}}),
+  but to also perform deep mapping and index-based mapping as well!
+  
+  Check out the {{{./examples_dozer.html}examples}}, or read on for more information.
+
+* Deep mapping
+
+  {{{http://dozer.sourceforge.net/documentation/deepmapping.html}Deep mapping}} allows you to make use of the relationships 
+  between your classes.
+  
+  For example, if your class had an <<<address>>> field, you could utilize deep mapping as follows 
+  (assuming there are valid getters/setters defined for <<<address>>>, <<<city>>> and <<<name>>> in the 3 involved classes):
+  
+------------------------
+address.city.name
+------------------------
+
+* Indexed-based mapping
+
+  {{{http://dozer.sourceforge.net/documentation/indexmapping.html}Index-based mapping}} allows you to access elements of arrays and
+  Collections by their index.
+  
+  For example, if your class had a collection of Addresses, you could utilize index-based mapping 
+  to access the first one as follows:
+
+------------------------
+addresses[0]
+------------------------
+  
+  You can even combine index-based mapping with deep mapping:
+  
+------------------------
+addresses[0].city.name
+------------------------
+  
+* Reference Mapping XML Configuration
+
+  Most of the time you'll want to let Super CSV take care of the dozer configuration by simply calling the <<<configureBeanMapping()>>> method.
+  However, you might want to make use of the advanced features of Dozer (such as custom converters, bean factories, etc).
+  In this case, you can supply Super CSV with a pre-configured DozerBeanMapper.
+  
+  The following XML is provided as a reference - it's the XML configuration used in the project's unit tests.
+  The <<<CsvDozerBeanData>>> class is used internally as the input/output of any Dozer mapping (each indexed column represents a column of CSV). 
+  At a minimum, you should replace the <<<org.supercsv.mock.dozer.SurveyResponse>>> with the class you're mapping, 
+  and update the field mappings as appropriate (but try not to change the XML attributes, as they're important!).
+  
++---------------------------------------------------------------------------------------------------+
+<mappings xmlns="http://dozer.sourceforge.net" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://dozer.sourceforge.net
+          http://dozer.sourceforge.net/schema/beanmapping.xsd">
+
+	<!-- configuration for CsvDozerBeanReader -->
+	<mapping type="one-way" wildcard="false" map-null="false">
+		<class-a>org.supercsv.io.dozer.CsvDozerBeanData</class-a>
+		<class-b>org.supercsv.mock.dozer.SurveyResponse</class-b>
+		<field>
+			<a>columns[0]</a>
+			<b>age</b>
+		</field>
+		<field>
+			<a>columns[1]</a>
+			<b>consentGiven</b>
+		</field>
+		<field>
+			<a>columns[2]</a>
+			<b>answers[0].questionNo</b>
+		</field>
+		<field>
+			<a>columns[3]</a>
+			<b>answers[0].answer</b>
+		</field>
+		<field>
+			<a>columns[4]</a>
+			<b>answers[1].questionNo</b>
+		</field>
+		<field>
+			<a>columns[5]</a>
+			<b>answers[1].answer</b>
+		</field>
+		<field>
+			<a>columns[6]</a>
+			<b>answers[2].questionNo</b>
+		</field>
+		<field>
+			<a>columns[7]</a>
+			<b>answers[2].answer</b>
+		</field>
+	</mapping>
+
+	<!-- configuration for CsvDozerBeanWriter -->
+	<mapping type="one-way" wildcard="false" map-null="true">
+		<class-a>org.supercsv.mock.dozer.SurveyResponse</class-a>
+		<class-b>org.supercsv.io.dozer.CsvDozerBeanData</class-b>
+		<field copy-by-reference="true">
+			<a>age</a>
+			<b>columns[0]</b>
+		</field>
+		<field copy-by-reference="true">
+			<a>consentGiven</a>
+			<b>columns[1]</b>
+		</field>
+		<field copy-by-reference="true">
+			<a>answers[0].questionNo</a>
+			<b>columns[2]</b>
+		</field>
+		<field copy-by-reference="true">
+			<a>answers[0].answer</a>
+			<b>columns[3]</b>
+		</field>
+		<field copy-by-reference="true">
+			<a>answers[1].questionNo</a>
+			<b>columns[4]</b>
+		</field>
+		<field copy-by-reference="true">
+			<a>answers[1].answer</a>
+			<b>columns[5]</b>
+		</field>
+		<field copy-by-reference="true">
+			<a>answers[2].questionNo</a>
+			<b>columns[6]</b>
+		</field>
+		<field copy-by-reference="true">
+			<a>answers[2].answer</a>
+			<b>columns[7]</b>
+		</field>
+	</mapping>
+
+</mappings>
++---------------------------------------------------------------------------------------------------+

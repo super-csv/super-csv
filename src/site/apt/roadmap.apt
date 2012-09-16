@@ -19,11 +19,11 @@
 
 Road map
 
-  There's nothing definitively planned for future releases at this stage, so please let us know if you have any {{{https://sourceforge.net/tracker/?group_id=201724&atid=978710}feature requests}}.
+  There's nothing definitively planned for future releases at this stage, so please let us know if you have any {{{https://sourceforge.net/p/supercsv/feature-requests/}feature requests}}.
   
   Possible ideas for the future:
   
-    * Nested property support for POJOs
+    * Resurrect the speed benchmark tests (including the new Dozer reader/writer)
 
     * Comment character support (ignoring comments)
   
