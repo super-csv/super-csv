@@ -14,8 +14,7 @@
 	See the License for the specific language governing permissions and
 	limitations under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
   
   	<!-- Use Sonatype's OSS repo to deploy to Maven central -->
@@ -27,7 +26,7 @@
 
 	<groupId>net.sf.supercsv</groupId>
 	<artifactId>super-csv-parent</artifactId>
-	<version>2.0.0-beta-1-SNAPSHOT</version>
+	<version>2.0.0-beta-1</version>
 	<packaging>pom</packaging>
 	<url>http://supercsv.sourceforge.net</url>
 	<name>Super CSV</name>
@@ -452,9 +451,9 @@
 	</distributionManagement>
 
 	<scm>
-		<connection>scm:svn:https://svn.code.sf.net/p/supercsv/code/trunk</connection>
-		<developerConnection>scm:svn:svn+ssh://jamesbassett@svn.code.sf.net/p/supercsv/code/trunk</developerConnection>
+		<connection>scm:svn:https://svn.code.sf.net/p/supercsv/code/tags/v2.0.0-beta-1</connection>
+		<developerConnection>scm:svn:svn+ssh://jamesbassett@svn.code.sf.net/p/supercsv/code/tags/v2.0.0-beta-1</developerConnection>
 		<tag>HEAD</tag>
-		<url>https://sourceforge.net/p/supercsv/code/</url>
+		<url>https://sourceforge.net/p/supercsv/code/tags/v2.0.0-beta-1</url>
 	</scm>
 </project>
