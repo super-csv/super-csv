@@ -374,7 +374,6 @@
 							<report>project-team</report>
 							<report>issue-tracking</report>
 							<report>license</report>
-							<report>scm</report>
 						</reports>
 					</reportSet>
 				</reportSets>
@@ -453,10 +452,9 @@
 	</distributionManagement>
 
 	<scm>
-		<connection>scm:svn:https://supercsv.svn.sourceforge.net/svnroot/supercsv/trunk
-		</connection>
-		<developerConnection>scm:svn:https://supercsv.svn.sourceforge.net/svnroot/supercsv/trunk</developerConnection>
+		<connection>scm:svn:https://svn.code.sf.net/p/supercsv/code/trunk</connection>
+		<developerConnection>scm:svn+ssh://jamesbassett@svn.code.sf.net/p/supercsv/code/trunk</developerConnection>
 		<tag>HEAD</tag>
-		<url>http://supercsv.svn.sourceforge.net/viewvc/supercsv/trunk</url>
+		<url>https://sourceforge.net/p/supercsv/code/</url>
 	</scm>
 </project>
