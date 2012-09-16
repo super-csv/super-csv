@@ -266,7 +266,7 @@
 				<configuration>
 					<autoVersionSubmodules>true</autoVersionSubmodules>
 					<preparationGoals>clean verify</preparationGoals>
-					<goals>deploy site:site</goals>
+					<goals>deploy</goals>
 					<tagNameFormat>v@{project.version}</tagNameFormat>
 				</configuration>
 			</plugin>
@@ -453,7 +453,6 @@
 	<scm>
 		<connection>scm:svn:https://svn.code.sf.net/p/supercsv/code/tags/v2.0.0-beta-1</connection>
 		<developerConnection>scm:svn:svn+ssh://jamesbassett@svn.code.sf.net/p/supercsv/code/tags/v2.0.0-beta-1</developerConnection>
-		<tag>HEAD</tag>
 		<url>https://sourceforge.net/p/supercsv/code/tags/v2.0.0-beta-1</url>
 	</scm>
 </project>
