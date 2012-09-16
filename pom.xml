@@ -453,7 +453,7 @@
 
 	<scm>
 		<connection>scm:svn:https://svn.code.sf.net/p/supercsv/code/trunk</connection>
-		<developerConnection>scm:svn+ssh://jamesbassett@svn.code.sf.net/p/supercsv/code/trunk</developerConnection>
+		<developerConnection>scm:svn:svn+ssh://jamesbassett@svn.code.sf.net/p/supercsv/code/trunk</developerConnection>
 		<tag>HEAD</tag>
 		<url>https://sourceforge.net/p/supercsv/code/</url>
 	</scm>
