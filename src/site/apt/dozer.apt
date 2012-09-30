@@ -61,6 +61,13 @@ addresses[0]
 ------------------------
 addresses[0].city.name
 ------------------------
+
+* Logging
+
+  Dozer uses {{{http://www.slf4j.org}SLF4J}} for logging. By default it will use a no-operation implementation (i.e. no logging),
+  but you can use any of the supported implementations (logback, log4j, slf4j-simple) by placing the appropriate binding jar on the classpath.
+
+  See the {{{http://www.slf4j.org/manual.html}SLF4J manual}} for more details.
   
 * Reference Mapping XML Configuration
 

@@ -26,9 +26,9 @@
       <attribute value="jar:file:/C:/Users/Jim/.m2/repository/commons-lang/commons-lang/2.5/commons-lang-2.5-javadoc.jar!/" name="javadoc_location"/>
     </attributes>
   </classpathentry>
-  <classpathentry kind="var" path="M2_REPO/org/slf4j/slf4j-api/1.6.6/slf4j-api-1.6.6.jar" sourcepath="M2_REPO/org/slf4j/slf4j-api/1.6.6/slf4j-api-1.6.6-sources.jar">
+  <classpathentry kind="var" path="M2_REPO/org/slf4j/slf4j-api/1.7.1/slf4j-api-1.7.1.jar" sourcepath="M2_REPO/org/slf4j/slf4j-api/1.7.1/slf4j-api-1.7.1-sources.jar">
     <attributes>
-      <attribute value="jar:file:/C:/Users/Jim/.m2/repository/org/slf4j/slf4j-api/1.6.6/slf4j-api-1.6.6-javadoc.jar!/" name="javadoc_location"/>
+      <attribute value="jar:file:/C:/Users/Jim/.m2/repository/org/slf4j/slf4j-api/1.7.1/slf4j-api-1.7.1-javadoc.jar!/" name="javadoc_location"/>
     </attributes>
   </classpathentry>
   <classpathentry kind="var" path="M2_REPO/ch/qos/logback/logback-classic/1.0.7/logback-classic-1.0.7.jar" sourcepath="M2_REPO/ch/qos/logback/logback-classic/1.0.7/logback-classic-1.0.7-sources.jar">
