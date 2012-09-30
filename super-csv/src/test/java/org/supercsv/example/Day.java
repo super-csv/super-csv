@@ -19,5 +19,5 @@ package org.supercsv.example;
  * An enumeration of days.
  */
 public enum Day {
-	MONDAY, TUESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY
+	MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY
 }
