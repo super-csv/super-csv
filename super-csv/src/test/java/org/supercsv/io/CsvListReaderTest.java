@@ -26,6 +26,7 @@ import static org.supercsv.SuperCsvTestUtils.STRING_CUSTOMERS;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.After;
@@ -79,9 +80,16 @@ public class CsvListReaderTest {
 		final String[] header = listReader.getHeader(true);
 		assertArrayEquals(HEADER, header);
 		
-		int i = 0;
+		// read all of the customers in
+		final List<List<String>> customers = new ArrayList<List<String>>();
 		List<String> customer;
 		while( (customer = listReader.read()) != null ) {
+			customers.add(customer);
+		}
+		
+		// assert that the List for each customer is correct (ensures Lists haven't been modified)
+		for( int i = 0; i < customers.size(); i++ ) {
+			customer = customers.get(i);
 			assertEquals(STRING_CUSTOMERS.get(i).getCustomerNo(), customer.get(0));
 			assertEquals(STRING_CUSTOMERS.get(i).getFirstName(), customer.get(1));
 			assertEquals(STRING_CUSTOMERS.get(i).getLastName(), customer.get(2));
@@ -92,7 +100,6 @@ public class CsvListReaderTest {
 			assertEquals(STRING_CUSTOMERS.get(i).getFavouriteQuote(), customer.get(7));
 			assertEquals(STRING_CUSTOMERS.get(i).getEmail(), customer.get(8));
 			assertEquals(STRING_CUSTOMERS.get(i).getLoyaltyPoints(), customer.get(9));
-			i++;
 		}
 		
 		assertEquals(STRING_CUSTOMERS.size() + 1, listReader.getRowNumber());
@@ -107,9 +114,16 @@ public class CsvListReaderTest {
 		final String[] header = listReader.getHeader(true);
 		assertArrayEquals(HEADER, header);
 		
-		int i = 0;
+		// read all of the customers in
+		final List<List<Object>> customers = new ArrayList<List<Object>>();
 		List<Object> customer;
 		while( (customer = listReader.read(READ_PROCESSORS)) != null ) {
+			customers.add(customer);
+		}
+		
+		// assert that the List for each customer is correct (ensures Lists haven't been modified)
+		for( int i = 0; i < customers.size(); i++ ) {
+			customer = customers.get(i);
 			assertEquals(CUSTOMERS.get(i).getCustomerNo(), customer.get(0));
 			assertEquals(CUSTOMERS.get(i).getFirstName(), customer.get(1));
 			assertEquals(CUSTOMERS.get(i).getLastName(), customer.get(2));
@@ -120,7 +134,6 @@ public class CsvListReaderTest {
 			assertEquals(CUSTOMERS.get(i).getFavouriteQuote(), customer.get(7));
 			assertEquals(CUSTOMERS.get(i).getEmail(), customer.get(8));
 			assertEquals(CUSTOMERS.get(i).getLoyaltyPoints(), customer.get(9));
-			i++;
 		}
 		
 		assertEquals(CUSTOMERS.size() + 1, listReader.getRowNumber());
@@ -136,9 +149,16 @@ public class CsvListReaderTest {
 		final String[] header = tokenizerListReader.getHeader(true);
 		assertArrayEquals(HEADER, header);
 		
-		int i = 0;
+		// read all of the customers in
+		final List<List<String>> customers = new ArrayList<List<String>>();
 		List<String> customer;
 		while( (customer = tokenizerListReader.read()) != null ) {
+			customers.add(customer);
+		}
+		
+		// assert that the List for each customer is correct (ensures Lists haven't been modified)
+		for( int i = 0; i < customers.size(); i++ ) {
+			customer = customers.get(i);
 			assertEquals(STRING_CUSTOMERS.get(i).getCustomerNo(), customer.get(0));
 			assertEquals(STRING_CUSTOMERS.get(i).getFirstName(), customer.get(1));
 			assertEquals(STRING_CUSTOMERS.get(i).getLastName(), customer.get(2));
@@ -149,7 +169,6 @@ public class CsvListReaderTest {
 			assertEquals(STRING_CUSTOMERS.get(i).getFavouriteQuote(), customer.get(7));
 			assertEquals(STRING_CUSTOMERS.get(i).getEmail(), customer.get(8));
 			assertEquals(STRING_CUSTOMERS.get(i).getLoyaltyPoints(), customer.get(9));
-			i++;
 		}
 		
 		assertEquals(STRING_CUSTOMERS.size() + 1, tokenizerListReader.getRowNumber());

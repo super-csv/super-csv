@@ -32,9 +32,6 @@ import org.supercsv.util.Util;
  */
 public class CsvListReader extends AbstractCsvReader implements ICsvListReader {
 	
-	// temporary storage of processed columns
-	private final List<Object> processedColumns = new ArrayList<Object>();
-	
 	/**
 	 * Constructs a new <tt>CsvListReader</tt> with the supplied Reader and CSV preferences. Note that the
 	 * <tt>reader</tt> will be wrapped in a <tt>BufferedReader</tt> before accessed.
@@ -71,7 +68,7 @@ public class CsvListReader extends AbstractCsvReader implements ICsvListReader {
 	public List<String> read() throws IOException {
 		
 		if( readRow() ) {
-			return getColumns();
+			return new ArrayList<String>(getColumns());
 		}
 		
 		return null; // EOF
@@ -87,6 +84,7 @@ public class CsvListReader extends AbstractCsvReader implements ICsvListReader {
 		}
 		
 		if( readRow() ) {
+			final List<Object> processedColumns = new ArrayList<Object>();
 			Util.executeCellProcessors(processedColumns, getColumns(), processors, getLineNumber(), getRowNumber());
 			return processedColumns;
 		}
