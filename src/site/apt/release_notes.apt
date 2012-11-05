@@ -19,6 +19,22 @@
 
 Release notes
 
+* 2.0.0
+
+  <10/2012>
+  
+  This is the final release of version 2.0.0, which fixes a few minor bugs found in version 2.0.0-beta-1.
+  Please refer to the 2.0.0-beta-1 release notes below for a full list of new features, bug fixes and upgrade notes.
+  
+  
+  <<Bug fixes>>
+
+    * {{{https://sourceforge.net/p/supercsv/bugs/33/}33}} - Added missing WEDNESDAY enum literal to custom cell processor example
+    
+    * {{{https://sourceforge.net/p/supercsv/bugs/34/}34}} - Added SLF4J API jar to distribution zip file
+    
+    * {{{https://sourceforge.net/p/supercsv/bugs/35/}35}} - CsvListReader now returns a new List for each <<<read()>>> operation
+    
 * 2.0.0-beta-1
 
   <09/2012>
