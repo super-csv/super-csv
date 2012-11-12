@@ -64,7 +64,7 @@ public class CsvDozerBeanReader extends AbstractCsvReader implements ICsvDozerBe
 	
 	/**
 	 * Constructs a new <tt>CsvDozerBeanReader</tt> with the supplied (custom) Tokenizer and CSV preferences and creates
-	 * it's own DozerBeanMapper. The tokenizer should be set up with the Reader (CSV CSV) and CsvPreference
+	 * it's own DozerBeanMapper. The tokenizer should be set up with the Reader (CSV input) and CsvPreference
 	 * beforehand.
 	 * 
 	 * @param tokenizer
@@ -103,7 +103,7 @@ public class CsvDozerBeanReader extends AbstractCsvReader implements ICsvDozerBe
 	
 	/**
 	 * Constructs a new <tt>CsvDozerBeanReader</tt> with the supplied (custom) Tokenizer, CSV preferences and
-	 * DozerBeanMapper. The tokenizer should be set up with the Reader (CSV CSV) and CsvPreference beforehand.
+	 * DozerBeanMapper. The tokenizer should be set up with the Reader (CSV input) and CsvPreference beforehand.
 	 * 
 	 * @param tokenizer
 	 *            the tokenizer
