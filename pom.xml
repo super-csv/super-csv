@@ -26,7 +26,7 @@
 
 	<groupId>net.sf.supercsv</groupId>
 	<artifactId>super-csv-parent</artifactId>
-	<version>2.0.0</version>
+	<version>2.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<url>http://supercsv.sourceforge.net</url>
 	<name>Super CSV</name>
@@ -451,8 +451,8 @@
 	</distributionManagement>
 
 	<scm>
-		<connection>scm:svn:https://svn.code.sf.net/p/supercsv/code/tags/v2.0.0</connection>
-		<developerConnection>scm:svn:svn+ssh://jamesbassett@svn.code.sf.net/p/supercsv/code/tags/v2.0.0</developerConnection>
-		<url>https://sourceforge.net/p/supercsv/code/tags/v2.0.0</url>
+		<connection>scm:svn:https://svn.code.sf.net/p/supercsv/code/trunk</connection>
+		<developerConnection>scm:svn:svn+ssh://jamesbassett@svn.code.sf.net/p/supercsv/code/trunk</developerConnection>
+		<url>https://sourceforge.net/p/supercsv/code/</url>
 	</scm>
 </project>
