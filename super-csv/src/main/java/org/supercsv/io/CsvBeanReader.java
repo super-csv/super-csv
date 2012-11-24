@@ -176,6 +176,10 @@ public class CsvBeanReader extends AbstractCsvReader implements ICsvBeanReader {
 		}
 		
 		if( readRow() ) {
+			if( nameMapping.length != length() ) {
+				throw new IllegalArgumentException(String.format("the nameMapping array and the number of columns read "
+					+ "should be the same size (nameMapping length = %d, columns = %d)", nameMapping.length, length()));
+			}
 			processedColumns.clear();
 			processedColumns.addAll(getColumns());
 			return populateBean(clazz, nameMapping);

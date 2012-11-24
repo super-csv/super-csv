@@ -45,6 +45,8 @@ public interface ICsvBeanReader extends ICsvReader {
 	 * @return a populated bean or null if EOF
 	 * @throws IOException
 	 *             if an I/O error occurred
+	 * @throws IllegalArgumentException
+	 *             if nameMapping.length != number of columns read
 	 * @throws NullPointerException
 	 *             if clazz or nameMapping are null
 	 * @throws SuperCsvException

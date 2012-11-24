@@ -256,6 +256,15 @@ public class CsvBeanReaderTest {
 	}
 	
 	/**
+	 * Tests the read() method, with a name mapping array that's not the right size.
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void testReadWithInvalidSizeNameMapping() throws IOException {
+		beanReader.getHeader(true);
+		beanReader.read(PersonBean.class, new String[]{null, "firstName"});
+	}
+	
+	/**
 	 * Tests the read() method (with processors), with a null bean class.
 	 */
 	@Test(expected = NullPointerException.class)
