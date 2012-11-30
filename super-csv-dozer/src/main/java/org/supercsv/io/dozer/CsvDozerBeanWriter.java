@@ -21,7 +21,6 @@ import static org.dozer.loader.api.TypeMappingOptions.wildcard;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.dozer.DozerBeanMapper;
@@ -162,7 +161,7 @@ public class CsvDozerBeanWriter extends AbstractCsvWriter implements ICsvDozerBe
 				throw new NullPointerException("fieldMapping should not be null");
 			}
 			this.clazz = clazz;
-			this.fieldMapping = Arrays.copyOf(fieldMapping, fieldMapping.length);
+			this.fieldMapping = fieldMapping;
 		}
 		
 		@Override

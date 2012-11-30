@@ -93,7 +93,7 @@ public class Tokenizer extends AbstractTokenizer {
 				return false; // EOF
 			}
 		}
-		while( line.isEmpty() );
+		while( line.length() == 0 );
 		
 		// update the untokenized CSV row
 		currentRow.append(line);

@@ -87,7 +87,7 @@ public abstract class AbstractCsvWriter implements ICsvWriter {
 	 * @return an escaped version of the element ready for persisting
 	 */
 	protected String escapeString(final String csvElement) {
-		if( csvElement.isEmpty() ) {
+		if( csvElement.length() == 0 ) {
 			return "";
 		}
 		

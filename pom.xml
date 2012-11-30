@@ -47,6 +47,11 @@
 		<pluginManagement>
 			<plugins>
 				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>animal-sniffer-maven-plugin</artifactId>
+					<version>1.9</version>
+				</plugin>
+				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-ant-plugin</artifactId>
 					<version>2.3</version>
@@ -207,12 +212,6 @@
 				</configuration>
 			</plugin>
 
-			<!-- Creates the ant build file -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-ant-plugin</artifactId>
-			</plugin>
-
 			<!-- Runs the Junit tests -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -270,6 +269,29 @@
 					<tagNameFormat>v@{project.version}</tagNameFormat>
 				</configuration>
 			</plugin>
+			
+			<!-- Ensures Java 1.5 compatability -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>animal-sniffer-maven-plugin</artifactId>
+				<configuration>
+					<signature>
+						<groupId>org.codehaus.mojo.signature</groupId>
+						<artifactId>java15</artifactId>
+						<version>1.0</version>
+					</signature>
+				</configuration>
+        		<executions>
+					<execution>
+						<id>check-java15-compatability</id>
+						<phase>test</phase>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			
 		</plugins>
 	</build>
 

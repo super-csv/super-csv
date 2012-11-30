@@ -36,8 +36,8 @@ import org.supercsv.mock.IdentityTransform;
  */
 public class ParseBigDecimalTest {
 	
-	private static final DecimalFormatSymbols FRENCH_SYMBOLS = DecimalFormatSymbols.getInstance(Locale.FRANCE);
-	private static final DecimalFormatSymbols ENGLISH_SYMBOLS = DecimalFormatSymbols.getInstance(Locale.ENGLISH);
+	private static final DecimalFormatSymbols FRENCH_SYMBOLS = new DecimalFormatSymbols(Locale.FRANCE);
+	private static final DecimalFormatSymbols ENGLISH_SYMBOLS = new DecimalFormatSymbols(Locale.ENGLISH);
 	
 	private CellProcessor processor;
 	private CellProcessor processor2;

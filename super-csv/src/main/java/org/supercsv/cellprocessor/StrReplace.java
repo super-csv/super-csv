@@ -101,7 +101,7 @@ public class StrReplace extends CellProcessorAdaptor implements BoolCellProcesso
 	private static void checkPreconditions(final String regex, final String replacement) {
 		if( regex == null ) {
 			throw new NullPointerException("regex should not be null");
-		} else if( regex.isEmpty() ) {
+		} else if( regex.length() == 0 ) {
 			throw new IllegalArgumentException("regex should not be empty");
 		}
 		

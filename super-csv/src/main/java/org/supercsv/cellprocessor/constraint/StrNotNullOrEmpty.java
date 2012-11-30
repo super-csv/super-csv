@@ -72,7 +72,7 @@ public class StrNotNullOrEmpty extends CellProcessorAdaptor implements StringCel
 		
 		if( value instanceof String ) {
 			final String stringValue = (String) value;
-			if( stringValue.isEmpty() ) {
+			if( stringValue.length() == 0 ) {
 				throw new SuperCsvConstraintViolationException("the String should not be empty", context, this);
 			}
 		} else {
