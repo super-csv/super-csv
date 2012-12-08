@@ -26,7 +26,7 @@ Downloading Super CSV
 * Maven users
 
   If you are using Maven, simply copy the following dependency into your pom.xml file. 
-  The artifact is hosted at {{{http://search.maven.org}Maven Central}}, and is standalone (no dependencies).
+  The artifact is hosted at {{{http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22net.sf.supercsv%22}Maven Central}}, and is standalone (no dependencies).
   
 +-------------------------------------+
 <dependency>

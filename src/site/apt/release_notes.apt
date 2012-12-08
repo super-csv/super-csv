@@ -19,9 +19,21 @@
 
 Release notes
 
+* 2.0.1
+
+  <12/2012>
+  
+  Just a small bug fix release to restore Java 5 compatibility (should also be more compatible with older versions of Android as well).
+  
+  <<Bug fixes>>
+
+    * {{{https://sourceforge.net/p/supercsv/bugs/36/}36}} - CsvBeanReader allows a nameMapping array of the wrong size when processors aren't used
+    
+    * {{{https://sourceforge.net/p/supercsv/bugs/37/}37}} - Restore Java 5 compatibility
+
 * 2.0.0
 
-  <10/2012>
+  <11/2012>
   
   This is the final release of version 2.0.0, which fixes a few minor bugs found in version 2.0.0-beta-1.
   Please refer to the 2.0.0-beta-1 release notes below for a full list of new features, bug fixes and upgrade notes.

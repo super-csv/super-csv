@@ -19,14 +19,24 @@
 
 Road map
 
-  There's nothing definitively planned for future releases at this stage, so please let us know if you have any {{{https://sourceforge.net/p/supercsv/feature-requests/}feature requests}}.
-  
-  Possible ideas for the future:
-  
+* 2.1.0
+
+  <01/2013>
+
+    * Upgrade to Dozer 5.4.0
+
+    * Better support for delaying errors (for batch reading/writing)
+
     * Resurrect the speed benchmark tests (including the new Dozer reader/writer)
 
+* Other possible ideas for the future
+
+    There's nothing else definitively planned for future releases at this stage, so please let us know if you have any {{{https://sourceforge.net/p/supercsv/feature-requests/}feature requests}}.
+    
+    Possible features include:
+  
     * Comment character support (ignoring comments)
   
-    * Batch reading and writing, delaying errors
-  
     * Internationalization of error messages
+
+    * End world hunger and make dolphins speak

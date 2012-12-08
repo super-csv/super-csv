@@ -33,7 +33,7 @@ import org.supercsv.util.CsvContext;
  * <p>
  * If you need further processing of the value in case the value is not <tt>null</tt>, you can link the processor with
  * other processors such as <code>
- * new ConvertNullTo("\"\"", new Trim(3))
+ * new ConvertNullTo("\"\"", new Truncate(3))
  * </code>
  * 
  * @since 1.20
