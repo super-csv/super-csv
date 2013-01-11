@@ -18,6 +18,7 @@ package org.supercsv.cellprocessor;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import org.supercsv.cellprocessor.ift.DateCellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
@@ -36,6 +37,9 @@ import org.supercsv.util.CsvContext;
  * <p>
  * This processor caters for lenient or non-lenient date interpretations (the default is false for constructors without
  * a 'lenient' parameter). See {@link SimpleDateFormat#setLenient(boolean)} for more information.
+ * <p>
+ * If you don't wish to use the default Locale when parsing Dates (your data is formatted for a different Locale), then
+ * use the constructor that accepts a Locale.
  * 
  * @author Kasper B. Graversen
  * @author James Bassett
@@ -45,6 +49,8 @@ public class ParseDate extends CellProcessorAdaptor implements StringCellProcess
 	private final String dateFormat;
 	
 	private final boolean lenient;
+	
+	private final Locale locale;
 	
 	/**
 	 * Constructs a new <tt>ParseDate</tt> processor which converts a String to a Date using the supplied date format.
@@ -74,6 +80,28 @@ public class ParseDate extends CellProcessorAdaptor implements StringCellProcess
 		checkPreconditions(dateFormat);
 		this.dateFormat = dateFormat;
 		this.lenient = lenient;
+		this.locale = null;
+	}
+	
+	/**
+	 * Constructs a new <tt>ParseDate</tt> processor which converts a String to a Date using the supplied date format
+	 * and Locale.
+	 * 
+	 * @param dateFormat
+	 *            the date format to use
+	 * @param lenient
+	 *            whether date interpretation is lenient
+	 * @param locale
+	 *            the Locale used to parse the date
+	 * @throws NullPointerException
+	 *             if dateFormat or locale is null
+	 */
+	public ParseDate(final String dateFormat, final boolean lenient, final Locale locale) {
+		super();
+		checkPreconditions(dateFormat, locale);
+		this.dateFormat = dateFormat;
+		this.lenient = lenient;
+		this.locale = locale;
 	}
 	
 	/**
@@ -109,10 +137,34 @@ public class ParseDate extends CellProcessorAdaptor implements StringCellProcess
 		checkPreconditions(dateFormat);
 		this.dateFormat = dateFormat;
 		this.lenient = lenient;
+		this.locale = null;
 	}
 	
 	/**
-	 * Checks the preconditions for creating a new ParseDate processor.
+	 * Constructs a new <tt>ParseDate</tt> processor which converts a String to a Date using the supplied date format
+	 * and Locale, then calls the next processor in the chain.
+	 * 
+	 * @param dateFormat
+	 *            the date format to use
+	 * @param lenient
+	 *            whether date interpretation is lenient
+	 * @param locale
+	 *            the Locale used to parse the date
+	 * @param next
+	 *            the next processor in the chain
+	 * @throws NullPointerException
+	 *             if dateFormat, locale, or next is null
+	 */
+	public ParseDate(final String dateFormat, final boolean lenient, final Locale locale, final DateCellProcessor next) {
+		super(next);
+		checkPreconditions(dateFormat, locale);
+		this.dateFormat = dateFormat;
+		this.lenient = lenient;
+		this.locale = locale;
+	}
+	
+	/**
+	 * Checks the preconditions for creating a new ParseDate processor with a date format.
 	 * 
 	 * @param dateFormat
 	 *            the date format to use
@@ -122,6 +174,24 @@ public class ParseDate extends CellProcessorAdaptor implements StringCellProcess
 	private static void checkPreconditions(final String dateFormat) {
 		if( dateFormat == null ) {
 			throw new NullPointerException("dateFormat should not be null");
+		}
+	}
+	
+	/**
+	 * Checks the preconditions for creating a new ParseDate processor with date format and locale.
+	 * 
+	 * @param dateFormat
+	 *            the date format to use
+	 * @param locale
+	 *            the Locale used to parse the date
+	 * @throws NullPointerException
+	 *             if dateFormat or locale is null
+	 */
+	private static void checkPreconditions(final String dateFormat, final Locale locale) {
+		if( dateFormat == null ) {
+			throw new NullPointerException("dateFormat should not be null");
+		} else if( locale == null ) {
+			throw new NullPointerException("locale should not be null");
 		}
 	}
 	
@@ -139,7 +209,12 @@ public class ParseDate extends CellProcessorAdaptor implements StringCellProcess
 		}
 		
 		try {
-			final SimpleDateFormat formatter = new SimpleDateFormat(dateFormat);
+			final SimpleDateFormat formatter;
+			if( locale == null ) {
+				formatter = new SimpleDateFormat(dateFormat);
+			} else {
+				formatter = new SimpleDateFormat(dateFormat, locale);
+			}
 			formatter.setLenient(lenient);
 			final Date result = formatter.parse((String) value);
 			return next.execute(result, context);

@@ -23,6 +23,7 @@ import static org.supercsv.SuperCsvTestUtils.date;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Locale;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -47,6 +48,8 @@ public class ParseDateTest {
 	
 	// locale-independent ("Sun, Dec 25, '11" in en)
 	private static final String FORMATTED_DATE2 = new SimpleDateFormat(DATE_FORMAT2).format(DATE);
+	
+	private static final String GERMAN_DATE = new SimpleDateFormat(DATE_FORMAT2, Locale.GERMAN).format(DATE);
 	
 	private CellProcessor processor;
 	private CellProcessor processor2;
@@ -95,6 +98,19 @@ public class ParseDateTest {
 		// try a different date format
 		assertEquals(DATE, differentFormat.execute(FORMATTED_DATE2, ANONYMOUS_CSVCONTEXT));
 		assertEquals(DATE, differentFormatChain.execute(FORMATTED_DATE2, ANONYMOUS_CSVCONTEXT));
+	}
+	
+	/**
+	 * Tests parsing a Date formatted in a different locale.
+	 */
+	@Test
+	public void testDifferentLocale() {
+		final CellProcessor germanProcessor = new ParseDate(DATE_FORMAT2, false, Locale.GERMAN);
+		assertEquals(DATE, germanProcessor.execute(GERMAN_DATE, ANONYMOUS_CSVCONTEXT));
+		
+		final CellProcessor germanProcessorChain = new ParseDate(DATE_FORMAT2, false, Locale.GERMAN,
+			new IdentityTransform());
+		assertEquals(DATE, germanProcessorChain.execute(GERMAN_DATE, ANONYMOUS_CSVCONTEXT));
 	}
 	
 	/**
@@ -152,8 +168,24 @@ public class ParseDateTest {
 	 * Tests construction with a null date format (should throw an Exception).
 	 */
 	@Test(expected = NullPointerException.class)
-	public void testConstructionWithNullDateFormat() {
+	public void testConstructorWithNullDateFormat() {
 		new ParseDate(null);
+	}
+	
+	/**
+	 * Tests construction (using the Locale constructor) with a null date format (should throw an Exception).
+	 */
+	@Test(expected = NullPointerException.class)
+	public void testLocaleConstructorWithNullDateFormat() {
+		new ParseDate(null, false, Locale.GERMAN);
+	}
+	
+	/**
+	 * Tests construction (using the Locale constructor) with a null locale (should throw an Exception).
+	 */
+	@Test(expected = NullPointerException.class)
+	public void testLocaleConstructorWithNullLocale() {
+		new ParseDate(DATE_FORMAT, false, (Locale) null);
 	}
 	
 }
