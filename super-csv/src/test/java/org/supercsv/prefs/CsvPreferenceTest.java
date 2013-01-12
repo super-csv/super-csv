@@ -117,4 +117,12 @@ public class CsvPreferenceTest {
 	public void testConstructorWithNullEolSymbols() {
 		new CsvPreference.Builder('"', ',', null).build();
 	}
+	
+	/**
+	 * Tests construction with null end of line symbols (should throw an exception).
+	 */
+	@Test(expected = NullPointerException.class)
+	public void testSkipCommentsWithNullCommentMatcher() {
+		new CsvPreference.Builder(EXCEL_PREFERENCE).skipComments(null).build();
+	}
 }

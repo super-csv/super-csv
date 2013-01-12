@@ -37,22 +37,28 @@ CSV Preferences
     []
     
     [surroundingSpacesNeedQuotes] Whether spaces surrounding a cell need quotes in order to be preserved (see below). The default value is false (quotes aren't required).
+    
+    []
+    
+    [skipComments] Skips comments (what makes up a comment is determined by the CommentMatcher you supply). See the section on skipping comments below for more information.
+    
+    []
 
 * Predefined preferences
 
   There are four 'ready to use' configurations for typical scenarios.
 
-*------------------------------------------------------------------------------------------------------------------+------------------*----------------------*-----------------------------------------*------------------------------------*
- <<Constant>>                                                                                                      || Quote character || Delimiter character || End of line symbols (for writing only) || Surrounding spaces require quotes  
-*------------------------------------------------------------------------------------------------------------------+------------------*----------------------*-----------------------------------------*------------------------------------*
- {{{./apidocs/org/supercsv/prefs/CsvPreference.html#STANDARD_PREFERENCE}STANDARD_PREFERENCE}}                      |        "         |           ,          |       \\r\\n                            |            false                    
-*------------------------------------------------------------------------------------------------------------------+------------------*----------------------*-----------------------------------------*------------------------------------*
- {{{./apidocs/org/supercsv/prefs/CsvPreference.html#EXCEL_PREFERENCE}EXCEL_PREFERENCE}}                            |        "         |           ,          |        \\n                              |            false                    
-*------------------------------------------------------------------------------------------------------------------+------------------*----------------------*-----------------------------------------*------------------------------------*
- {{{./apidocs/org/supercsv/prefs/CsvPreference.html#EXCEL_NORTH_EUROPE_PREFERENCE}EXCEL_NORTH_EUROPE_PREFERENCE}}  |        "         |           ;          |        \\n                              |            false                    
-*------------------------------------------------------------------------------------------------------------------+------------------*----------------------*-----------------------------------------*------------------------------------*
- {{{./apidocs/org/supercsv/prefs/CsvPreference.html#TAB_PREFERENCE}TAB_PREFERENCE}}                                |        "         |          \\t         |        \\n                              |            false                   
-*------------------------------------------------------------------------------------------------------------------+------------------*----------------------*-----------------------------------------*------------------------------------*
+*------------------------------------------------------------------------------------------------------------------+-------------*-----------------*----------------------*---------------------------------*----------------*
+ <<Constant>>                                                                                                      || Quote char || Delimiter char || End of line symbols || Surrounding spaces need quotes || Skip comments 
+*------------------------------------------------------------------------------------------------------------------+-------------*-----------------*----------------------*---------------------------------*----------------*
+ {{{./apidocs/org/supercsv/prefs/CsvPreference.html#STANDARD_PREFERENCE}STANDARD_PREFERENCE}}                      |        "    |           ,     |       \\r\\n         |            false                |      false
+*------------------------------------------------------------------------------------------------------------------+-------------*-----------------*----------------------*---------------------------------*----------------*
+ {{{./apidocs/org/supercsv/prefs/CsvPreference.html#EXCEL_PREFERENCE}EXCEL_PREFERENCE}}                            |        "    |           ,     |        \\n           |            false                |      false
+*------------------------------------------------------------------------------------------------------------------+-------------*-----------------*----------------------*---------------------------------*----------------*
+ {{{./apidocs/org/supercsv/prefs/CsvPreference.html#EXCEL_NORTH_EUROPE_PREFERENCE}EXCEL_NORTH_EUROPE_PREFERENCE}}  |        "    |           ;     |        \\n           |            false                |      false
+*------------------------------------------------------------------------------------------------------------------+-------------*-----------------*----------------------*---------------------------------*----------------*
+ {{{./apidocs/org/supercsv/prefs/CsvPreference.html#TAB_PREFERENCE}TAB_PREFERENCE}}                                |        "    |          \\t    |        \\n           |            false                |      false
+*------------------------------------------------------------------------------------------------------------------+-------------*-----------------*----------------------*---------------------------------*----------------*
 
 * Create your own preference
 
@@ -88,3 +94,22 @@ private static final CsvPreference STANDARD_SURROUNDING_SPACES_NEED_QUOTES =
   
   Prior to Super CSV 2.0.0, this behaviour wasn't configurable and surrounding spaces were always trimmed.
   
+* Skipping comments
+
+  Although comments aren't part of RFC4180, some CSV files use them so it's useful to be able to skip these lines (or even skip lines because they contain invalid data).
+  You can use one of the predefined comment matchers:
+  
+  * {{{./apidocs/org/supercsv/comment/CommentStartsWith.html}CommentStartsWith}} - matches lines that start with a specified String
+  
+  * {{{./apidocs/org/supercsv/comment/CommentMatches.html}CommentMatches}} - matches lines that match a specified regular expression
+  
+  []
+  
+  Or if you like you can write your own by implementing the {{{./apidocs/org/supercsv/comment/CommentMatcher.html}CommentMatcher}} interface.
+  
+  Just pass your desired comment matcher to the <<<skipComments()>>> method when building your preferences:
+  
++------------------------------------------------------------------------------------------------------------------------------------------------+
+private static final CsvPreference STANDARD_SKIP_COMMENTS = 
+    new CsvPreference.Builder(CsvPreference.STANDARD_PREFERENCE).skipComments(new CommentStartsWith("#").build();
++------------------------------------------------------------------------------------------------------------------------------------------------+

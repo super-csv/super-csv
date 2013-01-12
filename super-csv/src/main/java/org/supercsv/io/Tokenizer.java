@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.List;
 
+import org.supercsv.comment.CommentMatcher;
 import org.supercsv.exception.SuperCsvException;
 import org.supercsv.prefs.CsvPreference;
 
@@ -47,6 +48,8 @@ public class Tokenizer extends AbstractTokenizer {
 	
 	private final boolean surroundingSpacesNeedQuotes;
 	
+	private final CommentMatcher commentMatcher;
+	
 	/**
 	 * Enumeration of tokenizer states. QUOTE_MODE is activated between quotes.
 	 */
@@ -69,6 +72,7 @@ public class Tokenizer extends AbstractTokenizer {
 		this.quoteChar = preferences.getQuoteChar();
 		this.delimeterChar = preferences.getDelimiterChar();
 		this.surroundingSpacesNeedQuotes = preferences.isSurroundingSpacesNeedQuotes();
+		this.commentMatcher = preferences.getCommentMatcher();
 	}
 	
 	/**
@@ -93,7 +97,7 @@ public class Tokenizer extends AbstractTokenizer {
 				return false; // EOF
 			}
 		}
-		while( line.length() == 0 );
+		while( line.length() == 0 || (commentMatcher != null && commentMatcher.isComment(line)) );
 		
 		// update the untokenized CSV row
 		currentRow.append(line);

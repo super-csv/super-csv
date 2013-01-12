@@ -15,6 +15,10 @@
  */
 package org.supercsv.prefs;
 
+import org.supercsv.comment.CommentMatcher;
+import org.supercsv.comment.CommentMatches;
+import org.supercsv.comment.CommentStartsWith;
+
 /**
  * Before reading or writing CSV files, you must supply the reader/writer with some preferences.
  * <p>
@@ -61,9 +65,9 @@ package org.supercsv.prefs;
  * quotes were automatically added to Strings containing surrounding spaces when writing).
  * <p>
  * If you wish enable this functionality again, then you can create a CsvPreference with the
- * <tt>surroundingSpacesNeedQuotes</tt> flag set to true (the default is false). This means that surrounding spaces without
- * quotes will be trimmed when reading, and quotes will automatically be added for Strings containing surrounding spaces
- * when writing.
+ * <tt>surroundingSpacesNeedQuotes</tt> flag set to true (the default is false). This means that surrounding spaces
+ * without quotes will be trimmed when reading, and quotes will automatically be added for Strings containing
+ * surrounding spaces when writing.
  * <p>
  * You can apply the surroundingSpacesNeedQuotes property to an existing preference as follows:<br/>
  * {@code private static final CsvPreference STANDARD_SURROUNDING_SPACES_NEED_QUOTES = new CsvPreference.Builder(CsvPreference.STANDARD_PREFERENCE).surroundingSpacesNeedQuotes(true).build();}
@@ -104,6 +108,8 @@ public final class CsvPreference {
 	
 	private final boolean surroundingSpacesNeedQuotes;
 	
+	private final CommentMatcher commentMatcher;
+	
 	/**
 	 * Constructs a new <tt>CsvPreference</tt> from a Builder.
 	 */
@@ -112,6 +118,7 @@ public final class CsvPreference {
 		this.delimiterChar = builder.delimiterChar;
 		this.endOfLineSymbols = builder.endOfLineSymbols;
 		this.surroundingSpacesNeedQuotes = builder.surroundingSpacesNeedQuotes;
+		this.commentMatcher = builder.commentMatcher;
 	}
 	
 	/**
@@ -151,6 +158,15 @@ public final class CsvPreference {
 	}
 	
 	/**
+	 * Returns the comment matcher.
+	 * 
+	 * @return the comment matcher
+	 */
+	public CommentMatcher getCommentMatcher() {
+		return commentMatcher;
+	}
+	
+	/**
 	 * Builds immutable <tt>CsvPreference</tt> instances. The builder pattern allows for additional preferences to be
 	 * added in the future.
 	 */
@@ -164,6 +180,8 @@ public final class CsvPreference {
 		
 		private boolean surroundingSpacesNeedQuotes = false;
 		
+		private CommentMatcher commentMatcher;
+		
 		/**
 		 * Constructs a Builder with all of the values from an existing <tt>CsvPreference</tt> instance. Useful if you
 		 * want to base your preferences off one of the existing CsvPreference constants.
@@ -176,6 +194,7 @@ public final class CsvPreference {
 			this.delimiterChar = preference.delimiterChar;
 			this.endOfLineSymbols = preference.endOfLineSymbols;
 			this.surroundingSpacesNeedQuotes = preference.surroundingSpacesNeedQuotes;
+			this.commentMatcher = preference.commentMatcher;
 		}
 		
 		/**
@@ -209,6 +228,7 @@ public final class CsvPreference {
 		 * by quotes (applicable to both reading and writing CSV). The default is <tt>false</tt>, as spaces
 		 * "are considered part of a field and should not be ignored" according to RFC 4180.
 		 * 
+		 * @since 2.0.0
 		 * @param surroundingSpacesNeedQuotes
 		 *            flag indicating whether spaces at the beginning or end of a cell should be ignored if they're not
 		 *            surrounded by quotes
@@ -216,6 +236,25 @@ public final class CsvPreference {
 		 */
 		public Builder surroundingSpacesNeedQuotes(final boolean surroundingSpacesNeedQuotes) {
 			this.surroundingSpacesNeedQuotes = surroundingSpacesNeedQuotes;
+			return this;
+		}
+		
+		/**
+		 * Enables the skipping of comments. You can supply your own comment matcher or use one of the predefined ones:
+		 * {@link CommentMatches} or {@link CommentStartsWith}.
+		 * 
+		 * @since 2.1.0
+		 * @param commentMatcher
+		 *            the comment matcher to use
+		 * @return the updated Builder
+		 * @throws NullPointerException
+		 *             if commentMatcher is null
+		 */
+		public Builder skipComments(final CommentMatcher commentMatcher) {
+			if( commentMatcher == null ) {
+				throw new NullPointerException("commentMatcher should not be null");
+			}
+			this.commentMatcher = commentMatcher;
 			return this;
 		}
 		

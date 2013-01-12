@@ -16,6 +16,7 @@
 package org.supercsv.io;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.supercsv.prefs.CsvPreference.EXCEL_PREFERENCE;
@@ -29,6 +30,8 @@ import java.util.List;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.supercsv.comment.CommentMatches;
+import org.supercsv.comment.CommentStartsWith;
 import org.supercsv.exception.SuperCsvException;
 import org.supercsv.prefs.CsvPreference;
 
@@ -417,6 +420,60 @@ public class TokenizerTest {
 		assertEquals("two turtle doves", columns.get(1));
 		assertEquals("three french hens", columns.get(2));
 		assertEquals(input, tokenizer.getUntokenizedRow());
+	}
+	
+	/**
+	 * Tests that the CommentStartsWith comment matcher works (comments are skipped).
+	 */
+	@Test
+	public void testSkipCommentsStartsWith() throws IOException{
+		
+		final CsvPreference commentsStartWithPrefs = new CsvPreference.Builder(EXCEL_PREFERENCE)
+		.skipComments(new CommentStartsWith("#")).build();
+
+		
+		final String input = "#comment\nnot,a,comment\n# another comment\nalso,not,comment";
+		final Tokenizer tokenizer = createTokenizer(input, commentsStartWithPrefs);
+		tokenizer.readColumns(columns);
+		assertTrue(columns.size() == 3);
+		assertEquals("not", columns.get(0));
+		assertEquals("a", columns.get(1));
+		assertEquals("comment", columns.get(2));
+		
+		tokenizer.readColumns(columns);
+		assertTrue(columns.size() == 3);
+		assertEquals("also", columns.get(0));
+		assertEquals("not", columns.get(1));
+		assertEquals("comment", columns.get(2));
+		
+		assertFalse(tokenizer.readColumns(columns));
+	}
+	
+	/**
+	 * Tests that the CommentMatches comment matcher works (comments are skipped).
+	 */
+	@Test
+	public void testSkipCommentsMatches() throws IOException{
+		
+		final CsvPreference commentsMatchesPrefs = new CsvPreference.Builder(EXCEL_PREFERENCE)
+		.skipComments(new CommentMatches("<!--.*-->")).build();
+		
+		final String input = "<!--comment-->\nnot,a,comment\n<!-- another comment-->\nalso,not,comment";
+		final Tokenizer tokenizer = createTokenizer(input, commentsMatchesPrefs);
+		tokenizer.readColumns(columns);
+		assertTrue(columns.size() == 3);
+		assertEquals("not", columns.get(0));
+		assertEquals("a", columns.get(1));
+		assertEquals("comment", columns.get(2));
+		
+		tokenizer.readColumns(columns);
+		assertTrue(columns.size() == 3);
+		assertEquals("also", columns.get(0));
+		assertEquals("not", columns.get(1));
+		assertEquals("comment", columns.get(2));
+		
+		assertFalse(tokenizer.readColumns(columns));
+		
 	}
 	
 }
