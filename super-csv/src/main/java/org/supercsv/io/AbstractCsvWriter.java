@@ -231,6 +231,22 @@ public abstract class AbstractCsvWriter implements ICsvWriter {
 	/**
 	 * {@inheritDoc}
 	 */
+	public void writeComment(final String comment) throws IOException {
+
+		lineNumber++; // we're not catering for embedded newlines (must be a single-line comment)
+		
+		if( comment == null ) {
+			throw new NullPointerException(String.format("comment to write should not be null on line %d", lineNumber));
+		}
+		
+		writer.write(comment);
+		writer.write(preference.getEndOfLineSymbols());
+
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void writeHeader(final String... header) throws IOException {
 		
 		// update the current row/line numbers

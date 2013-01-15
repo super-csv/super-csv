@@ -44,6 +44,21 @@ public interface ICsvWriter extends Closeable, Flushable {
 	int getRowNumber();
 	
 	/**
+	 * Writes a single-line comment to the CSV file (the comment must already include any special comment characters
+	 * e.g. '#' at start). Please note that comments are not part of RFC4180, so this may make your CSV file less
+	 * portable.
+	 * 
+	 * @param comment
+	 *            the comment
+	 * @throws NullPointerException
+	 *             if comment is null
+	 * @throws IOException
+	 *             if an I/O error occurs
+	 * @since 2.1.0
+	 */
+	void writeComment(String comment) throws IOException;
+	
+	/**
 	 * Writes the header of the CSV file.
 	 * 
 	 * @param header

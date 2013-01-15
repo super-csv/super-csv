@@ -37,7 +37,8 @@ import org.supercsv.prefs.CsvPreference;
 public class AbstractCsvWriterTest {
 	
 	private static final CsvPreference PREFS = CsvPreference.STANDARD_PREFERENCE;
-	private static final CsvPreference SURROUNDING_SPACES_REQUIRE_QUOTES_PREFS = new CsvPreference.Builder(CsvPreference.STANDARD_PREFERENCE).surroundingSpacesNeedQuotes(true).build();
+	private static final CsvPreference SURROUNDING_SPACES_REQUIRE_QUOTES_PREFS = new CsvPreference.Builder(
+		CsvPreference.STANDARD_PREFERENCE).surroundingSpacesNeedQuotes(true).build();
 	
 	private Writer writer;
 	
@@ -91,10 +92,42 @@ public class AbstractCsvWriterTest {
 	}
 	
 	/**
+	 * Tests the writeComment() method.
+	 */
+	@Test
+	public void testWriteComment() throws IOException {
+		assertEquals(0, abstractWriter.getLineNumber());
+		assertEquals(0, abstractWriter.getRowNumber());
+		
+		final String comment = "#this is a comment";
+		abstractWriter.writeComment(comment);
+		assertEquals(1, abstractWriter.getLineNumber());
+		assertEquals(0, abstractWriter.getRowNumber());
+		
+		final String header = "this,is,the,header";
+		abstractWriter.writeHeader(header.split(","));
+		assertEquals(2, abstractWriter.getLineNumber());
+		assertEquals(1, abstractWriter.getRowNumber());
+		
+		abstractWriter.writeComment(comment);
+		assertEquals(3, abstractWriter.getLineNumber());
+		assertEquals(1, abstractWriter.getRowNumber());
+		
+		abstractWriter.writeHeader(header.split(","));
+		assertEquals(4, abstractWriter.getLineNumber());
+		assertEquals(2, abstractWriter.getRowNumber());
+		
+		abstractWriter.flush();
+		final String eol = PREFS.getEndOfLineSymbols();
+		final String expected = comment + eol + header + eol + comment + eol + header + eol;
+		assertEquals(expected, writer.toString());
+	}
+	
+	/**
 	 * Tests the escapeString() method with and without surroundingSpacesNeedQuotes enabled.
 	 */
 	@Test
-	public void testEscapeString(){
+	public void testEscapeString() {
 		
 		assertEquals("", abstractWriter.escapeString(""));
 		assertEquals("", surroundingSpacesNeedQuotesAbstractWriter.escapeString(""));
@@ -109,19 +142,33 @@ public class AbstractCsvWriterTest {
 		assertEquals("\"trailing space \"", surroundingSpacesNeedQuotesAbstractWriter.escapeString("trailing space "));
 		
 		assertEquals("just a normal phrase", abstractWriter.escapeString("just a normal phrase"));
-		assertEquals("just a normal phrase", surroundingSpacesNeedQuotesAbstractWriter.escapeString("just a normal phrase"));
+		assertEquals("just a normal phrase",
+			surroundingSpacesNeedQuotesAbstractWriter.escapeString("just a normal phrase"));
 		
 		assertEquals("\"oh look, a comma\"", abstractWriter.escapeString("oh look, a comma"));
 		assertEquals("\"oh look, a comma\"", surroundingSpacesNeedQuotesAbstractWriter.escapeString("oh look, a comma"));
 		
-		assertEquals("\"\"\"Watch out for quotes\"\", he said\"", abstractWriter.escapeString("\"Watch out for quotes\", he said"));
-		assertEquals("\"\"\"Watch out for quotes\"\", he said\"", surroundingSpacesNeedQuotesAbstractWriter.escapeString("\"Watch out for quotes\", he said"));
+		assertEquals("\"\"\"Watch out for quotes\"\", he said\"",
+			abstractWriter.escapeString("\"Watch out for quotes\", he said"));
+		assertEquals("\"\"\"Watch out for quotes\"\", he said\"",
+			surroundingSpacesNeedQuotesAbstractWriter.escapeString("\"Watch out for quotes\", he said"));
 		
 		assertEquals("\"text that spans\r\ntwo lines\"", abstractWriter.escapeString("text that spans\ntwo lines"));
-		assertEquals("\"text that spans\r\ntwo lines\"", surroundingSpacesNeedQuotesAbstractWriter.escapeString("text that spans\ntwo lines"));
+		assertEquals("\"text that spans\r\ntwo lines\"",
+			surroundingSpacesNeedQuotesAbstractWriter.escapeString("text that spans\ntwo lines"));
 		
-		assertEquals("\"text \"\"with quotes\"\" that spans\r\ntwo lines\"", abstractWriter.escapeString("text \"with quotes\" that spans\ntwo lines"));
-		assertEquals("\"text \"\"with quotes\"\" that spans\r\ntwo lines\"", surroundingSpacesNeedQuotesAbstractWriter.escapeString("text \"with quotes\" that spans\ntwo lines"));
+		assertEquals("\"text \"\"with quotes\"\" that spans\r\ntwo lines\"",
+			abstractWriter.escapeString("text \"with quotes\" that spans\ntwo lines"));
+		assertEquals("\"text \"\"with quotes\"\" that spans\r\ntwo lines\"",
+			surroundingSpacesNeedQuotesAbstractWriter.escapeString("text \"with quotes\" that spans\ntwo lines"));
+	}
+	
+	/**
+	 * Tests the writeComment() method with a null String.
+	 */
+	@Test(expected = NullPointerException.class)
+	public void writeCommentWithNull() throws IOException {
+		abstractWriter.writeComment(null);
 	}
 	
 	/**
