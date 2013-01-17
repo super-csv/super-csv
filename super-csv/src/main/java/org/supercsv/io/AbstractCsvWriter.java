@@ -80,11 +80,12 @@ public abstract class AbstractCsvWriter implements ICsvWriter {
 	
 	/**
 	 * Make a string ready for writing by escaping various characters as specified by the CSV format. This method also
-	 * updates the current lineNumber as newlines are encountered in the String to be escaped.
+	 * updates the current lineNumber as line terminators are encountered in the String to be escaped (converting all 3
+	 * variations of line terminators to the end of line symbols specified in the preferences).
 	 * 
 	 * @param csvElement
 	 *            an element of a CSV file
-	 * @return an escaped version of the element ready for persisting
+	 * @return an escaped version of the element ready for writing
 	 */
 	protected String escapeString(final String csvElement) {
 		if( csvElement.length() == 0 ) {
@@ -104,9 +105,18 @@ public abstract class AbstractCsvWriter implements ICsvWriter {
 		boolean needForEscape = surroundingSpacesNeedQuotes
 			&& (csvElement.charAt(0) == space || csvElement.charAt(lastCharIndex) == space);
 		
+		boolean skipNewline = false;
+		
 		for( int i = 0; i <= lastCharIndex; i++ ) {
 			
 			final char c = csvElement.charAt(i);
+			
+			if( skipNewline ) {
+				skipNewline = false;
+				if( c == '\n' ) {
+					continue; // newline following a carriage return is skipped
+				}
+			}
 			
 			if( c == delimiter ) {
 				needForEscape = true;
@@ -115,6 +125,11 @@ public abstract class AbstractCsvWriter implements ICsvWriter {
 				needForEscape = true;
 				currentColumn.append(quote);
 				currentColumn.append(quote);
+			} else if( c == '\r' ) {
+				needForEscape = true;
+				currentColumn.append(eolSymbols);
+				lineNumber++;
+				skipNewline = true;
 			} else if( c == '\n' ) {
 				needForEscape = true;
 				currentColumn.append(eolSymbols);
@@ -232,7 +247,7 @@ public abstract class AbstractCsvWriter implements ICsvWriter {
 	 * {@inheritDoc}
 	 */
 	public void writeComment(final String comment) throws IOException {
-
+		
 		lineNumber++; // we're not catering for embedded newlines (must be a single-line comment)
 		
 		if( comment == null ) {
@@ -241,7 +256,7 @@ public abstract class AbstractCsvWriter implements ICsvWriter {
 		
 		writer.write(comment);
 		writer.write(preference.getEndOfLineSymbols());
-
+		
 	}
 	
 	/**

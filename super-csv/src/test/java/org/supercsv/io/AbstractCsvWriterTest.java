@@ -50,8 +50,11 @@ public class AbstractCsvWriterTest {
 	 */
 	static class MockCsvWriter extends AbstractCsvWriter {
 		
+		private CsvPreference preference;
+		
 		public MockCsvWriter(Writer writer, CsvPreference preference) {
 			super(writer, preference);
+			this.preference = preference;
 		}
 	}
 	
@@ -161,6 +164,84 @@ public class AbstractCsvWriterTest {
 			abstractWriter.escapeString("text \"with quotes\" that spans\ntwo lines"));
 		assertEquals("\"text \"\"with quotes\"\" that spans\r\ntwo lines\"",
 			surroundingSpacesNeedQuotesAbstractWriter.escapeString("text \"with quotes\" that spans\ntwo lines"));
+	}
+	
+	/**
+	 * Tests that all 3 variations of line terminators embedded in CSV are handled correctly (are replaced with the end
+	 * of line symbols and line number is incremented correctly). writeHeader() is used because it increments the line
+	 * number just like the write() methods exposed on concretes writers.
+	 * 
+	 * @param csvWriter
+	 *            the CSV writer
+	 * @param prefs
+	 *            the preferences
+	 * @throws IOException
+	 */
+	private void writeHeaderWithEmbeddedEndOfLineSymbols(final MockCsvWriter csvWriter) throws IOException {
+		
+		final String eolSymbols = csvWriter.preference.getEndOfLineSymbols();
+		
+		final String textWithNewline = "text that\nspans\nthree lines";
+		final String textWithCarriageReturn = "text that\rspans\rthree lines";
+		final String textWithCarriageAndNewline = "text that\r\nspans\r\nthree lines";
+		
+		final String expected = "\"text that" + eolSymbols + "spans" + eolSymbols + "three lines\"" + eolSymbols;
+		
+		// \n
+		csvWriter.writeHeader(textWithNewline);
+		csvWriter.flush();
+		assertEquals(expected, writer.toString());
+		assertEquals(3, csvWriter.getLineNumber());
+		assertEquals(1, csvWriter.getRowNumber());
+		
+		// \r
+		csvWriter.writeHeader(textWithCarriageReturn);
+		csvWriter.flush();
+		assertEquals(expected + expected, writer.toString());
+		assertEquals(6, csvWriter.getLineNumber());
+		assertEquals(2, csvWriter.getRowNumber());
+		
+		// \r\n
+		csvWriter.writeHeader(textWithCarriageAndNewline);
+		csvWriter.flush();
+		assertEquals(expected + expected + expected, writer.toString());
+		assertEquals(9, csvWriter.getLineNumber());
+		assertEquals(3, csvWriter.getRowNumber());
+		
+		// \r\n\n (checks that skipNewline only skips 1 newline)
+		csvWriter.writeHeader("\r\n\n");
+		csvWriter.flush();
+		assertEquals(expected + expected + expected + "\"" + eolSymbols + eolSymbols + "\"" + eolSymbols,
+			writer.toString());
+		assertEquals(12, csvWriter.getLineNumber());
+		assertEquals(4, csvWriter.getRowNumber());
+		
+		csvWriter.close();
+	}
+	
+	/**
+	 * Tests the writeHeader() method with an embedded carriage return and newline (i.e. Windows).
+	 */
+	@Test
+	public void testWriteHeaderWithCarriageReturnNewline() throws IOException {
+		writeHeaderWithEmbeddedEndOfLineSymbols(new MockCsvWriter(writer, CsvPreference.STANDARD_PREFERENCE));
+	}
+	
+	/**
+	 * Tests the writeHeader() method with an embedded newline (i.e. Linux).
+	 */
+	@Test
+	public void testWriteHeaderWithNewline() throws IOException {
+		writeHeaderWithEmbeddedEndOfLineSymbols(new MockCsvWriter(writer, CsvPreference.EXCEL_PREFERENCE));
+	}
+	
+	/**
+	 * Tests the writeHeader() method with an embedded carriage return (i.e. Mac).
+	 */
+	@Test
+	public void testWriteHeaderWithCarriageReturn() throws IOException {
+		writeHeaderWithEmbeddedEndOfLineSymbols(new MockCsvWriter(writer,
+			new CsvPreference.Builder('"', ',', "\r").build()));
 	}
 	
 	/**
