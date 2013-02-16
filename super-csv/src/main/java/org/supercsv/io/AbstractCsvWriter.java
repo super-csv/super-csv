@@ -21,6 +21,7 @@ import java.io.Writer;
 import java.util.List;
 
 import org.supercsv.prefs.CsvPreference;
+import org.supercsv.util.CsvContext;
 import org.supercsv.util.Util;
 
 /**
@@ -35,13 +36,16 @@ public abstract class AbstractCsvWriter implements ICsvWriter {
 	
 	private final CsvPreference preference;
 	
+	private final CsvEncoder encoder;
+	
 	// the line number being written / just written
 	private int lineNumber = 0;
 	
 	// the row being written / just written
 	private int rowNumber = 0;
 	
-	private final StringBuilder currentColumn = new StringBuilder();
+	// the column being written / just written
+	private int columnNumber = 0;
 	
 	/**
 	 * Constructs a new <tt>AbstractCsvWriter</tt> with the supplied writer and preferences.
@@ -62,6 +66,7 @@ public abstract class AbstractCsvWriter implements ICsvWriter {
 		
 		this.writer = new BufferedWriter(writer);
 		this.preference = preference;
+		this.encoder = preference.getEncoder();
 	}
 	
 	/**
@@ -86,67 +91,16 @@ public abstract class AbstractCsvWriter implements ICsvWriter {
 	 * @param csvElement
 	 *            an element of a CSV file
 	 * @return an escaped version of the element ready for writing
+	 * @deprecated this method will be removed in the next major release, in favour of supplying your own CsvEncoder via
+	 *             the CsvPreference object. If you have overridden this method, it will not delegate to the CsvEncoder
+	 *             at all.
 	 */
 	protected String escapeString(final String csvElement) {
-		if( csvElement.length() == 0 ) {
-			return "";
-		}
-		
-		currentColumn.delete(0, currentColumn.length()); // reusing builder object
-		
-		final int delimiter = preference.getDelimiterChar();
-		final char quote = (char) preference.getQuoteChar();
-		final char space = ' ';
-		final String eolSymbols = preference.getEndOfLineSymbols();
-		final boolean surroundingSpacesNeedQuotes = preference.isSurroundingSpacesNeedQuotes();
-		final int lastCharIndex = csvElement.length() - 1;
-		
-		// elements with leading/trailing spaces require surrounding quotes if surroundingSpacesNeedQuotes is enabled
-		boolean needForEscape = surroundingSpacesNeedQuotes
-			&& (csvElement.charAt(0) == space || csvElement.charAt(lastCharIndex) == space);
-		
-		boolean skipNewline = false;
-		
-		for( int i = 0; i <= lastCharIndex; i++ ) {
-			
-			final char c = csvElement.charAt(i);
-			
-			if( skipNewline ) {
-				skipNewline = false;
-				if( c == '\n' ) {
-					continue; // newline following a carriage return is skipped
-				}
-			}
-			
-			if( c == delimiter ) {
-				needForEscape = true;
-				currentColumn.append(c);
-			} else if( c == quote ) {
-				needForEscape = true;
-				currentColumn.append(quote);
-				currentColumn.append(quote);
-			} else if( c == '\r' ) {
-				needForEscape = true;
-				currentColumn.append(eolSymbols);
-				lineNumber++;
-				skipNewline = true;
-			} else if( c == '\n' ) {
-				needForEscape = true;
-				currentColumn.append(eolSymbols);
-				lineNumber++;
-			} else {
-				currentColumn.append(c);
-			}
-		}
-		
-		// if element contains special characters, escape the
-		// whole element with surrounding quotes
-		if( needForEscape ) {
-			currentColumn.insert(0, quote).append(quote);
-		}
-		
-		return currentColumn.toString();
-		
+		// TODO move this code to writeRow() when this method is removed
+		final CsvContext context = new CsvContext(lineNumber, rowNumber, columnNumber);
+		final String escapedCsv = encoder.encode(csvElement, context, preference);
+		lineNumber = context.getLineNumber(); // line number can increment when encoding multi-line columns
+		return escapedCsv;
 	}
 	
 	/**
@@ -230,12 +184,15 @@ public abstract class AbstractCsvWriter implements ICsvWriter {
 		
 		for( int i = 0; i < columns.length; i++ ) {
 			
+			columnNumber = i; // column no used by CsvEncoder
+			
 			if( i > 0 ) {
 				writer.write(preference.getDelimiterChar()); // delimiter
 			}
 			
-			if( columns[i] != null ) {
-				writer.write(escapeString(columns[i])); // escaped column (a null column implies "")
+			final String csvElement = columns[i];
+			if( csvElement != null ) {
+				writer.write(escapeString(csvElement)); // escaped column (a null column implies "")
 			}
 			
 		}

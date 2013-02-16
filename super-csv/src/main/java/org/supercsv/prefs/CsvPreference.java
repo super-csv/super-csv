@@ -18,6 +18,10 @@ package org.supercsv.prefs;
 import org.supercsv.comment.CommentMatcher;
 import org.supercsv.comment.CommentMatches;
 import org.supercsv.comment.CommentStartsWith;
+import org.supercsv.io.CsvEncoder;
+import org.supercsv.io.DefaultCsvEncoder;
+import org.supercsv.quote.NormalQuoteMode;
+import org.supercsv.quote.QuoteMode;
 
 /**
  * Before reading or writing CSV files, you must supply the reader/writer with some preferences.
@@ -78,6 +82,7 @@ import org.supercsv.comment.CommentStartsWith;
  * @author Kasper B. Graversen
  * @author James Bassett
  */
+// TODO update javadoc and website with extra prefs!
 public final class CsvPreference {
 	
 	/**
@@ -108,6 +113,10 @@ public final class CsvPreference {
 	
 	private final boolean surroundingSpacesNeedQuotes;
 	
+	private final CsvEncoder encoder;
+	
+	private final QuoteMode quoteMode;
+	
 	private final CommentMatcher commentMatcher;
 	
 	/**
@@ -119,6 +128,8 @@ public final class CsvPreference {
 		this.endOfLineSymbols = builder.endOfLineSymbols;
 		this.surroundingSpacesNeedQuotes = builder.surroundingSpacesNeedQuotes;
 		this.commentMatcher = builder.commentMatcher;
+		this.encoder = builder.encoder;
+		this.quoteMode = builder.quoteMode;
 	}
 	
 	/**
@@ -158,6 +169,24 @@ public final class CsvPreference {
 	}
 	
 	/**
+	 * Returns the CSV encoder.
+	 * 
+	 * @return the CSV encoder
+	 */
+	public CsvEncoder getEncoder() {
+		return encoder;
+	}
+	
+	/**
+	 * Returns the quote mode.
+	 * 
+	 * @return the quote mode
+	 */
+	public QuoteMode getQuoteMode() {
+		return quoteMode;
+	}
+	
+	/**
 	 * Returns the comment matcher.
 	 * 
 	 * @return the comment matcher
@@ -180,6 +209,10 @@ public final class CsvPreference {
 		
 		private boolean surroundingSpacesNeedQuotes = false;
 		
+		private CsvEncoder encoder;
+		
+		private QuoteMode quoteMode;
+		
 		private CommentMatcher commentMatcher;
 		
 		/**
@@ -194,6 +227,8 @@ public final class CsvPreference {
 			this.delimiterChar = preference.delimiterChar;
 			this.endOfLineSymbols = preference.endOfLineSymbols;
 			this.surroundingSpacesNeedQuotes = preference.surroundingSpacesNeedQuotes;
+			this.encoder = preference.encoder;
+			this.quoteMode = preference.quoteMode;
 			this.commentMatcher = preference.commentMatcher;
 		}
 		
@@ -259,11 +294,56 @@ public final class CsvPreference {
 		}
 		
 		/**
+		 * Uses a custom CsvEncoder to escape CSV for writing.
+		 * 
+		 * @since 2.1.0
+		 * @param encoder
+		 *            the custom encoder
+		 * @return the updated Builder
+		 * @throws NullPointerException
+		 *             if encoder is null
+		 */
+		public Builder useEncoder(final CsvEncoder encoder) {
+			if( encoder == null ) {
+				throw new NullPointerException("encoder should not be null");
+			}
+			this.encoder = encoder;
+			return this;
+		}
+		
+		/**
+		 * Uses a custom QuoteMode to determine if surrounding quotes should be applied when writing.
+		 * 
+		 * @since 2.1.0
+		 * @param quoteMode
+		 *            the quote mode
+		 * @return the updated Builder
+		 * @throws NullPointerException
+		 *             if quoteMode is null
+		 */
+		public Builder useQuoteMode(final QuoteMode quoteMode) {
+			if( quoteMode == null ) {
+				throw new NullPointerException("quoteMode should not be null");
+			}
+			this.quoteMode = quoteMode;
+			return this;
+		}
+		
+		/**
 		 * Builds the CsvPreference instance.
 		 * 
 		 * @return the immutable CsvPreference instance
 		 */
 		public CsvPreference build() {
+			
+			if (encoder == null){
+				encoder = new DefaultCsvEncoder();
+			}
+			
+			if (quoteMode == null){
+				quoteMode = new NormalQuoteMode();
+			}
+			
 			return new CsvPreference(this);
 		}
 		
