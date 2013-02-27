@@ -31,6 +31,7 @@ public final class ReflectionUtils {
 	
 	public static final String SET_PREFIX = "set";
 	public static final String GET_PREFIX = "get";
+	public static final String IS_PREFIX = "is";
 	
 	/**
 	 * A map of primitives and their associated wrapper classes, to cater for autoboxing.
@@ -79,18 +80,61 @@ public final class ReflectionUtils {
 			throw new NullPointerException("fieldName should not be null");
 		}
 		
-		String getterName = getMethodNameForField(GET_PREFIX, fieldName);
-		Class<?> clazz = object.getClass();
-		try {
-			return clazz.getMethod(getterName);
-		}
-		catch(final Exception e) {
-			throw new SuperCsvReflectionException(
-				String.format(
-					"unable to find method %s() in class %s - check that the corresponding nameMapping element matches the field name in the bean",
-					getterName, clazz.getName()), e);
+		final Class<?> clazz = object.getClass();
+		
+		// find a standard getter
+		final String standardGetterName = getMethodNameForField(GET_PREFIX, fieldName);
+		Method getter = findGetterWithCompatibleReturnType(standardGetterName, clazz, false);
+		
+		// if that fails, try for an isX() style boolean getter
+		if( getter == null ) {
+			final String booleanGetterName = getMethodNameForField(IS_PREFIX, fieldName);
+			getter = findGetterWithCompatibleReturnType(booleanGetterName, clazz, true);
 		}
 		
+		if( getter == null ) {
+			throw new SuperCsvReflectionException(
+				String
+					.format(
+						"unable to find getter for field %s in class %s - check that the corresponding nameMapping element matches the field name in the bean",
+						fieldName, clazz.getName()));
+		}
+		
+		return getter;
+	}
+	
+	/**
+	 * Helper method for findGetter() that finds a getter with the supplied name, optionally enforcing that the method
+	 * must have a Boolean/boolean return type. Developer note: this method could have accepted an actual return type to
+	 * enforce, but it was more efficient to cater for only Booleans (as they're the only type that has differently
+	 * named getters).
+	 * 
+	 * @param getterName
+	 *            the getter name
+	 * @param clazz
+	 *            the class
+	 * @param enforceBooleanReturnType
+	 *            if true, the method must return a Boolean/boolean, otherwise it's return type doesn't matter
+	 * @return the getter, or null if none is found
+	 */
+	private static Method findGetterWithCompatibleReturnType(final String getterName, final Class<?> clazz,
+		final boolean enforceBooleanReturnType) {
+		
+		for( final Method method : clazz.getMethods() ) {
+			
+			if( !getterName.equals(method.getName()) || method.getParameterTypes().length != 0
+				|| method.getReturnType().equals(void.class) ) {
+				continue; // getter must have correct name, 0 parameters and a return type
+			}
+			
+			if( !enforceBooleanReturnType || boolean.class.equals(method.getReturnType())
+				|| Boolean.class.equals(method.getReturnType()) ) {
+				return method;
+			}
+			
+		}
+		
+		return null;
 	}
 	
 	/**

@@ -21,11 +21,11 @@ package org.supercsv.mock;
  * @author James Bassett
  */
 public class ReflectionBean {
-	
-	private boolean sailForTreasure;
+
 	private String name;
 	private Number favouriteNumber;
 	private Number overloaded;
+	private boolean primitiveBoolean;
 	private int primitiveInt;
 	private short primitiveShort;
 	private long primitiveLong;
@@ -33,6 +33,7 @@ public class ReflectionBean {
 	private float primitiveFloat;
 	private char primitiveChar;
 	private byte primitiveByte;
+	private Boolean booleanWrapper;
 	private Integer integerWrapper;
 	private Short shortWrapper;
 	private Long longWrapper;
@@ -40,18 +41,7 @@ public class ReflectionBean {
 	private Float floatWrapper;
 	private Character charWrapper;
 	private Byte byteWrapper;
-	
-	public boolean getSailForTreasure() {
-		return sailForTreasure;
-	}
-
-	public void setSailForTreasure(boolean sailForTreasure) {
-		this.sailForTreasure = sailForTreasure;
-	}
-
-	public void setSailForTreasure(){
-		throw new RuntimeException("this method isn't a setter and should never be invoked");
-	}
+	private Boolean booleanWrapper2;
 	
 	public String getName() {
 		return name;
@@ -72,7 +62,7 @@ public class ReflectionBean {
 	public Number getOverloaded() {
 		return overloaded;
 	}
-
+	
 	public void setOverloaded(Integer overloaded) {
 		throw new RuntimeException("this overloaded setter shouldn't be invoked!");
 	}
@@ -80,7 +70,7 @@ public class ReflectionBean {
 	public void setOverloaded(Number overloaded) {
 		this.overloaded = overloaded;
 	}
-
+	
 	public int getPrimitiveInt() {
 		return primitiveInt;
 	}
@@ -191,6 +181,46 @@ public class ReflectionBean {
 	
 	public void setByteWrapper(Byte byteWrapper) {
 		this.byteWrapper = byteWrapper;
+	}
+
+	public void getPrimitiveBoolean() {
+		throw new RuntimeException("this method isn't a getter (no return type) and should never be invoked");
+	}
+	
+	public boolean getPrimitiveBoolean(boolean dummy) {
+		throw new RuntimeException("this method isn't a getter (it has a param) and should never be invoked");
+	}
+	
+	public boolean isPrimitiveBoolean() {
+		return primitiveBoolean;
+	}
+
+	public void setPrimitiveBoolean(boolean primitiveBoolean) {
+		this.primitiveBoolean = primitiveBoolean;
+	}
+	
+	public void setPrimitiveBoolean() {
+		throw new RuntimeException("this method isn't a setter (no param) and should never be invoked");
+	}
+
+	public Boolean getBooleanWrapper() {
+		return booleanWrapper;
+	}
+
+	public void setBooleanWrapper(Boolean booleanWrapper) {
+		this.booleanWrapper = booleanWrapper;
+	}
+
+	public Boolean isBooleanWrapper2() {
+		return booleanWrapper2;
+	}
+
+	public void setBooleanWrapper2(Boolean booleanWrapper2) {
+		this.booleanWrapper2 = booleanWrapper2;
+	}
+	
+	public String isInvalid(){
+		throw new RuntimeException("this method isn't a getter and should never be invoked");
 	}
 	
 }

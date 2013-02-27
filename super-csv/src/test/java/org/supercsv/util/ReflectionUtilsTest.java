@@ -21,7 +21,6 @@ import static org.supercsv.util.ReflectionUtils.findGetter;
 import static org.supercsv.util.ReflectionUtils.findSetter;
 
 import java.lang.reflect.Constructor;
-import java.security.Permission;
 
 import org.junit.After;
 import org.junit.Before;
@@ -57,47 +56,43 @@ public class ReflectionUtilsTest {
 	}
 	
 	/**
-	 * Sets the SecurityManager to a mock implementation which throws a SecurityException whenever checkMemberAccess()
-	 * is called. clearSecurityManager() should be called immediately after the test to restore things back to normal.
-	 * 
-	 * @param allowedCalls
-	 *            the number of calls to checkMemberAccess() that should be allowed before throwing the exception.
-	 */
-	private static void initSecurityManager(final int allowedCalls) {
-		System.setSecurityManager(new SecurityManager() {
-			
-			private int allowedCallsLeft = allowedCalls;
-			
-			@Override
-			public void checkMemberAccess(Class<?> clazz, int which) {
-				if( allowedCallsLeft-- <= 0 ) {
-					throw new SecurityException("Computer says no!");
-				}
-				
-			}
-			
-			@Override
-			public void checkPermission(Permission perm) {
-				// allow resetting the SecurityManager
-			}
-		});
-	}
-	
-	/**
-	 * Clears the SecurityManager.
-	 */
-	private static void clearSecurityManager() {
-		System.setSecurityManager(null);
-	}
-	
-	/**
 	 * Tests the findGetter() method.
 	 */
 	@Test
 	public void testFindGetter() throws Exception {
-		String name = "Bob";
+		final String name = "Bob";
 		bean.setName(name);
 		assertEquals(name, findGetter(bean, "name").invoke(bean));
+	}
+	
+	/**
+	 * Tests the findGetter() method with an 'get' style boolean getter.
+	 */
+	@Test
+	public void testFindBooleanGetter() throws Exception {
+		final Boolean boolValue = true;
+		bean.setBooleanWrapper(boolValue);
+		assertEquals(boolValue, findGetter(bean, "booleanWrapper").invoke(bean));
+	}
+	
+	/**
+	 * Tests the findGetter() method with an 'is' style boolean getter.
+	 */
+	@Test
+	public void testFindAlternateBooleanGetter() throws Exception {
+		final boolean boolValue = true;
+		bean.setPrimitiveBoolean(boolValue);
+		assertEquals(boolValue, findGetter(bean, "primitiveBoolean").invoke(bean));
+	}
+	
+	/**
+	 * Tests the findGetter() method with an 'is' style Boolean getter.
+	 */
+	@Test
+	public void testFindAlternateBooleanWrapperGetter() throws Exception {
+		final Boolean boolValue = Boolean.TRUE;
+		bean.setBooleanWrapper2(boolValue);
+		assertEquals(boolValue, findGetter(bean, "booleanWrapper2").invoke(bean));
 	}
 	
 	/**
@@ -105,7 +100,7 @@ public class ReflectionUtilsTest {
 	 */
 	@Test
 	public void testFindSetter() throws Exception {
-		String name = "Bob";
+		final String name = "Bob";
 		findSetter(bean, "name", String.class).invoke(bean, name);
 		assertEquals(name, bean.getName());
 	}
@@ -135,8 +130,8 @@ public class ReflectionUtilsTest {
 	 */
 	@Test
 	public void testFindSetterWithMethodOfSameName() throws Exception {
-		findSetter(bean, "sailForTreasure", Boolean.class).invoke(bean, Boolean.TRUE);
-		assertTrue(bean.getSailForTreasure());
+		findSetter(bean, "primitiveBoolean", boolean.class).invoke(bean, true);
+		assertTrue(bean.isPrimitiveBoolean());
 	}
 	
 	/**
@@ -146,7 +141,10 @@ public class ReflectionUtilsTest {
 	@Test
 	public void testAutoboxing() throws Exception {
 		
-		// first try setting a wrapper values onto the primitive setters
+		// first try setting wrapper values onto the primitive setters
+		
+		findSetter(bean, "primitiveBoolean", Boolean.class).invoke(bean, Boolean.TRUE);
+		assertEquals(true, bean.isPrimitiveBoolean());
 		
 		findSetter(bean, "primitiveInt", Integer.class).invoke(bean, Integer.valueOf(1));
 		assertEquals(1, bean.getPrimitiveInt());
@@ -170,6 +168,9 @@ public class ReflectionUtilsTest {
 		assertEquals(Byte.parseByte("123"), bean.getPrimitiveByte());
 		
 		// now try setting primitive values onto the wrapper setters
+		
+		findSetter(bean, "booleanWrapper", boolean.class).invoke(bean, true);
+		assertEquals(Boolean.TRUE, bean.getBooleanWrapper());
 		
 		findSetter(bean, "integerWrapper", int.class).invoke(bean, 1);
 		assertEquals(Integer.valueOf(1), bean.getIntegerWrapper());
@@ -216,21 +217,6 @@ public class ReflectionUtilsTest {
 	@Test(expected = SuperCsvReflectionException.class)
 	public void testFindGetterWithInvalidFieldName() {
 		findGetter(bean, "invalid");
-	}
-	
-	/**
-	 * Tests the findGetter() method when a SecurityException is thrown (should throw an exception).
-	 */
-	@Test(expected = SuperCsvReflectionException.class)
-	public void testFindGetterWithSecurityException() {
-		try {
-			initSecurityManager(0);
-			findGetter(bean, "name");
-		}
-		finally {
-			clearSecurityManager();
-		}
-		
 	}
 	
 	/**

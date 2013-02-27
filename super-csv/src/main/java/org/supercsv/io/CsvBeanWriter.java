@@ -72,7 +72,7 @@ public class CsvBeanWriter extends AbstractCsvWriter implements ICsvBeanWriter {
 	 * @throws SuperCsvReflectionException
 	 *             if there was a reflection exception extracting the bean value
 	 */
-	private void extractBeanValues(final Object source, final String[] nameMapping) throws SuperCsvReflectionException {
+	private void extractBeanValues(final Object source, final String[] nameMapping) {
 		
 		if( source == null ) {
 			throw new NullPointerException("the bean to write should not be null");
