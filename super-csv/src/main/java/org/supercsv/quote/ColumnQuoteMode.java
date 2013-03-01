@@ -35,6 +35,8 @@ public class ColumnQuoteMode implements QuoteMode {
 	 * 
 	 * @param columnsToQuote
 	 *            array of booleans (one per CSV column) indicating whether each column should be quoted or not
+	 * @throws NullPointerException
+	 *             if columnsToQuote is null
 	 */
 	public ColumnQuoteMode(final boolean... columnsToQuote) {
 		if( columnsToQuote == null ) {

@@ -39,22 +39,14 @@ public class DefaultCsvEncoder implements CsvEncoder {
 	 */
 	public String encode(final String input, final CsvContext context, final CsvPreference preference) {
 		
-		if( input.length() == 0 ) {
-			return "";
-		}
-		
 		currentColumn.delete(0, currentColumn.length()); // reusing builder object
 		
 		final int delimiter = preference.getDelimiterChar();
 		final char quote = (char) preference.getQuoteChar();
-		final char space = ' ';
 		final String eolSymbols = preference.getEndOfLineSymbols();
 		final int lastCharIndex = input.length() - 1;
 		
-		boolean surroundingSpacesNeedQuotes = preference.isSurroundingSpacesNeedQuotes()
-			&& (input.charAt(0) == space || input.charAt(lastCharIndex) == space);
-		boolean needsSurroundingQuotes = surroundingSpacesNeedQuotes
-			|| preference.getQuoteMode().quotesRequired(input, context, preference);
+		boolean quotesRequiredForSpecialChar = false;
 		
 		boolean skipNewline = false;
 		
@@ -70,19 +62,19 @@ public class DefaultCsvEncoder implements CsvEncoder {
 			}
 			
 			if( c == delimiter ) {
-				needsSurroundingQuotes = true;
+				quotesRequiredForSpecialChar = true;
 				currentColumn.append(c);
 			} else if( c == quote ) {
-				needsSurroundingQuotes = true;
+				quotesRequiredForSpecialChar = true;
 				currentColumn.append(quote);
 				currentColumn.append(quote);
 			} else if( c == '\r' ) {
-				needsSurroundingQuotes = true;
+				quotesRequiredForSpecialChar = true;
 				currentColumn.append(eolSymbols);
 				context.setLineNumber(context.getLineNumber() + 1);
 				skipNewline = true;
 			} else if( c == '\n' ) {
-				needsSurroundingQuotes = true;
+				quotesRequiredForSpecialChar = true;
 				currentColumn.append(eolSymbols);
 				context.setLineNumber(context.getLineNumber() + 1);
 			} else {
@@ -90,9 +82,11 @@ public class DefaultCsvEncoder implements CsvEncoder {
 			}
 		}
 		
-		// if element contains special characters, or the preferences say so, escape the
-		// whole element with surrounding quotes
-		if( needsSurroundingQuotes ) {
+		final boolean quotesRequiredForMode = preference.getQuoteMode().quotesRequired(input, context, preference);
+		final boolean quotesRequiredForSurroundingSpaces = preference.isSurroundingSpacesNeedQuotes()
+			&& input.length() > 0 && (input.charAt(0) == ' ' || input.charAt(input.length() - 1) == ' ');
+		
+		if( quotesRequiredForSpecialChar || quotesRequiredForMode || quotesRequiredForSurroundingSpaces ) {
 			currentColumn.insert(0, quote).append(quote);
 		}
 		

@@ -105,7 +105,9 @@ What is CSV?
    zzz,yyy,xxx
 -----------------------------------------------------------------------------------
 
-  Super CSV only encloses fields in double quotes when they require escaping (see Rule 6).
+  By default Super CSV only encloses fields in double quotes when they require escaping (see Rule 6),
+  but it is possible to enable quotes always, for particular columns, or for some other reason by supplying
+  a {{{./apidocs/org/supercsv/quote/QuoteMode.html}QuoteMode}} in the CsvPreference object.
   
   The quote character is configurable via the {{{./apidocs/org/supercsv/prefs/CsvPreference.html}CsvPreference}} object, though is typically a double quote (<<<">>>).
 

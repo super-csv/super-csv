@@ -41,24 +41,48 @@ CSV Preferences
     []
     
     [skipComments] Skips comments (what makes up a comment is determined by the CommentMatcher you supply). See the section on skipping comments below for more information.
+
+    []
     
+    [encoder] Use your own encoder when writing CSV. See the section on custom encoders below.
+    
+    []
+    
+    [quoteMode] Allows you to enable surrounding quotes for writing (if a column wouldn't normally be quoted because it doesn't contain special characters).
+    See the section on quote modes below.
+        
     []
 
 * Predefined preferences
 
   There are four 'ready to use' configurations for typical scenarios.
 
-*------------------------------------------------------------------------------------------------------------------+-------------*-----------------*----------------------*---------------------------------*----------------*
- <<Constant>>                                                                                                      || Quote char || Delimiter char || End of line symbols || Surrounding spaces need quotes || Skip comments 
-*------------------------------------------------------------------------------------------------------------------+-------------*-----------------*----------------------*---------------------------------*----------------*
- {{{./apidocs/org/supercsv/prefs/CsvPreference.html#STANDARD_PREFERENCE}STANDARD_PREFERENCE}}                      |        "    |           ,     |       \\r\\n         |            false                |      false
-*------------------------------------------------------------------------------------------------------------------+-------------*-----------------*----------------------*---------------------------------*----------------*
- {{{./apidocs/org/supercsv/prefs/CsvPreference.html#EXCEL_PREFERENCE}EXCEL_PREFERENCE}}                            |        "    |           ,     |        \\n           |            false                |      false
-*------------------------------------------------------------------------------------------------------------------+-------------*-----------------*----------------------*---------------------------------*----------------*
- {{{./apidocs/org/supercsv/prefs/CsvPreference.html#EXCEL_NORTH_EUROPE_PREFERENCE}EXCEL_NORTH_EUROPE_PREFERENCE}}  |        "    |           ;     |        \\n           |            false                |      false
-*------------------------------------------------------------------------------------------------------------------+-------------*-----------------*----------------------*---------------------------------*----------------*
- {{{./apidocs/org/supercsv/prefs/CsvPreference.html#TAB_PREFERENCE}TAB_PREFERENCE}}                                |        "    |          \\t    |        \\n           |            false                |      false
-*------------------------------------------------------------------------------------------------------------------+-------------*-----------------*----------------------*---------------------------------*----------------*
+*------------------------------------------------------------------------------------------------------------------+-------------*-----------------*----------------------*
+ <<Constant>>                                                                                                      || Quote char || Delimiter char || End of line symbols 
+*------------------------------------------------------------------------------------------------------------------+-------------*-----------------*----------------------*
+ {{{./apidocs/org/supercsv/prefs/CsvPreference.html#STANDARD_PREFERENCE}STANDARD_PREFERENCE}}                      |        "    |           ,     |       \\r\\n         
+*------------------------------------------------------------------------------------------------------------------+-------------*-----------------*----------------------*
+ {{{./apidocs/org/supercsv/prefs/CsvPreference.html#EXCEL_PREFERENCE}EXCEL_PREFERENCE}}                            |        "    |           ,     |        \\n           
+*------------------------------------------------------------------------------------------------------------------+-------------*-----------------*----------------------*
+ {{{./apidocs/org/supercsv/prefs/CsvPreference.html#EXCEL_NORTH_EUROPE_PREFERENCE}EXCEL_NORTH_EUROPE_PREFERENCE}}  |        "    |           ;     |        \\n           
+*------------------------------------------------------------------------------------------------------------------+-------------*-----------------*----------------------*
+ {{{./apidocs/org/supercsv/prefs/CsvPreference.html#TAB_PREFERENCE}TAB_PREFERENCE}}                                |        "    |          \\t    |        \\n           
+*------------------------------------------------------------------------------------------------------------------+-------------*-----------------*----------------------*
+
+
+  All of these configurations use the default values of:
+
+*----------------------------+-------------------------------------------------------------------------------------*
+ <<Preference>>              || Default value
+*----------------------------+-------------------------------------------------------------------------------------*
+ surroundingSpacesNeedQuotes | true
+*----------------------------+-------------------------------------------------------------------------------------*
+ encoder                     | {{{./apidocs/org/supercsv/io/DefaultCsvEncoder.html}DefaultCsvEncoder}}
+*----------------------------+-------------------------------------------------------------------------------------*
+ quoteMode                   | {{{./apidocs/org/supercsv/quote/NormalQuoteMode.html}NormalQuoteMode}}
+*----------------------------+-------------------------------------------------------------------------------------*
+ skipComments                | false (no CommentMatcher used)
+*----------------------------+-------------------------------------------------------------------------------------*
 
 * Create your own preference
 
@@ -93,6 +117,39 @@ private static final CsvPreference STANDARD_SURROUNDING_SPACES_NEED_QUOTES =
 +------------------------------------------------------------------------------------------------------------------------------------------------+
   
   Prior to Super CSV 2.0.0, this behaviour wasn't configurable and surrounding spaces were always trimmed.
+
+* Custom quote mode
+
+  By default Super CSV only adds surrounding quotes when writing CSV when it contains a delimiter, quote or newline
+  (or if you've enabled <<<surroundingSpacesNeedQuotes>>> and the value has surrounding spaces).
+  
+  Super CSV provides two alternative quoting modes:
+  
+  * {{{./apidocs/org/supercsv/quote/AlwaysQuoteMode.html}AlwaysQuoteMode}} - quotes are always applied
+
+  * {{{./apidocs/org/supercsv/quote/ColumnQuoteMode.html}ColumnQuoteMode}} - quotes are always applied for particular columns
+  
+  []
+  
+  You can also write your own {{{./apidocs/org/supercsv/quote/QuoteMode.html}QuoteMode}}, 
+  but please note that this is a means to <enable> quotes when they're not normally required (you won't be able to disable quotes because
+  then your CSV will not be readable if it contains embedded special characters).
+  Just pass your desired mode to the <<<useQuoteMode()>>> method when building your preferences:
+
++------------------------------------------------------------------------------------------------------------------------------------------------+
+private static final CsvPreference ALWAYS_QUOTE = 
+    new CsvPreference.Builder(CsvPreference.STANDARD_PREFERENCE).useQuoteMode(new AlwaysQuoteMode().build();
++------------------------------------------------------------------------------------------------------------------------------------------------+  
+
+* Custom CSV encoder
+
+  Super CSV provides a powerful {{{./apidocs/org/supercsv/io/CsvEncoder.html}CsvEncoder}}, but if you'd like complete control
+  over how your CSV is encoded, then you can supply your own to the <<<useEncoder()>>> method when building your preferences:
+
++------------------------------------------------------------------------------------------------------------------------------------------------+
+private static final CsvPreference CUSTOM_ENCODER = 
+    new CsvPreference.Builder(CsvPreference.STANDARD_PREFERENCE).useEncoder(new MyAwesomeEncoder().build();
++------------------------------------------------------------------------------------------------------------------------------------------------+
   
 * Skipping comments
 

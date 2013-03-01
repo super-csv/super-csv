@@ -27,7 +27,8 @@ import org.supercsv.util.CsvContext;
 public interface QuoteMode {
 	
 	/**
-	 * Determines whether surrounding quotes are required.
+	 * Determines whether surrounding quotes are required if the CSV column to be written doesn't contain special
+	 * characters (if it does then it will have surrounding quotes added to conform to RFC4180).
 	 * 
 	 * @param csvColumn
 	 *            an element of a CSV file

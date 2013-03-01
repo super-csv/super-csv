@@ -16,8 +16,6 @@
 package org.supercsv.prefs;
 
 import org.supercsv.comment.CommentMatcher;
-import org.supercsv.comment.CommentMatches;
-import org.supercsv.comment.CommentStartsWith;
 import org.supercsv.io.CsvEncoder;
 import org.supercsv.io.DefaultCsvEncoder;
 import org.supercsv.quote.NormalQuoteMode;
@@ -78,11 +76,21 @@ import org.supercsv.quote.QuoteMode;
  * <p>
  * You can also create your own preferences. For example if your file was pipe-delimited, you could use the following:<br/>
  * {@code private static final CsvPreference PIPE_DELIMITED = new CsvPreference.Builder('"', '|', "\n").build();}
+ * <p>
+ * Other preferences incude:
+ * <ul>
+ * <li>using a custom {@link CsvEncoder} when writing CSV (if you want complete control over how the CSV is encoded)</li>
+ * <li>using a custom {@link QuoteMode} when writing CSV (if you want to enable quotes when they're not normally
+ * required). You can use the existing {@link org.supercsv.quote.AlwaysQuoteMode AlwaysQuoteMode},
+ * {@link org.supercsv.quote.ColumnQuoteMode ColumnQuoteMode}, or supply your own.</li>
+ * <li>using a custom {@link CommentMatcher} to skip comments when reading CSV. You can use the existing
+ * {@link org.supercsv.comment.CommentStartsWith CommentStartsWith}, {@link org.supercsv.comment.CommentMatches
+ * CommentMatches}, or supply your own.</li>
+ * </ul>
  * 
  * @author Kasper B. Graversen
  * @author James Bassett
  */
-// TODO update javadoc and website with extra prefs!
 public final class CsvPreference {
 	
 	/**
@@ -276,7 +284,8 @@ public final class CsvPreference {
 		
 		/**
 		 * Enables the skipping of comments. You can supply your own comment matcher or use one of the predefined ones:
-		 * {@link CommentMatches} or {@link CommentStartsWith}.
+		 * {@link org.supercsv.comment.CommentStartsWith CommentStartsWith} or
+		 * {@link org.supercsv.comment.CommentMatches CommentMatches}
 		 * 
 		 * @since 2.1.0
 		 * @param commentMatcher
@@ -312,7 +321,10 @@ public final class CsvPreference {
 		}
 		
 		/**
-		 * Uses a custom QuoteMode to determine if surrounding quotes should be applied when writing.
+		 * Uses a custom QuoteMode to determine if surrounding quotes should be applied when writing (only applicable if
+		 * a column doesn't contain any special characters and wouldn't otherwise be quoted). You can supply your own
+		 * quote mode or use one of the predefined ones: {@link org.supercsv.quote.AlwaysQuoteMode AlwaysQuoteMode} or
+		 * {@link org.supercsv.quote.ColumnQuoteMode ColumnQuoteMode}
 		 * 
 		 * @since 2.1.0
 		 * @param quoteMode
@@ -336,11 +348,11 @@ public final class CsvPreference {
 		 */
 		public CsvPreference build() {
 			
-			if (encoder == null){
+			if( encoder == null ) {
 				encoder = new DefaultCsvEncoder();
 			}
 			
-			if (quoteMode == null){
+			if( quoteMode == null ) {
 				quoteMode = new NormalQuoteMode();
 			}
 			

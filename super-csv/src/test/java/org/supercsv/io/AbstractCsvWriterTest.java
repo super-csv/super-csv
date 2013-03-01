@@ -127,46 +127,6 @@ public class AbstractCsvWriterTest {
 	}
 	
 	/**
-	 * Tests the escapeString() method with and without surroundingSpacesNeedQuotes enabled.
-	 */
-	@Test
-	public void testEscapeString() {
-		
-		assertEquals("", abstractWriter.escapeString(""));
-		assertEquals("", surroundingSpacesNeedQuotesAbstractWriter.escapeString(""));
-		
-		assertEquals(" ", abstractWriter.escapeString(" "));
-		assertEquals("\" \"", surroundingSpacesNeedQuotesAbstractWriter.escapeString(" "));
-		
-		assertEquals(" leading space", abstractWriter.escapeString(" leading space"));
-		assertEquals("\" leading space\"", surroundingSpacesNeedQuotesAbstractWriter.escapeString(" leading space"));
-		
-		assertEquals("trailing space ", abstractWriter.escapeString("trailing space "));
-		assertEquals("\"trailing space \"", surroundingSpacesNeedQuotesAbstractWriter.escapeString("trailing space "));
-		
-		assertEquals("just a normal phrase", abstractWriter.escapeString("just a normal phrase"));
-		assertEquals("just a normal phrase",
-			surroundingSpacesNeedQuotesAbstractWriter.escapeString("just a normal phrase"));
-		
-		assertEquals("\"oh look, a comma\"", abstractWriter.escapeString("oh look, a comma"));
-		assertEquals("\"oh look, a comma\"", surroundingSpacesNeedQuotesAbstractWriter.escapeString("oh look, a comma"));
-		
-		assertEquals("\"\"\"Watch out for quotes\"\", he said\"",
-			abstractWriter.escapeString("\"Watch out for quotes\", he said"));
-		assertEquals("\"\"\"Watch out for quotes\"\", he said\"",
-			surroundingSpacesNeedQuotesAbstractWriter.escapeString("\"Watch out for quotes\", he said"));
-		
-		assertEquals("\"text that spans\r\ntwo lines\"", abstractWriter.escapeString("text that spans\ntwo lines"));
-		assertEquals("\"text that spans\r\ntwo lines\"",
-			surroundingSpacesNeedQuotesAbstractWriter.escapeString("text that spans\ntwo lines"));
-		
-		assertEquals("\"text \"\"with quotes\"\" that spans\r\ntwo lines\"",
-			abstractWriter.escapeString("text \"with quotes\" that spans\ntwo lines"));
-		assertEquals("\"text \"\"with quotes\"\" that spans\r\ntwo lines\"",
-			surroundingSpacesNeedQuotesAbstractWriter.escapeString("text \"with quotes\" that spans\ntwo lines"));
-	}
-	
-	/**
 	 * Tests that all 3 variations of line terminators embedded in CSV are handled correctly (are replaced with the end
 	 * of line symbols and line number is incremented correctly). writeHeader() is used because it increments the line
 	 * number just like the write() methods exposed on concretes writers.
