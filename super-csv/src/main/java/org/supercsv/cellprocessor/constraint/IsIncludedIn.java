@@ -31,7 +31,8 @@ import org.supercsv.exception.SuperCsvConstraintViolationException;
 import org.supercsv.util.CsvContext;
 
 /**
- * This processor ensures that the input value belongs to a specific set of given values.
+ * This processor ensures that the input value belongs to a specific set of (unchangeable) values. If you want to check
+ * if the value is an element of a (possibly changing) Collection, then use {@link IsElementOf} instead.
  * 
  * @since 1.50
  * @author Dominique De Vito
@@ -162,8 +163,8 @@ public class IsIncludedIn extends CellProcessorAdaptor implements BoolCellProces
 		validateInputNotNull(value, context);
 		
 		if( !possibleValues.contains(value) ) {
-			throw new SuperCsvConstraintViolationException(String.format("'%s' is not included in the allowed set of values", value),
-				context, this);
+			throw new SuperCsvConstraintViolationException(String.format(
+				"'%s' is not included in the allowed set of values", value), context, this);
 		}
 		
 		return next.execute(value, context);
