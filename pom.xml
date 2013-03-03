@@ -30,10 +30,14 @@
 		<module>super-csv</module>
 		<module>super-csv-dozer</module>
 		<module>super-csv-distribution</module>
+		<module>super-csv-benchmark</module>
 	</modules>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+		<dozer.version>5.4.0</dozer.version>
+		<slf4j.version>1.7.2</slf4j.version>
 
 		<!-- properties ensure reporting plugin versions are same as managed versions -->
 		<cobertura.plugin.version>2.5.2</cobertura.plugin.version>
@@ -165,38 +169,6 @@
 				</configuration>
 			</plugin>
 
-			<!-- Generates the OSGi manifest (required for OSGi support) -->
-			<plugin>
-				<groupId>org.apache.felix</groupId>
-				<artifactId>maven-bundle-plugin</artifactId>
-				<extensions>true</extensions>
-				<configuration>
-					<instructions>
-						<Export-Package>org.supercsv.*</Export-Package>
-					</instructions>
-				</configuration>
-				<executions>
-					<execution>
-						<id>bundle-manifest</id>
-						<phase>process-classes</phase>
-						<goals>
-							<goal>manifest</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-
-			<!-- Creates the final jar. This is needed to use the OSGi manifest entries -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<configuration>
-					<archive>
-						<manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
-					</archive>
-				</configuration>
-			</plugin>
-
 			<!-- Generates the site documentation -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -312,6 +284,18 @@
 				<groupId>net.sf.supercsv</groupId>
 				<artifactId>super-csv-dozer</artifactId>
 				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>net.sf.dozer</groupId>
+				<artifactId>dozer</artifactId>
+				<version>${dozer.version}</version>
+				<exclusions>
+					<!-- this exclusion won't be necessary in the future -->
+					<exclusion>
+						<groupId>org.slf4j</groupId>
+						<artifactId>slf4j-log4j12</artifactId>
+					</exclusion>
+				</exclusions>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

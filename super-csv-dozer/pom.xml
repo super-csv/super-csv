@@ -29,11 +29,6 @@
 	<description>An extension for Super CSV that uses Dozer for reading/writing between CSV and POJOs</description>
 	<packaging>jar</packaging>
 	
-	<properties>
-	    <dozer.version>5.4.0</dozer.version>
-	    <slf4j.version>1.7.2</slf4j.version>
-	</properties>
-	
 	<build>
 		<plugins>
 			<plugin>
@@ -53,6 +48,38 @@
 					</execution>
 				</executions>
 			</plugin>
+			
+			<!-- Generates the OSGi manifest (required for OSGi support) -->
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<extensions>true</extensions>
+				<configuration>
+					<instructions>
+						<Export-Package>org.supercsv.*</Export-Package>
+					</instructions>
+				</configuration>
+				<executions>
+					<execution>
+						<id>bundle-manifest</id>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>manifest</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- Creates the final jar. This is needed to use the OSGi manifest entries -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+					</archive>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 	
@@ -64,7 +91,6 @@
 		<dependency>
 			<groupId>net.sf.dozer</groupId>
 			<artifactId>dozer</artifactId>
-			<version>${dozer.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>

@@ -31,16 +31,6 @@
       <attribute value="jar:file:/home/jim/.m2/repository/org/slf4j/jcl-over-slf4j/1.6.6/jcl-over-slf4j-1.6.6-javadoc.jar!/" name="javadoc_location"/>
     </attributes>
   </classpathentry>
-  <classpathentry kind="var" path="M2_REPO/org/slf4j/slf4j-log4j12/1.6.6/slf4j-log4j12-1.6.6.jar" sourcepath="M2_REPO/org/slf4j/slf4j-log4j12/1.6.6/slf4j-log4j12-1.6.6-sources.jar">
-    <attributes>
-      <attribute value="jar:file:/home/jim/.m2/repository/org/slf4j/slf4j-log4j12/1.6.6/slf4j-log4j12-1.6.6-javadoc.jar!/" name="javadoc_location"/>
-    </attributes>
-  </classpathentry>
-  <classpathentry kind="var" path="M2_REPO/log4j/log4j/1.2.17/log4j-1.2.17.jar" sourcepath="M2_REPO/log4j/log4j/1.2.17/log4j-1.2.17-sources.jar">
-    <attributes>
-      <attribute value="jar:file:/home/jim/.m2/repository/log4j/log4j/1.2.17/log4j-1.2.17-javadoc.jar!/" name="javadoc_location"/>
-    </attributes>
-  </classpathentry>
   <classpathentry kind="var" path="M2_REPO/ch/qos/logback/logback-classic/1.0.9/logback-classic-1.0.9.jar" sourcepath="M2_REPO/ch/qos/logback/logback-classic/1.0.9/logback-classic-1.0.9-sources.jar">
     <attributes>
       <attribute value="jar:file:/home/jim/.m2/repository/ch/qos/logback/logback-classic/1.0.9/logback-classic-1.0.9-javadoc.jar!/" name="javadoc_location"/>
