@@ -19,6 +19,40 @@
 
 Release notes
 
+* 2.1.0
+
+  <04/2013>
+  
+  A ton of great new features :)
+  
+  <<New features>>
+  
+    * {{{https://sourceforge.net/p/supercsv/feature-requests/8/}8}} - Added locale support to ParseDate processor
+    
+    * {{{https://sourceforge.net/p/supercsv/feature-requests/9/}9}} - Readers can now skip comments (via the <<<skipComments>>> CsvPreference) 
+      and Writers can write comments (via the <<<writeComment()>>> method)
+    
+    * {{{https://sourceforge.net/p/supercsv/feature-requests/23/}23}} - Upgrade to Dozer 5.4.0
+    
+    * {{{https://sourceforge.net/p/supercsv/feature-requests/24/}24}} - Added a <<<quoteMode>>> preference that allows quoting to be enabled when it's normally
+      not required, as well as adding a <<<csvEncoder>>> preference that allows complete control over how CSV is encoded for writing.
+    
+    * {{{https://sourceforge.net/p/supercsv/feature-requests/25/}25}} - Added {{{./apidocs/org/supercsv/cellprocessor/Collector.html}Collector}} and 
+      {{{./apidocs/org/supercsv/cellprocessor/constraint/IsElementOf.html}IsElementOf}} cell processors, which can be combined to ensure referential integrity.
+      Collector can also help during development - you could apply a Collector (with a Set) to a column to find out all of the unique values for that column!
+      
+    * {{{https://sourceforge.net/p/supercsv/feature-requests/27/}27}} - Added support for boolean getters (e.g. <<<isX()>>>) to CsvBeanWriter
+    
+    * {{{https://sourceforge.net/p/supercsv/feature-requests/31/}31}} - CsvListReader now supports cell processors for CSV files with a variable number of columns
+  
+  <<Bug fixes>>
+
+    * {{{https://sourceforge.net/p/supercsv/bugs/38/}38}} - <<<AbstractCsvWriter.escapeString()>>> does not increment the line count correctly for embedded newlines
+    
+  <<General enhancements>>
+  
+    * Resurrected the speed benchmark tests. There's now a full suite of benchmark tests for all the readers/writers.
+    
 * 2.0.1
 
   <12/2012>
