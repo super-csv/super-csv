@@ -25,7 +25,7 @@ import static org.supercsv.prefs.CsvPreference.STANDARD_PREFERENCE;
 import static org.supercsv.prefs.CsvPreference.TAB_PREFERENCE;
 
 import org.junit.Test;
-import org.supercsv.io.DefaultCsvEncoder;
+import org.supercsv.encoder.DefaultCsvEncoder;
 import org.supercsv.quote.AlwaysQuoteMode;
 import org.supercsv.quote.NormalQuoteMode;
 

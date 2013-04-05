@@ -19,7 +19,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
-import org.supercsv.exception.SuperCsvException;
 import org.supercsv.prefs.CsvPreference;
 import org.supercsv.util.CsvContext;
 
@@ -31,14 +30,31 @@ import org.supercsv.util.CsvContext;
 public class ColumnQuoteModeTest {
 	
 	/**
-	 * Tests the quotesRequired() method.
+	 * Tests the quotesRequired() method with a boolean array.
 	 */
 	@Test
-	public void testQuotesRequired() {
+	public void testQuotesRequiredWithBooleanArray() {
+		testQuotesRequired(new ColumnQuoteMode(new boolean[] { true, false, false, true }));
+	}
+	
+	/**
+	 * Tests the quotesRequired() method with an int array.
+	 */
+	@Test
+	public void testQuotesRequiredWithIntArray() {
+		testQuotesRequired(new ColumnQuoteMode(1, 4));
+	}
+	
+	/**
+	 * Tests the quotesRequired() method with the supplied quote mode.
+	 * 
+	 * @param quoteMode
+	 *            the quote mode to use
+	 */
+	private void testQuotesRequired(final QuoteMode quoteMode) {
 		final String input = "input";
 		final CsvPreference prefs = CsvPreference.STANDARD_PREFERENCE;
 		
-		final QuoteMode quoteMode = new ColumnQuoteMode(true, false, false, true);
 		assertTrue(quoteMode.quotesRequired(input, new CsvContext(1, 1, 1), prefs));
 		assertFalse(quoteMode.quotesRequired(input, new CsvContext(1, 1, 2), prefs));
 		assertFalse(quoteMode.quotesRequired(input, new CsvContext(1, 1, 3), prefs));
@@ -46,23 +62,19 @@ public class ColumnQuoteModeTest {
 	}
 	
 	/**
-	 * Tests the quotesRequired() method when the boolean array isn't the right size.
+	 * Tests construction with a null boolean array (should throw an exception).
 	 */
-	@Test(expected = SuperCsvException.class)
-	public void testQuotesRequiredWithInvalidBooleanArray() {
-		final String input = "input";
-		final CsvPreference prefs = CsvPreference.STANDARD_PREFERENCE;
-		
-		final QuoteMode quoteMode = new ColumnQuoteMode(new boolean[] {});
-		quoteMode.quotesRequired(input, new CsvContext(1, 1, 1), prefs);
+	@Test(expected = NullPointerException.class)
+	public void testConstructorWithNullBooleanArray() {
+		new ColumnQuoteMode((boolean[]) null);
 	}
 	
 	/**
-	 * Tests construction with a null array (should throw an exception).
+	 * Tests construction with a null int array (should throw an exception).
 	 */
 	@Test(expected = NullPointerException.class)
-	public void testConstructorWithNullArray() {
-		new ColumnQuoteMode(null);
+	public void testConstructorWithNullIntArray() {
+		new ColumnQuoteMode((int[]) null);
 	}
 	
 }

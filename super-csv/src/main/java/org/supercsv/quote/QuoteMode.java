@@ -19,7 +19,9 @@ import org.supercsv.prefs.CsvPreference;
 import org.supercsv.util.CsvContext;
 
 /**
- * The interface for quoting modes.
+ * The interface for quoting modes. The quote mode allows quoting to be enabled in cases where quotes would not normally
+ * be required (because the column doesn't contain any special characters). It is not a way to disable quoting
+ * altogether - to do that you must supply your own CsvEncoder.
  * 
  * @author James Bassett
  * @since 2.1.0
@@ -27,8 +29,8 @@ import org.supercsv.util.CsvContext;
 public interface QuoteMode {
 	
 	/**
-	 * Determines whether surrounding quotes are required if the CSV column to be written doesn't contain special
-	 * characters (if it does then it will have surrounding quotes added to conform to RFC4180).
+	 * Determines whether surrounding quotes are mandatory in cases where the CSV column would not normally be quoted
+	 * (the data to be written doesn't contain special characters).
 	 * 
 	 * @param csvColumn
 	 *            an element of a CSV file
@@ -36,7 +38,7 @@ public interface QuoteMode {
 	 *            the context
 	 * @param preference
 	 *            the CSV preferences
-	 * @return true if surrounding quotes are required, otherwise false
+	 * @return true if surrounding quotes are mandatory, otherwise false
 	 */
 	boolean quotesRequired(String csvColumn, CsvContext context, CsvPreference preference);
 	

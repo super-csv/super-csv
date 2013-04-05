@@ -16,8 +16,8 @@
 package org.supercsv.prefs;
 
 import org.supercsv.comment.CommentMatcher;
-import org.supercsv.io.CsvEncoder;
-import org.supercsv.io.DefaultCsvEncoder;
+import org.supercsv.encoder.CsvEncoder;
+import org.supercsv.encoder.DefaultCsvEncoder;
 import org.supercsv.quote.NormalQuoteMode;
 import org.supercsv.quote.QuoteMode;
 

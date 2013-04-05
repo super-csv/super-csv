@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
 
+import org.supercsv.encoder.CsvEncoder;
 import org.supercsv.prefs.CsvPreference;
 import org.supercsv.util.CsvContext;
 import org.supercsv.util.Util;
@@ -184,7 +185,7 @@ public abstract class AbstractCsvWriter implements ICsvWriter {
 		
 		for( int i = 0; i < columns.length; i++ ) {
 			
-			columnNumber = i; // column no used by CsvEncoder
+			columnNumber = i + 1; // column no used by CsvEncoder
 			
 			if( i > 0 ) {
 				writer.write(preference.getDelimiterChar()); // delimiter

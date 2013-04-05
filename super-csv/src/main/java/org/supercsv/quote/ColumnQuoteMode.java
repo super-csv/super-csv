@@ -15,46 +15,65 @@
  */
 package org.supercsv.quote;
 
-import org.supercsv.exception.SuperCsvException;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.supercsv.prefs.CsvPreference;
 import org.supercsv.util.CsvContext;
 
 /**
- * When using ColumnQuoteMode surrounding quotes are only applied if the column should always be quoted, or if required
- * to escape special characters (per RFC4180).
+ * When using ColumnQuoteMode surrounding quotes are only applied if required to escape special characters (per
+ * RFC4180), or if a particular column should always be quoted.
  * 
  * @author James Bassett
  * @since 2.1.0
  */
 public class ColumnQuoteMode implements QuoteMode {
 	
-	private final boolean[] columnsToQuote;
+	private final Set<Integer> columnNumbers = new HashSet<Integer>();
 	
 	/**
-	 * Constructs a new <tt>ColumnQuoteMode</tt>.
+	 * Constructs a new <tt>ColumnQuoteMode</tt> that quotes columns by column number. If no column numbers are supplied
+	 * (i.e. no parameters) then quoting will be determined per RFC4180.
+	 * 
+	 * @param columnsToQuote
+	 *            the column numbers to quote
+	 */
+	public ColumnQuoteMode(final int... columnsToQuote) {
+		if( columnsToQuote == null ) {
+			throw new NullPointerException("columnsToQuote should not be null");
+		}
+		for( final Integer columnToQuote : columnsToQuote ) {
+			columnNumbers.add(columnToQuote);
+		}
+	}
+	
+	/**
+	 * Constructs a new <tt>ColumnQuoteMode</tt> that quotes columns if the element representing that column in the
+	 * supplied array is true. Please note that <tt>false</tt> doesn't disable quoting, it just means that quoting is
+	 * determined by RFC4180.
 	 * 
 	 * @param columnsToQuote
 	 *            array of booleans (one per CSV column) indicating whether each column should be quoted or not
 	 * @throws NullPointerException
 	 *             if columnsToQuote is null
 	 */
-	public ColumnQuoteMode(final boolean... columnsToQuote) {
+	public ColumnQuoteMode(final boolean[] columnsToQuote) {
 		if( columnsToQuote == null ) {
 			throw new NullPointerException("columnsToQuote should not be null");
 		}
-		this.columnsToQuote = columnsToQuote;
+		for( int i = 0; i < columnsToQuote.length; i++ ) {
+			if( columnsToQuote[i] ) {
+				columnNumbers.add(i + 1); // column numbers start at 1
+			}
+		}
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 */
 	public boolean quotesRequired(final String csvColumn, final CsvContext context, final CsvPreference preference) {
-		if( context.getColumnNumber() > columnsToQuote.length ) {
-			throw new SuperCsvException(String.format(
-				"the number of elements in the columnsToQuote array (%d) doesn't match the number of columns",
-				columnsToQuote.length), context);
-		}
-		return columnsToQuote[context.getColumnNumber() - 1];
+		return columnNumbers.contains(context.getColumnNumber());
 	}
 	
 }
