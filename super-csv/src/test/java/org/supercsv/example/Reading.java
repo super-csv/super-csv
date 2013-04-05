@@ -44,9 +44,12 @@ public class Reading {
 	
 	private static final String CSV_FILENAME = "src/test/resources/customers.csv";
 	
+	private static final String VARIABLE_CSV_FILENAME = "src/test/resources/customerswithvariablecolumns.csv";
+	
 	public static void main(String[] args) throws Exception {
 		readWithCsvBeanReader();
 		readWithCsvListReader();
+		readVariableColumnsWithCsvListReader();
 		readWithCsvMapReader();
 		partialReadWithCsvBeanReader();
 		partialReadWithCsvMapReader();
@@ -121,6 +124,52 @@ public class Reading {
 			while( (customerList = listReader.read(processors)) != null ) {
 				System.out.println(String.format("lineNo=%s, rowNo=%s, customerList=%s", listReader.getLineNumber(),
 					listReader.getRowNumber(), customerList));
+			}
+			
+		}
+		finally {
+			if( listReader != null ) {
+				listReader.close();
+			}
+		}
+	}
+	
+	/**
+	 * An example of reading a file with a variable number of columns using CsvListReader. It demonstrates that you can
+	 * still use cell processors, but you must execute them by calling the executeProcessors() method on the reader,
+	 * instead of supplying processors to the read() method. In this scenario, the last column (birthDate) is sometimes
+	 * missing.
+	 */
+	private static void readVariableColumnsWithCsvListReader() throws Exception {
+		
+		final CellProcessor[] allProcessors = new CellProcessor[] { new UniqueHashCode(), // customerNo (must be unique)
+			new NotNull(), // firstName
+			new NotNull(), // lastName
+			new ParseDate("dd/MM/yyyy") }; // birthDate
+		
+		final CellProcessor[] noBirthDateProcessors = new CellProcessor[] { allProcessors[0], // customerNo
+			allProcessors[1], // firstName
+			allProcessors[2] }; // lastName
+		
+		ICsvListReader listReader = null;
+		try {
+			listReader = new CsvListReader(new FileReader(VARIABLE_CSV_FILENAME), CsvPreference.STANDARD_PREFERENCE);
+			
+			listReader.getHeader(true); // skip the header (can't be used with CsvListReader)
+			
+			while( (listReader.read()) != null ) {
+				
+				// use different processors depending on the number of columns
+				final CellProcessor[] processors;
+				if( listReader.length() == noBirthDateProcessors.length ) {
+					processors = noBirthDateProcessors;
+				} else {
+					processors = allProcessors;
+				}
+				
+				final List<Object> customerList = listReader.executeProcessors(processors);
+				System.out.println(String.format("lineNo=%s, rowNo=%s, columns=%s, customerList=%s",
+					listReader.getLineNumber(), listReader.getRowNumber(), customerList.size(), customerList));
 			}
 			
 		}

@@ -162,7 +162,8 @@ United States, married=true, numberOfKids=3, favouriteQuote="You've got to ask y
   {{{./apidocs/org/supercsv/io/CsvListReader.html}CsvListReader}} is the most primitive reader and should only be used if it's not possible
   to use the other implementations.
   
-  On the other hand, it is the only reader that can be used for reading CSV files with an arbitrary number of columns (which is not technically valid CSV, but still happens),
+  On the other hand, it is the only reader that can be used for reading CSV files with an 
+  {{{./examples_reading_variable_cols.html}arbitrary number of columns}} (which is not technically valid CSV, but still happens),
   and it's a quick and dirty way to read CSV as a List of Strings.
 
 +-------------------------------------------------------------------------------------------------------------+
@@ -209,6 +210,7 @@ lineNo=13, rowNo=5, customerList=[4, Bill, Jobs, Tue Jul 10 00:00:00 EST 1973, 2
 Santa Clara, CA 95050
 United States, true, 3, "You've got to ask yourself one question: "Do I feel lucky?" Well, do ya, punk?" - Dirty Harry, billy34@hotmail.com, 36]
 ---------------------------------------------------------------------------------------------------------------
+
 
 * Reading with CsvMapReader
 

@@ -22,7 +22,6 @@ import java.util.List;
 
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.prefs.CsvPreference;
-import org.supercsv.util.Util;
 
 /**
  * CsvListReader is a simple reader that reads a row from a CSV file into a <tt>List</tt> of Strings.
@@ -84,11 +83,16 @@ public class CsvListReader extends AbstractCsvReader implements ICsvListReader {
 		}
 		
 		if( readRow() ) {
-			final List<Object> processedColumns = new ArrayList<Object>();
-			Util.executeCellProcessors(processedColumns, getColumns(), processors, getLineNumber(), getRowNumber());
-			return processedColumns;
+			return executeProcessors(processors);
 		}
 		
 		return null; // EOF
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public List<Object> executeProcessors(final CellProcessor... processors) {
+		return super.executeProcessors(new ArrayList<Object>(getColumns().size()), processors);
 	}
 }

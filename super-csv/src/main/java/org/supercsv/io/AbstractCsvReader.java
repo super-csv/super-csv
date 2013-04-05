@@ -20,8 +20,11 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.exception.SuperCsvConstraintViolationException;
 import org.supercsv.exception.SuperCsvException;
 import org.supercsv.prefs.CsvPreference;
+import org.supercsv.util.Util;
 
 /**
  * Defines the standard behaviour of a CSV reader.
@@ -178,6 +181,27 @@ public abstract class AbstractCsvReader implements ICsvReader {
 			return true;
 		}
 		return false;
+	}
+	
+	/**
+	 * Executes the supplied cell processors on the last row of CSV that was read and populates the supplied List of
+	 * processed columns.
+	 * 
+	 * @param processedColumns
+	 *            the List to populate with processed columns
+	 * @param processors
+	 *            the cell processors
+	 * @return the updated List
+	 * @throws NullPointerException
+	 *             if processedColumns or processors is null
+	 * @throws SuperCsvConstraintViolationException
+	 *             if a CellProcessor constraint failed
+	 * @throws SuperCsvException
+	 *             if the wrong number of processors are supplied, or CellProcessor execution failed
+	 */
+	protected List<Object> executeProcessors(final List<Object> processedColumns, final CellProcessor[] processors) {
+		Util.executeCellProcessors(processedColumns, getColumns(), processors, getLineNumber(), getRowNumber());
+		return processedColumns;
 	}
 	
 }

@@ -140,6 +140,40 @@ public class CsvListReaderTest {
 	}
 	
 	/**
+	 * Tests the read() method combined with the executeProcessors() method.
+	 */
+	@Test
+	public void testReadCombinedWithExecuteProcessors() throws IOException {
+		
+		final String[] header = listReader.getHeader(true);
+		assertArrayEquals(HEADER, header);
+		
+		// read all of the customers in (manually processing each)
+		final List<List<Object>> customers = new ArrayList<List<Object>>();
+		while( listReader.read() != null ) {
+			final List<Object> customer = listReader.executeProcessors(READ_PROCESSORS);
+			customers.add(customer);
+		}
+		
+		// assert that the List for each customer is correct (ensures Lists haven't been modified)
+		for( int i = 0; i < customers.size(); i++ ) {
+			final List<Object> customer = customers.get(i);
+			assertEquals(CUSTOMERS.get(i).getCustomerNo(), customer.get(0));
+			assertEquals(CUSTOMERS.get(i).getFirstName(), customer.get(1));
+			assertEquals(CUSTOMERS.get(i).getLastName(), customer.get(2));
+			assertEquals(CUSTOMERS.get(i).getBirthDate(), customer.get(3));
+			assertEquals(CUSTOMERS.get(i).getMailingAddress(), customer.get(4));
+			assertEquals(CUSTOMERS.get(i).getMarried(), customer.get(5));
+			assertEquals(CUSTOMERS.get(i).getNumberOfKids(), customer.get(6));
+			assertEquals(CUSTOMERS.get(i).getFavouriteQuote(), customer.get(7));
+			assertEquals(CUSTOMERS.get(i).getEmail(), customer.get(8));
+			assertEquals(CUSTOMERS.get(i).getLoyaltyPoints(), customer.get(9));
+		}
+		
+		assertEquals(CUSTOMERS.size() + 1, listReader.getRowNumber());
+	}
+	
+	/**
 	 * Tests the read() method using the tokenizer version of CsvListReader (just to make sure it behaves exactly the
 	 * same as the reader version).
 	 */
@@ -180,6 +214,14 @@ public class CsvListReaderTest {
 	@Test(expected = NullPointerException.class)
 	public void testReadProcessorsWithNullProcessors() throws IOException {
 		listReader.read((CellProcessor[]) null);
+	}
+	
+	/**
+	 * Tests the executeProcessors() method (with processors), with a null cell processor array.
+	 */
+	@Test(expected = NullPointerException.class)
+	public void testExecuteProcessorsWithNullProcessors() throws IOException {
+		listReader.executeProcessors((CellProcessor[]) null);
 	}
 	
 	/**

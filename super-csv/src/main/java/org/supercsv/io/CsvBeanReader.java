@@ -27,7 +27,6 @@ import org.supercsv.exception.SuperCsvReflectionException;
 import org.supercsv.prefs.CsvPreference;
 import org.supercsv.util.BeanInterfaceProxy;
 import org.supercsv.util.MethodCache;
-import org.supercsv.util.Util;
 
 /**
  * CsvBeanReader reads a CSV file by instantiating a bean for every row and mapping each column to a field on the bean
@@ -204,7 +203,7 @@ public class CsvBeanReader extends AbstractCsvReader implements ICsvBeanReader {
 		
 		if( readRow() ) {
 			// execute the processors then populate the bean
-			Util.executeCellProcessors(processedColumns, getColumns(), processors, getLineNumber(), getRowNumber());
+			executeProcessors(processedColumns, processors);
 			return populateBean(clazz, nameMapping);
 		}
 		

@@ -1,0 +1,99 @@
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~ Copyright 2007 Kasper B. Graversen
+~~ 
+~~ Licensed under the Apache License, Version 2.0 (the "License");
+~~ you may not use this file except in compliance with the License.
+~~ You may obtain a copy of the License at
+~~ 
+~~     http://www.apache.org/licenses/LICENSE-2.0
+~~ 
+~~ Unless required by applicable law or agreed to in writing, software
+~~ distributed under the License is distributed on an "AS IS" BASIS,
+~~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~~ See the License for the specific language governing permissions and
+~~ limitations under the License.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                                    ---------------------------------------
+                                    Reading CSV files with variable columns
+                                    ---------------------------------------
+                                    
+Reading CSV files with variable columns
+
+  Some CSV files don't conform to RFC4180 and have a different number of columns on each row. For example, the
+  following file doesn't always have a <<<birthDate>>> column.
+  
+---------------------------------------------------------------------------------------------------------------
+customerNo,firstName,lastName,birthDate
+1,John,Dunbar,13/06/1945
+2,Bob,Down
+3,Alice,Wunderland
+4,Bill,Jobs,10/07/1973
+---------------------------------------------------------------------------------------------------------------
+
+  If you are unfortunate enough to have a CSV file with a variable number of columns, 
+  you'll have to use {{{./apidocs/org/supercsv/io/CsvListReader.html}CsvListReader}}, as it's the only reader
+  that supports it.
+  
+  You won't be able to use the <<<read()>>> method that uses cell processors, as you don't know how many processors to use
+  until you've read the line. But that doesn't mean you can't use cell processors! 
+  
+  As shown below you can execute the cell processors after calling <<<read()>>>
+  by calling the <<<executeProcessors()>>> method. Because it's done after reading the line of CSV, you have an opportunity to
+  check how many columns there are (using <<<listReader.length()>>>) and supplying the correct number of processors.
+
++-------------------------------------------------------------------------------------------------------------+
+/**
+ * An example of reading a file with a variable number of columns using CsvListReader. It demonstrates that you can
+ * still use cell processors, but you must execute them by calling the executeProcessors() method on the reader,
+ * instead of supplying processors to the read() method. In this scenario, the last column (birthDate) is sometimes
+ * missing.
+ */
+private static void readVariableColumnsWithCsvListReader() throws Exception {
+	
+	final CellProcessor[] allProcessors = new CellProcessor[] { new UniqueHashCode(), // customerNo (must be unique)
+		new NotNull(), // firstName
+		new NotNull(), // lastName
+		new ParseDate("dd/MM/yyyy") }; // birthDate
+	
+	final CellProcessor[] noBirthDateProcessors = new CellProcessor[] { allProcessors[0], // customerNo
+		allProcessors[1], // firstName
+		allProcessors[2] }; // lastName
+	
+	ICsvListReader listReader = null;
+	try {
+		listReader = new CsvListReader(new FileReader(VARIABLE_CSV_FILENAME), CsvPreference.STANDARD_PREFERENCE);
+		
+		listReader.getHeader(true); // skip the header (can't be used with CsvListReader)
+		
+		while( (listReader.read()) != null ) {
+			
+			// use different processors depending on the number of columns
+			final CellProcessor[] processors;
+			if( listReader.length() == noBirthDateProcessors.length ) {
+				processors = noBirthDateProcessors;
+			} else {
+				processors = allProcessors;
+			}
+			
+			final List<Object> customerList = listReader.executeProcessors(processors);
+			System.out.println(String.format("lineNo=%s, rowNo=%s, columns=%s, customerList=%s",
+				listReader.getLineNumber(), listReader.getRowNumber(), customerList.size(), customerList));
+		}
+		
+	}
+	finally {
+		if( listReader != null ) {
+			listReader.close();
+		}
+	}
+}
++-------------------------------------------------------------------------------------------------------------+
+
+  Output:
+  
+---------------------------------------------------------------------------------------------------------------
+lineNo=2, rowNo=2, columns=4, customerList=[1, John, Dunbar, Wed Jun 13 00:00:00 EST 1945]
+lineNo=3, rowNo=3, columns=3, customerList=[2, Bob, Down]
+lineNo=4, rowNo=4, columns=3, customerList=[3, Alice, Wunderland]
+lineNo=5, rowNo=5, columns=4, customerList=[4, Bill, Jobs, Tue Jul 10 00:00:00 EST 1973]
+---------------------------------------------------------------------------------------------------------------

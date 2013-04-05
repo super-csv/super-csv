@@ -57,6 +57,7 @@
 		</menu>
 		<menu name="Examples">
 			<item name="Reading CSV files" href="examples_reading.html" />
+			<item name="Reading CSV files with variable columns" href="examples_reading_variable_cols.html" />
 			<item name="Writing CSV files" href="examples_writing.html" />
 			<item name="Partial reading" href="examples_partial_reading.html" />
 			<item name="Partial writing" href="examples_partial_writing.html" />
