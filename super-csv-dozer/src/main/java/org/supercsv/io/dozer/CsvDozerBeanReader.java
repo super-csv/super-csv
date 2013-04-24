@@ -15,6 +15,7 @@
  */
 package org.supercsv.io.dozer;
 
+import static org.dozer.loader.api.FieldsMappingOptions.hintB;
 import static org.dozer.loader.api.TypeMappingOptions.mapNull;
 import static org.dozer.loader.api.TypeMappingOptions.oneWay;
 import static org.dozer.loader.api.TypeMappingOptions.wildcard;
@@ -132,6 +133,13 @@ public class CsvDozerBeanReader extends AbstractCsvReader implements ICsvDozerBe
 	/**
 	 * {@inheritDoc}
 	 */
+	public void configureBeanMapping(final Class<?> clazz, final String[] fieldMapping, final Class<?>[] hintTypes) {
+		dozerBeanMapper.addMapping(new MappingBuilder(clazz, fieldMapping, hintTypes));
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
 	public <T> T read(final Class<T> clazz) throws IOException {
 		if( clazz == null ) {
 			throw new NullPointerException("clazz should not be null");
@@ -173,6 +181,7 @@ public class CsvDozerBeanReader extends AbstractCsvReader implements ICsvDozerBe
 		
 		private final Class<?> clazz;
 		private final String[] fieldMapping;
+		private final Class<?>[] hintTypes;
 		
 		/**
 		 * Constructs a new MappingBuilder.
@@ -193,6 +202,36 @@ public class CsvDozerBeanReader extends AbstractCsvReader implements ICsvDozerBe
 			}
 			this.clazz = clazz;
 			this.fieldMapping = fieldMapping;
+			this.hintTypes = null;
+		}
+		
+		/**
+		 * Constructs a new MappingBuilder.
+		 * 
+		 * @param clazz
+		 *            the class to add mapping configuration for (same as the type passed into write methods)
+		 * @param fieldMapping
+		 *            the field mapping for for each column (may contain <tt>null</tt> elements to indicate ignored
+		 *            columns)
+		 * @throws NullPointerException
+		 *             if clazz, fieldMapping or hintTypes is null
+		 * @throws IllegalArgumentException
+		 *             if fieldMapping.length != hintTypes.length
+		 */
+		public MappingBuilder(final Class<?> clazz, final String[] fieldMapping, final Class<?>[] hintTypes) {
+			if( clazz == null ) {
+				throw new NullPointerException("clazz should not be null");
+			} else if( fieldMapping == null ) {
+				throw new NullPointerException("fieldMapping should not be null");
+			} else if( hintTypes == null ) {
+				throw new NullPointerException("fieldMapping should not be null");
+			} else if( fieldMapping.length != hintTypes.length ) {
+				throw new IllegalArgumentException(String.format(
+					"hintTypes length(%d) should match fieldMapping length(%d)", hintTypes.length, fieldMapping.length));
+			}
+			this.clazz = clazz;
+			this.fieldMapping = fieldMapping;
+			this.hintTypes = hintTypes;
 		}
 		
 		@Override
@@ -200,12 +239,13 @@ public class CsvDozerBeanReader extends AbstractCsvReader implements ICsvDozerBe
 			
 			/*
 			 * Add the required dozer mappings to map from each column (in the CsvDozerBeanData List) to its associated
-			 * field in the supplied class. mapNull is disabled so that null field values are ignored. oneWay is enabled
-			 * just in case a custom DozerBeanMapper is supplied (so the same DozerBeanMapper can be used by
-			 * CsvDozerBeanWriter). wildcard is disabled to prevent Dozer from trying to map things automatically.
+			 * field in the supplied class. mapNull is enabled so that null CSV values are added to Lists if indexed
+			 * mapping is used. oneWay is enabled just in case a custom DozerBeanMapper is supplied (so the same
+			 * DozerBeanMapper can be used by CsvDozerBeanWriter). wildcard is disabled to prevent Dozer from trying to
+			 * map things automatically.
 			 */
 			final TypeMappingBuilder mappingBuilder = mapping(CsvDozerBeanData.class, clazz, oneWay(), wildcard(false),
-				mapNull(false));
+				mapNull(true));
 			
 			for( int i = 0; i < fieldMapping.length; i++ ) {
 				
@@ -215,7 +255,13 @@ public class CsvDozerBeanReader extends AbstractCsvReader implements ICsvDozerBe
 					continue; // no field mappings required (column will be ignored)
 				}
 				
-				mappingBuilder.fields("columns[" + i + "]", mapping);
+				if( hintTypes != null && hintTypes[i] != null ) {
+					// add a hint on the target field
+					mappingBuilder.fields("columns[" + i + "]", mapping, hintB(hintTypes[i]));
+				} else {
+					mappingBuilder.fields("columns[" + i + "]", mapping);
+				}
+				
 			}
 		}
 	}

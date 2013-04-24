@@ -22,6 +22,7 @@ import java.util.List;
 import org.supercsv.cellprocessor.ConvertNullTo;
 import org.supercsv.cellprocessor.FmtBool;
 import org.supercsv.cellprocessor.Optional;
+import org.supercsv.cellprocessor.Token;
 import org.supercsv.cellprocessor.constraint.NotNull;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.io.dozer.CsvDozerBeanWriter;
@@ -56,7 +57,7 @@ public class Writing {
 	private static void writeWithDozerCsvBeanWriter() throws Exception {
 		
 		final CellProcessor[] processors = new CellProcessor[] { 
-			new Optional(),         // age
+			new Token(0, null),     // age
 			new FmtBool("Y", "N"),  // consent
 			new NotNull(),          // questionNo 1
 			new Optional(),         // answer 1
@@ -68,7 +69,7 @@ public class Writing {
 		// create the survey responses to write
 		SurveyResponse response1 = new SurveyResponse(18, true, Arrays.asList(new Answer(1, "Twelve"), new Answer(2,
 			"Albert Einstein"), new Answer(3, "Big Bang Theory")));
-		SurveyResponse response2 = new SurveyResponse(null, true, Arrays.asList(new Answer(1, "Thirteen"), new Answer(2,
+		SurveyResponse response2 = new SurveyResponse(0, true, Arrays.asList(new Answer(1, "Thirteen"), new Answer(2,
 			"Nikola Tesla"), new Answer(3, "Stargate")));
 		SurveyResponse response3 = new SurveyResponse(42, false, Arrays.asList(new Answer(1, null), new Answer(2,
 			"Carl Sagan"), new Answer(3, "Star Wars")));
@@ -106,7 +107,7 @@ public class Writing {
 		
 		// null ages and answers are converted to something more meaningful
 		final CellProcessor[] partialProcessors = new CellProcessor[] { 
-			new ConvertNullTo("age not supplied"), // age
+			new Token(0, "age not supplied"), // age
 			new FmtBool("Y", "N"),                 // consent
 			new NotNull(),                         // questionNo 1
 			new ConvertNullTo("not answered"),     // answer 1
@@ -118,7 +119,7 @@ public class Writing {
 		// create the survey responses to write
 		SurveyResponse response1 = new SurveyResponse(18, true, Arrays.asList(new Answer(1, "Twelve"), new Answer(2,
 			"Albert Einstein"), new Answer(3, "Big Bang Theory")));
-		SurveyResponse response2 = new SurveyResponse(null, true, Arrays.asList(new Answer(1, "Thirteen"), new Answer(2,
+		SurveyResponse response2 = new SurveyResponse(0, true, Arrays.asList(new Answer(1, "Thirteen"), new Answer(2,
 			"Nikola Tesla"), new Answer(3, "Stargate")));
 		SurveyResponse response3 = new SurveyResponse(42, false, Arrays.asList(new Answer(1, null), new Answer(2,
 			"Carl Sagan"), new Answer(3, "Star Wars")));

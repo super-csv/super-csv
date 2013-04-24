@@ -34,8 +34,10 @@ import org.supercsv.cellprocessor.ParseInt;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.io.ITokenizer;
 import org.supercsv.io.Tokenizer;
+import org.supercsv.mock.dozer.Answer;
 import org.supercsv.mock.dozer.SurveyResponse;
 import org.supercsv.prefs.CsvPreference;
+import org.supercsv.util.CsvContext;
 
 /**
  * Tests the CsvDozerBeanReader class.
@@ -205,7 +207,7 @@ public class CsvDozerBeanReaderTest {
 		
 		SurveyResponse response1 = useProcessors ? beanReader.read(SurveyResponse.class, PROCESSORS) : beanReader
 			.read(SurveyResponse.class);
-		assertEquals(23, response1.getAge().intValue());
+		assertEquals(23, response1.getAge());
 		assertEquals(Boolean.TRUE, response1.getConsentGiven());
 		assertEquals(3, response1.getAnswers().size());
 		assertEquals(1, response1.getAnswers().get(0).getQuestionNo().intValue());
@@ -217,7 +219,7 @@ public class CsvDozerBeanReaderTest {
 		
 		SurveyResponse response2 = useProcessors ? beanReader.read(SurveyResponse.class, PROCESSORS) : beanReader
 			.read(SurveyResponse.class);
-		assertEquals(16, response2.getAge().intValue());
+		assertEquals(16, response2.getAge());
 		assertEquals(Boolean.TRUE, response2.getConsentGiven());
 		assertEquals(3, response2.getAnswers().size());
 		assertEquals(1, response2.getAnswers().get(0).getQuestionNo().intValue());
@@ -229,7 +231,7 @@ public class CsvDozerBeanReaderTest {
 		
 		SurveyResponse response3 = useProcessors ? beanReader.read(SurveyResponse.class, PROCESSORS) : beanReader
 			.read(SurveyResponse.class);
-		assertEquals(44, response3.getAge().intValue());
+		assertEquals(44, response3.getAge());
 		assertEquals(Boolean.TRUE, response3.getConsentGiven());
 		assertEquals(3, response3.getAnswers().size());
 		assertEquals(1, response3.getAnswers().get(0).getQuestionNo().intValue());
@@ -338,7 +340,7 @@ public class CsvDozerBeanReaderTest {
 		
 		SurveyResponse response1 = useProcessors ? beanReader.read(SurveyResponse.class, PROCESSORS) : beanReader
 			.read(SurveyResponse.class);
-		assertNull(response1.getAge());
+		assertEquals(0, response1.getAge());
 		assertEquals(Boolean.TRUE, response1.getConsentGiven());
 		assertEquals(2, response1.getAnswers().size());
 		assertEquals(1, response1.getAnswers().get(0).getQuestionNo().intValue());
@@ -348,7 +350,7 @@ public class CsvDozerBeanReaderTest {
 		
 		SurveyResponse response2 = useProcessors ? beanReader.read(SurveyResponse.class, PROCESSORS) : beanReader
 			.read(SurveyResponse.class);
-		assertNull(response2.getAge());
+		assertEquals(0, response2.getAge());
 		assertEquals(Boolean.TRUE, response2.getConsentGiven());
 		assertEquals(2, response2.getAnswers().size());
 		assertEquals(1, response2.getAnswers().get(0).getQuestionNo().intValue());
@@ -358,7 +360,7 @@ public class CsvDozerBeanReaderTest {
 		
 		SurveyResponse response3 = useProcessors ? beanReader.read(SurveyResponse.class, PROCESSORS) : beanReader
 			.read(SurveyResponse.class);
-		assertNull(response3.getAge());
+		assertEquals(0, response3.getAge());
 		assertEquals(Boolean.TRUE, response3.getConsentGiven());
 		assertEquals(2, response3.getAnswers().size());
 		assertEquals(1, response3.getAnswers().get(0).getQuestionNo().intValue());
@@ -368,6 +370,57 @@ public class CsvDozerBeanReaderTest {
 		
 		assertNull(useProcessors ? beanReader.read(SurveyResponse.class, PROCESSORS) : beanReader
 			.read(SurveyResponse.class));
+		
+	}
+	
+	/**
+	 * Tests mapping columns to indexed list elements (with no deep mapping). Dozer requires a hint in this situation.
+	 */
+	@Test
+	public void testReadToListElement() throws IOException {
+		final String csv = "age,answer1,answer2,answer3\n"
+			+ "23,Nikola Tesla,\"\"\"A brief history of time\"\" by Steven Hawking\",Theoretical physicist\n"
+			+ ",Genghis Kahn,\"\"\"Monsoon\"\" by Wilbur Smith\",\n"
+			+ "44,,,\"I hate surveys, thanks for wasting my time!\"";
+		reader = new StringReader(csv);
+		beanReader = new CsvDozerBeanReader(reader, PREFS);
+		
+		beanReader.getHeader(true); // skip header
+		
+		final String[] fieldMapping = new String[] { "age", "answers[0]", "answers[1]", "answers[2]" };
+		final Class<?>[] hintTypes = new Class<?>[] { null, Answer.class, Answer.class, Answer.class };
+		beanReader.configureBeanMapping(SurveyResponse.class, fieldMapping, hintTypes);
+		
+		final CellProcessor parseAnswer = new CellProcessor() {
+			public Object execute(Object value, CsvContext context) {
+				return value == null ? null : new Answer(0, (String) value);
+			}
+		};
+		final CellProcessor[] processors = new CellProcessor[] { new Optional(new ParseInt()), parseAnswer,
+			parseAnswer, parseAnswer };
+		
+		SurveyResponse response1 = beanReader.read(SurveyResponse.class, processors);
+		assertEquals(23, response1.getAge());
+		assertEquals(3, response1.getAnswers().size());
+		assertEquals("Nikola Tesla", response1.getAnswers().get(0).getAnswer());
+		assertEquals("\"A brief history of time\" by Steven Hawking", response1.getAnswers().get(1).getAnswer());
+		assertEquals("Theoretical physicist", response1.getAnswers().get(2).getAnswer());
+		
+		SurveyResponse response2 = beanReader.read(SurveyResponse.class, processors);
+		assertEquals(0, response2.getAge());
+		assertEquals(3, response2.getAnswers().size());
+		assertEquals("Genghis Kahn", response2.getAnswers().get(0).getAnswer());
+		assertEquals("\"Monsoon\" by Wilbur Smith", response2.getAnswers().get(1).getAnswer());
+		assertNull(response2.getAnswers().get(2));
+		
+		SurveyResponse response3 = beanReader.read(SurveyResponse.class, processors);
+		assertEquals(44, response3.getAge());
+		assertEquals(3, response3.getAnswers().size());
+		assertNull(response3.getAnswers().get(0));
+		assertNull(response3.getAnswers().get(1));
+		assertEquals("I hate surveys, thanks for wasting my time!", response3.getAnswers().get(2).getAnswer());
+		
+		assertNull(beanReader.read(SurveyResponse.class, processors));
 		
 	}
 	
@@ -452,17 +505,53 @@ public class CsvDozerBeanReaderTest {
 	/**
 	 * Tests the configureBeanMapping() method with a null clazz (should throw an exception).
 	 */
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void testConfigureBeanMappingWithNullClazz() {
-		beanReader.configureBeanMapping(null, FIELD_MAPPING);
+		try {
+			beanReader.configureBeanMapping(null, FIELD_MAPPING);
+			fail("should have thrown NullPointerException");
+		}
+		catch(NullPointerException e) {}
+		
+		try {
+			beanReader.configureBeanMapping(null, FIELD_MAPPING, new Class<?>[FIELD_MAPPING.length]);
+			fail("should have thrown NullPointerException");
+		}
+		catch(NullPointerException e) {}
 	}
 	
 	/**
 	 * Tests the configureBeanMapping() method with a null fieldMapping array (should throw an exception).
 	 */
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void testConfigureBeanMappingWithNullFieldMapping() {
-		beanReader.configureBeanMapping(SurveyResponse.class, null);
+		try {
+			beanReader.configureBeanMapping(SurveyResponse.class, null);
+			fail("should have thrown NullPointerException");
+		}
+		catch(NullPointerException e) {}
+		
+		try {
+			beanReader.configureBeanMapping(SurveyResponse.class, null, new Class<?>[FIELD_MAPPING.length]);
+			fail("should have thrown NullPointerException");
+		}
+		catch(NullPointerException e) {}
+	}
+	
+	/**
+	 * Tests the configureBeanMapping() method with a null hintTypes array (should throw an exception).
+	 */
+	@Test(expected = NullPointerException.class)
+	public void testConfigureBeanMappingWithNullHintTypes() {
+		beanReader.configureBeanMapping(SurveyResponse.class, FIELD_MAPPING, null);
+	}
+	
+	/**
+	 * Tests the configureBeanMapping() method with a hintTypes array of the wrong size (should throw an exception).
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void testConfigureBeanMappingWithInvalidHintTypes() {
+		beanReader.configureBeanMapping(SurveyResponse.class, FIELD_MAPPING, new Class<?>[0]);
 	}
 	
 	/**

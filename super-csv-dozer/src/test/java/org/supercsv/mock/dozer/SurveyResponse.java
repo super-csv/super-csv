@@ -22,7 +22,7 @@ import java.util.List;
  */
 public class SurveyResponse {
 	
-	private Integer age;
+	private int age;
 	
 	private Boolean consentGiven;
 	
@@ -31,17 +31,17 @@ public class SurveyResponse {
 	public SurveyResponse() {
 	}
 
-	public SurveyResponse(final Integer age, final Boolean consentGiven, final List<Answer> answers) {
+	public SurveyResponse(final int age, final Boolean consentGiven, final List<Answer> answers) {
 		this.age = age;
 		this.consentGiven = consentGiven;
 		this.answers = answers;
 	}
 
-	public Integer getAge() {
+	public int getAge() {
 		return age;
 	}
 	
-	public void setAge(Integer age) {
+	public void setAge(int age) {
 		this.age = age;
 	}
 	

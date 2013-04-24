@@ -47,7 +47,9 @@ Release notes
   
   <<Bug fixes>>
 
-    * {{{https://sourceforge.net/p/supercsv/bugs/38/}38}} - <<<AbstractCsvWriter.escapeString()>>> does not increment the line count correctly for embedded newlines
+    * {{{https://sourceforge.net/p/supercsv/bugs/38/}38}} - <<<AbstractCsvWriter.escapeString()>>> now increments the line count correctly for embedded newlines
+    
+    * {{{https://sourceforge.net/p/supercsv/bugs/39/}39}} - <<<CsvDozerBeanReader>>> now accepts hints when reading into Lists of beans using indexed mapping
     
   <<General enhancements>>
   

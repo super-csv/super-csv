@@ -19,7 +19,7 @@
           http://dozer.sourceforge.net/schema/beanmapping.xsd">
 
 	<!-- configuration for CsvDozerBeanReader -->
-	<mapping type="one-way" wildcard="false" map-null="false">
+	<mapping type="one-way" wildcard="false" map-null="true">
 		<class-a>org.supercsv.io.dozer.CsvDozerBeanData</class-a>
 		<class-b>org.supercsv.mock.dozer.SurveyResponse</class-b>
 		<field>

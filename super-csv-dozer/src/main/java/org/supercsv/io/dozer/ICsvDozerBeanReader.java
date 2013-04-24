@@ -40,11 +40,11 @@ public interface ICsvDozerBeanReader extends ICsvReader {
 	 * Each element of the fieldMapping array represents a CSV column to be read and uses the standard Dozer field
 	 * mapping syntax. For example, if you were configuring the mappings for Person class you might define
 	 * <tt>firstName</tt> as the first element (just a simple field mapping), <tt>address.city</tt> as the second
-	 * element (a nested - or deep - field mapping), and
-	 * <tt>accounts[0].balance</tt> as the third element (index based mapping).
+	 * element (a nested - or deep - field mapping), and <tt>accounts[0].balance</tt> as the third element (index based
+	 * mapping).
 	 * <p>
-	 * If you require access to the other features of Dozer in your mappings (customer getters/setters, bean factories, custom converters), 
-	 * then you should supply your own DozerBeanMapper to the Writer instead.
+	 * If you require access to the other features of Dozer in your mappings (customer getters/setters, bean factories,
+	 * custom converters), then you should supply your own DozerBeanMapper to the Writer instead.
 	 * 
 	 * @param clazz
 	 *            the class to add mapping configuration for (same as the type passed into write methods)
@@ -55,6 +55,41 @@ public interface ICsvDozerBeanReader extends ICsvReader {
 	 * @since 2.0.0
 	 */
 	void configureBeanMapping(Class<?> clazz, String[] fieldMapping);
+	
+	/**
+	 * Configures the underlying DozerBeanMapper with the mappings required to map from the CSV file to the specified
+	 * class (this method may only be called before reading, as it's not possible to configure a DozerBeanMapper that
+	 * has already been initialized). Generally this method will only be called once, but it may called more times to
+	 * add mappings for other classes (you can define mappings for two different subclasses for example, but if you
+	 * define a mapping for the parent class then that will take precedence - inheritance mapping isn't supported).
+	 * <p>
+	 * Each element of the fieldMapping array represents a CSV column to be read and uses the standard Dozer field
+	 * mapping syntax. For example, if you were configuring the mappings for Person class you might define
+	 * <tt>firstName</tt> as the first element (just a simple field mapping), <tt>address.city</tt> as the second
+	 * element (a nested - or deep - field mapping), and <tt>accounts[0].balance</tt> as the third element (index based
+	 * mapping).
+	 * <p>
+	 * If you are mapping to an indexed list element (e.g. <tt>accounts[0]</tt>) and using a cell processor to return a
+	 * custom bean type (e.g. a <tt>ParseAccount</tt> processor that creates an <tt>Account</tt> bean), you will need to
+	 * specify a hint for that column so Dozer can map that column.
+	 * <p>
+	 * If you require access to the other features of Dozer in your mappings (customer getters/setters, bean factories,
+	 * custom converters), then you should supply your own DozerBeanMapper to the Writer instead.
+	 * 
+	 * @param clazz
+	 *            the class to add mapping configuration for (same as the type passed into write methods)
+	 * @param fieldMapping
+	 *            the field mapping for for each column (may contain <tt>null</tt> elements to indicate ignored columns)
+	 * @param hintTypes
+	 *            an array of types used as hints for Dozer when mapping to an indexed list element (e.g.
+	 *            <tt>accounts[0]</tt>) - a null element indicates no hint is required for that column
+	 * @throws NullPointerException
+	 *             if clazz, fieldMapping, or hintTypes is null
+	 * @throws IllegalArgumentException
+	 *             if fieldMapping.length != hintTypes.length
+	 * @since 2.1.0
+	 */
+	void configureBeanMapping(Class<?> clazz, String[] fieldMapping, Class<?>[] hintTypes);
 	
 	/**
 	 * Reads a row of a CSV file and populates an instance of the specified class, using Dozer to map column values to
