@@ -243,7 +243,7 @@
 				<configuration>
 					<autoVersionSubmodules>true</autoVersionSubmodules>
 					<preparationGoals>clean verify</preparationGoals>
-					<goals>deploy site-deploy</goals>
+					<goals>deploy</goals>
 					<tagNameFormat>v@{project.version}</tagNameFormat>
 				</configuration>
 			</plugin>
