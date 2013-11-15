@@ -22,6 +22,7 @@ import static org.supercsv.cellprocessor.constraint.LMinMax.MIN_INTEGER;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.supercsv.cellprocessor.StrReplace;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.exception.SuperCsvCellProcessorException;
 import org.supercsv.exception.SuperCsvConstraintViolationException;
@@ -86,6 +87,15 @@ public class LMinMaxTest {
 		long input = MAX_INTEGER;
 		assertEquals(input, processor.execute(input, ANONYMOUS_CSVCONTEXT));
 		assertEquals(input, processorChain.execute(input, ANONYMOUS_CSVCONTEXT));
+	}
+	
+	/**
+	 * Tests that this processor can be chained after a StringCellProcessor.
+	 */
+	@Test
+	public void testChainedAfterStringCellProcessor() {
+		final CellProcessor chain = new StrReplace("zero", "0", new LMinMax(MIN_INTEGER, MAX_INTEGER));
+		assertEquals(0L, chain.execute("zero", ANONYMOUS_CSVCONTEXT));
 	}
 	
 	/**

@@ -20,6 +20,7 @@ import static org.supercsv.SuperCsvTestUtils.ANONYMOUS_CSVCONTEXT;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.supercsv.cellprocessor.StrReplace;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.exception.SuperCsvCellProcessorException;
 import org.supercsv.exception.SuperCsvConstraintViolationException;
@@ -64,6 +65,15 @@ public class DMinMaxTest {
 	public void testValidString() {
 		assertEquals(IN_RANGE, processor.execute(String.valueOf(IN_RANGE), ANONYMOUS_CSVCONTEXT));
 		assertEquals(IN_RANGE, processorChain.execute(String.valueOf(IN_RANGE), ANONYMOUS_CSVCONTEXT));
+	}
+	
+	/**
+	 * Tests that this processor can be chained after a StringCellProcessor.
+	 */
+	@Test
+	public void testChainedAfterStringCellProcessor() {
+		final CellProcessor chain = new StrReplace("zero", "0", new DMinMax(MIN, MAX));
+		assertEquals(0.0, chain.execute("zero", ANONYMOUS_CSVCONTEXT));
 	}
 	
 	/**

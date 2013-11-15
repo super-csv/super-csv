@@ -17,6 +17,7 @@ package org.supercsv.cellprocessor.constraint;
 
 import org.supercsv.cellprocessor.CellProcessorAdaptor;
 import org.supercsv.cellprocessor.ift.LongCellProcessor;
+import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.exception.SuperCsvCellProcessorException;
 import org.supercsv.exception.SuperCsvConstraintViolationException;
 import org.supercsv.util.CsvContext;
@@ -29,7 +30,7 @@ import org.supercsv.util.CsvContext;
  * @author Kasper B. Graversen
  * @author James Bassett
  */
-public class LMinMax extends CellProcessorAdaptor {
+public class LMinMax extends CellProcessorAdaptor implements StringCellProcessor {
 	
 	/** Maximum value for a Long */
 	public static final long MAX_LONG = Long.MAX_VALUE;
