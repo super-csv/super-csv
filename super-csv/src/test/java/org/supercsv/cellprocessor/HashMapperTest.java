@@ -92,6 +92,18 @@ public class HashMapperTest {
 	}
 	
 	/**
+	 * Tests that other kinds of processors (e.g. LongCellProcessors) can be chained to HashMapper.
+	 */
+	@Test
+	public void testChainedToLongCellProcessor() {
+		final String input = "one million";
+		final Map<Object, Object> map = new HashMap<Object, Object>();
+		map.put(input, 1000000);
+		final CellProcessor p = new HashMapper(map, new FmtNumber("###,###,###"));
+		assertEquals("1,000,000", p.execute(input, ANONYMOUS_CSVCONTEXT));
+	}
+	
+	/**
 	 * Tests execution with a null input (should throw an Exception).
 	 */
 	@Test(expected = SuperCsvCellProcessorException.class)

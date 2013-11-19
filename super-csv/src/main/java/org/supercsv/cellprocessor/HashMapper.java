@@ -18,6 +18,7 @@ package org.supercsv.cellprocessor;
 import java.util.Map;
 
 import org.supercsv.cellprocessor.ift.BoolCellProcessor;
+import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.cellprocessor.ift.DateCellProcessor;
 import org.supercsv.cellprocessor.ift.DoubleCellProcessor;
 import org.supercsv.cellprocessor.ift.LongCellProcessor;
@@ -92,7 +93,7 @@ public class HashMapper extends CellProcessorAdaptor implements BoolCellProcesso
 	 * @throws IllegalArgumentException
 	 *             if mapping is empty
 	 */
-	public HashMapper(final Map<Object, Object> mapping, final BoolCellProcessor next) {
+	public HashMapper(final Map<Object, Object> mapping, final CellProcessor next) {
 		this(mapping, null, next);
 	}
 	
@@ -113,7 +114,7 @@ public class HashMapper extends CellProcessorAdaptor implements BoolCellProcesso
 	 * @throws IllegalArgumentException
 	 *             if mapping is empty
 	 */
-	public HashMapper(final Map<Object, Object> mapping, final Object defaultValue, final BoolCellProcessor next) {
+	public HashMapper(final Map<Object, Object> mapping, final Object defaultValue, final CellProcessor next) {
 		super(next);
 		checkPreconditions(mapping);
 		this.mapping = mapping;
