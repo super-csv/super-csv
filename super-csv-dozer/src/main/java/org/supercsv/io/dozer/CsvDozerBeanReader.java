@@ -31,7 +31,6 @@ import org.supercsv.io.AbstractCsvReader;
 import org.supercsv.io.CsvBeanReader;
 import org.supercsv.io.ITokenizer;
 import org.supercsv.prefs.CsvPreference;
-import org.supercsv.util.Util;
 
 /**
  * CsvDozerBeanReader is a powerful replacement for {@link CsvBeanReader} that uses Dozer to map from CSV to a bean.
@@ -145,14 +144,7 @@ public class CsvDozerBeanReader extends AbstractCsvReader implements ICsvDozerBe
 			throw new NullPointerException("clazz should not be null");
 		}
 		
-		if( readRow() ) {
-			// call dozer to map the read columns to the bean
-			beanData.getColumns().clear();
-			beanData.getColumns().addAll(getColumns());
-			return dozerBeanMapper.map(beanData, clazz);
-		}
-		
-		return null; // EOF
+		return readIntoBean(null, clazz, null);
 	}
 	
 	/**
@@ -165,10 +157,69 @@ public class CsvDozerBeanReader extends AbstractCsvReader implements ICsvDozerBe
 			throw new NullPointerException("processors should not be null");
 		}
 		
+		return readIntoBean(null, clazz, processors);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public <T> T read(final T bean) throws IOException {
+		if( bean == null ) {
+			throw new NullPointerException("bean should not be null");
+		}
+		
+		return readIntoBean(bean, null, null);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public <T> T read(final T bean, final CellProcessor... processors) throws IOException {
+		if( bean == null ) {
+			throw new NullPointerException("bean should not be null");
+		} else if( processors == null ) {
+			throw new NullPointerException("processors should not be null");
+		}
+		
+		return readIntoBean(bean, null, processors);
+	}
+	
+	/**
+	 * Reads a row of a CSV file and populates the a bean, using Dozer to map column values to the appropriate field. If
+	 * an existing bean is supplied, Dozer will populate that, otherwise Dozer will create an instance of type clazz
+	 * (only one of bean or clazz should be supplied). If processors are supplied then they are used, otherwise the raw
+	 * String values will be used.
+	 * 
+	 * @param bean
+	 *            the bean to populate (if null, then clazz will be used instead)
+	 * @param clazz
+	 *            the type to instantiate (only required if bean is null)
+	 * @param processors
+	 *            the (optional) cell processors
+	 * @return the populated bean
+	 * @throws IOException
+	 *             if an I/O error occurred
+	 */
+	private <T> T readIntoBean(final T bean, final Class<T> clazz, final CellProcessor[] processors) throws IOException {
 		if( readRow() ) {
-			// execute the processors then call dozer to populate the bean
-			Util.executeCellProcessors(beanData.getColumns(), getColumns(), processors, getLineNumber(), getRowNumber());
-			return dozerBeanMapper.map(beanData, clazz);
+			if( processors == null ) {
+				// populate bean data with the raw String values
+				beanData.getColumns().clear();
+				beanData.getColumns().addAll(getColumns());
+			} else {
+				// populate bean data with the processed values
+				executeProcessors(beanData.getColumns(), processors);
+			}
+			
+			if( bean != null ) {
+				// populate existing bean
+				dozerBeanMapper.map(beanData, bean);
+				return bean;
+			} else {
+				// let Dozer create a new bean
+				return dozerBeanMapper.map(beanData, clazz);
+			}
+			
 		}
 		
 		return null; // EOF

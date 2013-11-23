@@ -127,7 +127,7 @@ public class CsvBeanReaderTest {
 		assertArrayEquals(HEADER, beanReader.getHeader(true));
 		
 		final String[] header = PARTIAL_HEADER;
-		for (CustomerBean fullCustomer : CUSTOMERS){
+		for( CustomerBean fullCustomer : CUSTOMERS ) {
 			
 			// create the expected customer (same as full but with only first/last name and email)
 			CustomerBean expectedCustomer = new CustomerBean();
@@ -136,7 +136,7 @@ public class CsvBeanReaderTest {
 			expectedCustomer.setEmail(fullCustomer.getEmail());
 			assertEquals(expectedCustomer, beanReader.read(CustomerBean.class, header, READ_PROCESSORS));
 		}
-
+		
 		assertNull(beanReader.read(CustomerBean.class, header, READ_PROCESSORS));
 	}
 	
@@ -171,7 +171,7 @@ public class CsvBeanReaderTest {
 		assertArrayEquals(HEADER, beanReader.getHeader(true));
 		
 		final String[] header = PARTIAL_HEADER;
-		for (CustomerStringBean fullCustomer : STRING_CUSTOMERS){
+		for( CustomerStringBean fullCustomer : STRING_CUSTOMERS ) {
 			
 			// create the expected customer (same as full but with only first/last name and email)
 			CustomerBean expectedCustomer = new CustomerBean();
@@ -180,8 +180,52 @@ public class CsvBeanReaderTest {
 			expectedCustomer.setEmail(fullCustomer.getEmail());
 			assertEquals(expectedCustomer, beanReader.read(CustomerBean.class, header));
 		}
-
+		
 		assertNull(beanReader.read(CustomerBean.class, header));
+	}
+	
+	/**
+	 * Tests the read() method with no processors, populating an existing bean.
+	 */
+	@Test
+	public void testReadIntoExistingBean() throws IOException {
+		
+		final String[] header = beanReader.getHeader(true);
+		assertArrayEquals(HEADER, header);
+		
+		assertEquals(JOHN_STRING, beanReader.read(new CustomerStringBean(), header));
+		assertEquals(BOB_STRING, beanReader.read(new CustomerStringBean(), header));
+		assertEquals(ALICE_STRING, beanReader.read(new CustomerStringBean(), header));
+		assertEquals(BILL_STRING, beanReader.read(new CustomerStringBean(), header));
+		assertEquals(MIRANDA_STRING, beanReader.read(new CustomerStringBean(), header));
+		assertEquals(STEVE_STRING, beanReader.read(new CustomerStringBean(), header));
+		assertEquals(ADA_STRING, beanReader.read(new CustomerStringBean(), header));
+		assertEquals(SERGEI_STRING, beanReader.read(new CustomerStringBean(), header));
+		assertEquals(LARRY_STRING, beanReader.read(new CustomerStringBean(), header));
+		assertEquals(GRACE_STRING, beanReader.read(new CustomerStringBean(), header));
+		assertNull(beanReader.read(new CustomerStringBean(), header));
+	}
+	
+	/**
+	 * Tests the read() method using processors, populating an existing bean.
+	 */
+	@Test
+	public void testReadIntoExistingBeanWithProcessors() throws IOException {
+		
+		final String[] header = beanReader.getHeader(true);
+		assertArrayEquals(HEADER, header);
+		
+		assertEquals(JOHN, beanReader.read(new CustomerBean(), header, READ_PROCESSORS));
+		assertEquals(BOB, beanReader.read(new CustomerBean(), header, READ_PROCESSORS));
+		assertEquals(ALICE, beanReader.read(new CustomerBean(), header, READ_PROCESSORS));
+		assertEquals(BILL, beanReader.read(new CustomerBean(), header, READ_PROCESSORS));
+		assertEquals(MIRANDA, beanReader.read(new CustomerBean(), header, READ_PROCESSORS));
+		assertEquals(STEVE, beanReader.read(new CustomerBean(), header, READ_PROCESSORS));
+		assertEquals(ADA, beanReader.read(new CustomerBean(), header, READ_PROCESSORS));
+		assertEquals(SERGEI, beanReader.read(new CustomerBean(), header, READ_PROCESSORS));
+		assertEquals(LARRY, beanReader.read(new CustomerBean(), header, READ_PROCESSORS));
+		assertEquals(GRACE, beanReader.read(new CustomerBean(), header, READ_PROCESSORS));
+		assertNull(beanReader.read(new CustomerBean(), header, READ_PROCESSORS));
 	}
 	
 	/**
@@ -248,6 +292,14 @@ public class CsvBeanReaderTest {
 	}
 	
 	/**
+	 * Tests the read() method, with a null bean.
+	 */
+	@Test(expected = NullPointerException.class)
+	public void testReadWithNullBean() throws IOException {
+		beanReader.read((Object) null, HEADER);
+	}
+	
+	/**
 	 * Tests the read() method, with a null name mapping array.
 	 */
 	@Test(expected = NullPointerException.class)
@@ -256,12 +308,29 @@ public class CsvBeanReaderTest {
 	}
 	
 	/**
+	 * Tests the read() method, with a null name mapping array.
+	 */
+	@Test(expected = NullPointerException.class)
+	public void testReadIntoBeanWithNullNameMapping() throws IOException {
+		beanReader.read(new PersonBean(), (String[]) null);
+	}
+	
+	/**
 	 * Tests the read() method, with a name mapping array that's not the right size.
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testReadWithInvalidSizeNameMapping() throws IOException {
 		beanReader.getHeader(true);
-		beanReader.read(PersonBean.class, new String[]{null, "firstName"});
+		beanReader.read(PersonBean.class, new String[] { null, "firstName" });
+	}
+	
+	/**
+	 * Tests the read() method, with a name mapping array that's not the right size.
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void testReadIntoBeanWithInvalidSizeNameMapping() throws IOException {
+		beanReader.getHeader(true);
+		beanReader.read(new PersonBean(), new String[] { null, "firstName" });
 	}
 	
 	/**
@@ -273,6 +342,14 @@ public class CsvBeanReaderTest {
 	}
 	
 	/**
+	 * Tests the read() method (with processors), with a null bean.
+	 */
+	@Test(expected = NullPointerException.class)
+	public void testReadUsingProcessorsWithNullBean() throws IOException {
+		beanReader.read((Object) null, HEADER, READ_PROCESSORS);
+	}
+	
+	/**
 	 * Tests the read() method (with processors), with a null name mapping array.
 	 */
 	@Test(expected = NullPointerException.class)
@@ -281,11 +358,27 @@ public class CsvBeanReaderTest {
 	}
 	
 	/**
+	 * Tests the read() method (with processors), with a null name mapping array.
+	 */
+	@Test(expected = NullPointerException.class)
+	public void testReadIntoBeanUsingProcessorsWithNullNameMapping() throws IOException {
+		beanReader.read(new PersonBean(), (String[]) null, READ_PROCESSORS);
+	}
+	
+	/**
 	 * Tests the read() method (with processors), with a null cell processor array.
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testReadProcessorsWithNullProcessors() throws IOException {
 		beanReader.read(PersonBean.class, HEADER, (CellProcessor[]) null);
+	}
+	
+	/**
+	 * Tests the read() method (with processors), with a null cell processor array.
+	 */
+	@Test(expected = NullPointerException.class)
+	public void testReadIntoBeanUsingProcessorsWithNullProcessors() throws IOException {
+		beanReader.read(new PersonBean(), HEADER, (CellProcessor[]) null);
 	}
 	
 	/**

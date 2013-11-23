@@ -47,6 +47,12 @@ import org.supercsv.util.CsvContext;
 public class CsvDozerBeanReaderTest {
 	
 	private static final CsvPreference PREFS = CsvPreference.STANDARD_PREFERENCE;
+	private static final boolean EXISTING_BEAN = true;
+	private static final boolean CREATE_NEW_BEAN = false;
+	private static final boolean CONFIGURED = true;
+	private static final boolean NOT_CONFIGURED = false;
+	private static final boolean USE_PROCESSORS = true;
+	private static final boolean NO_PROCESSORS = false;
 	
 	private Reader reader;
 	
@@ -107,7 +113,15 @@ public class CsvDozerBeanReaderTest {
 	 */
 	@Test
 	public void testReadForBeanReader() throws IOException {
-		testRead(beanReader, false, false);
+		testRead(beanReader, NO_PROCESSORS, NOT_CONFIGURED, CREATE_NEW_BEAN);
+	}
+	
+	/**
+	 * Tests the read() method without any processors for a standard bean reader.
+	 */
+	@Test
+	public void testReadForBeanReaderWithExistingBean() throws IOException {
+		testRead(beanReader, NO_PROCESSORS, NOT_CONFIGURED, EXISTING_BEAN);
 	}
 	
 	/**
@@ -115,7 +129,15 @@ public class CsvDozerBeanReaderTest {
 	 */
 	@Test
 	public void testReadForBeanReaderUsingProcessors() throws IOException {
-		testRead(beanReader, true, false);
+		testRead(beanReader, USE_PROCESSORS, NOT_CONFIGURED, CREATE_NEW_BEAN);
+	}
+	
+	/**
+	 * Tests the read() method using processors for a standard bean reader.
+	 */
+	@Test
+	public void testReadForBeanReaderUsingProcessorsWithExistingBean() throws IOException {
+		testRead(beanReader, USE_PROCESSORS, NOT_CONFIGURED, EXISTING_BEAN);
 	}
 	
 	/**
@@ -123,7 +145,15 @@ public class CsvDozerBeanReaderTest {
 	 */
 	@Test
 	public void testReadForTokenizerBeanReader() throws IOException {
-		testRead(tokenizerBeanReader, false, false);
+		testRead(tokenizerBeanReader, NO_PROCESSORS, NOT_CONFIGURED, CREATE_NEW_BEAN);
+	}
+	
+	/**
+	 * Tests the read() method without any processors for a bean reader with custom tokenizer.
+	 */
+	@Test
+	public void testReadForTokenizerBeanReaderWithExistingBean() throws IOException {
+		testRead(tokenizerBeanReader, NO_PROCESSORS, NOT_CONFIGURED, EXISTING_BEAN);
 	}
 	
 	/**
@@ -131,7 +161,15 @@ public class CsvDozerBeanReaderTest {
 	 */
 	@Test
 	public void testReadForTokenizerBeanReaderUsingProcessors() throws IOException {
-		testRead(tokenizerBeanReader, true, false);
+		testRead(tokenizerBeanReader, USE_PROCESSORS, NOT_CONFIGURED, CREATE_NEW_BEAN);
+	}
+	
+	/**
+	 * Tests the read() method using processors for a bean reader with custom tokenizer.
+	 */
+	@Test
+	public void testReadForTokenizerBeanReaderUsingProcessorsWithExistingBean() throws IOException {
+		testRead(tokenizerBeanReader, USE_PROCESSORS, NOT_CONFIGURED, EXISTING_BEAN);
 	}
 	
 	/**
@@ -139,7 +177,15 @@ public class CsvDozerBeanReaderTest {
 	 */
 	@Test
 	public void testReadForBeanReaderWithMapper() throws IOException {
-		testRead(beanReaderWithMapper, false, false);
+		testRead(beanReaderWithMapper, NO_PROCESSORS, NOT_CONFIGURED, CREATE_NEW_BEAN);
+	}
+	
+	/**
+	 * Tests the read() method without any processors for a bean reader with custom DozerBeanMapper.
+	 */
+	@Test
+	public void testReadForBeanReaderWithMapperWithExistingBean() throws IOException {
+		testRead(beanReaderWithMapper, NO_PROCESSORS, NOT_CONFIGURED, EXISTING_BEAN);
 	}
 	
 	/**
@@ -147,7 +193,15 @@ public class CsvDozerBeanReaderTest {
 	 */
 	@Test
 	public void testReadForBeanReaderWithMapperUsingProcessors() throws IOException {
-		testRead(beanReaderWithMapper, true, false);
+		testRead(beanReaderWithMapper, USE_PROCESSORS, NOT_CONFIGURED, CREATE_NEW_BEAN);
+	}
+	
+	/**
+	 * Tests the read() method using processors for a bean reader with custom DozerBeanMapper.
+	 */
+	@Test
+	public void testReadForBeanReaderWithMapperUsingProcessorsWithExistingBean() throws IOException {
+		testRead(beanReaderWithMapper, USE_PROCESSORS, NOT_CONFIGURED, EXISTING_BEAN);
 	}
 	
 	/**
@@ -156,7 +210,16 @@ public class CsvDozerBeanReaderTest {
 	 */
 	@Test
 	public void testReadForBeanReaderWithConfiguredMapper() throws IOException {
-		testRead(beanReaderWithConfiguredMapper, false, true);
+		testRead(beanReaderWithConfiguredMapper, NO_PROCESSORS, CONFIGURED, CREATE_NEW_BEAN);
+	}
+	
+	/**
+	 * Tests the read() method without any processors for a bean reader with a pre-configured DozerBeanMapper (no need
+	 * to call configureBeanMapping() at all).
+	 */
+	@Test
+	public void testReadForBeanReaderWithConfiguredMapperWithExistingBean() throws IOException {
+		testRead(beanReaderWithConfiguredMapper, NO_PROCESSORS, CONFIGURED, EXISTING_BEAN);
 	}
 	
 	/**
@@ -165,7 +228,16 @@ public class CsvDozerBeanReaderTest {
 	 */
 	@Test
 	public void testReadForBeanReaderWithConfiguredMapperUsingProcessors() throws IOException {
-		testRead(beanReaderWithConfiguredMapper, true, true);
+		testRead(beanReaderWithConfiguredMapper, USE_PROCESSORS, CONFIGURED, CREATE_NEW_BEAN);
+	}
+	
+	/**
+	 * Tests the read() method using processors for a bean reader with a pre-configured DozerBeanMapper (no need to call
+	 * configureBeanMapping() at all).
+	 */
+	@Test
+	public void testReadForBeanReaderWithConfiguredMapperUsingProcessorsWithExistingBean() throws IOException {
+		testRead(beanReaderWithConfiguredMapper, USE_PROCESSORS, CONFIGURED, EXISTING_BEAN);
 	}
 	
 	/**
@@ -173,7 +245,15 @@ public class CsvDozerBeanReaderTest {
 	 */
 	@Test
 	public void testReadForTokenizerBeanReaderWithMapper() throws IOException {
-		testRead(tokenizerBeanReaderWithMapper, false, false);
+		testRead(tokenizerBeanReaderWithMapper, NO_PROCESSORS, NOT_CONFIGURED, CREATE_NEW_BEAN);
+	}
+	
+	/**
+	 * Tests the read() method without any processors for a bean reader with custom tokenizer and DozerBeanMapper.
+	 */
+	@Test
+	public void testReadForTokenizerBeanReaderWithMapperWithExistingBean() throws IOException {
+		testRead(tokenizerBeanReaderWithMapper, NO_PROCESSORS, NOT_CONFIGURED, EXISTING_BEAN);
 	}
 	
 	/**
@@ -181,7 +261,15 @@ public class CsvDozerBeanReaderTest {
 	 */
 	@Test
 	public void testReadForTokenizerBeanReaderWithMapperUsingProcessors() throws IOException {
-		testRead(tokenizerBeanReaderWithMapper, true, false);
+		testRead(tokenizerBeanReaderWithMapper, USE_PROCESSORS, NOT_CONFIGURED, CREATE_NEW_BEAN);
+	}
+	
+	/**
+	 * Tests the read() method using processors for a bean reader with custom tokenizer and DozerBeanMapper.
+	 */
+	@Test
+	public void testReadForTokenizerBeanReaderWithMapperUsingProcessorsWithExistingBean() throws IOException {
+		testRead(tokenizerBeanReaderWithMapper, USE_PROCESSORS, NOT_CONFIGURED, EXISTING_BEAN);
 	}
 	
 	/**
@@ -194,10 +282,12 @@ public class CsvDozerBeanReaderTest {
 	 *            whether processors should be used for the test
 	 * @param configured
 	 *            whether the reader is already configured
+	 * @param useExistingBean
+	 *            whether to map to an existing bean, or let Dozer create a new instance of a class
 	 * @throws IOException
 	 */
-	private void testRead(final CsvDozerBeanReader beanReader, final boolean useProcessors, final boolean configured)
-		throws IOException {
+	private void testRead(final CsvDozerBeanReader beanReader, final boolean useProcessors, final boolean configured,
+		final boolean useExistingBean) throws IOException {
 		
 		beanReader.getHeader(true);
 		
@@ -205,8 +295,7 @@ public class CsvDozerBeanReaderTest {
 			beanReader.configureBeanMapping(SurveyResponse.class, FIELD_MAPPING);
 		}
 		
-		SurveyResponse response1 = useProcessors ? beanReader.read(SurveyResponse.class, PROCESSORS) : beanReader
-			.read(SurveyResponse.class);
+		SurveyResponse response1 = readSurveyResponse(beanReader, useProcessors, useExistingBean);
 		assertEquals(23, response1.getAge());
 		assertEquals(Boolean.TRUE, response1.getConsentGiven());
 		assertEquals(3, response1.getAnswers().size());
@@ -217,8 +306,7 @@ public class CsvDozerBeanReaderTest {
 		assertEquals(3, response1.getAnswers().get(2).getQuestionNo().intValue());
 		assertEquals("Theoretical physicist", response1.getAnswers().get(2).getAnswer());
 		
-		SurveyResponse response2 = useProcessors ? beanReader.read(SurveyResponse.class, PROCESSORS) : beanReader
-			.read(SurveyResponse.class);
+		SurveyResponse response2 = readSurveyResponse(beanReader, useProcessors, useExistingBean);
 		assertEquals(16, response2.getAge());
 		assertEquals(Boolean.TRUE, response2.getConsentGiven());
 		assertEquals(3, response2.getAnswers().size());
@@ -229,8 +317,7 @@ public class CsvDozerBeanReaderTest {
 		assertEquals(3, response2.getAnswers().get(2).getQuestionNo().intValue());
 		assertNull(response2.getAnswers().get(2).getAnswer());
 		
-		SurveyResponse response3 = useProcessors ? beanReader.read(SurveyResponse.class, PROCESSORS) : beanReader
-			.read(SurveyResponse.class);
+		SurveyResponse response3 = readSurveyResponse(beanReader, useProcessors, useExistingBean);
 		assertEquals(44, response3.getAge());
 		assertEquals(Boolean.TRUE, response3.getConsentGiven());
 		assertEquals(3, response3.getAnswers().size());
@@ -241,9 +328,31 @@ public class CsvDozerBeanReaderTest {
 		assertEquals(3, response3.getAnswers().get(2).getQuestionNo().intValue());
 		assertEquals("I hate surveys, thanks for wasting my time!", response3.getAnswers().get(2).getAnswer());
 		
-		assertNull(useProcessors ? beanReader.read(SurveyResponse.class, PROCESSORS) : beanReader
-			.read(SurveyResponse.class));
+		assertNull(readSurveyResponse(beanReader, useProcessors, useExistingBean));
 		
+	}
+	
+	/**
+	 * Reads a SurveyResponse.
+	 * 
+	 * @param beanReader
+	 *            the bean reader
+	 * @param useProcessors
+	 *            whether to use cell processors or not
+	 * @param useExistingBean
+	 *            whether to populate an existing bean, or let Dozer instantiate an instance of a class
+	 * @return the SurveyResponse
+	 * @throws IOException
+	 */
+	private SurveyResponse readSurveyResponse(final CsvDozerBeanReader beanReader, final boolean useProcessors,
+		final boolean useExistingBean) throws IOException {
+		if( useExistingBean ) {
+			return useProcessors ? beanReader.read(new SurveyResponse(), PROCESSORS) : beanReader
+				.read(new SurveyResponse());
+		} else {
+			return useProcessors ? beanReader.read(SurveyResponse.class, PROCESSORS) : beanReader
+				.read(SurveyResponse.class);
+		}
 	}
 	
 	/**
@@ -252,7 +361,16 @@ public class CsvDozerBeanReaderTest {
 	 */
 	@Test
 	public void testPartialReadForBeanReader() throws IOException {
-		testPartialRead(beanReader, false);
+		testPartialRead(beanReader, NO_PROCESSORS, CREATE_NEW_BEAN);
+	}
+	
+	/**
+	 * Tests the read() method without any processors with null elements in the fieldMapping (ignored columns) for a
+	 * standard bean reader.
+	 */
+	@Test
+	public void testPartialReadForBeanReaderWithExistingBean() throws IOException {
+		testPartialRead(beanReader, NO_PROCESSORS, EXISTING_BEAN);
 	}
 	
 	/**
@@ -261,7 +379,16 @@ public class CsvDozerBeanReaderTest {
 	 */
 	@Test
 	public void testPartialReadForBeanReaderUsingProcessors() throws IOException {
-		testPartialRead(beanReader, true);
+		testPartialRead(beanReader, USE_PROCESSORS, CREATE_NEW_BEAN);
+	}
+	
+	/**
+	 * Tests the read() method using processors with null elements in the fieldMapping (ignored columns) for a standard
+	 * bean reader.
+	 */
+	@Test
+	public void testPartialReadForBeanReaderUsingProcessorsWithExistingBean() throws IOException {
+		testPartialRead(beanReader, USE_PROCESSORS, EXISTING_BEAN);
 	}
 	
 	/**
@@ -270,7 +397,16 @@ public class CsvDozerBeanReaderTest {
 	 */
 	@Test
 	public void testPartialReadForTokenizerBeanReader() throws IOException {
-		testPartialRead(tokenizerBeanReader, false);
+		testPartialRead(tokenizerBeanReader, NO_PROCESSORS, CREATE_NEW_BEAN);
+	}
+	
+	/**
+	 * Tests the read() method without any processors with null elements in the fieldMapping (ignored columns) for a
+	 * bean reader with custom tokenizer.
+	 */
+	@Test
+	public void testPartialReadForTokenizerBeanReaderWithExistingBean() throws IOException {
+		testPartialRead(tokenizerBeanReader, NO_PROCESSORS, EXISTING_BEAN);
 	}
 	
 	/**
@@ -279,7 +415,16 @@ public class CsvDozerBeanReaderTest {
 	 */
 	@Test
 	public void testPartialReadForTokenizerBeanReaderUsingProcessors() throws IOException {
-		testPartialRead(tokenizerBeanReader, true);
+		testPartialRead(tokenizerBeanReader, USE_PROCESSORS, CREATE_NEW_BEAN);
+	}
+	
+	/**
+	 * Tests the read() method using processors with null elements in the fieldMapping (ignored columns) for a bean
+	 * reader with custom tokenizer.
+	 */
+	@Test
+	public void testPartialReadForTokenizerBeanReaderUsingProcessorsWithExistingBean() throws IOException {
+		testPartialRead(tokenizerBeanReader, USE_PROCESSORS, EXISTING_BEAN);
 	}
 	
 	/**
@@ -288,7 +433,16 @@ public class CsvDozerBeanReaderTest {
 	 */
 	@Test
 	public void testPartialReadForBeanReaderWithMapper() throws IOException {
-		testPartialRead(beanReaderWithMapper, false);
+		testPartialRead(beanReaderWithMapper, NO_PROCESSORS, CREATE_NEW_BEAN);
+	}
+	
+	/**
+	 * Tests the read() method without any processors with null elements in the fieldMapping (ignored columns) for a
+	 * bean reader with custom DozerBeanMapper.
+	 */
+	@Test
+	public void testPartialReadForBeanReaderWithMapperWithExistingBean() throws IOException {
+		testPartialRead(beanReaderWithMapper, NO_PROCESSORS, EXISTING_BEAN);
 	}
 	
 	/**
@@ -297,7 +451,16 @@ public class CsvDozerBeanReaderTest {
 	 */
 	@Test
 	public void testPartialReadForBeanReaderWithMapperUsingProcessors() throws IOException {
-		testPartialRead(beanReaderWithMapper, true);
+		testPartialRead(beanReaderWithMapper, USE_PROCESSORS, CREATE_NEW_BEAN);
+	}
+	
+	/**
+	 * Tests the read() method using processors with null elements in the fieldMapping (ignored columns) for a bean
+	 * reader with custom DozerBeanMapper.
+	 */
+	@Test
+	public void testPartialReadForBeanReaderWithMapperUsingProcessorsWithExistingBean() throws IOException {
+		testPartialRead(beanReaderWithMapper, USE_PROCESSORS, EXISTING_BEAN);
 	}
 	
 	/**
@@ -306,7 +469,16 @@ public class CsvDozerBeanReaderTest {
 	 */
 	@Test
 	public void testPartialReadForTokenizerBeanReaderWithMapper() throws IOException {
-		testPartialRead(tokenizerBeanReaderWithMapper, false);
+		testPartialRead(tokenizerBeanReaderWithMapper, NO_PROCESSORS, CREATE_NEW_BEAN);
+	}
+	
+	/**
+	 * Tests the read() method without any processors with null elements in the fieldMapping (ignored columns) for a
+	 * bean reader with custom tokenizer and DozerBeanMapper.
+	 */
+	@Test
+	public void testPartialReadForTokenizerBeanReaderWithMapperWithExistingBean() throws IOException {
+		testPartialRead(tokenizerBeanReaderWithMapper, NO_PROCESSORS, EXISTING_BEAN);
 	}
 	
 	/**
@@ -315,7 +487,16 @@ public class CsvDozerBeanReaderTest {
 	 */
 	@Test
 	public void testPartialReadForTokenizerBeanReaderWithMapperUsingProcessors() throws IOException {
-		testPartialRead(tokenizerBeanReaderWithMapper, true);
+		testPartialRead(tokenizerBeanReaderWithMapper, USE_PROCESSORS, CREATE_NEW_BEAN);
+	}
+	
+	/**
+	 * Tests the read() method using processors with null elements in the fieldMapping (ignored columns) for a bean
+	 * reader with custom tokenizer and DozerBeanMapper.
+	 */
+	@Test
+	public void testPartialReadForTokenizerBeanReaderWithMapperUsingProcessorsWithExistingBean() throws IOException {
+		testPartialRead(tokenizerBeanReaderWithMapper, USE_PROCESSORS, EXISTING_BEAN);
 	}
 	
 	/**
@@ -327,9 +508,12 @@ public class CsvDozerBeanReaderTest {
 	 *            the bean reader to use for the test
 	 * @param useProcessors
 	 *            whether processors should be used for the test
+	 * @param useExistingBean
+	 *            whether to populate an existing bean, or let Dozer instantiate an instance of a class
 	 * @throws IOException
 	 */
-	private void testPartialRead(final CsvDozerBeanReader beanReader, final boolean useProcessors) throws IOException {
+	private void testPartialRead(final CsvDozerBeanReader beanReader, final boolean useProcessors,
+		final boolean useExistingBean) throws IOException {
 		
 		beanReader.getHeader(true);
 		
@@ -338,8 +522,7 @@ public class CsvDozerBeanReaderTest {
 			"answers[0].answer", "answers[1].questionNo", "answers[1].answer", null, null };
 		beanReader.configureBeanMapping(SurveyResponse.class, partialMapping);
 		
-		SurveyResponse response1 = useProcessors ? beanReader.read(SurveyResponse.class, PROCESSORS) : beanReader
-			.read(SurveyResponse.class);
+		SurveyResponse response1 = readSurveyResponse(beanReader, useProcessors, useExistingBean);
 		assertEquals(0, response1.getAge());
 		assertEquals(Boolean.TRUE, response1.getConsentGiven());
 		assertEquals(2, response1.getAnswers().size());
@@ -348,8 +531,7 @@ public class CsvDozerBeanReaderTest {
 		assertEquals(2, response1.getAnswers().get(1).getQuestionNo().intValue());
 		assertEquals("\"A brief history of time\" by Steven Hawking", response1.getAnswers().get(1).getAnswer());
 		
-		SurveyResponse response2 = useProcessors ? beanReader.read(SurveyResponse.class, PROCESSORS) : beanReader
-			.read(SurveyResponse.class);
+		SurveyResponse response2 = readSurveyResponse(beanReader, useProcessors, useExistingBean);
 		assertEquals(0, response2.getAge());
 		assertEquals(Boolean.TRUE, response2.getConsentGiven());
 		assertEquals(2, response2.getAnswers().size());
@@ -358,8 +540,7 @@ public class CsvDozerBeanReaderTest {
 		assertEquals(2, response2.getAnswers().get(1).getQuestionNo().intValue());
 		assertEquals("\"Monsoon\" by Wilbur Smith", response2.getAnswers().get(1).getAnswer());
 		
-		SurveyResponse response3 = useProcessors ? beanReader.read(SurveyResponse.class, PROCESSORS) : beanReader
-			.read(SurveyResponse.class);
+		SurveyResponse response3 = readSurveyResponse(beanReader, useProcessors, useExistingBean);
 		assertEquals(0, response3.getAge());
 		assertEquals(Boolean.TRUE, response3.getConsentGiven());
 		assertEquals(2, response3.getAnswers().size());
@@ -368,8 +549,7 @@ public class CsvDozerBeanReaderTest {
 		assertEquals(2, response3.getAnswers().get(1).getQuestionNo().intValue());
 		assertNull(response3.getAnswers().get(1).getAnswer());
 		
-		assertNull(useProcessors ? beanReader.read(SurveyResponse.class, PROCESSORS) : beanReader
-			.read(SurveyResponse.class));
+		assertNull(readSurveyResponse(beanReader, useProcessors, useExistingBean));
 		
 	}
 	
@@ -559,7 +739,15 @@ public class CsvDozerBeanReaderTest {
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testReadWithNullClazz() throws IOException {
-		beanReader.read(null);
+		beanReader.read((Class<?>) null);
+	}
+	
+	/**
+	 * Tests the read() method with a null bean (should throw an exception).
+	 */
+	@Test(expected = NullPointerException.class)
+	public void testReadWithNullBean() throws IOException {
+		beanReader.read((Object) null);
 	}
 	
 	/**
@@ -567,7 +755,15 @@ public class CsvDozerBeanReaderTest {
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testReadWithProcessorsWithNullClazz() throws IOException {
-		beanReader.read(null, PROCESSORS);
+		beanReader.read((Class<?>) null, PROCESSORS);
+	}
+	
+	/**
+	 * Tests the read() method (with processors) with a null bean (should throw an exception).
+	 */
+	@Test(expected = NullPointerException.class)
+	public void testReadWithProcessorsWithNullBean() throws IOException {
+		beanReader.read((Object) null, PROCESSORS);
 	}
 	
 	/**
@@ -576,6 +772,14 @@ public class CsvDozerBeanReaderTest {
 	@Test(expected = NullPointerException.class)
 	public void testReadWithProcessorsWithNullProcessors() throws IOException {
 		beanReader.read(SurveyResponse.class, (CellProcessor[]) null);
+	}
+	
+	/**
+	 * Tests the read() method (with processors) with a null cell processor array (should throw an exception).
+	 */
+	@Test(expected = NullPointerException.class)
+	public void testReadBeanWithProcessorsWithNullProcessors() throws IOException {
+		beanReader.read(new SurveyResponse(), (CellProcessor[]) null);
 	}
 	
 }

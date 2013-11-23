@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.exception.SuperCsvConstraintViolationException;
 import org.supercsv.exception.SuperCsvException;
 import org.supercsv.exception.SuperCsvReflectionException;
 import org.supercsv.prefs.CsvPreference;
@@ -127,22 +128,17 @@ public class CsvBeanReader extends AbstractCsvReader implements ICsvBeanReader {
 	}
 	
 	/**
-	 * Instantiates the bean (or creates a proxy if it's an interface), and maps the processed columns to the fields of
-	 * the bean.
+	 * Populates the bean by mapping the processed columns to the fields of the bean.
 	 * 
-	 * @param clazz
-	 *            the bean class to instantiate (a proxy will be created if an interface is supplied), using the default
-	 *            (no argument) constructor
+	 * @param resultBean
+	 *            the bean to populate
 	 * @param nameMapping
 	 *            the name mappings
 	 * @return the populated bean
 	 * @throws SuperCsvReflectionException
 	 *             if there was a reflection exception while populating the bean
 	 */
-	private <T> T populateBean(final Class<T> clazz, final String[] nameMapping) {
-		
-		// instantiate the bean or proxy
-		final T resultBean = instantiateBean(clazz);
+	private <T> T populateBean(final T resultBean, final String[] nameMapping) {
 		
 		// map each column to its associated field on the bean
 		for( int i = 0; i < nameMapping.length; i++ ) {
@@ -174,17 +170,7 @@ public class CsvBeanReader extends AbstractCsvReader implements ICsvBeanReader {
 			throw new NullPointerException("nameMapping should not be null");
 		}
 		
-		if( readRow() ) {
-			if( nameMapping.length != length() ) {
-				throw new IllegalArgumentException(String.format("the nameMapping array and the number of columns read "
-					+ "should be the same size (nameMapping length = %d, columns = %d)", nameMapping.length, length()));
-			}
-			processedColumns.clear();
-			processedColumns.addAll(getColumns());
-			return populateBean(clazz, nameMapping);
-		}
-		
-		return null; // EOF
+		return readIntoBean(instantiateBean(clazz), nameMapping, null);
 	}
 	
 	/**
@@ -201,10 +187,81 @@ public class CsvBeanReader extends AbstractCsvReader implements ICsvBeanReader {
 			throw new NullPointerException("processors should not be null");
 		}
 		
+		return readIntoBean(instantiateBean(clazz), nameMapping, processors);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public <T> T read(final T bean, final String... nameMapping) throws IOException {
+		
+		if( bean == null ) {
+			throw new NullPointerException("bean should not be null");
+		} else if( nameMapping == null ) {
+			throw new NullPointerException("nameMapping should not be null");
+		}
+		
+		return readIntoBean(bean, nameMapping, null);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public <T> T read(final T bean, final String[] nameMapping, final CellProcessor... processors) throws IOException {
+		if( bean == null ) {
+			throw new NullPointerException("bean should not be null");
+		} else if( nameMapping == null ) {
+			throw new NullPointerException("nameMapping should not be null");
+		} else if( processors == null ) {
+			throw new NullPointerException("processors should not be null");
+		}
+		
+		return readIntoBean(bean, nameMapping, processors);
+	}
+	
+	/**
+	 * Reads a row of a CSV file and populates the bean, using the supplied name mapping to map column values to the
+	 * appropriate fields. If processors are supplied then they are used, otherwise the raw String values will be used.
+	 * 
+	 * @param bean
+	 *            the bean to populate
+	 * @param nameMapping
+	 *            the name mapping array
+	 * @param processors
+	 *            the (optional) cell processors
+	 * @return the populated bean, or null if EOF was reached
+	 * @throws IllegalArgumentException
+	 *             if nameMapping.length != number of CSV columns read
+	 * @throws IOException
+	 *             if an I/O error occurred
+	 * @throws NullPointerException
+	 *             if bean or nameMapping are null
+	 * @throws SuperCsvConstraintViolationException
+	 *             if a CellProcessor constraint failed
+	 * @throws SuperCsvException
+	 *             if there was a general exception while reading/processing
+	 * @throws SuperCsvReflectionException
+	 *             if there was an reflection exception while mapping the values to the bean
+	 */
+	private <T> T readIntoBean(final T bean, final String[] nameMapping, final CellProcessor[] processors)
+		throws IOException {
+		
 		if( readRow() ) {
-			// execute the processors then populate the bean
-			executeProcessors(processedColumns, processors);
-			return populateBean(clazz, nameMapping);
+			if( nameMapping.length != length() ) {
+				throw new IllegalArgumentException(String.format(
+					"the nameMapping array and the number of columns read "
+						+ "should be the same size (nameMapping length = %d, columns = %d)", nameMapping.length,
+					length()));
+			}
+			
+			if( processors == null ) {
+				processedColumns.clear();
+				processedColumns.addAll(getColumns());
+			} else {
+				executeProcessors(processedColumns, processors);
+			}
+			
+			return populateBean(bean, nameMapping);
 		}
 		
 		return null; // EOF

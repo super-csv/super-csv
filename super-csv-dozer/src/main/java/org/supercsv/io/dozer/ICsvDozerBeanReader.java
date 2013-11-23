@@ -111,6 +111,25 @@ public interface ICsvDozerBeanReader extends ICsvReader {
 	<T> T read(Class<T> clazz) throws IOException;
 	
 	/**
+	 * Reads a row of a CSV file and populates the supplied bean, using Dozer to map column values to the appropriate
+	 * fields.
+	 * 
+	 * @param bean
+	 *            the bean to populate
+	 * @return a populated bean or null if EOF
+	 * @throws IOException
+	 *             if an I/O error occurred
+	 * @throws MappingException
+	 *             if there was an exception during Dozer mapping
+	 * @throws NullPointerException
+	 *             if bean is null
+	 * @throws SuperCsvException
+	 *             if there was a general exception while reading/processing
+	 * @since 2.2.0
+	 */
+	<T> T read(T bean) throws IOException;
+	
+	/**
 	 * Reads a row of a CSV file and populates an instance of the specified class, using Dozer to map column values to
 	 * the appropriate fields. Before population the data can be further processed by cell processors (each element in
 	 * the processors array corresponds with a CSV column). A <tt>null</tt> entry in the processors array indicates no
@@ -119,6 +138,8 @@ public interface ICsvDozerBeanReader extends ICsvReader {
 	 * 
 	 * @param clazz
 	 *            the type to instantiate
+	 * @param processors
+	 *            the cell processors
 	 * @return a populated bean or null if EOF
 	 * @throws IOException
 	 *             if an I/O error occurred
@@ -131,5 +152,29 @@ public interface ICsvDozerBeanReader extends ICsvReader {
 	 * @since 2.0.0
 	 */
 	<T> T read(Class<T> clazz, CellProcessor... processors) throws IOException;
+	
+	/**
+	 * Reads a row of a CSV file and populates the supplied bean, using Dozer to map column values to the appropriate
+	 * fields. Before population the data can be further processed by cell processors (each element in the processors
+	 * array corresponds with a CSV column). A <tt>null</tt> entry in the processors array indicates no further
+	 * processing is required (the unprocessed String value will be set on the bean's field) - though Dozer will attempt
+	 * some conversions of it's own it the types don't match.
+	 * 
+	 * @param bean
+	 *            the bean to populate
+	 * @param processors
+	 *            the cell processors
+	 * @return a populated bean or null if EOF
+	 * @throws IOException
+	 *             if an I/O error occurred
+	 * @throws MappingException
+	 *             if there was an exception during Dozer mapping
+	 * @throws NullPointerException
+	 *             if bean is null
+	 * @throws SuperCsvException
+	 *             if there was a general exception while reading/processing
+	 * @since 2.2.0
+	 */
+	<T> T read(T bean, CellProcessor... processors) throws IOException;
 	
 }
