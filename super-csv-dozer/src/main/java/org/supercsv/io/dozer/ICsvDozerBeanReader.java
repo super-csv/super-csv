@@ -97,6 +97,8 @@ public interface ICsvDozerBeanReader extends ICsvReader {
 	 * 
 	 * @param clazz
 	 *            the type to instantiate
+	 * @param <T>
+	 *            the bean type
 	 * @return a populated bean or null if EOF
 	 * @throws IOException
 	 *             if an I/O error occurred
@@ -116,6 +118,8 @@ public interface ICsvDozerBeanReader extends ICsvReader {
 	 * 
 	 * @param bean
 	 *            the bean to populate
+	 * @param <T>
+	 *            the bean type
 	 * @return a populated bean or null if EOF
 	 * @throws IOException
 	 *             if an I/O error occurred
@@ -140,6 +144,8 @@ public interface ICsvDozerBeanReader extends ICsvReader {
 	 *            the type to instantiate
 	 * @param processors
 	 *            the cell processors
+	 * @param <T>
+	 *            the bean type
 	 * @return a populated bean or null if EOF
 	 * @throws IOException
 	 *             if an I/O error occurred
@@ -164,6 +170,8 @@ public interface ICsvDozerBeanReader extends ICsvReader {
 	 *            the bean to populate
 	 * @param processors
 	 *            the cell processors
+	 * @param <T>
+	 *            the bean type
 	 * @return a populated bean or null if EOF
 	 * @throws IOException
 	 *             if an I/O error occurred

@@ -73,6 +73,8 @@ public class CsvDozerBeanWriter extends AbstractCsvWriter implements ICsvDozerBe
 	 *            the writer
 	 * @param preference
 	 *            the CSV preferences
+	 * @param dozerBeanMapper
+	 *            the pre-configured DozerBeanMapper
 	 * @throws NullPointerException
 	 *             if writer, preference or dozerBeanMapper are null
 	 */
@@ -172,8 +174,8 @@ public class CsvDozerBeanWriter extends AbstractCsvWriter implements ICsvDozerBe
 			 * the CsvDozerBeanData List). mapNull is enabled so that null field values are added to the List (otherwise
 			 * the List would be too short!). oneWay is enabled just in case a custom DozerBeanMapper is supplied (so
 			 * the same DozerBeanMapper can be used by CsvDozerBeanReader). wildcard is disabled to prevent Dozer from
-			 * trying to map every field in the bean automatically. copyByReference is enabled on the field mapping
-			 * to ensure no conversions are performed (bean values are just copied to the List).
+			 * trying to map every field in the bean automatically. copyByReference is enabled on the field mapping to
+			 * ensure no conversions are performed (bean values are just copied to the List).
 			 */
 			final TypeMappingBuilder mappingBuilder = mapping(clazz, type(CsvDozerBeanData.class).mapNull(true),
 				oneWay(), wildcard(false));

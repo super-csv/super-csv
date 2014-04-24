@@ -19,6 +19,28 @@
 
 Release notes
 
+* 2.2.0
+
+  <04/2014>
+  
+  A small release to show the project is still alive...(has a whole year passed already??)
+  
+  <<New features>>
+  
+    * {{{https://sourceforge.net/p/supercsv/feature-requests/28/}28}} - <<<CsvBeanReader>>> and <<<CsvDozerBeanReader>>> can now read into existing beans
+  
+    * {{{https://sourceforge.net/p/supercsv/feature-requests/39/}39}} - <<<ParseBigDecimal>>> now removes grouping separators if <<<DecimalFormatSymbols>>> are supplied  
+  
+    * {{{https://sourceforge.net/p/supercsv/feature-requests/41/}41}} - A new <<<ParseEnum>>> cell processor for parsing Enums
+  
+  <<Bug fixes>>
+
+    * {{{https://sourceforge.net/p/supercsv/bugs/45/}45}} - <<<CsvBeanReader>>> and <<<CsvBeanWriter>>> are more flexible when matching getters/setters (case is ignored)
+
+    * {{{https://sourceforge.net/p/supercsv/bugs/46/}46}} - <<<DMinMax>>> and <<<LMinMax>>> processors can now be chained after <<<StringCellProcessors>>>
+    
+    * {{{https://sourceforge.net/p/supercsv/bugs/49/}49}} - <<<HashMapper>>> now allows all kinds of processors to be chained after it
+    
 * 2.1.0
 
   <04/2013>

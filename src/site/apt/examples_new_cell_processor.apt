@@ -26,7 +26,8 @@ Writing custom cell processors
   So how do you write a custom cell processor?
   
   Let's say you're trying to read a CSV file that has a day column, and you've written your own enumeration
-  to represent that.
+  to represent that (ignoring the fact that Super CSV now has a {{{./apidocs/org/supercsv/cellprocessor/ParseEnum.html}ParseEnum}}
+  processor that does this already...this is just an example!).
 
 
 +------------------------------------------------------------------------------------------------------+
