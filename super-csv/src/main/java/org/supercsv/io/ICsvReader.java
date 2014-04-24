@@ -58,8 +58,9 @@ public interface ICsvReader extends Closeable {
 	String[] getHeader(boolean firstLineCheck) throws IOException;
 	
 	/**
-	 * Gets the current position in the file. The first line of the file is line number 1.
+	 * Gets the current position in the file, where the first line of the file is line number 1.
 	 * 
+	 * @return the line number
 	 * @since 1.0
 	 */
 	int getLineNumber();
@@ -77,6 +78,7 @@ public interface ICsvReader extends Closeable {
 	 * differs from the lineNumber, which is the number of real lines that have been read in the file. The first row is
 	 * row 1 (which is typically the header row).
 	 * 
+	 * @return the current row number
 	 * @since 2.0.0
 	 */
 	int getRowNumber();
@@ -84,6 +86,7 @@ public interface ICsvReader extends Closeable {
 	/**
 	 * Returns the length (i.e. number of columns) of the current row.
 	 * 
+	 * @return the length of the current row
 	 * @since 1.0
 	 */
 	int length();

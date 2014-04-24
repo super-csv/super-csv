@@ -48,6 +48,8 @@ public final class BeanInterfaceProxy implements InvocationHandler {
 	 * 
 	 * @param proxyInterface
 	 *            the interface the the proxy will implement
+	 * @param <T>
+	 *            the proxy implementation type
 	 * @return the proxy implementation
 	 * @throws NullPointerException
 	 *             if proxyInterface is null

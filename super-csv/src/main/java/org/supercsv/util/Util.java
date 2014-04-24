@@ -104,6 +104,8 @@ public final class Util {
 	 *            the keys of the Map (corresponding with the elements in the sourceList). Cannot contain duplicates.
 	 * @param sourceList
 	 *            the List to convert
+	 * @param <T>
+	 *            the type of the values in the map
 	 * @throws NullPointerException
 	 *             if destinationMap, nameMapping or sourceList are null
 	 * @throws SuperCsvException
@@ -216,7 +218,7 @@ public final class Util {
 	}
 	
 	/**
-	 * Converts an List<Object) to a String array (null-safe), by calling toString() on each element.
+	 * Converts an {@code List<Object>} to a String array (null-safe), by calling {@code toString()} on each element.
 	 * 
 	 * @param objectList
 	 *            the List

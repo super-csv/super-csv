@@ -48,7 +48,7 @@ public class Truncate extends CellProcessorAdaptor implements BoolCellProcessor,
 	 * @param maxSize
 	 *            the maximum size of the String
 	 * @throws IllegalArgumentException
-	 *             if maxSize <= 0
+	 *             if {@code maxSize <= 0}
 	 */
 	public Truncate(final int maxSize) {
 		this(maxSize, EMPTY_STRING);
@@ -63,7 +63,7 @@ public class Truncate extends CellProcessorAdaptor implements BoolCellProcessor,
 	 * @param suffix
 	 *            the String to append if the input is truncated (e.g. "...")
 	 * @throws IllegalArgumentException
-	 *             if maxSize <= 0
+	 *             if {@code maxSize <= 0}
 	 * @throws NullPointerException
 	 *             if suffix is null
 	 */
@@ -85,7 +85,7 @@ public class Truncate extends CellProcessorAdaptor implements BoolCellProcessor,
 	 * @param next
 	 *            the next processor in the chain
 	 * @throws IllegalArgumentException
-	 *             if maxSize <= 0
+	 *             if {@code maxSize <= 0}
 	 * @throws NullPointerException
 	 *             if suffix or next is null
 	 */
@@ -105,7 +105,7 @@ public class Truncate extends CellProcessorAdaptor implements BoolCellProcessor,
 	 * @param next
 	 *            the next processor in the chain
 	 * @throws IllegalArgumentException
-	 *             if maxSize <= 0
+	 *             if {@code maxSize <= 0}
 	 * @throws NullPointerException
 	 *             if next is null
 	 */
@@ -121,7 +121,7 @@ public class Truncate extends CellProcessorAdaptor implements BoolCellProcessor,
 	 * @param suffix
 	 *            the String to append if the input is truncated (e.g. "...")
 	 * @throws IllegalArgumentException
-	 *             if maxSize <= 0
+	 *             if {@code maxSize <= 0}
 	 * @throws NullPointerException
 	 *             if suffix is null
 	 */

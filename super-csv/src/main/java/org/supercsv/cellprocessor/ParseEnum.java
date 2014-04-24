@@ -37,6 +37,8 @@ public class ParseEnum extends CellProcessorAdaptor implements StringCellProcess
 	 * 
 	 * @param enumClass
 	 *            the enum class to convert to
+	 * @param <T>
+	 *            the Enum type
 	 * @throws NullPointerException
 	 *             if enumClass is null
 	 */
@@ -55,6 +57,8 @@ public class ParseEnum extends CellProcessorAdaptor implements StringCellProcess
 	 *            the enum class to convert to
 	 * @param ignoreCase
 	 *            whether to ignore the case of the input
+	 * @param <T>
+	 *            the Enum type
 	 * @throws NullPointerException
 	 *             if enumClass is null
 	 */
@@ -73,6 +77,8 @@ public class ParseEnum extends CellProcessorAdaptor implements StringCellProcess
 	 *            the enum class to convert to
 	 * @param next
 	 *            the next processor in the chain
+	 * @param <T>
+	 *            the Enum type
 	 * @throws NullPointerException
 	 *             if enumClass or next is null
 	 */
@@ -93,6 +99,8 @@ public class ParseEnum extends CellProcessorAdaptor implements StringCellProcess
 	 *            whether to ignore the case of the input
 	 * @param next
 	 *            the next processor in the chain
+	 * @param <T>
+	 *            the Enum type
 	 * @throws NullPointerException
 	 *             if enumClass or next is null
 	 */

@@ -21,7 +21,7 @@ import org.supercsv.exception.SuperCsvCellProcessorException;
 import org.supercsv.util.CsvContext;
 
 /**
- * Converts a String to a Character. If the String has a length > 1, then an Exception is thrown.
+ * Converts a String to a Character. If the String has a {@literal length > 1}, then an Exception is thrown.
  * 
  * @since 1.10
  * @author Kasper B. Graversen

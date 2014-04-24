@@ -15,11 +15,13 @@
  */
 package org.supercsv.cellprocessor;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.supercsv.SuperCsvTestUtils.ANONYMOUS_CSVCONTEXT;
+import static org.supercsv.SuperCsvTestUtils.assertExecution;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormatSymbols;
+import java.util.Arrays;
 import java.util.Locale;
 
 import org.junit.Before;
@@ -36,8 +38,8 @@ import org.supercsv.mock.IdentityTransform;
  */
 public class ParseBigDecimalTest {
 	
-	private static final DecimalFormatSymbols FRENCH_SYMBOLS = new DecimalFormatSymbols(Locale.FRANCE);
 	private static final DecimalFormatSymbols ENGLISH_SYMBOLS = new DecimalFormatSymbols(Locale.ENGLISH);
+	private static final DecimalFormatSymbols GERMAN_SYMBOLS = new DecimalFormatSymbols(Locale.GERMANY);
 	
 	private CellProcessor processor;
 	private CellProcessor processor2;
@@ -53,10 +55,10 @@ public class ParseBigDecimalTest {
 	public void setUp() {
 		processor = new ParseBigDecimal();
 		processor2 = new ParseBigDecimal(ENGLISH_SYMBOLS);
-		processor3 = new ParseBigDecimal(FRENCH_SYMBOLS);
+		processor3 = new ParseBigDecimal(GERMAN_SYMBOLS);
 		processorChain = new ParseBigDecimal(new IdentityTransform());
 		processorChain2 = new ParseBigDecimal(ENGLISH_SYMBOLS, new IdentityTransform());
-		processorChain3 = new ParseBigDecimal(FRENCH_SYMBOLS, new IdentityTransform());
+		processorChain3 = new ParseBigDecimal(GERMAN_SYMBOLS, new IdentityTransform());
 	}
 	
 	/**
@@ -66,18 +68,18 @@ public class ParseBigDecimalTest {
 	public void testValidInput() {
 		
 		String normalInput = "1357.459";
-		String frenchInput = "1357,459";
+		String germanInput = "1357,459";
 		BigDecimal expectedOutput = new BigDecimal(normalInput);
 		
 		// normal input
-		assertEquals(expectedOutput, processor.execute(normalInput, ANONYMOUS_CSVCONTEXT));
-		assertEquals(expectedOutput, processor2.execute(normalInput, ANONYMOUS_CSVCONTEXT));
-		assertEquals(expectedOutput, processorChain.execute(normalInput, ANONYMOUS_CSVCONTEXT));
-		assertEquals(expectedOutput, processorChain2.execute(normalInput, ANONYMOUS_CSVCONTEXT));
+		for( final CellProcessor p : Arrays.asList(processor, processor2, processorChain, processorChain2) ) {
+			assertExecution(p, normalInput, expectedOutput);
+		}
 		
-		// french input ("," instead of "." as decimal symbol)
-		assertEquals(expectedOutput, processor3.execute(frenchInput, ANONYMOUS_CSVCONTEXT));
-		assertEquals(expectedOutput, processorChain3.execute(frenchInput, ANONYMOUS_CSVCONTEXT));
+		// german input ("," instead of "." as decimal symbol)
+		for( final CellProcessor p : Arrays.asList(processor3, processorChain3) ) {
+			assertExecution(p, germanInput, expectedOutput);
+		}
 	}
 	
 	/**
@@ -87,18 +89,76 @@ public class ParseBigDecimalTest {
 	public void testValidNegativeInput() {
 		
 		String normalInput = "-1357.459";
-		String frenchInput = "-1357,459";
+		String germanInput = "-1357,459";
 		BigDecimal expectedOutput = new BigDecimal(normalInput);
 		
 		// normal input
-		assertEquals(expectedOutput, processor.execute(normalInput, ANONYMOUS_CSVCONTEXT));
-		assertEquals(expectedOutput, processor2.execute(normalInput, ANONYMOUS_CSVCONTEXT));
-		assertEquals(expectedOutput, processorChain.execute(normalInput, ANONYMOUS_CSVCONTEXT));
-		assertEquals(expectedOutput, processorChain2.execute(normalInput, ANONYMOUS_CSVCONTEXT));
+		for( final CellProcessor p : Arrays.asList(processor, processor2, processorChain, processorChain2) ) {
+			assertExecution(p, normalInput, expectedOutput);
+		}
 		
-		// french input ("," instead of "." as decimal symbol)
-		assertEquals(expectedOutput, processor3.execute(frenchInput, ANONYMOUS_CSVCONTEXT));
-		assertEquals(expectedOutput, processorChain3.execute(frenchInput, ANONYMOUS_CSVCONTEXT));
+		// german input ("," instead of "." as decimal symbol)
+		for( final CellProcessor p : Arrays.asList(processor3, processorChain3) ) {
+			assertExecution(p, germanInput, expectedOutput);
+		}
+	}
+	
+	/**
+	 * Tests that grouping separators are handled correctly for positive numbers.
+	 */
+	@Test
+	public void testValidInputWithGroupingSeparator() {
+		String normalInput = "1,357.459";
+		String germanInput = "1.357,459";
+		BigDecimal expectedOutput = new BigDecimal("1357.459");
+		
+		// 'no symbols' processors should choke on grouping separators
+		for( CellProcessor p : Arrays.asList(processor, processorChain) ) {
+			try {
+				p.execute(normalInput, ANONYMOUS_CSVCONTEXT);
+				fail("should have thrown SuperCsvCellProcessorException");
+			}
+			catch(SuperCsvCellProcessorException e) {}
+		}
+		
+		// normal input
+		for( final CellProcessor p : Arrays.asList(processor2, processorChain2) ) {
+			assertExecution(p, normalInput, expectedOutput);
+		}
+		
+		// german input (opposite - "," is decimal symbol and "." is grouping)
+		for( final CellProcessor p : Arrays.asList(processor3, processorChain3) ) {
+			assertExecution(p, germanInput, expectedOutput);
+		}
+	}
+	
+	/**
+	 * Tests that grouping separators are handled correctly for negative numbers.
+	 */
+	@Test
+	public void testValidNegativeInputWithGroupingSeparator() {
+		String normalInput = "-1,357.459";
+		String germanInput = "-1.357,459";
+		BigDecimal expectedOutput = new BigDecimal("-1357.459");
+		
+		// 'no symbols' processors should choke on grouping separators
+		for( CellProcessor p : Arrays.asList(processor, processorChain) ) {
+			try {
+				p.execute(normalInput, ANONYMOUS_CSVCONTEXT);
+				fail("should have thrown SuperCsvCellProcessorException");
+			}
+			catch(SuperCsvCellProcessorException e) {}
+		}
+		
+		// normal input
+		for( final CellProcessor p : Arrays.asList(processor2, processorChain2) ) {
+			assertExecution(p, normalInput, expectedOutput);
+		}
+		
+		// german input (opposite - "," is decimal symbol and "." is grouping)
+		for( final CellProcessor p : Arrays.asList(processor3, processorChain3) ) {
+			assertExecution(p, germanInput, expectedOutput);
+		}
 	}
 	
 	/**

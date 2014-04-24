@@ -75,7 +75,7 @@ public class DMinMax extends CellProcessorAdaptor implements StringCellProcessor
 	 * @param max
 	 *            the maximum value (inclusive)
 	 * @throws IllegalArgumentException
-	 *             if max < min
+	 *             if {@code max < min}
 	 */
 	public DMinMax(final double min, final double max) {
 		super();
@@ -95,7 +95,7 @@ public class DMinMax extends CellProcessorAdaptor implements StringCellProcessor
 	 * @param next
 	 *            the next processor in the chain
 	 * @throws IllegalArgumentException
-	 *             if max < min
+	 *             if {@code max < min}
 	 * @throws NullPointerException
 	 *             if next is null
 	 */
@@ -114,7 +114,7 @@ public class DMinMax extends CellProcessorAdaptor implements StringCellProcessor
 	 * @param max
 	 *            the maximum value (inclusive)
 	 * @throws IllegalArgumentException
-	 *             if max < min
+	 *             if {@code max < min}
 	 */
 	private static void checkPreconditions(final double min, final double max) {
 		if( max < min ) {

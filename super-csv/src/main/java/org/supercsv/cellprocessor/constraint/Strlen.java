@@ -27,7 +27,7 @@ import org.supercsv.util.CsvContext;
 
 /**
  * This processor ensures that the input String has a length equal to any of the supplied lengths. The length
- * constraints must all be > 0 or an exception is thrown. Lookup time is O(1).
+ * constraints must all be {@code > 0} or an exception is thrown. Lookup time is O(1).
  * 
  * @author Kasper B. Graversen
  * @author Dominique De Vito

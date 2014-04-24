@@ -42,6 +42,8 @@ public class Optional extends ConvertNullTo {
 	 * Constructs a new <tt>Optional</tt> processor, which when encountering <tt>null</tt> will return <tt>null</tt> ,
 	 * for all other values it will call the next processor in the chain.
 	 * 
+	 * @param next
+	 *            the next CellProcessor in the chain
 	 * @throws NullPointerException
 	 *             if next is null
 	 */

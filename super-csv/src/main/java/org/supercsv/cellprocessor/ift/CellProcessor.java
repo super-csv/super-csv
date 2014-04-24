@@ -25,6 +25,11 @@ public interface CellProcessor {
 	/**
 	 * This method is invoked by the framework when the processor needs to process data or check constraints.
 	 * 
+	 * @param value
+	 *            the value to be processed
+	 * @param context
+	 *            the CSV context
+	 * @return the result of cell processor execution
 	 * @since 1.0
 	 */
 	Object execute(final Object value, final CsvContext context);

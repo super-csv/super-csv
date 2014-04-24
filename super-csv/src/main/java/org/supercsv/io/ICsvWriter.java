@@ -30,6 +30,7 @@ public interface ICsvWriter extends Closeable, Flushable {
 	/**
 	 * Gets the current position in the file. The first line of the file is line number 1.
 	 * 
+	 * @return the line number
 	 * @since 1.0
 	 */
 	int getLineNumber();
@@ -39,6 +40,7 @@ public interface ICsvWriter extends Closeable, Flushable {
 	 * This differs from the lineNumber, which is the number of real lines that have been written to the file. The first
 	 * row is row 1 (which is typically the header row).
 	 * 
+	 * @return the current row number
 	 * @since 2.0.0
 	 */
 	int getRowNumber();

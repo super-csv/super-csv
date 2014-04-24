@@ -42,6 +42,8 @@ public interface ICsvBeanReader extends ICsvReader {
 	 *            an array of Strings linking the CSV columns to their corresponding field in the bean (the array length
 	 *            should match the number of columns). A <tt>null</tt> entry in the array indicates that the column
 	 *            should be ignored (the field in the bean will be null - or its default value).
+	 * @param <T>
+	 *            the bean type
 	 * @return a populated bean or null if EOF
 	 * @throws IOException
 	 *             if an I/O error occurred
@@ -67,6 +69,8 @@ public interface ICsvBeanReader extends ICsvReader {
 	 *            an array of Strings linking the CSV columns to their corresponding field in the bean (the array length
 	 *            should match the number of columns). A <tt>null</tt> entry in the array indicates that the column
 	 *            should be ignored (the field in the bean will be null - or its default value).
+	 * @param <T>
+	 *            the bean type
 	 * @return a populated bean or null if EOF
 	 * @throws IOException
 	 *             if an I/O error occurred
@@ -102,6 +106,8 @@ public interface ICsvBeanReader extends ICsvReader {
 	 *            element in the processors array corresponds with a CSV column - the number of processors should match
 	 *            the number of columns). A <tt>null</tt> entry indicates no further processing is required (the
 	 *            unprocessed String value will be set on the bean's field).
+	 * @param <T>
+	 *            the bean type
 	 * @return a populated bean or null if EOF
 	 * @throws IOException
 	 *             if an I/O error occurred
@@ -135,6 +141,8 @@ public interface ICsvBeanReader extends ICsvReader {
 	 *            element in the processors array corresponds with a CSV column - the number of processors should match
 	 *            the number of columns). A <tt>null</tt> entry indicates no further processing is required (the
 	 *            unprocessed String value will be set on the bean's field).
+	 * @param <T>
+	 *            the bean type
 	 * @return a populated bean or null if EOF
 	 * @throws IOException
 	 *             if an I/O error occurred

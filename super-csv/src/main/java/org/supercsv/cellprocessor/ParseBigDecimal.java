@@ -27,9 +27,10 @@ import org.supercsv.util.CsvContext;
  * Convert a String to a BigDecimal. It uses the String constructor of BigDecimal (<tt>new BigDecimal("0.1")</tt>) as it
  * yields predictable results (see {@link BigDecimal}).
  * <p>
- * If the data uses a character other than "." as a decimal separator (France uses "," for example), then use the
+ * If the data uses a character other than "." as a decimal separator (Germany uses "," for example), then use the
  * constructor that accepts a <tt>DecimalFormatSymbols</tt> object, as it will convert the character to a "." before
- * creating the BigDecimal.
+ * creating the BigDecimal. Likewise if the data contains a grouping separator (Germany uses "." for example) then
+ * supplying a <tt>DecimalFormatSymbols</tt> object will allow grouping separators to be removed before parsing.
  * 
  * @since 1.30
  * @author Kasper B. Graversen
@@ -39,13 +40,13 @@ public class ParseBigDecimal extends CellProcessorAdaptor implements StringCellP
 	
 	private static final char DEFAULT_DECIMAL_SEPARATOR = '.';
 	
-	private final char decimalSeparator;
+	private final DecimalFormatSymbols symbols;
 	
 	/**
 	 * Constructs a new <tt>ParseBigDecimal</tt> processor, which converts a String to a BigDecimal.
 	 */
 	public ParseBigDecimal() {
-		this.decimalSeparator = DEFAULT_DECIMAL_SEPARATOR;
+		this.symbols = null;
 	}
 	
 	/**
@@ -60,7 +61,7 @@ public class ParseBigDecimal extends CellProcessorAdaptor implements StringCellP
 	public ParseBigDecimal(final DecimalFormatSymbols symbols) {
 		super();
 		checkPreconditions(symbols);
-		this.decimalSeparator = symbols.getDecimalSeparator();
+		this.symbols = symbols;
 	}
 	
 	/**
@@ -74,7 +75,7 @@ public class ParseBigDecimal extends CellProcessorAdaptor implements StringCellP
 	 */
 	public ParseBigDecimal(final CellProcessor next) {
 		super(next);
-		this.decimalSeparator = DEFAULT_DECIMAL_SEPARATOR;
+		this.symbols = null;
 	}
 	
 	/**
@@ -92,7 +93,7 @@ public class ParseBigDecimal extends CellProcessorAdaptor implements StringCellP
 	public ParseBigDecimal(final DecimalFormatSymbols symbols, final CellProcessor next) {
 		super(next);
 		checkPreconditions(symbols);
-		this.decimalSeparator = symbols.getDecimalSeparator();
+		this.symbols = symbols;
 	}
 	
 	/**
@@ -122,20 +123,36 @@ public class ParseBigDecimal extends CellProcessorAdaptor implements StringCellP
 		if( value instanceof String ) {
 			final String s = (String) value;
 			try {
-				if( decimalSeparator == DEFAULT_DECIMAL_SEPARATOR ) {
+				if( symbols == null ) {
 					result = new BigDecimal(s);
 				} else {
-					result = new BigDecimal(s.replace(decimalSeparator, DEFAULT_DECIMAL_SEPARATOR));
+					result = new BigDecimal(fixSymbols(s, symbols));
 				}
 			}
 			catch(final NumberFormatException e) {
-				throw new SuperCsvCellProcessorException(String.format("'%s' could not be parsed as a BigDecimal", value), context,
-					this, e);
+				throw new SuperCsvCellProcessorException(String.format("'%s' could not be parsed as a BigDecimal",
+					value), context, this, e);
 			}
 		} else {
 			throw new SuperCsvCellProcessorException(String.class, value, context, this);
 		}
 		
 		return next.execute(result, context);
+	}
+	
+	/**
+	 * Fixes the symbols in the input String (currently only decimal separator and grouping separator) so that the
+	 * String can be parsed as a BigDecimal.
+	 * 
+	 * @param s
+	 *            the String to fix
+	 * @param symbols
+	 *            the decimal format symbols
+	 * @return the fixed String
+	 */
+	private static String fixSymbols(final String s, final DecimalFormatSymbols symbols) {
+		final char groupingSeparator = symbols.getGroupingSeparator();
+		final char decimalSeparator = symbols.getDecimalSeparator();
+		return s.replace(String.valueOf(groupingSeparator), "").replace(decimalSeparator, DEFAULT_DECIMAL_SEPARATOR);
 	}
 }

@@ -25,10 +25,9 @@ import org.supercsv.quote.QuoteMode;
  * Before reading or writing CSV files, you must supply the reader/writer with some preferences.
  * <p>
  * <strong>Please note:</strong> the end of line symbols are <em>only</em> used for writing.
- * <p>
- * The following predefined configurations are available:
+ * </p>
  * <table border="0" cellpadding="1" >
- * <tbody>
+ * <caption>Predefined configurations</caption> <tbody>
  * <tr>
  * <th align="left">Constant</th>
  * <th align="left">Quote character</th>
@@ -65,18 +64,25 @@ import org.supercsv.quote.QuoteMode;
  * By default, spaces surrounding an unquoted cell are treated as part of the data. In versions of Super CSV prior to
  * 2.0.0 this wasn't the case, and any surrounding spaces that weren't within quotes were ignored when reading (and
  * quotes were automatically added to Strings containing surrounding spaces when writing).
+ * </p>
  * <p>
  * If you wish enable this functionality again, then you can create a CsvPreference with the
  * <tt>surroundingSpacesNeedQuotes</tt> flag set to true (the default is false). This means that surrounding spaces
  * without quotes will be trimmed when reading, and quotes will automatically be added for Strings containing
  * surrounding spaces when writing.
+ * </p>
  * <p>
- * You can apply the surroundingSpacesNeedQuotes property to an existing preference as follows:<br/>
+ * You can apply the surroundingSpacesNeedQuotes property to an existing preference as follows:
+ * </p>
+ * <p>
  * {@code private static final CsvPreference STANDARD_SURROUNDING_SPACES_NEED_QUOTES = new CsvPreference.Builder(CsvPreference.STANDARD_PREFERENCE).surroundingSpacesNeedQuotes(true).build();}
+ * </p>
  * <p>
- * You can also create your own preferences. For example if your file was pipe-delimited, you could use the following:<br/>
+ * You can also create your own preferences. For example if your file was pipe-delimited, you could use the following:
+ * </p>
+ * <p>
  * {@code private static final CsvPreference PIPE_DELIMITED = new CsvPreference.Builder('"', '|', "\n").build();}
- * <p>
+ * </p>
  * Other preferences incude:
  * <ul>
  * <li>using a custom {@link CsvEncoder} when writing CSV (if you want complete control over how the CSV is encoded)</li>

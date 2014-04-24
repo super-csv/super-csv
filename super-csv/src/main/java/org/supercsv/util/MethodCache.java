@@ -68,13 +68,14 @@ public class MethodCache {
 	/**
 	 * Returns the setter method for the field on an object.
 	 * 
-	 * @param <T>
 	 * @param object
 	 *            the object
 	 * @param fieldName
 	 *            the field name
 	 * @param argumentType
 	 *            the type to be passed to the setter
+	 * @param <T>
+	 *            the object type
 	 * @return the setter method associated with the field on the object
 	 * @throws NullPointerException
 	 *             if object, fieldName or fieldType is null

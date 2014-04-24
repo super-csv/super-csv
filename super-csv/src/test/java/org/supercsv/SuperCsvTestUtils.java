@@ -15,6 +15,8 @@
  */
 package org.supercsv;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -193,6 +195,20 @@ public class SuperCsvTestUtils {
 		cal.set(year, month - 1, dayOfMonth, hour, minute, second);
 		cal.set(Calendar.MILLISECOND, 0);
 		return cal.getTime();
+	}
+	
+	/**
+	 * Asserts that the processor gives the expected output for the supplied input.
+	 * 
+	 * @param processor
+	 *            the processor
+	 * @param input
+	 *            the input
+	 * @param expectedOutput
+	 *            the expected output
+	 */
+	public static void assertExecution(final CellProcessor processor, final String input, final Object expectedOutput) {
+		assertEquals(expectedOutput, processor.execute(input, ANONYMOUS_CSVCONTEXT));
 	}
 	
 }

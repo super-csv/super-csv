@@ -22,6 +22,14 @@ import java.util.Set;
  * A 3-dimensional HashMap is a HashMap that enables you to refer to values via three keys rather than one. The
  * underlying implementation is simply a HashMap containing HashMap containing a HashMap, each of which maps to values.
  * 
+ * @param <K1>
+ *            the first key type
+ * @param <K2>
+ *            the second key type
+ * @param <K3>
+ *            the third key type
+ * @param <V>
+ *            the value type
  * @author Kasper B. Graversen
  * @since 2.0.0 (migrated from Spiffy 0.5)
  */
@@ -193,6 +201,8 @@ public class ThreeDHashMap<K1, K2, K3, V> {
 	/**
 	 * Returns the number of key-value mappings in this map for the second key.
 	 * 
+	 * @param firstKey
+	 *            the first key
 	 * @return Returns the number of key-value mappings in this map for the second key.
 	 */
 	public int size(final K1 firstKey) {
@@ -207,6 +217,10 @@ public class ThreeDHashMap<K1, K2, K3, V> {
 	/**
 	 * Returns the number of key-value mappings in this map for the third key.
 	 * 
+	 * @param firstKey
+	 *            the first key
+	 * @param secondKey
+	 *            the second key
 	 * @return Returns the number of key-value mappings in this map for the third key.
 	 */
 	public int size(final K1 firstKey, final K2 secondKey) {
@@ -226,6 +240,8 @@ public class ThreeDHashMap<K1, K2, K3, V> {
 	
 	/**
 	 * Returns a set of the keys of the outermost map.
+	 * 
+	 * @return the key set for the outermost map
 	 */
 	public Set<K1> keySet() {
 		return map.keySet();

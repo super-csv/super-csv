@@ -22,6 +22,12 @@ import java.util.Set;
  * A two-dimensional hashmap, is a HashMap that enables you to refer to values via two keys rather than one. The
  * underlying implementation is simply a HashMap containing HashMap, each of which maps to values.
  * 
+ * @param <K1>
+ *            the first key type
+ * @param <K2>
+ *            the second key type
+ * @param <V>
+ *            the value type
  * @see java.util.HashMap
  * @author Kasper B. Graversen
  * @since 2.0.0 (migrated from Spiffy 0.5)
@@ -124,6 +130,8 @@ public class TwoDHashMap<K1, K2, V> {
 	/**
 	 * Returns the number of key-value mappings in this map for the second key.
 	 * 
+	 * @param firstKey
+	 *            the first key
 	 * @return Returns the number of key-value mappings in this map for the second key.
 	 */
 	public int size(final K1 firstKey) {
@@ -137,6 +145,8 @@ public class TwoDHashMap<K1, K2, V> {
 	
 	/**
 	 * Returns a set of the keys of the outermost map.
+	 * 
+	 * @return the key set for the outermost map
 	 */
 	public Set<K1> keySet() {
 		return map.keySet();

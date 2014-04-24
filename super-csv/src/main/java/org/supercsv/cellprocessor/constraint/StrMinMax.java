@@ -44,7 +44,7 @@ public class StrMinMax extends CellProcessorAdaptor implements StringCellProcess
 	 * @param max
 	 *            the maximum String length
 	 * @throws IllegalArgumentException
-	 *             if max < min, or min is < 0
+	 *             if {@code max < min}, or {@code min is < 0}
 	 */
 	public StrMinMax(final long min, final long max) {
 		super();
@@ -66,7 +66,7 @@ public class StrMinMax extends CellProcessorAdaptor implements StringCellProcess
 	 * @throws NullPointerException
 	 *             if next is null
 	 * @throws IllegalArgumentException
-	 *             if max < min, or min is < 0
+	 *             if {@code max < min}, or {@code min is < 0}
 	 */
 	public StrMinMax(final long min, final long max, final CellProcessor next) {
 		super(next);
@@ -83,7 +83,7 @@ public class StrMinMax extends CellProcessorAdaptor implements StringCellProcess
 	 * @param max
 	 *            the maximum String length
 	 * @throws IllegalArgumentException
-	 *             if max < min, or min is < 0
+	 *             if {@code max < min}, or {@code min is < 0}
 	 */
 	private static void checkPreconditions(final long min, final long max) {
 		if( max < min ) {
@@ -100,7 +100,7 @@ public class StrMinMax extends CellProcessorAdaptor implements StringCellProcess
 	 * @throws SuperCsvCellProcessorException
 	 *             if value is null
 	 * @throws SuperCsvConstraintViolationException
-	 *             if length is < min or length > max
+	 *             if {@code length < min} or {@code length > max}
 	 */
 	public Object execute(final Object value, final CsvContext context) {
 		validateInputNotNull(value, context);

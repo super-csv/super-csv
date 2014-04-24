@@ -81,7 +81,7 @@ public class LMinMax extends CellProcessorAdaptor implements StringCellProcessor
 	 * @param max
 	 *            the maximum value (inclusive)
 	 * @throws IllegalArgumentException
-	 *             if max < min
+	 *             if {@code max < min}
 	 */
 	public LMinMax(final long min, final long max) {
 		super();
@@ -103,7 +103,7 @@ public class LMinMax extends CellProcessorAdaptor implements StringCellProcessor
 	 * @throws NullPointerException
 	 *             if next is null
 	 * @throws IllegalArgumentException
-	 *             if max < min
+	 *             if {@code max < min}
 	 */
 	public LMinMax(final long min, final long max, final LongCellProcessor next) {
 		super(next);
@@ -120,7 +120,7 @@ public class LMinMax extends CellProcessorAdaptor implements StringCellProcessor
 	 * @param max
 	 *            the maximum value (inclusive)
 	 * @throws IllegalArgumentException
-	 *             if max < min
+	 *             if {@code max < min}
 	 */
 	private static void checkPreconditions(final long min, final long max) {
 		if( max < min ) {
@@ -132,7 +132,7 @@ public class LMinMax extends CellProcessorAdaptor implements StringCellProcessor
 	 * {@inheritDoc}
 	 * 
 	 * @throws SuperCsvCellProcessorException
-	 *             if value is null or  can't be parsed as a Long
+	 *             if value is null or can't be parsed as a Long
 	 * @throws SuperCsvConstraintViolationException
 	 *             if value, or doesn't lie between min and max (inclusive)
 	 */
@@ -147,8 +147,8 @@ public class LMinMax extends CellProcessorAdaptor implements StringCellProcessor
 				result = Long.parseLong(value.toString());
 			}
 			catch(final NumberFormatException e) {
-				throw new SuperCsvCellProcessorException(String.format("'%s' could not be parsed as a Long", value), context, this,
-					e);
+				throw new SuperCsvCellProcessorException(String.format("'%s' could not be parsed as a Long", value),
+					context, this, e);
 			}
 		}
 		
