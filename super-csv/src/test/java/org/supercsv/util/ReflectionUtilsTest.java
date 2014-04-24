@@ -135,6 +135,46 @@ public class ReflectionUtilsTest {
 	}
 	
 	/**
+	 * Tests the findGetter() method with a field name that is all capitals.
+	 */
+	@Test
+	public void testFindURLGetter() throws Exception {
+		final String url = "www.google.com";
+		bean.setURL(url);
+		assertEquals(url, findGetter(bean, "URL").invoke(bean));
+	}
+	
+	/**
+	 * Tests the findSetter() method with a field name that is all capitals.
+	 */
+	@Test
+	public void testFindURLSetter() throws Exception {
+		final String url = "www.google.com";
+		findSetter(bean, "URL", String.class).invoke(bean, url);
+		assertEquals(url, bean.getURL());
+	}
+	
+	/**
+	 * Tests the findGetter() method with a getter that has a lowercase char after 'get'.
+	 */
+	@Test
+	public void testFindiPhoneGetter() throws Exception {
+		final String value = "Apple";
+		bean.setiPad(value);
+		assertEquals(value, findGetter(bean, "iPad").invoke(bean));
+	}
+	
+	/**
+	 * Tests the findSetter() method with a setter that has a lowercase char after 'set'.
+	 */
+	@Test
+	public void testFindiPhoneSetter() throws Exception {
+		final String value = "Apple";
+		findSetter(bean, "iPad", String.class).invoke(bean, value);
+		assertEquals(value, bean.getiPad());
+	}
+	
+	/**
 	 * Tests the findSetter() method by passing primitives and wrapper classes to setters that expect wrapper classes
 	 * and primitives respectively (this tests the autoboxing logic).
 	 */

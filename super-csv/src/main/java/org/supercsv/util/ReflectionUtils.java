@@ -122,7 +122,7 @@ public final class ReflectionUtils {
 		
 		for( final Method method : clazz.getMethods() ) {
 			
-			if( !getterName.equals(method.getName()) || method.getParameterTypes().length != 0
+			if( !getterName.equalsIgnoreCase(method.getName()) || method.getParameterTypes().length != 0
 				|| method.getReturnType().equals(void.class) ) {
 				continue; // getter must have correct name, 0 parameters and a return type
 			}
@@ -211,7 +211,7 @@ public final class ReflectionUtils {
 		Method compatibleSetter = null;
 		for( final Method method : clazz.getMethods() ) {
 			
-			if( !setterName.equals(method.getName()) || method.getParameterTypes().length != 1 ) {
+			if( !setterName.equalsIgnoreCase(method.getName()) || method.getParameterTypes().length != 1 ) {
 				continue; // setter must have correct name and only 1 parameter
 			}
 			

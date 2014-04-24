@@ -21,7 +21,7 @@ package org.supercsv.mock;
  * @author James Bassett
  */
 public class ReflectionBean {
-
+	
 	private String name;
 	private Number favouriteNumber;
 	private Number overloaded;
@@ -42,8 +42,11 @@ public class ReflectionBean {
 	private Character charWrapper;
 	private Byte byteWrapper;
 	private Boolean booleanWrapper2;
+	private String URL;
+	private String iPad;
 	
 	public String getName() {
+		
 		return name;
 	}
 	
@@ -182,7 +185,7 @@ public class ReflectionBean {
 	public void setByteWrapper(Byte byteWrapper) {
 		this.byteWrapper = byteWrapper;
 	}
-
+	
 	public void getPrimitiveBoolean() {
 		throw new RuntimeException("this method isn't a getter (no return type) and should never be invoked");
 	}
@@ -194,7 +197,7 @@ public class ReflectionBean {
 	public boolean isPrimitiveBoolean() {
 		return primitiveBoolean;
 	}
-
+	
 	public void setPrimitiveBoolean(boolean primitiveBoolean) {
 		this.primitiveBoolean = primitiveBoolean;
 	}
@@ -202,25 +205,41 @@ public class ReflectionBean {
 	public void setPrimitiveBoolean() {
 		throw new RuntimeException("this method isn't a setter (no param) and should never be invoked");
 	}
-
+	
 	public Boolean getBooleanWrapper() {
 		return booleanWrapper;
 	}
-
+	
 	public void setBooleanWrapper(Boolean booleanWrapper) {
 		this.booleanWrapper = booleanWrapper;
 	}
-
+	
 	public Boolean isBooleanWrapper2() {
 		return booleanWrapper2;
 	}
-
+	
 	public void setBooleanWrapper2(Boolean booleanWrapper2) {
 		this.booleanWrapper2 = booleanWrapper2;
 	}
 	
-	public String isInvalid(){
+	public String isInvalid() {
 		throw new RuntimeException("this method isn't a getter and should never be invoked");
+	}
+	
+	public String getURL() {
+		return URL;
+	}
+
+	public void setURL(String URL) {
+		this.URL = URL;
+	}
+	
+	public String getiPad() {
+		return iPad;
+	}
+	
+	public void setiPad(String iPad) {
+		this.iPad = iPad;
 	}
 	
 }
