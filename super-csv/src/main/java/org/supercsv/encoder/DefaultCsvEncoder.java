@@ -26,8 +26,6 @@ import org.supercsv.util.CsvContext;
  */
 public class DefaultCsvEncoder implements CsvEncoder {
 	
-	private final StringBuilder currentColumn = new StringBuilder();
-	
 	/**
 	 * Constructs a new <tt>DefaultCsvEncoder</tt>.
 	 */
@@ -39,8 +37,7 @@ public class DefaultCsvEncoder implements CsvEncoder {
 	 */
 	public String encode(final String input, final CsvContext context, final CsvPreference preference) {
 		
-		currentColumn.delete(0, currentColumn.length()); // reusing builder object
-		
+		final StringBuilder currentColumn = new StringBuilder();
 		final int delimiter = preference.getDelimiterChar();
 		final char quote = (char) preference.getQuoteChar();
 		final String eolSymbols = preference.getEndOfLineSymbols();
