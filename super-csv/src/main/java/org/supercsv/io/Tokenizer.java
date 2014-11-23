@@ -48,6 +48,8 @@ public class Tokenizer extends AbstractTokenizer {
 	
 	private final boolean surroundingSpacesNeedQuotes;
 	
+	private final boolean ignoreEmptyLines;
+	
 	private final CommentMatcher commentMatcher;
 	
 	/**
@@ -72,6 +74,7 @@ public class Tokenizer extends AbstractTokenizer {
 		this.quoteChar = preferences.getQuoteChar();
 		this.delimeterChar = preferences.getDelimiterChar();
 		this.surroundingSpacesNeedQuotes = preferences.isSurroundingSpacesNeedQuotes();
+		this.ignoreEmptyLines = preferences.isIgnoreEmptyLines();
 		this.commentMatcher = preferences.getCommentMatcher();
 	}
 	
@@ -89,7 +92,7 @@ public class Tokenizer extends AbstractTokenizer {
 		currentColumn.setLength(0);
 		currentRow.setLength(0);
 		
-		// keep reading lines until data is found
+		// read a line (ignoring empty lines/comments if necessary)
 		String line;
 		do {
 			line = readLine();
@@ -97,7 +100,7 @@ public class Tokenizer extends AbstractTokenizer {
 				return false; // EOF
 			}
 		}
-		while( line.length() == 0 || (commentMatcher != null && commentMatcher.isComment(line)) );
+		while( ignoreEmptyLines && line.length() == 0 || (commentMatcher != null && commentMatcher.isComment(line)) );
 		
 		// update the untokenized CSV row
 		currentRow.append(line);

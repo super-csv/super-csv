@@ -40,8 +40,12 @@ CSV Preferences
     
     []
     
+    [ignoreEmptyLines] Whether empty lines (i.e. containing only end of line symbols) are ignored. The default value is true (empty lines are ignored).
+    
+    []
+    
     [skipComments] Skips comments (what makes up a comment is determined by the CommentMatcher you supply). See the section on skipping comments below for more information.
-
+    
     []
     
     [encoder] Use your own encoder when writing CSV. See the section on custom encoders below.
@@ -76,6 +80,8 @@ CSV Preferences
  <<Preference>>              || Default value
 *----------------------------+-------------------------------------------------------------------------------------*
  surroundingSpacesNeedQuotes | false
+*----------------------------+-------------------------------------------------------------------------------------*
+ ignoreEmptyLines            | true
 *----------------------------+-------------------------------------------------------------------------------------*
  encoder                     | {{{./apidocs/org/supercsv/encoder/DefaultCsvEncoder.html}DefaultCsvEncoder}}
 *----------------------------+-------------------------------------------------------------------------------------*

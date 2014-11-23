@@ -127,6 +127,8 @@ public final class CsvPreference {
 	
 	private final boolean surroundingSpacesNeedQuotes;
 	
+	private final boolean ignoreEmptyLines;
+	
 	private final CsvEncoder encoder;
 	
 	private final QuoteMode quoteMode;
@@ -141,6 +143,7 @@ public final class CsvPreference {
 		this.delimiterChar = builder.delimiterChar;
 		this.endOfLineSymbols = builder.endOfLineSymbols;
 		this.surroundingSpacesNeedQuotes = builder.surroundingSpacesNeedQuotes;
+		this.ignoreEmptyLines = builder.ignoreEmptyLines; 
 		this.commentMatcher = builder.commentMatcher;
 		this.encoder = builder.encoder;
 		this.quoteMode = builder.quoteMode;
@@ -183,6 +186,15 @@ public final class CsvPreference {
 	}
 	
 	/**
+	 * Returns the ignoreEmptyLines flag.
+	 * 
+	 * @return the ignoreEmptyLines flag
+	 */
+	public boolean isIgnoreEmptyLines() {
+		return ignoreEmptyLines;
+	}
+
+	/**
 	 * Returns the CSV encoder.
 	 * 
 	 * @return the CSV encoder
@@ -223,6 +235,8 @@ public final class CsvPreference {
 		
 		private boolean surroundingSpacesNeedQuotes = false;
 		
+		private boolean ignoreEmptyLines = true;
+		
 		private CsvEncoder encoder;
 		
 		private QuoteMode quoteMode;
@@ -241,6 +255,7 @@ public final class CsvPreference {
 			this.delimiterChar = preference.delimiterChar;
 			this.endOfLineSymbols = preference.endOfLineSymbols;
 			this.surroundingSpacesNeedQuotes = preference.surroundingSpacesNeedQuotes;
+			this.ignoreEmptyLines = preference.ignoreEmptyLines;
 			this.encoder = preference.encoder;
 			this.quoteMode = preference.quoteMode;
 			this.commentMatcher = preference.commentMatcher;
@@ -285,6 +300,20 @@ public final class CsvPreference {
 		 */
 		public Builder surroundingSpacesNeedQuotes(final boolean surroundingSpacesNeedQuotes) {
 			this.surroundingSpacesNeedQuotes = surroundingSpacesNeedQuotes;
+			return this;
+		}
+		
+		/**
+		 * Flag indicating whether empty lines (i.e. containing only end of line symbols) should be ignored. The default
+		 * is <tt>true</tt>.
+		 * 
+		 * @since 2.2.1
+		 * @param ignoreEmptyLines
+		 *            flag indicating whether empty lines should be ignored
+		 * @return the updated Builder
+		 */
+		public Builder ignoreEmptyLines(final boolean ignoreEmptyLines) {
+			this.ignoreEmptyLines = ignoreEmptyLines;
 			return this;
 		}
 		

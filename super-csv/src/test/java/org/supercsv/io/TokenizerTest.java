@@ -17,6 +17,7 @@ package org.supercsv.io;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.supercsv.prefs.CsvPreference.EXCEL_PREFERENCE;
@@ -40,6 +41,8 @@ public class TokenizerTest {
 	private static final CsvPreference NORMAL_PREFERENCE = EXCEL_PREFERENCE;
 	private static final CsvPreference SPACES_NEED_QUOTES_PREFERENCE = new CsvPreference.Builder(EXCEL_PREFERENCE)
 		.surroundingSpacesNeedQuotes(true).build();
+	private static final CsvPreference DONT_IGNORE_EMPTY_LINES_PREFERENCE = new CsvPreference.Builder(EXCEL_PREFERENCE)
+		.ignoreEmptyLines(false).build();
 	
 	private Tokenizer tokenizer;
 	private List<String> columns;
@@ -129,10 +132,10 @@ public class TokenizerTest {
 	}
 	
 	/**
-	 * Tests that the readColumns() method skips over blank lines at the start of a file.
+	 * Tests that the readColumns() method skips over empty lines.
 	 */
 	@Test
-	public void testBlankLinesAtStart() throws Exception {
+	public void testEmptyLines() throws Exception {
 		
 		final String input = "\n\nthis is the third line\n";
 		tokenizer = createTokenizer(input, NORMAL_PREFERENCE);
@@ -141,6 +144,34 @@ public class TokenizerTest {
 		assertEquals("this is the third line", columns.get(0));
 		assertEquals(3, tokenizer.getLineNumber());
 		assertEquals("this is the third line", tokenizer.getUntokenizedRow());
+	}
+	
+	/**
+	 * Tests that the readColumns() method doesn't skip over empty lines if the ignoreEmptyLines
+	 * preference is disabled.
+	 */
+	@Test
+	public void testEmptyLinesWithIgnoreEmptyLines() throws Exception {
+		
+		final String input = "\nthis is the second line\n\n";
+		tokenizer = createTokenizer(input, DONT_IGNORE_EMPTY_LINES_PREFERENCE);
+		tokenizer.readColumns(columns);
+		assertTrue(columns.size() == 1);
+		assertNull(columns.get(0));
+		assertEquals(1, tokenizer.getLineNumber());
+		assertEquals("", tokenizer.getUntokenizedRow());
+		
+		tokenizer.readColumns(columns);
+		assertTrue(columns.size() == 1);
+		assertEquals("this is the second line", columns.get(0));
+		assertEquals(2, tokenizer.getLineNumber());
+		assertEquals("this is the second line", tokenizer.getUntokenizedRow());
+		
+		tokenizer.readColumns(columns);
+		assertTrue(columns.size() == 1);
+		assertNull(columns.get(0));
+		assertEquals(3, tokenizer.getLineNumber());
+		assertEquals("", tokenizer.getUntokenizedRow());
 	}
 	
 	/**
@@ -426,11 +457,10 @@ public class TokenizerTest {
 	 * Tests that the CommentStartsWith comment matcher works (comments are skipped).
 	 */
 	@Test
-	public void testSkipCommentsStartsWith() throws IOException{
+	public void testSkipCommentsStartsWith() throws IOException {
 		
-		final CsvPreference commentsStartWithPrefs = new CsvPreference.Builder(EXCEL_PREFERENCE)
-		.skipComments(new CommentStartsWith("#")).build();
-
+		final CsvPreference commentsStartWithPrefs = new CsvPreference.Builder(EXCEL_PREFERENCE).skipComments(
+			new CommentStartsWith("#")).build();
 		
 		final String input = "#comment\nnot,a,comment\n# another comment\nalso,not,comment";
 		final Tokenizer tokenizer = createTokenizer(input, commentsStartWithPrefs);
@@ -453,10 +483,10 @@ public class TokenizerTest {
 	 * Tests that the CommentMatches comment matcher works (comments are skipped).
 	 */
 	@Test
-	public void testSkipCommentsMatches() throws IOException{
+	public void testSkipCommentsMatches() throws IOException {
 		
-		final CsvPreference commentsMatchesPrefs = new CsvPreference.Builder(EXCEL_PREFERENCE)
-		.skipComments(new CommentMatches("<!--.*-->")).build();
+		final CsvPreference commentsMatchesPrefs = new CsvPreference.Builder(EXCEL_PREFERENCE).skipComments(
+			new CommentMatches("<!--.*-->")).build();
 		
 		final String input = "<!--comment-->\nnot,a,comment\n<!-- another comment-->\nalso,not,comment";
 		final Tokenizer tokenizer = createTokenizer(input, commentsMatchesPrefs);
