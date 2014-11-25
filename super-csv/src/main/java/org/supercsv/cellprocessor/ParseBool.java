@@ -31,8 +31,14 @@ import org.supercsv.util.CsvContext;
  * <p>
  * The default values for false are: <tt>"false", "0", "n", "f"</tt>
  * <p>
- * The input is converted to lowercase before comparison against the true/false values (to handle all variations of case
- * in the input), so if you supply your own true/false values then ensure they are lowercase.
+ * By default (unless the <tt>ignoreCase</tt> parameter is supplied on the constructor) this processor will ignore the
+ * case of the value, i.e. "true", "TRUE", and "True" will all be converted to <tt>true</tt> (likewise for
+ * <tt>false</tt>).
+ * <p>
+ * Prior to version 2.2.1, this processor always ignored case, so it was necessary to ensure that all supplied
+ * true/false values were lowercase, as the input was converted to lowercase before comparison against the true/false
+ * values (to handle all variations of case in the input). This is no longer required (just use the <tt>ignoreCase</tt>
+ * parameter).
  * 
  * @author Kasper B. Graversen
  * @author Dominique De Vito
@@ -47,16 +53,31 @@ public class ParseBool extends CellProcessorAdaptor implements StringCellProcess
 	private final Set<String> trueValues = new HashSet<String>();
 	private final Set<String> falseValues = new HashSet<String>();
 	
+	private final boolean ignoreCase;
+	
 	/**
-	 * Constructs a new <tt>ParseBool</tt> processor, which converts a String to a Boolean using the default values.
+	 * Constructs a new <tt>ParseBool</tt> processor, which converts a String to a Boolean using the default values
+	 * (ignoring case).
 	 */
 	public ParseBool() {
 		this(DEFAULT_TRUE_VALUES, DEFAULT_FALSE_VALUES);
 	}
 	
 	/**
-	 * Constructs a new <tt>ParseBool</tt> processor, which converts a String to a Boolean using the default values,
-	 * then calls the next processor in the chain.
+	 * Constructs a new <tt>ParseBool</tt> processor, which converts a String to a Boolean using the default values
+	 * (ignoring case if desired).
+	 * 
+	 * @since 2.2.1
+	 * @param ignoreCase
+	 *            whether to ignore the case when comparing against the true/false values
+	 */
+	public ParseBool(final boolean ignoreCase) {
+		this(DEFAULT_TRUE_VALUES, DEFAULT_FALSE_VALUES, ignoreCase);
+	}
+	
+	/**
+	 * Constructs a new <tt>ParseBool</tt> processor, which converts a String to a Boolean using the default values
+	 * (ignoring case), then calls the next processor in the chain.
 	 * 
 	 * @param next
 	 *            the next processor in the chain
@@ -68,8 +89,24 @@ public class ParseBool extends CellProcessorAdaptor implements StringCellProcess
 	}
 	
 	/**
+	 * Constructs a new <tt>ParseBool</tt> processor, which converts a String to a Boolean using the default values
+	 * (ignoring case if desired), then calls the next processor in the chain.
+	 * 
+	 * @since 2.2.1
+	 * @param ignoreCase
+	 *            whether to ignore the case when comparing against the true/false values
+	 * @param next
+	 *            the next processor in the chain
+	 * @throws NullPointerException
+	 *             if next is null
+	 */
+	public ParseBool(final boolean ignoreCase, final BoolCellProcessor next) {
+		this(DEFAULT_TRUE_VALUES, DEFAULT_FALSE_VALUES, ignoreCase, next);
+	}
+	
+	/**
 	 * Constructs a new <tt>ParseBool</tt> processor, which converts a String to a Boolean using the supplied true/false
-	 * values.
+	 * values (ignoring case).
 	 * 
 	 * @param trueValue
 	 *            the String which represents true
@@ -79,15 +116,34 @@ public class ParseBool extends CellProcessorAdaptor implements StringCellProcess
 	 *             if trueValue or falseValue is null
 	 */
 	public ParseBool(final String trueValue, final String falseValue) {
-		super();
-		checkPreconditions(trueValue, falseValue);
-		trueValues.add(trueValue);
-		falseValues.add(falseValue);
+		this(trueValue, falseValue, true);
 	}
 	
 	/**
 	 * Constructs a new <tt>ParseBool</tt> processor, which converts a String to a Boolean using the supplied true/false
-	 * values.
+	 * values (ignoring case if desired).
+	 * 
+	 * @since 2.2.1
+	 * @param trueValue
+	 *            the String which represents true
+	 * @param falseValue
+	 *            the String which represents false
+	 * @param ignoreCase
+	 *            whether to ignore the case when comparing against the true/false values
+	 * @throws NullPointerException
+	 *             if trueValue or falseValue is null
+	 */
+	public ParseBool(final String trueValue, final String falseValue, final boolean ignoreCase) {
+		super();
+		checkPreconditions(trueValue, falseValue);
+		trueValues.add(trueValue);
+		falseValues.add(falseValue);
+		this.ignoreCase = ignoreCase;
+	}
+	
+	/**
+	 * Constructs a new <tt>ParseBool</tt> processor, which converts a String to a Boolean using the supplied true/false
+	 * values (ignoring case).
 	 * 
 	 * @param trueValues
 	 *            the array of Strings which represent true
@@ -99,15 +155,36 @@ public class ParseBool extends CellProcessorAdaptor implements StringCellProcess
 	 *             if trueValues or falseValues is null
 	 */
 	public ParseBool(final String[] trueValues, final String[] falseValues) {
-		super();
-		checkPreconditions(trueValues, falseValues);
-		Collections.addAll(this.trueValues, trueValues);
-		Collections.addAll(this.falseValues, falseValues);
+		this(trueValues, falseValues, true);
 	}
 	
 	/**
 	 * Constructs a new <tt>ParseBool</tt> processor, which converts a String to a Boolean using the supplied true/false
-	 * values, then calls the next processor in the chain.
+	 * values (ignoring case if desired).
+	 * 
+	 * @since 2.2.1
+	 * @param trueValues
+	 *            the array of Strings which represent true
+	 * @param falseValues
+	 *            the array of Strings which represent false
+	 * @param ignoreCase
+	 *            whether to ignore the case when comparing against the true/false values
+	 * @throws IllegalArgumentException
+	 *             if trueValues or falseValues is empty
+	 * @throws NullPointerException
+	 *             if trueValues or falseValues is null
+	 */
+	public ParseBool(final String[] trueValues, final String[] falseValues, final boolean ignoreCase) {
+		super();
+		checkPreconditions(trueValues, falseValues);
+		Collections.addAll(this.trueValues, trueValues);
+		Collections.addAll(this.falseValues, falseValues);
+		this.ignoreCase = ignoreCase;
+	}
+	
+	/**
+	 * Constructs a new <tt>ParseBool</tt> processor, which converts a String to a Boolean using the supplied true/false
+	 * values (ignoring case), then calls the next processor in the chain.
 	 * 
 	 * @param trueValue
 	 *            the String which represents true
@@ -119,15 +196,37 @@ public class ParseBool extends CellProcessorAdaptor implements StringCellProcess
 	 *             if trueValue, falseValue or next is null
 	 */
 	public ParseBool(final String trueValue, final String falseValue, final BoolCellProcessor next) {
-		super(next);
-		checkPreconditions(trueValue, falseValue);
-		trueValues.add(trueValue);
-		falseValues.add(falseValue);
+		this(trueValue, falseValue, true, next);
 	}
 	
 	/**
 	 * Constructs a new <tt>ParseBool</tt> processor, which converts a String to a Boolean using the supplied true/false
-	 * values, then calls the next processor in the chain.
+	 * values (ignoring case if desired), then calls the next processor in the chain.
+	 * 
+	 * @since 2.2.1
+	 * @param trueValue
+	 *            the String which represents true
+	 * @param falseValue
+	 *            the String which represents false
+	 * @param ignoreCase
+	 *            whether to ignore the case when comparing against the true/false values
+	 * @param next
+	 *            the next processor in the chain
+	 * @throws NullPointerException
+	 *             if trueValue, falseValue or next is null
+	 */
+	public ParseBool(final String trueValue, final String falseValue, final boolean ignoreCase,
+		final BoolCellProcessor next) {
+		super(next);
+		checkPreconditions(trueValue, falseValue);
+		trueValues.add(trueValue);
+		falseValues.add(falseValue);
+		this.ignoreCase = ignoreCase;
+	}
+	
+	/**
+	 * Constructs a new <tt>ParseBool</tt> processor, which converts a String to a Boolean using the supplied true/false
+	 * values (ignoring case), then calls the next processor in the chain.
 	 * 
 	 * @param trueValues
 	 *            the array of Strings which represent true
@@ -141,10 +240,34 @@ public class ParseBool extends CellProcessorAdaptor implements StringCellProcess
 	 *             if trueValues, falseValues, or next is null
 	 */
 	public ParseBool(final String[] trueValues, final String[] falseValues, final BoolCellProcessor next) {
+		this(trueValues, falseValues, true, next);
+	}
+	
+	/**
+	 * Constructs a new <tt>ParseBool</tt> processor, which converts a String to a Boolean using the supplied true/false
+	 * values (ignoring case if desired), then calls the next processor in the chain.
+	 * 
+	 * @since 2.2.1
+	 * @param trueValues
+	 *            the array of Strings which represent true
+	 * @param falseValues
+	 *            the array of Strings which represent false
+	 * @param ignoreCase
+	 *            whether to ignore the case when comparing against the true/false values
+	 * @param next
+	 *            the next processor in the chain
+	 * @throws IllegalArgumentException
+	 *             if trueValues or falseValues is empty
+	 * @throws NullPointerException
+	 *             if trueValues, falseValues, or next is null
+	 */
+	public ParseBool(final String[] trueValues, final String[] falseValues, final boolean ignoreCase,
+		final BoolCellProcessor next) {
 		super(next);
 		checkPreconditions(trueValues, falseValues);
 		Collections.addAll(this.trueValues, trueValues);
 		Collections.addAll(this.falseValues, falseValues);
+		this.ignoreCase = ignoreCase;
 	}
 	
 	/**
@@ -207,11 +330,11 @@ public class ParseBool extends CellProcessorAdaptor implements StringCellProcess
 			throw new SuperCsvCellProcessorException(String.class, value, context, this);
 		}
 		
-		final String stringValue = ((String) value).toLowerCase();
+		final String stringValue = (String) value;
 		final Boolean result;
-		if( trueValues.contains(stringValue) ) {
+		if( contains(trueValues, stringValue, ignoreCase) ) {
 			result = Boolean.TRUE;
-		} else if( falseValues.contains(stringValue) ) {
+		} else if( contains(falseValues, stringValue, ignoreCase) ) {
 			result = Boolean.FALSE;
 		} else {
 			throw new SuperCsvCellProcessorException(String.format("'%s' could not be parsed as a Boolean", value),
@@ -219,6 +342,31 @@ public class ParseBool extends CellProcessorAdaptor implements StringCellProcess
 		}
 		
 		return next.execute(result, context);
+	}
+	
+	/**
+	 * Returns true if the set contains the value, otherwise false.
+	 * 
+	 * @param set
+	 *            the set
+	 * @param value
+	 *            the value to find
+	 * @param ignoreCase
+	 *            whether to ignore case
+	 * @return true if the set contains the value, otherwise false
+	 */
+	private static boolean contains(Set<String> set, String value, boolean ignoreCase) {
+		if( ignoreCase ) {
+			for( String element : set ) {
+				if( element.equalsIgnoreCase(value) ) {
+					return true;
+				}
+			}
+			return false;
+			
+		} else {
+			return set.contains(value);
+		}
 	}
 	
 }

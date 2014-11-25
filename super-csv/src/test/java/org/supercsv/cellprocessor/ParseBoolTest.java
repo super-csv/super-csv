@@ -17,7 +17,10 @@ package org.supercsv.cellprocessor;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.supercsv.SuperCsvTestUtils.ANONYMOUS_CSVCONTEXT;
+
+import java.util.Arrays;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -37,6 +40,9 @@ public class ParseBoolTest {
 	private static final String FALSE_VALUE = "n";
 	private static final String[] DEFAULT_TRUE_VALUES = new String[] { "1", "true", "t", "y" };
 	private static final String[] DEFAULT_FALSE_VALUES = new String[] { "0", "false", "f", "n" };
+	private static final String[] MIXED_TRUE_VALUES = new String[] { "1", "true", "True", "TRUE", "t", "T", "y", "Y" };
+	private static final String[] MIXED_FALSE_VALUES = new String[] { "0", "false", "False", "FALSE", "f", "F", "n",
+		"N" };
 	
 	private CellProcessor processor;
 	private CellProcessor processor2;
@@ -44,18 +50,32 @@ public class ParseBoolTest {
 	private CellProcessor processorChain;
 	private CellProcessor processorChain2;
 	private CellProcessor processorChain3;
+	private CellProcessor matchCaseProcessor;
+	private CellProcessor matchCaseProcessor2;
+	private CellProcessor matchCaseProcessor3;
+	private CellProcessor matchCaseProcessorChain;
+	private CellProcessor matchCaseProcessorChain2;
+	private CellProcessor matchCaseProcessorChain3;
 	
 	/**
 	 * Sets up the processors for the test using all constructor combinations.
 	 */
 	@Before
 	public void setUp() {
+		// so many constructors to test...sigh
 		processor = new ParseBool();
 		processor2 = new ParseBool(TRUE_VALUE, FALSE_VALUE);
 		processor3 = new ParseBool(new String[] { TRUE_VALUE }, new String[] { FALSE_VALUE });
 		processorChain = new ParseBool(new IdentityTransform());
 		processorChain2 = new ParseBool(TRUE_VALUE, FALSE_VALUE, new IdentityTransform());
 		processorChain3 = new ParseBool(new String[] { TRUE_VALUE }, new String[] { FALSE_VALUE },
+			new IdentityTransform());
+		matchCaseProcessor = new ParseBool(false);
+		matchCaseProcessor2 = new ParseBool(TRUE_VALUE, FALSE_VALUE, false);
+		matchCaseProcessor3 = new ParseBool(new String[] { TRUE_VALUE }, new String[] { FALSE_VALUE }, false);
+		matchCaseProcessorChain = new ParseBool(false, new IdentityTransform());
+		matchCaseProcessorChain2 = new ParseBool(TRUE_VALUE, FALSE_VALUE, false, new IdentityTransform());
+		matchCaseProcessorChain3 = new ParseBool(new String[] { TRUE_VALUE }, new String[] { FALSE_VALUE }, false,
 			new IdentityTransform());
 	}
 	
@@ -66,24 +86,69 @@ public class ParseBoolTest {
 	public void testValidInput() {
 		
 		// processors using default true/false values
-		for( String trueValue : DEFAULT_TRUE_VALUES ) {
-			assertTrue((Boolean) processor.execute(trueValue, ANONYMOUS_CSVCONTEXT));
-			assertTrue((Boolean) processorChain.execute(trueValue, ANONYMOUS_CSVCONTEXT));
-		}
-		for( String falseValue : DEFAULT_FALSE_VALUES ) {
-			assertFalse((Boolean) processor.execute(falseValue, ANONYMOUS_CSVCONTEXT));
-			assertFalse((Boolean) processorChain.execute(falseValue, ANONYMOUS_CSVCONTEXT));
+		for( CellProcessor processor : Arrays.asList(processor, processorChain) ) {
+			for( String trueValue : MIXED_TRUE_VALUES ) {
+				assertTrue((Boolean) processor.execute(trueValue, ANONYMOUS_CSVCONTEXT));
+			}
+			for( String falseValue : MIXED_FALSE_VALUES ) {
+				assertFalse((Boolean) processor.execute(falseValue, ANONYMOUS_CSVCONTEXT));
+			}
 		}
 		
 		// other processors with single supplied true/false values
-		assertTrue((Boolean) processor2.execute(TRUE_VALUE, ANONYMOUS_CSVCONTEXT));
-		assertTrue((Boolean) processor3.execute(TRUE_VALUE, ANONYMOUS_CSVCONTEXT));
-		assertTrue((Boolean) processorChain2.execute(TRUE_VALUE, ANONYMOUS_CSVCONTEXT));
-		assertTrue((Boolean) processorChain3.execute(TRUE_VALUE, ANONYMOUS_CSVCONTEXT));
-		assertFalse((Boolean) processor2.execute(FALSE_VALUE, ANONYMOUS_CSVCONTEXT));
-		assertFalse((Boolean) processor3.execute(FALSE_VALUE, ANONYMOUS_CSVCONTEXT));
-		assertFalse((Boolean) processorChain2.execute(FALSE_VALUE, ANONYMOUS_CSVCONTEXT));
-		assertFalse((Boolean) processorChain3.execute(FALSE_VALUE, ANONYMOUS_CSVCONTEXT));
+		for( CellProcessor processor : Arrays.asList(processor2, processor3, processorChain2, processorChain3) ) {
+			assertTrue((Boolean) processor.execute(TRUE_VALUE, ANONYMOUS_CSVCONTEXT));
+			assertTrue((Boolean) processor.execute(TRUE_VALUE.toUpperCase(), ANONYMOUS_CSVCONTEXT));
+			assertFalse((Boolean) processor.execute(FALSE_VALUE, ANONYMOUS_CSVCONTEXT));
+			assertFalse((Boolean) processor.execute(FALSE_VALUE.toUpperCase(), ANONYMOUS_CSVCONTEXT));
+		}
+		
+	}
+	
+	/**
+	 * Tests unchained/chained execution with valid true/false values using processors with ignoreCase disabled.
+	 */
+	@Test
+	public void testMatchCaseProcessorsWithValidInput() {
+		
+		// processors using default true/false values
+		for( CellProcessor processor : Arrays.asList(matchCaseProcessor, matchCaseProcessorChain) ) {
+			for( String trueValue : DEFAULT_TRUE_VALUES ) {
+				assertTrue((Boolean) processor.execute(trueValue, ANONYMOUS_CSVCONTEXT));
+			}
+			for( String falseValue : DEFAULT_FALSE_VALUES ) {
+				assertFalse((Boolean) processor.execute(falseValue, ANONYMOUS_CSVCONTEXT));
+			}
+		}
+		
+		// other processors with single supplied true/false values
+		for( CellProcessor processor : Arrays.asList(matchCaseProcessor2, matchCaseProcessor3,
+			matchCaseProcessorChain2, matchCaseProcessorChain3) ) {
+			assertTrue((Boolean) processor.execute(TRUE_VALUE, ANONYMOUS_CSVCONTEXT));
+			assertFalse((Boolean) processor.execute(FALSE_VALUE, ANONYMOUS_CSVCONTEXT));
+		}
+		
+	}
+	
+	/**
+	 * Tests unchained/chained execution with invalid true/false values using processors with ignoreCase disabled.
+	 */
+	@Test
+	public void testMatchCaseProcessorsWithInvalidInput() {
+		
+		for( CellProcessor processor : Arrays.asList(matchCaseProcessor, matchCaseProcessor2, matchCaseProcessor3,
+			matchCaseProcessorChain, matchCaseProcessorChain2, matchCaseProcessorChain3) ) {
+			try {
+				assertTrue((Boolean) processor.execute(TRUE_VALUE.toUpperCase(), ANONYMOUS_CSVCONTEXT));
+				fail("expecting SuperCsvCellProcessorException");
+			}
+			catch(SuperCsvCellProcessorException e) {}
+			try {
+				assertFalse((Boolean) processor.execute(FALSE_VALUE.toUpperCase(), ANONYMOUS_CSVCONTEXT));
+				fail("expecting SuperCsvCellProcessorException");
+			}
+			catch(SuperCsvCellProcessorException e) {}
+		}
 		
 	}
 	
