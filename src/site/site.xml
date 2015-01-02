@@ -36,7 +36,7 @@
 	<publishDate position="right" />
 	<body>
 		<links>
-			<item name="Donate" href="https://www.paypal.com/cgi-bin/webscr?item_name=Donation+to+Super+CSV&cmd=_donations&business=zak.mindbender%40gmail.com" />
+			<item name="Donate" href="http://sourceforge.net/p/supercsv/donate/" />
 		</links>
 		<breadcrumbs>
 			<item name="Super CSV" href="http://super-csv.github.io/super-csv/index.html" />
