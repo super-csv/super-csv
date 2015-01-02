@@ -23,6 +23,11 @@
 		<fluidoSkin>
 			<topBarEnabled>false</topBarEnabled>
 			<sideBarEnabled>true</sideBarEnabled>
+			<gitHub>
+        		<projectId>super-csv/super-csv</projectId>
+        		<ribbonOrientation>right</ribbonOrientation>
+        		<ribbonColor>gray</ribbonColor>
+        	</gitHub>
 			<googleSearch />
 			<googlePlusOne />
 			<facebookLike />
@@ -31,11 +36,10 @@
 	<publishDate position="right" />
 	<body>
 		<links>
-			<item name="Super CSV @ SourceForge" href="http://sourceforge.net/projects/supercsv/" />
-			<item name="Donate" href="http://sourceforge.net/p/supercsv/donate/" />
+			<item name="Donate" href="https://www.paypal.com/cgi-bin/webscr?item_name=Donation+to+Super+CSV&cmd=_donations&business=zak.mindbender%40gmail.com" />
 		</links>
 		<breadcrumbs>
-			<item name="Super CSV" href="http://supercsv.sourceforge.net/index.html" />
+			<item name="Super CSV" href="http://super-csv.github.io/super-csv/index.html" />
 		</breadcrumbs>
 		<menu name="About Super CSV">
 			<item name="Welcome" href="index.html" />

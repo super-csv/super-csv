@@ -19,6 +19,22 @@
 
 Release notes
 
+* 2.2.1
+
+  <01/2015>
+  
+  Moved the project to GitHub (and git!), as well as some features and bug fixes.
+  
+  <<New features>>
+  
+    * {{{https://sourceforge.net/p/supercsv/feature-requests/40/}40}} - Added ignoreCase functionality to <<<ParseBool>>>
+  
+    * {{{https://sourceforge.net/p/supercsv/feature-requests/48/}48}} - Added <<<ignoreEmptyLines>>> preference  
+  
+  <<Bug fixes>>
+
+    * {{{https://sourceforge.net/p/supercsv/bugs/43/}43}} - Fixed <<<DefaultCsvEncoder>>> to prevent <<<StringIndexOutOfBoundsException>>> when using preferences in multiple threads.
+
 * 2.2.0
 
   <04/2014>

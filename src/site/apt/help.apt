@@ -22,15 +22,15 @@ Help!
 * General help
 
   If you've read the documentation and examples and you still need help 
-  then don't hesitate to ask on the Super CSV {{{https://sourceforge.net/p/supercsv/discussion/718795/}Help forum}}.
+  then don't hesitate to ask on the Super CSV {{{https://github.com/super-csv/super-csv/issues}GitHub Issues page}}.
   
   The Super CSV developers also maintain an active presence on {{{http://stackoverflow.com/questions/tagged/supercsv}StackOverflow}} - 
   just be sure to use the <<<supercsv>>> tag.
   
 * Found a bug?
 
-  If you believe you've genuinely found a bug that hasn't been previously raised, then please report it on the
-  {{{https://sourceforge.net/p/supercsv/bugs/}bug tracker}}. Make sure you include:
+  If you believe you've genuinely found a bug that hasn't been previously raised, then please report it on
+  {{{https://github.com/super-csv/super-csv/issues}GitHub Issues page}}. Make sure you include:
   
   * the version of Super CSV you're using
   

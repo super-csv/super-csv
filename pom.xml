@@ -20,7 +20,7 @@
 	<artifactId>super-csv-parent</artifactId>
 	<version>2.2.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	<url>http://supercsv.sourceforge.net</url>
+	<url>https://github.com/super-csv/super-csv</url>
 	<name>Super CSV</name>
 	<description>Super CSV parent project</description>
 	<inceptionYear>2007</inceptionYear>
@@ -129,14 +129,6 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-site-plugin</artifactId>
 					<version>3.4</version>
-					<dependencies>
-						<!-- add support for ssh/scp -->
-						<dependency>
-							<groupId>org.apache.maven.wagon</groupId>
-							<artifactId>wagon-ssh</artifactId>
-							<version>2.8</version>
-						</dependency>
-					</dependencies>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -167,6 +159,16 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-site-plugin</artifactId>
+			</plugin>
+
+			<!-- Publishes the site to Github -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-scm-publish-plugin</artifactId>
+				<version>1.1</version>
+				<configuration>
+					<scmBranch>gh-pages</scmBranch>
+				</configuration>
 			</plugin>
 
 			<!-- Creates the Eclipse .classpath and .project files -->
@@ -316,7 +318,6 @@
 		<developer>
 			<name>James Bassett</name>
 			<id>jamesbassett</id>
-			<email>james.bassett@gmail.com</email>
 			<timezone>+10</timezone>
 			<roles>
 				<role>Developer (current)</role>
@@ -364,7 +365,7 @@
 
 	<organization>
 		<name>Super CSV</name>
-		<url>http://supercsv.sourceforge.net/</url>
+		<url>https://github.com/super-csv/super-csv</url>
 	</organization>
 
 	<licenses>
@@ -458,20 +459,21 @@
 	</reporting>
 
 	<issueManagement>
-		<system>Sourceforge</system>
-		<url>https://sourceforge.net/p/supercsv/bugs/</url>
+		<system>GitHub Issues</system>
+		<url>https://github.com/super-csv/super-csv/issues</url>
 	</issueManagement>
 
 	<distributionManagement>
 		<site>
-			<id>supercsv.sourceforge.net</id>
-			<url>scp://shell.sourceforge.net/home/project-web/supercsv/htdocs</url>
+			<id>gh-pages</id>
+			<url>scm:git:git@github.com:super-csv/super-csv.git</url>
 		</site>
 	</distributionManagement>
 
 	<scm>
-		<connection>scm:svn:https://svn.code.sf.net/p/supercsv/code/trunk</connection>
-		<developerConnection>scm:svn:svn+ssh://jamesbassett@svn.code.sf.net/p/supercsv/code/trunk</developerConnection>
-		<url>https://sourceforge.net/p/supercsv/code/</url>
+		<connection>scm:git:git@github.com:super-csv/super-csv.git</connection>
+		<developerConnection>scm:git:git@github.com:super-csv/super-csv.git</developerConnection>
+		<url>https://github.com/super-csv/super-csv</url>
 	</scm>
+
 </project>
