@@ -146,7 +146,7 @@
 <a class="jxr_linenumber" name="L138" href="#L138">138</a> 	<em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L139" href="#L139">139</a> <em class="jxr_javadoccomment">	 * Constructs a new &lt;tt&gt;CsvPreference&lt;/tt&gt; from a Builder.</em>
 <a class="jxr_linenumber" name="L140" href="#L140">140</a> <em class="jxr_javadoccomment">	 */</em>
-<a class="jxr_linenumber" name="L141" href="#L141">141</a> 	<strong class="jxr_keyword">private</strong> <a href="../../../org/supercsv/prefs/CsvPreference.html">CsvPreference</a>(<a href="../../../org/supercsv/prefs/CsvConfig.html">Builder</a> builder) {
+<a class="jxr_linenumber" name="L141" href="#L141">141</a> 	<strong class="jxr_keyword">private</strong> <a href="../../../org/supercsv/prefs/CsvPreference.html">CsvPreference</a>(<a href="../../../org/supercsv/prefs/CsvPreference.html">Builder</a> builder) {
 <a class="jxr_linenumber" name="L142" href="#L142">142</a> 		<strong class="jxr_keyword">this</strong>.quoteChar = builder.quoteChar;
 <a class="jxr_linenumber" name="L143" href="#L143">143</a> 		<strong class="jxr_keyword">this</strong>.delimiterChar = builder.delimiterChar;
 <a class="jxr_linenumber" name="L144" href="#L144">144</a> 		<strong class="jxr_keyword">this</strong>.endOfLineSymbols = builder.endOfLineSymbols;
@@ -233,7 +233,7 @@
 <a class="jxr_linenumber" name="L225" href="#L225">225</a> <em class="jxr_javadoccomment">	 * Builds immutable &lt;tt&gt;CsvPreference&lt;/tt&gt; instances. The builder pattern allows for additional preferences to be</em>
 <a class="jxr_linenumber" name="L226" href="#L226">226</a> <em class="jxr_javadoccomment">	 * added in the future.</em>
 <a class="jxr_linenumber" name="L227" href="#L227">227</a> <em class="jxr_javadoccomment">	 */</em>
-<a class="jxr_linenumber" name="L228" href="#L228">228</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> <a href="../../../org/supercsv/prefs/CsvConfig.html">Builder</a> {
+<a class="jxr_linenumber" name="L228" href="#L228">228</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> <a href="../../../org/supercsv/prefs/CsvPreference.html">Builder</a> {
 <a class="jxr_linenumber" name="L229" href="#L229">229</a> 		
 <a class="jxr_linenumber" name="L230" href="#L230">230</a> 		<strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">char</strong> quoteChar;
 <a class="jxr_linenumber" name="L231" href="#L231">231</a> 		
@@ -258,7 +258,7 @@
 <a class="jxr_linenumber" name="L250" href="#L250">250</a> <em class="jxr_javadoccomment">		 * @param preference</em>
 <a class="jxr_linenumber" name="L251" href="#L251">251</a> <em class="jxr_javadoccomment">		 *            the existing preference</em>
 <a class="jxr_linenumber" name="L252" href="#L252">252</a> <em class="jxr_javadoccomment">		 */</em>
-<a class="jxr_linenumber" name="L253" href="#L253">253</a> 		<strong class="jxr_keyword">public</strong> <a href="../../../org/supercsv/prefs/CsvConfig.html">Builder</a>(<strong class="jxr_keyword">final</strong> <a href="../../../org/supercsv/prefs/CsvPreference.html">CsvPreference</a> preference) {
+<a class="jxr_linenumber" name="L253" href="#L253">253</a> 		<strong class="jxr_keyword">public</strong> <a href="../../../org/supercsv/prefs/CsvPreference.html">Builder</a>(<strong class="jxr_keyword">final</strong> <a href="../../../org/supercsv/prefs/CsvPreference.html">CsvPreference</a> preference) {
 <a class="jxr_linenumber" name="L254" href="#L254">254</a> 			<strong class="jxr_keyword">this</strong>.quoteChar = preference.quoteChar;
 <a class="jxr_linenumber" name="L255" href="#L255">255</a> 			<strong class="jxr_keyword">this</strong>.delimiterChar = preference.delimiterChar;
 <a class="jxr_linenumber" name="L256" href="#L256">256</a> 			<strong class="jxr_keyword">this</strong>.endOfLineSymbols = preference.endOfLineSymbols;
@@ -283,7 +283,7 @@
 <a class="jxr_linenumber" name="L275" href="#L275">275</a> <em class="jxr_javadoccomment">		 * @throws NullPointerException</em>
 <a class="jxr_linenumber" name="L276" href="#L276">276</a> <em class="jxr_javadoccomment">		 *             if endOfLineSymbols is null</em>
 <a class="jxr_linenumber" name="L277" href="#L277">277</a> <em class="jxr_javadoccomment">		 */</em>
-<a class="jxr_linenumber" name="L278" href="#L278">278</a> 		<strong class="jxr_keyword">public</strong> <a href="../../../org/supercsv/prefs/CsvConfig.html">Builder</a>(<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">char</strong> quoteChar, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> delimiterChar, <strong class="jxr_keyword">final</strong> String endOfLineSymbols) {
+<a class="jxr_linenumber" name="L278" href="#L278">278</a> 		<strong class="jxr_keyword">public</strong> <a href="../../../org/supercsv/prefs/CsvPreference.html">Builder</a>(<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">char</strong> quoteChar, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> delimiterChar, <strong class="jxr_keyword">final</strong> String endOfLineSymbols) {
 <a class="jxr_linenumber" name="L279" href="#L279">279</a> 			<strong class="jxr_keyword">if</strong>( quoteChar == delimiterChar ) {
 <a class="jxr_linenumber" name="L280" href="#L280">280</a> 				<strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException(String.format(
 <a class="jxr_linenumber" name="L281" href="#L281">281</a> 					<span class="jxr_string">"quoteChar and delimiterChar should not be the same character: %c"</span>, quoteChar));
@@ -306,7 +306,7 @@
 <a class="jxr_linenumber" name="L298" href="#L298">298</a> <em class="jxr_javadoccomment">		 *            surrounded by quotes</em>
 <a class="jxr_linenumber" name="L299" href="#L299">299</a> <em class="jxr_javadoccomment">		 * @return the updated Builder</em>
 <a class="jxr_linenumber" name="L300" href="#L300">300</a> <em class="jxr_javadoccomment">		 */</em>
-<a class="jxr_linenumber" name="L301" href="#L301">301</a> 		<strong class="jxr_keyword">public</strong> <a href="../../../org/supercsv/prefs/CsvConfig.html">Builder</a> surroundingSpacesNeedQuotes(<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">boolean</strong> surroundingSpacesNeedQuotes) {
+<a class="jxr_linenumber" name="L301" href="#L301">301</a> 		<strong class="jxr_keyword">public</strong> <a href="../../../org/supercsv/prefs/CsvPreference.html">Builder</a> surroundingSpacesNeedQuotes(<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">boolean</strong> surroundingSpacesNeedQuotes) {
 <a class="jxr_linenumber" name="L302" href="#L302">302</a> 			<strong class="jxr_keyword">this</strong>.surroundingSpacesNeedQuotes = surroundingSpacesNeedQuotes;
 <a class="jxr_linenumber" name="L303" href="#L303">303</a> 			<strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
 <a class="jxr_linenumber" name="L304" href="#L304">304</a> 		}
@@ -320,7 +320,7 @@
 <a class="jxr_linenumber" name="L312" href="#L312">312</a> <em class="jxr_javadoccomment">		 *            flag indicating whether empty lines should be ignored</em>
 <a class="jxr_linenumber" name="L313" href="#L313">313</a> <em class="jxr_javadoccomment">		 * @return the updated Builder</em>
 <a class="jxr_linenumber" name="L314" href="#L314">314</a> <em class="jxr_javadoccomment">		 */</em>
-<a class="jxr_linenumber" name="L315" href="#L315">315</a> 		<strong class="jxr_keyword">public</strong> <a href="../../../org/supercsv/prefs/CsvConfig.html">Builder</a> ignoreEmptyLines(<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">boolean</strong> ignoreEmptyLines) {
+<a class="jxr_linenumber" name="L315" href="#L315">315</a> 		<strong class="jxr_keyword">public</strong> <a href="../../../org/supercsv/prefs/CsvPreference.html">Builder</a> ignoreEmptyLines(<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">boolean</strong> ignoreEmptyLines) {
 <a class="jxr_linenumber" name="L316" href="#L316">316</a> 			<strong class="jxr_keyword">this</strong>.ignoreEmptyLines = ignoreEmptyLines;
 <a class="jxr_linenumber" name="L317" href="#L317">317</a> 			<strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
 <a class="jxr_linenumber" name="L318" href="#L318">318</a> 		}
@@ -337,7 +337,7 @@
 <a class="jxr_linenumber" name="L329" href="#L329">329</a> <em class="jxr_javadoccomment">		 * @throws NullPointerException</em>
 <a class="jxr_linenumber" name="L330" href="#L330">330</a> <em class="jxr_javadoccomment">		 *             if commentMatcher is null</em>
 <a class="jxr_linenumber" name="L331" href="#L331">331</a> <em class="jxr_javadoccomment">		 */</em>
-<a class="jxr_linenumber" name="L332" href="#L332">332</a> 		<strong class="jxr_keyword">public</strong> <a href="../../../org/supercsv/prefs/CsvConfig.html">Builder</a> skipComments(<strong class="jxr_keyword">final</strong> <a href="../../../org/supercsv/comment/CommentMatcher.html">CommentMatcher</a> commentMatcher) {
+<a class="jxr_linenumber" name="L332" href="#L332">332</a> 		<strong class="jxr_keyword">public</strong> <a href="../../../org/supercsv/prefs/CsvPreference.html">Builder</a> skipComments(<strong class="jxr_keyword">final</strong> <a href="../../../org/supercsv/comment/CommentMatcher.html">CommentMatcher</a> commentMatcher) {
 <a class="jxr_linenumber" name="L333" href="#L333">333</a> 			<strong class="jxr_keyword">if</strong>( commentMatcher == <strong class="jxr_keyword">null</strong> ) {
 <a class="jxr_linenumber" name="L334" href="#L334">334</a> 				<strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> NullPointerException(<span class="jxr_string">"commentMatcher should not be null"</span>);
 <a class="jxr_linenumber" name="L335" href="#L335">335</a> 			}
@@ -355,7 +355,7 @@
 <a class="jxr_linenumber" name="L347" href="#L347">347</a> <em class="jxr_javadoccomment">		 * @throws NullPointerException</em>
 <a class="jxr_linenumber" name="L348" href="#L348">348</a> <em class="jxr_javadoccomment">		 *             if encoder is null</em>
 <a class="jxr_linenumber" name="L349" href="#L349">349</a> <em class="jxr_javadoccomment">		 */</em>
-<a class="jxr_linenumber" name="L350" href="#L350">350</a> 		<strong class="jxr_keyword">public</strong> <a href="../../../org/supercsv/prefs/CsvConfig.html">Builder</a> useEncoder(<strong class="jxr_keyword">final</strong> <a href="../../../org/supercsv/encoder/CsvEncoder.html">CsvEncoder</a> encoder) {
+<a class="jxr_linenumber" name="L350" href="#L350">350</a> 		<strong class="jxr_keyword">public</strong> <a href="../../../org/supercsv/prefs/CsvPreference.html">Builder</a> useEncoder(<strong class="jxr_keyword">final</strong> <a href="../../../org/supercsv/encoder/CsvEncoder.html">CsvEncoder</a> encoder) {
 <a class="jxr_linenumber" name="L351" href="#L351">351</a> 			<strong class="jxr_keyword">if</strong>( encoder == <strong class="jxr_keyword">null</strong> ) {
 <a class="jxr_linenumber" name="L352" href="#L352">352</a> 				<strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> NullPointerException(<span class="jxr_string">"encoder should not be null"</span>);
 <a class="jxr_linenumber" name="L353" href="#L353">353</a> 			}
@@ -376,7 +376,7 @@
 <a class="jxr_linenumber" name="L368" href="#L368">368</a> <em class="jxr_javadoccomment">		 * @throws NullPointerException</em>
 <a class="jxr_linenumber" name="L369" href="#L369">369</a> <em class="jxr_javadoccomment">		 *             if quoteMode is null</em>
 <a class="jxr_linenumber" name="L370" href="#L370">370</a> <em class="jxr_javadoccomment">		 */</em>
-<a class="jxr_linenumber" name="L371" href="#L371">371</a> 		<strong class="jxr_keyword">public</strong> <a href="../../../org/supercsv/prefs/CsvConfig.html">Builder</a> useQuoteMode(<strong class="jxr_keyword">final</strong> <a href="../../../org/supercsv/quote/QuoteMode.html">QuoteMode</a> quoteMode) {
+<a class="jxr_linenumber" name="L371" href="#L371">371</a> 		<strong class="jxr_keyword">public</strong> <a href="../../../org/supercsv/prefs/CsvPreference.html">Builder</a> useQuoteMode(<strong class="jxr_keyword">final</strong> <a href="../../../org/supercsv/quote/QuoteMode.html">QuoteMode</a> quoteMode) {
 <a class="jxr_linenumber" name="L372" href="#L372">372</a> 			<strong class="jxr_keyword">if</strong>( quoteMode == <strong class="jxr_keyword">null</strong> ) {
 <a class="jxr_linenumber" name="L373" href="#L373">373</a> 				<strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> NullPointerException(<span class="jxr_string">"quoteMode should not be null"</span>);
 <a class="jxr_linenumber" name="L374" href="#L374">374</a> 			}
