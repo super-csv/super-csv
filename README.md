@@ -7,7 +7,7 @@ Super CSV is a fast, programmer-friendly, open-source library for reading and wr
 
 We're in the process of moving from [SourceForge](https://sourceforge.net/projects/supercsv/) and will look at moving any outstanding issues across to GitHub (and redirecting the old website here) as soon as possible. 
 
-* **Documentation**: http://super-csv.github.io
+* **Documentation**: http://super-csv.github.io/super-csv
 * **GitHub**: https://github.com/super-csv/super-csv
 * **Free software**: Apache License, Version 2.0
 
