@@ -1,0 +1,11 @@
+org.supercsv.cellprocessor
+org.supercsv.cellprocessor.constraint
+org.supercsv.cellprocessor.ift
+org.supercsv.comment
+org.supercsv.encoder
+org.supercsv.exception
+org.supercsv.io
+org.supercsv.io.dozer
+org.supercsv.prefs
+org.supercsv.quote
+org.supercsv.util

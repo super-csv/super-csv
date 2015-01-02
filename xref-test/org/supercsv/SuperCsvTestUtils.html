@@ -1,0 +1,227 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<title>SuperCsvTestUtils xref</title>
+<link type="text/css" rel="stylesheet" href="../../stylesheet.css" />
+</head>
+<body>
+<div id="overview"><a href="../../../testapidocs/org/supercsv/SuperCsvTestUtils.html">View Javadoc</a></div><pre>
+<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> * Copyright 2007 Kasper B. Graversen</em>
+<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> * </em>
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> * Licensed under the Apache License, Version 2.0 (the "License");</em>
+<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> * you may not use this file except in compliance with the License.</em>
+<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_comment"> * You may obtain a copy of the License at</em>
+<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_comment"> * </em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_comment"> *     <a href="http://www.apache.org/licenses/LICENSE-2." target="alexandria_uri">http://www.apache.org/licenses/LICENSE-2.</a>0</em>
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_comment"> * </em>
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_comment"> * Unless required by applicable law or agreed to in writing, software</em>
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_comment"> * distributed under the License is distributed on an "AS IS" BASIS,</em>
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <em class="jxr_comment"> * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</em>
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <em class="jxr_comment"> * See the License for the specific language governing permissions and</em>
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <em class="jxr_comment"> * limitations under the License.</em>
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_comment"> */</em>
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">package</strong> org.supercsv;
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>  
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.junit.Assert.assertEquals;
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> java.util.Arrays;
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> java.util.Calendar;
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">import</strong> java.util.Date;
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">import</strong> java.util.List;
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">import</strong> org.supercsv.cellprocessor.FmtBool;
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">import</strong> org.supercsv.cellprocessor.FmtDate;
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>  <strong class="jxr_keyword">import</strong> org.supercsv.cellprocessor.Optional;
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">import</strong> org.supercsv.cellprocessor.ParseBool;
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">import</strong> org.supercsv.cellprocessor.ParseDate;
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">import</strong> org.supercsv.cellprocessor.ParseInt;
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <strong class="jxr_keyword">import</strong> org.supercsv.cellprocessor.ParseLong;
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">import</strong> org.supercsv.cellprocessor.ift.CellProcessor;
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <strong class="jxr_keyword">import</strong> org.supercsv.mock.CustomerBean;
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <strong class="jxr_keyword">import</strong> org.supercsv.mock.CustomerStringBean;
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <strong class="jxr_keyword">import</strong> org.supercsv.util.CsvContext;
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>  
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>  <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>  <em class="jxr_javadoccomment"> * Utility methods and constants for tests.</em>
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>  <em class="jxr_javadoccomment"> * </em>
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>  <em class="jxr_javadoccomment"> * @author James Bassett</em>
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>  <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../org/supercsv/SuperCsvTestUtils.html">SuperCsvTestUtils</a> {
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>  	
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> CsvContext ANONYMOUS_CSVCONTEXT = <strong class="jxr_keyword">new</strong> CsvContext(1, 2, 3);
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>  	
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>  	<em class="jxr_javadoccomment">/** the complete header for testing */</em>
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String[] HEADER = <strong class="jxr_keyword">new</strong> String[] { <span class="jxr_string">"customerNo"</span>, <span class="jxr_string">"firstName"</span>, <span class="jxr_string">"lastName"</span>, <span class="jxr_string">"birthDate"</span>,
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>  		<span class="jxr_string">"mailingAddress"</span>, <span class="jxr_string">"married"</span>, <span class="jxr_string">"numberOfKids"</span>, <span class="jxr_string">"favouriteQuote"</span>, <span class="jxr_string">"email"</span>, <span class="jxr_string">"loyaltyPoints"</span> };
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String HEADER_CSV = <span class="jxr_string">"customerNo,firstName,lastName,birthDate,mailingAddress,married,"</span>
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>  		+ <span class="jxr_string">"numberOfKids,favouriteQuote,email,loyaltyPoints"</span>;
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>  	
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>  	<em class="jxr_javadoccomment">/** partial header for testing partial reading (only a few columns are mapped) */</em>
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String[] PARTIAL_HEADER = <strong class="jxr_keyword">new</strong> String[] { <strong class="jxr_keyword">null</strong>, <span class="jxr_string">"firstName"</span>, <span class="jxr_string">"lastName"</span>, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>,
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>  		<strong class="jxr_keyword">null</strong>, <span class="jxr_string">"email"</span>, <strong class="jxr_keyword">null</strong> };
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>  	
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>  	<em class="jxr_javadoccomment">/** the processors to use for CSV reading tests */</em>
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> CellProcessor[] READ_PROCESSORS = <strong class="jxr_keyword">new</strong> CellProcessor[] { <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>,
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>  		<strong class="jxr_keyword">new</strong> ParseDate(<span class="jxr_string">"dd/MM/yyyy"</span>), <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">new</strong> Optional(<strong class="jxr_keyword">new</strong> ParseBool()), <strong class="jxr_keyword">new</strong> Optional(<strong class="jxr_keyword">new</strong> ParseInt()), <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>,
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>  		<strong class="jxr_keyword">new</strong> ParseLong() };
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>  	
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>  	<em class="jxr_javadoccomment">/** the processors to use for CSV writing tests */</em>
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> CellProcessor[] WRITE_PROCESSORS = <strong class="jxr_keyword">new</strong> CellProcessor[] { <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>,
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>  		<strong class="jxr_keyword">new</strong> FmtDate(<span class="jxr_string">"dd/MM/yyyy"</span>), <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">new</strong> Optional(<strong class="jxr_keyword">new</strong> FmtBool(<span class="jxr_string">"Y"</span>, <span class="jxr_string">"N"</span>)), <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong> };
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>  	
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>  	<em class="jxr_comment">// each line in the CSV file and it's corresponding CustomerBean/CustomerStringBeans for testing</em>
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String JOHN_CSV = <span class="jxr_string">"1,John,Dunbar,13/06/1945,\&quot;1600 Amphitheatre Parkway\r\nMountain View, CA 94043\r\nUnited States\&quot;,"</span>
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>  		+ <span class="jxr_string">",,\&quot;\&quot;\&quot;May the Force be with you.\&quot;\&quot; - Star Wars\&quot;,jdunbar@gmail.com,0"</span>;
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a href="../../org/supercsv/mock/CustomerBean.html">CustomerBean</a> JOHN = <strong class="jxr_keyword">new</strong> <a href="../../org/supercsv/mock/CustomerBean.html">CustomerBean</a>(<span class="jxr_string">"1"</span>, <span class="jxr_string">"John"</span>, <span class="jxr_string">"Dunbar"</span>, date(1945, 6, 13),
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>  		<span class="jxr_string">"1600 Amphitheatre Parkway\nMountain View, CA 94043\nUnited States"</span>, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>,
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>  		<span class="jxr_string">"\&quot;May the Force be with you.\&quot; - Star Wars"</span>, <span class="jxr_string">"jdunbar@gmail.com"</span>, 0L);
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a href="../../org/supercsv/mock/CustomerStringBean.html">CustomerStringBean</a> JOHN_STRING = <strong class="jxr_keyword">new</strong> <a href="../../org/supercsv/mock/CustomerStringBean.html">CustomerStringBean</a>(JOHN);
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>  	
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String BOB_CSV = <span class="jxr_string">"2,Bob,Down,25/02/1919,\&quot;1601 Willow Rd.\r\nMenlo Park, CA 94025\r\nUnited States\&quot;,"</span>
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>  		+ <span class="jxr_string">"Y,0,\&quot;\&quot;\&quot;Frankly, my dear, I don't give a damn.\&quot;\&quot; - Gone With The Wind\&quot;,bobdown@hotmail.com,123456"</span>;
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a href="../../org/supercsv/mock/CustomerBean.html">CustomerBean</a> BOB = <strong class="jxr_keyword">new</strong> <a href="../../org/supercsv/mock/CustomerBean.html">CustomerBean</a>(<span class="jxr_string">"2"</span>, <span class="jxr_string">"Bob"</span>, <span class="jxr_string">"Down"</span>, date(1919, 2, 25),
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>  		<span class="jxr_string">"1601 Willow Rd.\nMenlo Park, CA 94025\nUnited States"</span>, <strong class="jxr_keyword">true</strong>, 0,
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>  		<span class="jxr_string">"\&quot;Frankly, my dear, I don't give a damn.\&quot; - Gone With The Wind"</span>, <span class="jxr_string">"bobdown@hotmail.com"</span>, 123456L);
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a href="../../org/supercsv/mock/CustomerStringBean.html">CustomerStringBean</a> BOB_STRING = <strong class="jxr_keyword">new</strong> <a href="../../org/supercsv/mock/CustomerStringBean.html">CustomerStringBean</a>(BOB);
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>  	
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String ALICE_CSV = <span class="jxr_string">"3,Alice,Wunderland,08/08/1985,\&quot;One Microsoft Way\r\nRedmond, WA 98052-6399\r\nUnited States\&quot;,"</span>
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>  		+ <span class="jxr_string">"Y,0,\&quot;\&quot;\&quot;Play it, Sam. Play \&quot;\&quot;As Time Goes By.\&quot;\&quot;\&quot;\&quot; - Casablanca\&quot;,throughthelookingglass@yahoo.com,2255887799"</span>;
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a href="../../org/supercsv/mock/CustomerBean.html">CustomerBean</a> ALICE = <strong class="jxr_keyword">new</strong> <a href="../../org/supercsv/mock/CustomerBean.html">CustomerBean</a>(<span class="jxr_string">"3"</span>, <span class="jxr_string">"Alice"</span>, <span class="jxr_string">"Wunderland"</span>, date(1985, 8, 8),
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>  		<span class="jxr_string">"One Microsoft Way\nRedmond, WA 98052-6399\nUnited States"</span>, <strong class="jxr_keyword">true</strong>, 0,
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>  		<span class="jxr_string">"\&quot;Play it, Sam. Play \&quot;As Time Goes By.\&quot;\&quot; - Casablanca"</span>, <span class="jxr_string">"throughthelookingglass@yahoo.com"</span>, 2255887799L);
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a href="../../org/supercsv/mock/CustomerStringBean.html">CustomerStringBean</a> ALICE_STRING = <strong class="jxr_keyword">new</strong> <a href="../../org/supercsv/mock/CustomerStringBean.html">CustomerStringBean</a>(ALICE);
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>  	
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String BILL_CSV = <span class="jxr_string">"4,Bill,Jobs,10/07/1973,\&quot;2701 San Tomas Expressway\r\nSanta Clara, CA 95050\r\nUnited States\&quot;,"</span>
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>  		+ <span class="jxr_string">"Y,3,\&quot;\&quot;\&quot;You've got to ask yourself one question: \&quot;\&quot;Do I feel lucky?\&quot;\&quot; Well, do ya, punk?\&quot;\&quot; - Dirty Harry\&quot;,billy34@hotmail.com,36"</span>;
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a href="../../org/supercsv/mock/CustomerBean.html">CustomerBean</a> BILL = <strong class="jxr_keyword">new</strong> <a href="../../org/supercsv/mock/CustomerBean.html">CustomerBean</a>(<span class="jxr_string">"4"</span>, <span class="jxr_string">"Bill"</span>, <span class="jxr_string">"Jobs"</span>, date(1973, 7, 10),
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>  		<span class="jxr_string">"2701 San Tomas Expressway\nSanta Clara, CA 95050\nUnited States"</span>, <strong class="jxr_keyword">true</strong>, 3,
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>  		<span class="jxr_string">"\&quot;You've got to ask yourself one question: \&quot;Do I feel lucky?\&quot; Well, do ya, punk?\&quot; - Dirty Harry"</span>,
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>  		<span class="jxr_string">"billy34@hotmail.com"</span>, 36L);
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a href="../../org/supercsv/mock/CustomerStringBean.html">CustomerStringBean</a> BILL_STRING = <strong class="jxr_keyword">new</strong> <a href="../../org/supercsv/mock/CustomerStringBean.html">CustomerStringBean</a>(BILL);
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>  	
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String MIRANDA_CSV = <span class="jxr_string">"5,Miranda,Feist,03/01/1999,\&quot;2-4 Rue du Sablon\r\nMorges, 1110\r\nSwitzerland\&quot;,"</span>
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>  		+ <span class="jxr_string">",,\&quot;\&quot;\&quot;You had me at \&quot;\&quot;hello.\&quot;\&quot;\&quot;\&quot; - Jerry Maguire\&quot;,miranda_feist@gmail.com,54623"</span>;
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a href="../../org/supercsv/mock/CustomerBean.html">CustomerBean</a> MIRANDA = <strong class="jxr_keyword">new</strong> <a href="../../org/supercsv/mock/CustomerBean.html">CustomerBean</a>(<span class="jxr_string">"5"</span>, <span class="jxr_string">"Miranda"</span>, <span class="jxr_string">"Feist"</span>, date(1999, 1, 3),
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>  		<span class="jxr_string">"2-4 Rue du Sablon\nMorges, 1110\nSwitzerland"</span>, <strong class="jxr_keyword">null</strong>, <strong class="jxr_keyword">null</strong>, <span class="jxr_string">"\&quot;You had me at \&quot;hello.\&quot;\&quot; - Jerry Maguire"</span>,
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>  		<span class="jxr_string">"miranda_feist@gmail.com"</span>, 54623L);
+<a class="jxr_linenumber" name="L100" href="#L100">100</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a href="../../org/supercsv/mock/CustomerStringBean.html">CustomerStringBean</a> MIRANDA_STRING = <strong class="jxr_keyword">new</strong> <a href="../../org/supercsv/mock/CustomerStringBean.html">CustomerStringBean</a>(MIRANDA);
+<a class="jxr_linenumber" name="L101" href="#L101">101</a> 	
+<a class="jxr_linenumber" name="L102" href="#L102">102</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String STEVE_CSV = <span class="jxr_string">"6,Steve,Gates,31/12/2000,\&quot;701 First Avenue\r\nSunnyvale, CA 94089\r\nUnited States\&quot;,"</span>
+<a class="jxr_linenumber" name="L103" href="#L103">103</a> 		+ <span class="jxr_string">"N,0,\&quot;\&quot;\&quot;Gentlemen, you can't fight in here! This is the War Room!\&quot;\&quot; - Dr Strangelove\&quot;,stevengates@yahoo.com,1341512"</span>;
+<a class="jxr_linenumber" name="L104" href="#L104">104</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a href="../../org/supercsv/mock/CustomerBean.html">CustomerBean</a> STEVE = <strong class="jxr_keyword">new</strong> <a href="../../org/supercsv/mock/CustomerBean.html">CustomerBean</a>(<span class="jxr_string">"6"</span>, <span class="jxr_string">"Steve"</span>, <span class="jxr_string">"Gates"</span>, date(2000, 12, 31),
+<a class="jxr_linenumber" name="L105" href="#L105">105</a> 		<span class="jxr_string">"701 First Avenue\nSunnyvale, CA 94089\nUnited States"</span>, false, 0,
+<a class="jxr_linenumber" name="L106" href="#L106">106</a> 		<span class="jxr_string">"\&quot;Gentlemen, you can't fight in here! This is the War Room!\&quot; - Dr Strangelove"</span>, <span class="jxr_string">"stevengates@yahoo.com"</span>,
+<a class="jxr_linenumber" name="L107" href="#L107">107</a> 		1341512L);
+<a class="jxr_linenumber" name="L108" href="#L108">108</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a href="../../org/supercsv/mock/CustomerStringBean.html">CustomerStringBean</a> STEVE_STRING = <strong class="jxr_keyword">new</strong> <a href="../../org/supercsv/mock/CustomerStringBean.html">CustomerStringBean</a>(STEVE);
+<a class="jxr_linenumber" name="L109" href="#L109">109</a> 	
+<a class="jxr_linenumber" name="L110" href="#L110">110</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String ADA_CSV = <span class="jxr_string">"7,Ada,Von Trappe,18/11/1956,\&quot;One Dell Way\r\nRound Rock, TX 78682\r\nUnited States\&quot;,"</span>
+<a class="jxr_linenumber" name="L111" href="#L111">111</a> 		+ <span class="jxr_string">",2,\&quot;\&quot;\&quot;Hasta la vista, baby.\&quot;\&quot; - Terminator 2: Judgement Day\&quot;,vonada@gmail.com,0"</span>;
+<a class="jxr_linenumber" name="L112" href="#L112">112</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a href="../../org/supercsv/mock/CustomerBean.html">CustomerBean</a> ADA = <strong class="jxr_keyword">new</strong> <a href="../../org/supercsv/mock/CustomerBean.html">CustomerBean</a>(<span class="jxr_string">"7"</span>, <span class="jxr_string">"Ada"</span>, <span class="jxr_string">"Von Trappe"</span>, date(1956, 11, 18),
+<a class="jxr_linenumber" name="L113" href="#L113">113</a> 		<span class="jxr_string">"One Dell Way\nRound Rock, TX 78682\nUnited States"</span>, <strong class="jxr_keyword">null</strong>, 2,
+<a class="jxr_linenumber" name="L114" href="#L114">114</a> 		<span class="jxr_string">"\&quot;Hasta la vista, baby.\&quot; - Terminator 2: Judgement Day"</span>, <span class="jxr_string">"vonada@gmail.com"</span>, 0L);
+<a class="jxr_linenumber" name="L115" href="#L115">115</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a href="../../org/supercsv/mock/CustomerStringBean.html">CustomerStringBean</a> ADA_STRING = <strong class="jxr_keyword">new</strong> <a href="../../org/supercsv/mock/CustomerStringBean.html">CustomerStringBean</a>(ADA);
+<a class="jxr_linenumber" name="L116" href="#L116">116</a> 	
+<a class="jxr_linenumber" name="L117" href="#L117">117</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String SERGEI_CSV = <span class="jxr_string">"8,Sergei,Denisovich,22/06/1944,\&quot;1 Infinite Loop\r\nCupertino, CA 95014\r\nUnited States\&quot;,"</span>
+<a class="jxr_linenumber" name="L118" href="#L118">118</a> 		+ <span class="jxr_string">"Y,,\&quot;\&quot;\&quot;Open the pod bay doors, HAL.\&quot;\&quot; - 2001: A Space Odyssey\&quot;,sergei@denisovich.com,229431"</span>;
+<a class="jxr_linenumber" name="L119" href="#L119">119</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a href="../../org/supercsv/mock/CustomerBean.html">CustomerBean</a> SERGEI = <strong class="jxr_keyword">new</strong> <a href="../../org/supercsv/mock/CustomerBean.html">CustomerBean</a>(<span class="jxr_string">"8"</span>, <span class="jxr_string">"Sergei"</span>, <span class="jxr_string">"Denisovich"</span>, date(1944, 6, 22),
+<a class="jxr_linenumber" name="L120" href="#L120">120</a> 		<span class="jxr_string">"1 Infinite Loop\nCupertino, CA 95014\nUnited States"</span>, <strong class="jxr_keyword">true</strong>, <strong class="jxr_keyword">null</strong>,
+<a class="jxr_linenumber" name="L121" href="#L121">121</a> 		<span class="jxr_string">"\&quot;Open the pod bay doors, HAL.\&quot; - 2001: A Space Odyssey"</span>, <span class="jxr_string">"sergei@denisovich.com"</span>, 229431L);
+<a class="jxr_linenumber" name="L122" href="#L122">122</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a href="../../org/supercsv/mock/CustomerStringBean.html">CustomerStringBean</a> SERGEI_STRING = <strong class="jxr_keyword">new</strong> <a href="../../org/supercsv/mock/CustomerStringBean.html">CustomerStringBean</a>(SERGEI);
+<a class="jxr_linenumber" name="L123" href="#L123">123</a> 	
+<a class="jxr_linenumber" name="L124" href="#L124">124</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String LARRY_CSV = <span class="jxr_string">"9,Larry,Ballmer,01/01/1901,\&quot;1-7-1 Konan\r\nMinato-ku\r\nTokyo, 108-0075\r\nJapan\&quot;,"</span>
+<a class="jxr_linenumber" name="L125" href="#L125">125</a> 		+ <span class="jxr_string">"N,0,\&quot;\&quot;\&quot;A martini. Shaken, not stirred.\&quot;\&quot; - Goldfinger\&quot;,lazza99@gmail.com,164"</span>;
+<a class="jxr_linenumber" name="L126" href="#L126">126</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a href="../../org/supercsv/mock/CustomerBean.html">CustomerBean</a> LARRY = <strong class="jxr_keyword">new</strong> <a href="../../org/supercsv/mock/CustomerBean.html">CustomerBean</a>(<span class="jxr_string">"9"</span>, <span class="jxr_string">"Larry"</span>, <span class="jxr_string">"Ballmer"</span>, date(1901, 1, 1),
+<a class="jxr_linenumber" name="L127" href="#L127">127</a> 		<span class="jxr_string">"1-7-1 Konan\nMinato-ku\nTokyo, 108-0075\nJapan"</span>, false, 0, <span class="jxr_string">"\&quot;A martini. Shaken, not stirred.\&quot; - Goldfinger"</span>,
+<a class="jxr_linenumber" name="L128" href="#L128">128</a> 		<span class="jxr_string">"lazza99@gmail.com"</span>, 164L);
+<a class="jxr_linenumber" name="L129" href="#L129">129</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a href="../../org/supercsv/mock/CustomerStringBean.html">CustomerStringBean</a> LARRY_STRING = <strong class="jxr_keyword">new</strong> <a href="../../org/supercsv/mock/CustomerStringBean.html">CustomerStringBean</a>(LARRY);
+<a class="jxr_linenumber" name="L130" href="#L130">130</a> 	
+<a class="jxr_linenumber" name="L131" href="#L131">131</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String GRACE_CSV = <span class="jxr_string">"10,Grace,Fowler,28/11/2003,\&quot;11-1, Kamitoba Hokotate-cho\r\nMinami-ku\r\nKyoto, 601-8501\r\nJapan\&quot;,"</span>
+<a class="jxr_linenumber" name="L132" href="#L132">132</a> 		+ <span class="jxr_string">"N,0,\&quot;\&quot;\&quot;Carpe diem. Seize the day, boys. Make your lives extraordinary.\&quot;\&quot; - Dead Poets Society\&quot;,gracie@hotmail.com,168841"</span>;
+<a class="jxr_linenumber" name="L133" href="#L133">133</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a href="../../org/supercsv/mock/CustomerBean.html">CustomerBean</a> GRACE = <strong class="jxr_keyword">new</strong> <a href="../../org/supercsv/mock/CustomerBean.html">CustomerBean</a>(<span class="jxr_string">"10"</span>, <span class="jxr_string">"Grace"</span>, <span class="jxr_string">"Fowler"</span>, date(2003, 11, 28),
+<a class="jxr_linenumber" name="L134" href="#L134">134</a> 		<span class="jxr_string">"11-1, Kamitoba Hokotate-cho\nMinami-ku\nKyoto, 601-8501\nJapan"</span>, false, 0,
+<a class="jxr_linenumber" name="L135" href="#L135">135</a> 		<span class="jxr_string">"\&quot;Carpe diem. Seize the day, boys. Make your lives extraordinary.\&quot; - Dead Poets Society"</span>,
+<a class="jxr_linenumber" name="L136" href="#L136">136</a> 		<span class="jxr_string">"gracie@hotmail.com"</span>, 168841L);
+<a class="jxr_linenumber" name="L137" href="#L137">137</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <a href="../../org/supercsv/mock/CustomerStringBean.html">CustomerStringBean</a> GRACE_STRING = <strong class="jxr_keyword">new</strong> <a href="../../org/supercsv/mock/CustomerStringBean.html">CustomerStringBean</a>(GRACE);
+<a class="jxr_linenumber" name="L138" href="#L138">138</a> 	
+<a class="jxr_linenumber" name="L139" href="#L139">139</a> 	<em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L140" href="#L140">140</a> <em class="jxr_javadoccomment">	 * The CSV file to use for testing.</em>
+<a class="jxr_linenumber" name="L141" href="#L141">141</a> <em class="jxr_javadoccomment">	 */</em>
+<a class="jxr_linenumber" name="L142" href="#L142">142</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String CSV_FILE = <strong class="jxr_keyword">new</strong> StringBuilder(HEADER_CSV).append(<span class="jxr_string">"\r\n"</span>).append(JOHN_CSV).append(<span class="jxr_string">"\r\n"</span>)
+<a class="jxr_linenumber" name="L143" href="#L143">143</a> 		.append(BOB_CSV).append(<span class="jxr_string">"\r\n"</span>).append(ALICE_CSV).append(<span class="jxr_string">"\r\n"</span>).append(BILL_CSV).append(<span class="jxr_string">"\r\n"</span>)
+<a class="jxr_linenumber" name="L144" href="#L144">144</a> 		.append(MIRANDA_CSV).append(<span class="jxr_string">"\r\n"</span>).append(STEVE_CSV).append(<span class="jxr_string">"\r\n"</span>).append(ADA_CSV).append(<span class="jxr_string">"\r\n"</span>)
+<a class="jxr_linenumber" name="L145" href="#L145">145</a> 		.append(SERGEI_CSV).append(<span class="jxr_string">"\r\n"</span>).append(LARRY_CSV).append(<span class="jxr_string">"\r\n"</span>).append(GRACE_CSV).append(<span class="jxr_string">"\r\n"</span>).toString();
+<a class="jxr_linenumber" name="L146" href="#L146">146</a> 	
+<a class="jxr_linenumber" name="L147" href="#L147">147</a> 	<em class="jxr_javadoccomment">/** List of populated customer beans to use for testing */</em>
+<a class="jxr_linenumber" name="L148" href="#L148">148</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> List&lt;CustomerBean&gt; CUSTOMERS = Arrays.asList(JOHN, BOB, ALICE, BILL, MIRANDA, STEVE, ADA,
+<a class="jxr_linenumber" name="L149" href="#L149">149</a> 		SERGEI, LARRY, GRACE);
+<a class="jxr_linenumber" name="L150" href="#L150">150</a> 	
+<a class="jxr_linenumber" name="L151" href="#L151">151</a> 	<em class="jxr_javadoccomment">/** List of populated customer string beans to use for testing */</em>
+<a class="jxr_linenumber" name="L152" href="#L152">152</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> List&lt;CustomerStringBean&gt; STRING_CUSTOMERS = Arrays.asList(JOHN_STRING, BOB_STRING,
+<a class="jxr_linenumber" name="L153" href="#L153">153</a> 		ALICE_STRING, BILL_STRING, MIRANDA_STRING, STEVE_STRING, ADA_STRING, SERGEI_STRING, LARRY_STRING, GRACE_STRING);
+<a class="jxr_linenumber" name="L154" href="#L154">154</a> 	
+<a class="jxr_linenumber" name="L155" href="#L155">155</a> 	<em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L156" href="#L156">156</a> <em class="jxr_javadoccomment">	 * An easy and non-deprecated non-lenient way of creating Date objects.</em>
+<a class="jxr_linenumber" name="L157" href="#L157">157</a> <em class="jxr_javadoccomment">	 * </em>
+<a class="jxr_linenumber" name="L158" href="#L158">158</a> <em class="jxr_javadoccomment">	 * @param year</em>
+<a class="jxr_linenumber" name="L159" href="#L159">159</a> <em class="jxr_javadoccomment">	 *            the year, e.g. 2007 is year 2007</em>
+<a class="jxr_linenumber" name="L160" href="#L160">160</a> <em class="jxr_javadoccomment">	 * @param month</em>
+<a class="jxr_linenumber" name="L161" href="#L161">161</a> <em class="jxr_javadoccomment">	 *            the month, where 1 == January</em>
+<a class="jxr_linenumber" name="L162" href="#L162">162</a> <em class="jxr_javadoccomment">	 * @param dayOfMonth</em>
+<a class="jxr_linenumber" name="L163" href="#L163">163</a> <em class="jxr_javadoccomment">	 *            the day of the month, where 1 == first day of the month</em>
+<a class="jxr_linenumber" name="L164" href="#L164">164</a> <em class="jxr_javadoccomment">	 * @return a Date object with time set to midnight, ie. hour = 00, minutes = 00, seconds = 00 and milliseconds = 000</em>
+<a class="jxr_linenumber" name="L165" href="#L165">165</a> <em class="jxr_javadoccomment">	 */</em>
+<a class="jxr_linenumber" name="L166" href="#L166">166</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> Date date(<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> year, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> month, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> dayOfMonth) {
+<a class="jxr_linenumber" name="L167" href="#L167">167</a> 		<strong class="jxr_keyword">final</strong> Calendar cal = Calendar.getInstance();
+<a class="jxr_linenumber" name="L168" href="#L168">168</a> 		cal.setLenient(false);
+<a class="jxr_linenumber" name="L169" href="#L169">169</a> 		cal.set(year, month - 1, dayOfMonth, 0, 0, 0);
+<a class="jxr_linenumber" name="L170" href="#L170">170</a> 		cal.set(Calendar.MILLISECOND, 0);
+<a class="jxr_linenumber" name="L171" href="#L171">171</a> 		<strong class="jxr_keyword">return</strong> cal.getTime();
+<a class="jxr_linenumber" name="L172" href="#L172">172</a> 	}
+<a class="jxr_linenumber" name="L173" href="#L173">173</a> 	
+<a class="jxr_linenumber" name="L174" href="#L174">174</a> 	<em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L175" href="#L175">175</a> <em class="jxr_javadoccomment">	 * An easy and non-deprecated non-lenient way of creating Date objects.</em>
+<a class="jxr_linenumber" name="L176" href="#L176">176</a> <em class="jxr_javadoccomment">	 * </em>
+<a class="jxr_linenumber" name="L177" href="#L177">177</a> <em class="jxr_javadoccomment">	 * @param year</em>
+<a class="jxr_linenumber" name="L178" href="#L178">178</a> <em class="jxr_javadoccomment">	 *            the year, e.g. 2007 is year 2007</em>
+<a class="jxr_linenumber" name="L179" href="#L179">179</a> <em class="jxr_javadoccomment">	 * @param month</em>
+<a class="jxr_linenumber" name="L180" href="#L180">180</a> <em class="jxr_javadoccomment">	 *            the month, where 1 == January</em>
+<a class="jxr_linenumber" name="L181" href="#L181">181</a> <em class="jxr_javadoccomment">	 * @param dayOfMonth</em>
+<a class="jxr_linenumber" name="L182" href="#L182">182</a> <em class="jxr_javadoccomment">	 *            the day of the month, where 1 == first day of the month</em>
+<a class="jxr_linenumber" name="L183" href="#L183">183</a> <em class="jxr_javadoccomment">	 * @param hour</em>
+<a class="jxr_linenumber" name="L184" href="#L184">184</a> <em class="jxr_javadoccomment">	 *            the hour in 24 hour format where 0 == midnight</em>
+<a class="jxr_linenumber" name="L185" href="#L185">185</a> <em class="jxr_javadoccomment">	 * @param minute</em>
+<a class="jxr_linenumber" name="L186" href="#L186">186</a> <em class="jxr_javadoccomment">	 *            is the minute 0-59</em>
+<a class="jxr_linenumber" name="L187" href="#L187">187</a> <em class="jxr_javadoccomment">	 * @param second</em>
+<a class="jxr_linenumber" name="L188" href="#L188">188</a> <em class="jxr_javadoccomment">	 *            is the seconds 0-59</em>
+<a class="jxr_linenumber" name="L189" href="#L189">189</a> <em class="jxr_javadoccomment">	 * @return a Date object with time set to midnight, ie. hour = 00, minutes = 00, seconds = 00 and milliseconds = 000</em>
+<a class="jxr_linenumber" name="L190" href="#L190">190</a> <em class="jxr_javadoccomment">	 */</em>
+<a class="jxr_linenumber" name="L191" href="#L191">191</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> Date date(<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> year, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> month, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> dayOfMonth, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> hour, <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> minute,
+<a class="jxr_linenumber" name="L192" href="#L192">192</a> 		<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> second) {
+<a class="jxr_linenumber" name="L193" href="#L193">193</a> 		<strong class="jxr_keyword">final</strong> Calendar cal = Calendar.getInstance();
+<a class="jxr_linenumber" name="L194" href="#L194">194</a> 		cal.setLenient(false);
+<a class="jxr_linenumber" name="L195" href="#L195">195</a> 		cal.set(year, month - 1, dayOfMonth, hour, minute, second);
+<a class="jxr_linenumber" name="L196" href="#L196">196</a> 		cal.set(Calendar.MILLISECOND, 0);
+<a class="jxr_linenumber" name="L197" href="#L197">197</a> 		<strong class="jxr_keyword">return</strong> cal.getTime();
+<a class="jxr_linenumber" name="L198" href="#L198">198</a> 	}
+<a class="jxr_linenumber" name="L199" href="#L199">199</a> 	
+<a class="jxr_linenumber" name="L200" href="#L200">200</a> 	<em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L201" href="#L201">201</a> <em class="jxr_javadoccomment">	 * Asserts that the processor gives the expected output for the supplied input.</em>
+<a class="jxr_linenumber" name="L202" href="#L202">202</a> <em class="jxr_javadoccomment">	 * </em>
+<a class="jxr_linenumber" name="L203" href="#L203">203</a> <em class="jxr_javadoccomment">	 * @param processor</em>
+<a class="jxr_linenumber" name="L204" href="#L204">204</a> <em class="jxr_javadoccomment">	 *            the processor</em>
+<a class="jxr_linenumber" name="L205" href="#L205">205</a> <em class="jxr_javadoccomment">	 * @param input</em>
+<a class="jxr_linenumber" name="L206" href="#L206">206</a> <em class="jxr_javadoccomment">	 *            the input</em>
+<a class="jxr_linenumber" name="L207" href="#L207">207</a> <em class="jxr_javadoccomment">	 * @param expectedOutput</em>
+<a class="jxr_linenumber" name="L208" href="#L208">208</a> <em class="jxr_javadoccomment">	 *            the expected output</em>
+<a class="jxr_linenumber" name="L209" href="#L209">209</a> <em class="jxr_javadoccomment">	 */</em>
+<a class="jxr_linenumber" name="L210" href="#L210">210</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> assertExecution(<strong class="jxr_keyword">final</strong> CellProcessor processor, <strong class="jxr_keyword">final</strong> String input, <strong class="jxr_keyword">final</strong> Object expectedOutput) {
+<a class="jxr_linenumber" name="L211" href="#L211">211</a> 		assertEquals(expectedOutput, processor.execute(input, ANONYMOUS_CSVCONTEXT));
+<a class="jxr_linenumber" name="L212" href="#L212">212</a> 	}
+<a class="jxr_linenumber" name="L213" href="#L213">213</a> 	
+<a class="jxr_linenumber" name="L214" href="#L214">214</a> }
+</pre>
+<hr/>
+<div id="footer">Copyright &#169; 2007&#x2013;2015 <a href="http://supercsv.sourceforge.net/">Super CSV</a>. All rights reserved.</div>
+</body>
+</html>
