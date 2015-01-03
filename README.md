@@ -5,9 +5,10 @@ super-csv
 
 Super CSV is a fast, programmer-friendly, open-source library for reading and writing CSV files with Java.
 
-We're in the process of moving from [SourceForge](https://sourceforge.net/projects/supercsv/) and will look at moving any outstanding issues across to GitHub (and redirecting the old website here) as soon as possible. 
+**Please note:** We're in the process of moving from [SourceForge](https://sourceforge.net/projects/supercsv/) and will look at moving any outstanding issues across to GitHub as soon as possible. Any links referring to the old Super CSV website will now redirect to GitHub.
 
 * **Documentation**: http://super-csv.github.io/super-csv
+* **Download Instructions**: http://super-csv.github.io/super-csv/downloading.html
 * **GitHub**: https://github.com/super-csv/super-csv
 * **Free software**: Apache License, Version 2.0
 
