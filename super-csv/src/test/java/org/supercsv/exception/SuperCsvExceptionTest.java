@@ -39,12 +39,10 @@ public class SuperCsvExceptionTest {
 	public void testConstuctor1() {
 		SuperCsvException e = new SuperCsvException(MSG);
 		assertEquals(MSG, e.getMessage());
-		e.printStackTrace();
 		
 		// test with null msg
 		e = new SuperCsvException(null);
 		assertNull(e.getMessage());
-		e.printStackTrace();
 	}
 	
 	/**
@@ -55,13 +53,11 @@ public class SuperCsvExceptionTest {
 		SuperCsvException e = new SuperCsvException(MSG, ANONYMOUS_CSVCONTEXT);
 		assertEquals(MSG, e.getMessage());
 		assertEquals(ANONYMOUS_CSVCONTEXT, e.getCsvContext());
-		e.printStackTrace();
 		
 		// test with null msg and context
 		e = new SuperCsvException(null, (CsvContext) null);
 		assertNull(e.getMessage());
 		assertNull(e.getCsvContext());
-		e.printStackTrace();
 	}
 	
 	/**
@@ -73,14 +69,12 @@ public class SuperCsvExceptionTest {
 		assertEquals(MSG, e.getMessage());
 		assertEquals(ANONYMOUS_CSVCONTEXT, e.getCsvContext());
 		assertEquals(THROWABLE, e.getCause());
-		e.printStackTrace();
 		
 		// test with null msg, context and throwable
 		e = new SuperCsvException(null, (CsvContext) null, (Throwable) null);
 		assertNull(e.getMessage());
 		assertNull(e.getCsvContext());
 		assertNull(e.getCause());
-		e.printStackTrace();
 	}
 	
 }

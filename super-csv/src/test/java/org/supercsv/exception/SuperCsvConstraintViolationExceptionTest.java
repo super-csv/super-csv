@@ -44,14 +44,12 @@ public class SuperCsvConstraintViolationExceptionTest {
 		assertEquals(MSG, e.getMessage());
 		assertEquals(ANONYMOUS_CSVCONTEXT, e.getCsvContext());
 		assertEquals(PROCESSOR, e.getProcessor());
-		e.printStackTrace();
 		
 		// test with null values
 		e = new SuperCsvConstraintViolationException(null, (CsvContext) null, (CellProcessor) null);
 		assertNull(e.getMessage());
 		assertNull(e.getCsvContext());
 		assertNull(e.getProcessor());
-		e.printStackTrace();
 	}
 	
 	/**
@@ -64,7 +62,6 @@ public class SuperCsvConstraintViolationExceptionTest {
 		assertEquals(ANONYMOUS_CSVCONTEXT, e.getCsvContext());
 		assertEquals(PROCESSOR, e.getProcessor());
 		assertEquals(THROWABLE, e.getCause());
-		e.printStackTrace();
 		
 		// test with null values
 		e = new SuperCsvConstraintViolationException(null, null, null, (Throwable) null);
@@ -72,7 +69,6 @@ public class SuperCsvConstraintViolationExceptionTest {
 		assertNull(e.getCsvContext());
 		assertNull(e.getProcessor());
 		assertNull(e.getCause());
-		e.printStackTrace();
 	}
 	
 }

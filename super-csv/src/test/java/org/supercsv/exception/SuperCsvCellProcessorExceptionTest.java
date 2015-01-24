@@ -45,14 +45,12 @@ public class SuperCsvCellProcessorExceptionTest {
 		assertEquals(MSG, e.getMessage());
 		assertEquals(ANONYMOUS_CSVCONTEXT, e.getCsvContext());
 		assertEquals(PROCESSOR, e.getProcessor());
-		e.printStackTrace();
 		
 		// test with null values
 		e = new SuperCsvCellProcessorException(null, (CsvContext) null, (CellProcessor) null);
 		assertNull(e.getMessage());
 		assertNull(e.getCsvContext());
 		assertNull(e.getProcessor());
-		e.printStackTrace();
 	}
 	
 	/**
@@ -65,7 +63,6 @@ public class SuperCsvCellProcessorExceptionTest {
 		assertEquals(ANONYMOUS_CSVCONTEXT, e.getCsvContext());
 		assertEquals(PROCESSOR, e.getProcessor());
 		assertEquals(THROWABLE, e.getCause());
-		e.printStackTrace();
 		
 		// test with null values
 		e = new SuperCsvCellProcessorException(null, null, null, (Throwable) null);
@@ -73,7 +70,6 @@ public class SuperCsvCellProcessorExceptionTest {
 		assertNull(e.getCsvContext());
 		assertNull(e.getProcessor());
 		assertNull(e.getCause());
-		e.printStackTrace();
 	}
 	
 	/**
@@ -87,14 +83,12 @@ public class SuperCsvCellProcessorExceptionTest {
 		assertEquals("the input value should be of type java.lang.String but is java.lang.Integer", e.getMessage());
 		assertEquals(ANONYMOUS_CSVCONTEXT, e.getCsvContext());
 		assertEquals(PROCESSOR, e.getProcessor());
-		e.printStackTrace();
 		
 		// null actual value
 		e = new SuperCsvCellProcessorException(String.class, null, ANONYMOUS_CSVCONTEXT, PROCESSOR);
 		assertEquals("the input value should be of type java.lang.String but is null", e.getMessage());
 		assertEquals(ANONYMOUS_CSVCONTEXT, e.getCsvContext());
 		assertEquals(PROCESSOR, e.getProcessor());
-		e.printStackTrace();
 		
 		// test with null values
 		try {

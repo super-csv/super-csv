@@ -37,12 +37,10 @@ public class SuperCsvReflectionExceptionTest {
 	public void testConstructor1() {
 		SuperCsvReflectionException e = new SuperCsvReflectionException(MSG);
 		assertEquals(MSG, e.getMessage());
-		e.printStackTrace();
 		
 		// test with null msg
 		e = new SuperCsvReflectionException(null);
 		assertNull(e.getMessage());
-		e.printStackTrace();
 	}
 	
 	/**
@@ -53,13 +51,11 @@ public class SuperCsvReflectionExceptionTest {
 		SuperCsvReflectionException e = new SuperCsvReflectionException(MSG, THROWABLE);
 		assertEquals(MSG, e.getMessage());
 		assertEquals(THROWABLE, e.getCause());
-		e.printStackTrace();
 		
 		// test with null msg
 		e = new SuperCsvReflectionException(null, null);
 		assertNull(e.getMessage());
 		assertNull(e.getCause());
-		e.printStackTrace();
 	}
 	
 }
