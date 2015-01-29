@@ -105,15 +105,52 @@ public class Tokenizer extends AbstractTokenizer {
 		// update the untokenized CSV row
 		currentRow.append(line);
 		
-		// add a newline to determine end of line (making parsing easier)
-		line += NEWLINE;
-		
 		// process each character in the line, catering for surrounding quotes (QUOTE_MODE)
 		TokenizerState state = TokenizerState.NORMAL;
 		int quoteScopeStartingLine = -1; // the line number where a potential multi-line cell starts
 		int potentialSpaces = 0; // keep track of spaces (so leading/trailing space can be removed if required)
 		int charIndex = 0;
 		while( true ) {
+			boolean EOLReached = charIndex == line.length();
+			
+			if( EOLReached )
+			{
+				if( TokenizerState.NORMAL.equals(state) ) {
+					/*
+					 * Newline. Add any required spaces (if surrounding spaces don't need quotes) and return (we've read
+					 * a line!).
+					 */
+					if( !surroundingSpacesNeedQuotes ) {
+						appendSpaces(currentColumn, potentialSpaces);
+					}
+					columns.add(currentColumn.length() > 0 ? currentColumn.toString() : null); // "" -> null
+					return true;
+				}
+				else
+				{
+					/*
+					 * Newline. Doesn't count as newline while in QUOTESCOPE. Add the newline char, reset the charIndex
+					 * (will update to 0 for next iteration), read in the next line, then then continue to next
+					 * character. For a large file with an unterminated quoted section (no trailing quote), this could
+					 * cause memory issues as it will keep reading lines looking for the trailing quote. Maybe there
+					 * should be a configurable limit on max lines to read in quoted mode?
+					 */
+					currentColumn.append(NEWLINE);
+					currentRow.append(NEWLINE); // specific line terminator lost, \n will have to suffice
+					
+					charIndex = 0;
+					line = readLine();
+					if( line == null ) {
+						throw new SuperCsvException(
+							String
+								.format(
+									"unexpected end of file while reading quoted column beginning on line %d and ending on line %d",
+									quoteScopeStartingLine, getLineNumber()));
+					}
+					
+					currentRow.append(line); // update untokenized CSV row
+				}
+			}
 			
 			final char c = line.charAt(charIndex);
 			
@@ -140,18 +177,8 @@ public class Tokenizer extends AbstractTokenizer {
 					 */
 					potentialSpaces++;
 					
-				} else if( c == NEWLINE ) {
-					/*
-					 * Newline. Add any required spaces (if surrounding spaces don't need quotes) and return (we've read
-					 * a line!).
-					 */
-					if( !surroundingSpacesNeedQuotes ) {
-						appendSpaces(currentColumn, potentialSpaces);
-					}
-					columns.add(currentColumn.length() > 0 ? currentColumn.toString() : null); // "" -> null
-					return true;
-					
-				} else if( c == quoteChar ) {
+				}
+				else if( c == quoteChar ) {
 					/*
 					 * A single quote ("). Update to QUOTESCOPE (but don't save quote), then continue to next character.
 					 */
@@ -183,34 +210,11 @@ public class Tokenizer extends AbstractTokenizer {
 				 * QUOTE_MODE (within quotes).
 				 */
 				
-				if( c == NEWLINE ) {
-					
-					/*
-					 * Newline. Doesn't count as newline while in QUOTESCOPE. Add the newline char, reset the charIndex
-					 * (will update to 0 for next iteration), read in the next line, then then continue to next
-					 * character. For a large file with an unterminated quoted section (no trailing quote), this could
-					 * cause memory issues as it will keep reading lines looking for the trailing quote. Maybe there
-					 * should be a configurable limit on max lines to read in quoted mode?
-					 */
-					currentColumn.append(NEWLINE);
-					currentRow.append(NEWLINE); // specific line terminator lost, \n will have to suffice
-					
-					charIndex = -1;
-					line = readLine();
-					if( line == null ) {
-						throw new SuperCsvException(
-							String
-								.format(
-									"unexpected end of file while reading quoted column beginning on line %d and ending on line %d",
-									quoteScopeStartingLine, getLineNumber()));
-					}
-					
-					currentRow.append(line); // update untokenized CSV row
-					line += NEWLINE; // add newline to simplify parsing
-					
-				} else if( c == quoteChar ) {
-					
-					if( line.charAt(charIndex + 1) == quoteChar ) {
+				if( c == quoteChar ) {
+					int nextCharIndex = charIndex + 1;
+					boolean availableCharacters = nextCharIndex < line.length();
+					boolean nextCharIsQuote = availableCharacters && line.charAt(nextCharIndex) == quoteChar;
+					if( nextCharIsQuote ) {
 						/*
 						 * An escaped quote (""). Add a single quote, then move the cursor so the next iteration of the
 						 * loop will read the character following the escaped quote.
