@@ -21,6 +21,7 @@ import static org.junit.Assert.assertNull;
 import static org.supercsv.SuperCsvTestUtils.ANONYMOUS_CSVCONTEXT;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import org.junit.Before;
@@ -34,6 +35,7 @@ import org.supercsv.mock.IdentityTransform;
  * 
  * @author Dominique De Vito
  * @author James Bassett
+ * @author Kasper B. Graversen
  */
 public class HashMapperTest {
 	
@@ -100,7 +102,15 @@ public class HashMapperTest {
 		final Map<Object, Object> map = new HashMap<Object, Object>();
 		map.put(input, 1000000);
 		final CellProcessor p = new HashMapper(map, new FmtNumber("###,###,###"));
-		assertEquals("1,000,000", p.execute(input, ANONYMOUS_CSVCONTEXT));
+		
+		Locale defaultLocale = Locale.getDefault();
+		try {
+			Locale.setDefault(Locale.UK);
+			assertEquals("1,000,000", (String) p.execute(input, ANONYMOUS_CSVCONTEXT));
+		}
+		finally {
+			Locale.setDefault(defaultLocale);
+		}
 	}
 	
 	/**
