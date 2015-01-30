@@ -287,6 +287,13 @@
 				<surefireArgs>-Duser.country=DE -Duser.language=de</surefireArgs>
 			</properties>
 		</profile>
+		<profile>
+			<!-- enable this profile to run tests with a UK locale -->
+			<id>englishLocale</id>
+			<properties>
+				<surefireArgs>-Duser.country=GB -Duser.language=en</surefireArgs>
+			</properties>
+		</profile>
 	</profiles>
 
 	<dependencyManagement>

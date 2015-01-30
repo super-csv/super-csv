@@ -3,5 +3,6 @@ jdk:
   - oraclejdk8
 script: mvn test $MVN_ARGS
 env:
-  - MVN_ARGS="-P germanLocale"
   - MVN_ARGS=
+  - MVN_ARGS="-P germanLocale"
+  - MVN_ARGS="-P englishLocale"
