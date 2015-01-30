@@ -20,7 +20,11 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.supercsv.SuperCsvTestUtils.ANONYMOUS_CSVCONTEXT;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import org.junit.Before;
@@ -99,7 +103,10 @@ public class HashMapperTest {
 		final String input = "one million";
 		final Map<Object, Object> map = new HashMap<Object, Object>();
 		map.put(input, 1000000);
-		final CellProcessor p = new HashMapper(map, new FmtNumber("###,###,###"));
+		final DecimalFormat format = (DecimalFormat) NumberFormat.getNumberInstance(Locale.UK);
+		format.applyPattern("###,###,###");
+		
+		final CellProcessor p = new HashMapper(map, new FmtNumber(format));
 		assertEquals("1,000,000", p.execute(input, ANONYMOUS_CSVCONTEXT));
 	}
 	

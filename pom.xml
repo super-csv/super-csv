@@ -197,6 +197,9 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<argLine>${surefireArgs}</argLine>
+				</configuration>
 			</plugin>
 
 			<!-- Generates the cobertura code-coverage report -->
@@ -275,6 +278,16 @@
 
 		</plugins>
 	</build>
+	
+	<profiles>
+		<profile>
+			<!-- enable this profile to run tests with a German locale -->
+			<id>germanLocale</id>
+			<properties>
+				<surefireArgs>-Duser.country=DE -Duser.language=de</surefireArgs>
+			</properties>
+		</profile>
+	</profiles>
 
 	<dependencyManagement>
 		<dependencies>

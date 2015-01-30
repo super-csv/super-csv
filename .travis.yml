@@ -1,3 +1,7 @@
 language: java
 jdk:
   - oraclejdk8
+script: mvn test $MVN_ARGS
+env:
+  - MVN_ARGS="-P germanLocale"
+  - MVN_ARGS=
