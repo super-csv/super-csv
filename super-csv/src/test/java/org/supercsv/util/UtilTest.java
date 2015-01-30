@@ -15,10 +15,6 @@
  */
 package org.supercsv.util;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,31 +28,35 @@ import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.exception.SuperCsvException;
 import org.supercsv.mock.IdentityTransform;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.*;
+
 /**
  * Test the Util class.
- * 
+ *
  * @author James Bassett
  */
 public class UtilTest {
-	
+
 	private static final String[] NAME_MAPPING = new String[] { "name", null, "city" };
-	
+
 	private static final List<String> LIST = Arrays.asList("Ezio", "25", "Venice");
-	
+
 	private static final CellProcessor[] PROCESSORS = new CellProcessor[] { new IdentityTransform(), new ParseInt(),
 		null };
-	
+
 	private static final int LINE_NO = 23;
-	
+
 	private static final int ROW_NO = 12;
-	
+
 	private static final Map<String, Object> MAP = new HashMap<String, Object>();
 	static {
 		MAP.put("name", "Ezio");
 		MAP.put("age", 25);
 		MAP.put("city", "Venice");
 	}
-	
+
 	/**
 	 * Tests the filterMapToList() method (the age attribute is not used).
 	 */
@@ -68,7 +68,7 @@ public class UtilTest {
 		assertNull(list.get(1));
 		assertEquals("Venice", list.get(2));
 	}
-	
+
 	/**
 	 * Tests the filterMapToList() method with a null map (should throw an exception).
 	 */
@@ -76,7 +76,7 @@ public class UtilTest {
 	public void testFilterMapToListWithNullMap() {
 		Util.filterMapToList(null, NAME_MAPPING);
 	}
-	
+
 	/**
 	 * Tests the filterMapToList() method with a null name mapping array (should throw an exception).
 	 */
@@ -84,7 +84,7 @@ public class UtilTest {
 	public void testFilterMapToListWithNullNameMapping() {
 		Util.filterMapToList(MAP, null);
 	}
-	
+
 	/**
 	 * Tests the filterListToMap() method.
 	 */
@@ -96,7 +96,7 @@ public class UtilTest {
 		assertEquals("Ezio", map.get("name"));
 		assertEquals("Venice", map.get("city"));
 	}
-	
+
 	/**
 	 * Tests the filterListToMap() method with a null destination map (should throw an exception).
 	 */
@@ -104,7 +104,7 @@ public class UtilTest {
 	public void testFilterListToMapWithNullDestMap() {
 		Util.filterListToMap(null, NAME_MAPPING, LIST);
 	}
-	
+
 	/**
 	 * Tests the filterListToMap() method with a null name mapping array (should throw an exception).
 	 */
@@ -112,7 +112,7 @@ public class UtilTest {
 	public void testFilterListToMapWithNullNameMapping() {
 		Util.filterListToMap(new HashMap<String, String>(), null, LIST);
 	}
-	
+
 	/**
 	 * Tests the filterListToMap() method with a null source list (should throw an exception).
 	 */
@@ -120,23 +120,27 @@ public class UtilTest {
 	public void testFilterListToMapWithNullSourceList() {
 		Util.filterListToMap(new HashMap<String, String>(), NAME_MAPPING, null);
 	}
-	
+
 	/**
-	 * Tests the filterListToMap() method with a name mapping array with too few elements (should throw an exception).
+	 * Tests the filterListToMap() method with a name mapping array with too few elements.
 	 */
-	@Test(expected = SuperCsvException.class)
-	public void testFilterListToMapWithSizeMismatch() {
-		Util.filterListToMap(new HashMap<String, String>(), new String[] { "notEnoughColumns" }, LIST);
-	}
-	
-	/**
+    @Test
+    public void testFilterListToMapWithSizeMismatch() {
+        String firstColumn = "firstColumn";
+        Map<String, String> map = new HashMap<String, String>();
+        Util.filterListToMap(map, new String[]{firstColumn}, LIST);
+        assertThat(map.size(), is(1));
+        assertThat(map.get(firstColumn), is(LIST.get(0)));
+    }
+
+    /**
 	 * Tests the filterListToMap() method with a name mapping array with duplicate elements (should throw an exception).
 	 */
 	@Test(expected = SuperCsvException.class)
 	public void testFilterListToMapWithDuplicateNameMapping() {
 		Util.filterListToMap(new HashMap<String, String>(), new String[] { "name", "name", "city" }, LIST);
 	}
-	
+
 	/**
 	 * Tests the executeCellProcessors() method.
 	 */
@@ -149,7 +153,7 @@ public class UtilTest {
 		assertEquals(Integer.valueOf(25), destinationList.get(1));
 		assertEquals("Venice", destinationList.get(2));
 	}
-	
+
 	/**
 	 * Tests the executeCellProcessors() method with a null destination List (should throw an Exception).
 	 */
@@ -157,7 +161,7 @@ public class UtilTest {
 	public void testExecuteCellProcessorsWithNullDestination() {
 		Util.executeCellProcessors(null, LIST, PROCESSORS, LINE_NO, ROW_NO);
 	}
-	
+
 	/**
 	 * Tests the executeCellProcessors() method with a null source List (should throw an Exception).
 	 */
@@ -165,7 +169,7 @@ public class UtilTest {
 	public void testExecuteCellProcessorsWithNullSource() {
 		Util.executeCellProcessors(new ArrayList<Object>(), null, PROCESSORS, LINE_NO, ROW_NO);
 	}
-	
+
 	/**
 	 * Tests the executeCellProcessors() method with a processors array (should throw an Exception).
 	 */
@@ -173,17 +177,29 @@ public class UtilTest {
 	public void testExecuteCellProcessorsWithNullProcessors() {
 		Util.executeCellProcessors(new ArrayList<Object>(), LIST, null, LINE_NO, ROW_NO);
 	}
-	
+
 	/**
-	 * Tests the executeCellProcessors() method with a source List whose size doesn't match the number of CellProcessors
-	 * (should throw an Exception).
+	 * Tests the executeCellProcessors() method with an empty source List and some CellProcessors.
 	 */
-	@Test(expected = SuperCsvException.class)
-	public void testExecuteCellProcessorsWithSizeMismatch() {
+	@Test
+	public void testExecuteCellProcessorsWithEmptySourceList() {
 		final List<Object> invalidSizeList = new ArrayList<Object>();
-		Util.executeCellProcessors(new ArrayList<Object>(), invalidSizeList, PROCESSORS, LINE_NO, ROW_NO);
+        List result = new ArrayList();
+		Util.executeCellProcessors(result, invalidSizeList, PROCESSORS, LINE_NO, ROW_NO);
+        assertThat(result.size(), is(0));
 	}
-	
+
+	/**
+	 * Tests the executeCellProcessors() method with a source List whose size doesn't match the number of CellProcessors.
+	 */
+	@Test
+	public void testExecuteCellProcessorsWithSizeMismatch() {
+		final List<String> invalidSizeList = Arrays.asList("Ezio", "25", "Venice", "Other value");
+        List result = new ArrayList();
+		Util.executeCellProcessors(result, invalidSizeList, PROCESSORS, LINE_NO, ROW_NO);
+        assertThat(result.size(), equalTo(invalidSizeList.size()));
+	}
+
 	/**
 	 * Tests the filterMapToObjectArray() method.
 	 */
@@ -195,7 +211,7 @@ public class UtilTest {
 		assertNull(objectArray[1]);
 		assertEquals("Venice", objectArray[2]);
 	}
-	
+
 	/**
 	 * Tests the filterMapToObjectArray() method with a null values Map (should throw an Exception).
 	 */
@@ -203,7 +219,7 @@ public class UtilTest {
 	public void testFilterMapToObjectArrayWithNullValues() {
 		Util.filterMapToObjectArray(null, NAME_MAPPING);
 	}
-	
+
 	/**
 	 * Tests the filterMapToObjectArray() method with a null nameMapping array (should throw an Exception).
 	 */
@@ -211,7 +227,7 @@ public class UtilTest {
 	public void testFilterMapToObjectArrayWithNullNameMapping() {
 		Util.filterMapToObjectArray(MAP, null);
 	}
-	
+
 	/**
 	 * Tests the objectArrayToStringArray() method.
 	 */
@@ -224,7 +240,7 @@ public class UtilTest {
 		assertNull(output[1]);
 		assertEquals("three", output[2]);
 	}
-	
+
 	/**
 	 * Tests the objectArrayToStringArray() method with a null array.
 	 */
@@ -232,7 +248,7 @@ public class UtilTest {
 	public void testObjectArrayToStringArrayWithNullArray() {
 		assertNull(Util.objectArrayToStringArray(null));
 	}
-	
+
 	/**
 	 * Tests the objectListToStringArray() method.
 	 */
@@ -245,7 +261,7 @@ public class UtilTest {
 		assertNull(output[1]);
 		assertEquals("three", output[2]);
 	}
-	
+
 	/**
 	 * Tests the objectListToStringArray() method with a null List.
 	 */
@@ -253,7 +269,7 @@ public class UtilTest {
 	public void testObjectListToStringArrayWithNullList() {
 		assertNull(Util.objectListToStringArray(null));
 	}
-	
+
 	/**
 	 * Tests the private constructor for test coverage (yes, this is stupid).
 	 */
@@ -263,5 +279,5 @@ public class UtilTest {
 		c.setAccessible(true);
 		c.newInstance();
 	}
-	
+
 }
