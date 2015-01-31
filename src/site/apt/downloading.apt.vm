@@ -36,13 +36,24 @@ Downloading Super CSV
 </dependency>
 +-------------------------------------+
 
-  If you wish to use the new Dozer extension (with deep mapping and index-based mapping support),
+  If you wish to use the Dozer extension (with deep mapping and index-based mapping support),
   then you will also need the following:
   
 +-------------------------------------+
 <dependency>
     <groupId>${project.groupId}</groupId>
     <artifactId>super-csv-dozer</artifactId>
+    <version>${project.version}</version>
+</dependency>
++-------------------------------------+
+
+  If you wish to use the Joda-Time extension (cell processors for parsing/formatting Joda-Time classes),
+  then you will also need the following:
+  
++-------------------------------------+
+<dependency>
+    <groupId>${project.groupId}</groupId>
+    <artifactId>super-csv-joda</artifactId>
     <version>${project.version}</version>
 </dependency>
 +-------------------------------------+
@@ -68,4 +79,12 @@ Downloading Super CSV
   super-csv-dozer/super-csv-dozer-${project.version}-javadoc.jar | The Super CSV Dozer extension Javadoc documentation 
 *----------------------------------------------------------------+---------------------------------------------------------------------+
   super-csv-dozer/lib                                            | The Super CSV Dozer extension's dependencies (including Dozer)
+*----------------------------------------------------------------+---------------------------------------------------------------------+
+  super-csv-joda/super-csv-joda-${project.version}.jar           | Super CSV Joda-Time extension ${project.version} (compiled classes only)                 
+*----------------------------------------------------------------+---------------------------------------------------------------------+
+  super-csv-joda/super-csv-joda-${project.version}-sources.jar   | The Super CSV Joda-Time extension source code                                                 
+*----------------------------------------------------------------+---------------------------------------------------------------------+
+  super-csv-joda/super-csv-joda-${project.version}-javadoc.jar   | The Super CSV Joda-Time extension Javadoc documentation 
+*----------------------------------------------------------------+---------------------------------------------------------------------+
+  super-csv-joda/lib                                              | The Super CSV Joda-Time extension's dependencies (Joda-Time)
 *----------------------------------------------------------------+---------------------------------------------------------------------+

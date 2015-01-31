@@ -13,11 +13,11 @@
 	See the License for the specific language governing permissions and
 	limitations under the License.
 -->
-<project name="Super CSV Dozer Extension">
+<project name="Super CSV Joda-Time Extension">
 	<body>
 		<breadcrumbs>
 			<item name="Super CSV" href="http://super-csv.github.io/super-csv/index.html" />
-			<item name="Super CSV Dozer Extension" href="http://super-csv.github.io/super-csv/super-csv-dozer/index.html" />
+			<item name="Super CSV Joda-Time Extension" href="http://super-csv.github.io/super-csv/super-csv-joda-time/index.html" />
 		</breadcrumbs>
 		<menu ref="parent" />
 		<menu ref="reports" />

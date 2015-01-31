@@ -28,6 +28,7 @@
 	<modules>
 		<module>super-csv</module>
 		<module>super-csv-dozer</module>
+		<module>super-csv-joda</module>
 		<module>super-csv-distribution</module>
 		<module>super-csv-benchmark</module>
 	</modules>
@@ -448,6 +449,7 @@
 					<links>
 						<link>http://java.sun.com/j2se/1.5.0/docs/api</link>
 						<link>http://dozer.sourceforge.net/apidocs</link>
+						<link>http://www.joda.org/joda-time/apidocs</link>
 					</links>
 				</configuration>
 				<reportSets>

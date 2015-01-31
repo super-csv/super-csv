@@ -34,5 +34,14 @@
 			<useTransitiveDependencies>false</useTransitiveDependencies>
 			<unpack>true</unpack>
 		</dependencySet>
+		
+		<dependencySet>
+			<includes>
+				<include>net.sf.supercsv:super-csv-joda</include>
+			</includes>
+			<outputDirectory>super-csv-joda</outputDirectory>
+			<useTransitiveDependencies>false</useTransitiveDependencies>
+			<unpack>true</unpack>
+		</dependencySet>
 	</dependencySets>
 </assembly>

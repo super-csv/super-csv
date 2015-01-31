@@ -111,4 +111,28 @@ public static final CellProcessor[] PROCESSORS = new CellProcessor[] {
                                                                                    |                                                                     |                                                                             | {{{./apidocs/org/supercsv/cellprocessor/constraint/UniqueHashCode.html}UniqueHashCode}}      
 *----------------------------------------------------------------------------------*---------------------------------------------------------------------*-----------------------------------------------------------------------------*-----------------------------------------------------------------------------------------------*
 
-  	
+* Joda cell processors
+
+  In addition to the above, there are a number of useful processors for reading and writing {{{http://www.joda.org/joda-time}Joda-Time}} classes.
+  To use these, you must include <<<super-csv-joda>>> (see the {{{./downloading.html}Download}} page).
+
+*-------------------------------------------------------------------------------------------*--------------------------------------------------------------------------------------*
+ <<Reading>>                                                                                || Writing                                                                                                                                              
+*-------------------------------------------------------------------------------------------*--------------------------------------------------------------------------------------*
+  {{{./apidocs/org/supercsv/cellprocessor/joda/ParseDateTime.html}ParseDateTime}}           | {{{./apidocs/org/supercsv/cellprocessor/joda/FmtDateTime.html}FmtDateTime}}                          
+*-------------------------------------------------------------------------------------------*--------------------------------------------------------------------------------------*
+  {{{./apidocs/org/supercsv/cellprocessor/joda/ParseDateTimeZone.html}ParseDateTimeZone}}   | {{{./apidocs/org/supercsv/cellprocessor/joda/FmtDateTimeZone.html}FmtDateTimeZone}}                            
+*-------------------------------------------------------------------------------------------*--------------------------------------------------------------------------------------*
+  {{{./apidocs/org/supercsv/cellprocessor/joda/ParseDuration.html}ParseDuration}}           | {{{./apidocs/org/supercsv/cellprocessor/joda/FmtDuration.html}FmtDuration}}            
+*-------------------------------------------------------------------------------------------*--------------------------------------------------------------------------------------*
+  {{{./apidocs/org/supercsv/cellprocessor/joda/ParseInterval.html}ParseInterval}}           | {{{./apidocs/org/supercsv/cellprocessor/joda/FmtInterval.html}FmtInterval}}                                                                               
+*-------------------------------------------------------------------------------------------*--------------------------------------------------------------------------------------*
+  {{{./apidocs/org/supercsv/cellprocessor/joda/ParseLocalDate.html}ParseLocalDate}}         | {{{./apidocs/org/supercsv/cellprocessor/joda/FmtLocalDate.html}FmtLocalDate}}                                                                     
+*-------------------------------------------------------------------------------------------*--------------------------------------------------------------------------------------*
+  {{{./apidocs/org/supercsv/cellprocessor/joda/ParseLocalDateTime.html}ParseLocalDateTime}} | {{{./apidocs/org/supercsv/cellprocessor/joda/FmtLocalDateTime.html}FmtLocalDateTime}}                                                                                         
+*-------------------------------------------------------------------------------------------*--------------------------------------------------------------------------------------*
+  {{{./apidocs/org/supercsv/cellprocessor/joda/ParseLocalTime.html}ParseLocalTime}}         | {{{./apidocs/org/supercsv/cellprocessor/joda/FmtLocalTime.html}FmtLocalTime}}                                                                         
+*-------------------------------------------------------------------------------------------*--------------------------------------------------------------------------------------*
+  {{{./apidocs/org/supercsv/cellprocessor/joda/ParsePeriod.html}ParsePeriod}}               | {{{./apidocs/org/supercsv/cellprocessor/joda/FmtPeriod.html}FmtPeriod}}
+*-------------------------------------------------------------------------------------------*--------------------------------------------------------------------------------------*
+

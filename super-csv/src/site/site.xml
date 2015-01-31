@@ -16,8 +16,8 @@
 <project name="Super CSV Core">
 	<body>
 		<breadcrumbs>
-			<item name="Super CSV" href="http://supercsv.sourceforge.net/index.html" />
-			<item name="Super CSV Core" href="http://supercsv.sourceforge.net/super-csv/index.html" />
+			<item name="Super CSV" href="http://super-csv.github.io/super-csv/index.html" />
+			<item name="Super CSV Core" href="http://super-csv.github.io/super-csv/super-csv/index.html" />
 		</breadcrumbs>
         <menu ref="parent" />
         <menu ref="reports" />
