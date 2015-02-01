@@ -85,26 +85,6 @@ public abstract class AbstractCsvWriter implements ICsvWriter {
 	}
 	
 	/**
-	 * Make a string ready for writing by escaping various characters as specified by the CSV format. This method also
-	 * updates the current lineNumber as line terminators are encountered in the String to be escaped (converting all 3
-	 * variations of line terminators to the end of line symbols specified in the preferences).
-	 * 
-	 * @param csvElement
-	 *            an element of a CSV file
-	 * @return an escaped version of the element ready for writing
-	 * @deprecated this method will be removed in the next major release, in favour of supplying your own CsvEncoder via
-	 *             the CsvPreference object. If you have overridden this method, it will not delegate to the CsvEncoder
-	 *             at all.
-	 */
-	protected String escapeString(final String csvElement) {
-		// TODO move this code to writeRow() when this method is removed
-		final CsvContext context = new CsvContext(lineNumber, rowNumber, columnNumber);
-		final String escapedCsv = encoder.encode(csvElement, context, preference);
-		lineNumber = context.getLineNumber(); // line number can increment when encoding multi-line columns
-		return escapedCsv;
-	}
-	
-	/**
 	 * In order to maintain the current row and line numbers, this method <strong>must</strong> be called at the very
 	 * beginning of every write method implemented in concrete CSV writers. This will allow the correct row/line numbers
 	 * to be used in any exceptions thrown before writing occurs (e.g. during CellProcessor execution), and means that
@@ -193,7 +173,10 @@ public abstract class AbstractCsvWriter implements ICsvWriter {
 			
 			final String csvElement = columns[i];
 			if( csvElement != null ) {
-				writer.write(escapeString(csvElement)); // escaped column (a null column implies "")
+				final CsvContext context = new CsvContext(lineNumber, rowNumber, columnNumber);
+				final String escapedCsv = encoder.encode(csvElement, context, preference);
+				writer.write(escapedCsv);
+				lineNumber = context.getLineNumber(); // line number can increment when encoding multi-line columns
 			}
 			
 		}
