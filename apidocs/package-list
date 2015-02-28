@@ -1,6 +1,7 @@
 org.supercsv.cellprocessor
 org.supercsv.cellprocessor.constraint
 org.supercsv.cellprocessor.ift
+org.supercsv.cellprocessor.joda
 org.supercsv.comment
 org.supercsv.encoder
 org.supercsv.exception
