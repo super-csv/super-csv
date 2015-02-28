@@ -3,6 +3,7 @@ package org.supercsv.cellprocessor.joda;
 import org.joda.time.format.DateTimeFormatter;
 import org.supercsv.cellprocessor.CellProcessorAdaptor;
 import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.exception.SuperCsvCellProcessorException;
 import org.supercsv.util.CsvContext;
 
@@ -15,7 +16,7 @@ import org.supercsv.util.CsvContext;
  *            the Joda type that the processor returns
  */
 public abstract class AbstractJodaParsingProcessor<T> extends
-		CellProcessorAdaptor {
+		CellProcessorAdaptor implements StringCellProcessor {
 
 	private final DateTimeFormatter formatter;
 

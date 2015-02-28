@@ -19,6 +19,30 @@
 
 Release notes
 
+* 2.3.0
+
+  <02/2015>
+  
+  General housekeeping, plus a brand new Joda-Time extension packed with useful cell processors.
+  
+  <<New features>>
+  
+    * {{{https://github.com/super-csv/super-csv/issues/15}15}} - Cell Processors for Joda-Time
+  
+  <<Bug fixes>>
+
+    * {{{https://github.com/super-csv/super-csv/issues/18}18}} - Fixed locale-dependent unit test
+    
+  <<General enhancements>>
+  
+    * {{{https://github.com/super-csv/super-csv/issues/20}20}} - Memory optimization in <<<Tokenizer>>>
+    
+    * {{{https://github.com/super-csv/super-csv/issues/28}28}} - Allowed <<<validateInputNotNull()>>> to be overridden by cell processors
+    
+  <<Breaking changes>>
+
+    * {{{https://github.com/super-csv/super-csv/issues/17}17}} - Removed deprecated <<<AbstractCsvWriter.escapeString()>>> method
+
 * 2.2.1
 
   <01/2015>
