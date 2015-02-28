@@ -9,7 +9,7 @@ import org.supercsv.exception.SuperCsvCellProcessorException;
 import org.supercsv.util.CsvContext;
 
 /**
- * Abstract base class for cell processors parsing Strings as Joda types.
+ * Abstract base class for cell processors converting Joda types to Strings.
  * 
  * @since 2.3.0
  * @author James Bassett

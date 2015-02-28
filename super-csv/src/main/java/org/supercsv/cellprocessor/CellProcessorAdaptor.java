@@ -72,7 +72,7 @@ public abstract class CellProcessorAdaptor implements CellProcessor {
 	 *             if value is null
 	 * @since 2.0.0
 	 */
-	protected final void validateInputNotNull(final Object value, final CsvContext context) {
+	protected void validateInputNotNull(final Object value, final CsvContext context) {
 		if( value == null ) {
 			throw new SuperCsvCellProcessorException(
 				"this processor does not accept null input - if the column is optional then chain an Optional() processor before this one",
