@@ -37,6 +37,8 @@ Release notes
   
     * {{{https://github.com/super-csv/super-csv/issues/20}20}} - Memory optimization in <<<Tokenizer>>>
     
+    * {{{https://github.com/super-csv/super-csv/issues/28}28}} - Allowed <<<validateInputNotNull()>>> to be overridden by cell processors
+    
   <<Breaking changes>>
 
     * {{{https://github.com/super-csv/super-csv/issues/17}17}} - Removed deprecated <<<AbstractCsvWriter.escapeString()>>> method
