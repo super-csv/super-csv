@@ -149,6 +149,9 @@ public class Tokenizer extends AbstractTokenizer {
 					}
 					
 					currentRow.append(line); // update untokenized CSV row
+					
+				    if (line.length() == 0)
+                        continue;
 				}
 			}
 			

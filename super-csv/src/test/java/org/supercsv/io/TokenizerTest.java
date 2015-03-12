@@ -223,6 +223,28 @@ public class TokenizerTest {
 		assertEquals(input, tokenizer.getUntokenizedRow());
 	}
 	
+	@Test
+	public void testQuotedTextWithConsequtiveNewLines() throws Exception {
+		
+		// last field has a leading space before quote (should be preserved)
+		final String input = "one, \"multiline\n\n\ntext\"";
+		tokenizer = createTokenizer(input, NORMAL_PREFERENCE);
+		tokenizer.readColumns(columns);
+		assertEquals(2, columns.size());
+		assertEquals("one", columns.get(0));
+		assertEquals(" multiline\n\n\ntext", columns.get(1));
+		assertEquals(4, tokenizer.getLineNumber());
+		assertEquals(input, tokenizer.getUntokenizedRow());
+		
+		// same input when surrounding spaces require quotes (leading spaces trimmed)
+		tokenizer = createTokenizer(input, SPACES_NEED_QUOTES_PREFERENCE);
+		tokenizer.readColumns(columns);
+		assertTrue(columns.size() == 2);
+		assertEquals("one", columns.get(0));
+		assertEquals("multiline\n\n\ntext", columns.get(1));
+		assertEquals(input, tokenizer.getUntokenizedRow());
+	}
+	
 	/**
 	 * Tests the readColumns() method when EOF is reached within quote scope.
 	 */
