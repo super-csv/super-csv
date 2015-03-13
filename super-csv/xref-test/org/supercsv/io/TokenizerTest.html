@@ -232,289 +232,361 @@
 <a class="jxr_linenumber" name="L224" href="#L224">224</a> 	}
 <a class="jxr_linenumber" name="L225" href="#L225">225</a> 	
 <a class="jxr_linenumber" name="L226" href="#L226">226</a> 	<em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L227" href="#L227">227</a> <em class="jxr_javadoccomment">	 * Tests the readColumns() method when EOF is reached within quote scope.</em>
+<a class="jxr_linenumber" name="L227" href="#L227">227</a> <em class="jxr_javadoccomment">	 * Tests the readColumns() method with a single quoted newline.</em>
 <a class="jxr_linenumber" name="L228" href="#L228">228</a> <em class="jxr_javadoccomment">	 */</em>
 <a class="jxr_linenumber" name="L229" href="#L229">229</a> 	@Test
-<a class="jxr_linenumber" name="L230" href="#L230">230</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testQuotedFieldWithUnexpectedEOF() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L230" href="#L230">230</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testQuotedNewline() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L231" href="#L231">231</a> 		
-<a class="jxr_linenumber" name="L232" href="#L232">232</a> 		<em class="jxr_comment">// EOF reached within quote scope</em>
-<a class="jxr_linenumber" name="L233" href="#L233">233</a> 		<strong class="jxr_keyword">final</strong> String input = <span class="jxr_string">"\&quot;quoted spanning\ntwo lines with EOF reached before another quote"</span>;
-<a class="jxr_linenumber" name="L234" href="#L234">234</a> 		tokenizer = createTokenizer(input, NORMAL_PREFERENCE);
-<a class="jxr_linenumber" name="L235" href="#L235">235</a> 		<strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L236" href="#L236">236</a> 			tokenizer.readColumns(columns);
-<a class="jxr_linenumber" name="L237" href="#L237">237</a> 			fail(<span class="jxr_string">"should have thrown SuperCsvException"</span>);
-<a class="jxr_linenumber" name="L238" href="#L238">238</a> 		}
-<a class="jxr_linenumber" name="L239" href="#L239">239</a> 		<strong class="jxr_keyword">catch</strong>(SuperCsvException e) {
-<a class="jxr_linenumber" name="L240" href="#L240">240</a> 			assertEquals(<span class="jxr_string">"unexpected end of file while reading quoted column beginning on line 1 and ending on line 2"</span>,
-<a class="jxr_linenumber" name="L241" href="#L241">241</a> 				e.getMessage());
-<a class="jxr_linenumber" name="L242" href="#L242">242</a> 		}
-<a class="jxr_linenumber" name="L243" href="#L243">243</a> 	}
-<a class="jxr_linenumber" name="L244" href="#L244">244</a> 	
-<a class="jxr_linenumber" name="L245" href="#L245">245</a> 	<em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L246" href="#L246">246</a> <em class="jxr_javadoccomment">	 * Tests the readColumns() method with a leading space before the first quoted field. This is not technically valid</em>
-<a class="jxr_linenumber" name="L247" href="#L247">247</a> <em class="jxr_javadoccomment">	 * CSV, but the tokenizer is lenient enough to allow it. The leading spaces will be trimmed off when surrounding</em>
-<a class="jxr_linenumber" name="L248" href="#L248">248</a> <em class="jxr_javadoccomment">	 * spaces require quotes, otherwise they will be part of the field.</em>
+<a class="jxr_linenumber" name="L232" href="#L232">232</a> 		<strong class="jxr_keyword">final</strong> String input = <span class="jxr_string">"\&quot;\n\&quot;"</span>;
+<a class="jxr_linenumber" name="L233" href="#L233">233</a> 		tokenizer = createTokenizer(input, NORMAL_PREFERENCE);
+<a class="jxr_linenumber" name="L234" href="#L234">234</a> 		tokenizer.readColumns(columns);
+<a class="jxr_linenumber" name="L235" href="#L235">235</a> 		assertTrue(columns.size() == 1);
+<a class="jxr_linenumber" name="L236" href="#L236">236</a> 		assertEquals(<span class="jxr_string">"\n"</span>, columns.get(0));
+<a class="jxr_linenumber" name="L237" href="#L237">237</a> 		assertEquals(input, tokenizer.getUntokenizedRow());
+<a class="jxr_linenumber" name="L238" href="#L238">238</a> 		
+<a class="jxr_linenumber" name="L239" href="#L239">239</a> 		<em class="jxr_comment">// same input when surrounding spaces require quotes (results should be identical)</em>
+<a class="jxr_linenumber" name="L240" href="#L240">240</a> 		tokenizer = createTokenizer(input, SPACES_NEED_QUOTES_PREFERENCE);
+<a class="jxr_linenumber" name="L241" href="#L241">241</a> 		tokenizer.readColumns(columns);
+<a class="jxr_linenumber" name="L242" href="#L242">242</a> 		assertTrue(columns.size() == 1);
+<a class="jxr_linenumber" name="L243" href="#L243">243</a> 		assertEquals(<span class="jxr_string">"\n"</span>, columns.get(0));
+<a class="jxr_linenumber" name="L244" href="#L244">244</a> 		assertEquals(input, tokenizer.getUntokenizedRow());
+<a class="jxr_linenumber" name="L245" href="#L245">245</a> 	}
+<a class="jxr_linenumber" name="L246" href="#L246">246</a> 	
+<a class="jxr_linenumber" name="L247" href="#L247">247</a> 	<em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L248" href="#L248">248</a> <em class="jxr_javadoccomment">	 * Tests the readColumns() method with a variety of quoted newlines.</em>
 <a class="jxr_linenumber" name="L249" href="#L249">249</a> <em class="jxr_javadoccomment">	 */</em>
 <a class="jxr_linenumber" name="L250" href="#L250">250</a> 	@Test
-<a class="jxr_linenumber" name="L251" href="#L251">251</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testQuotedFirstFieldWithLeadingSpace() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L251" href="#L251">251</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testQuotedNewlines() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L252" href="#L252">252</a> 		
-<a class="jxr_linenumber" name="L253" href="#L253">253</a> 		<em class="jxr_comment">// leading spaces should be preserved</em>
-<a class="jxr_linenumber" name="L254" href="#L254">254</a> 		<strong class="jxr_keyword">final</strong> String input = <span class="jxr_string">"  \&quot;quoted with leading spaces\&quot;,two"</span>;
-<a class="jxr_linenumber" name="L255" href="#L255">255</a> 		tokenizer = createTokenizer(input, NORMAL_PREFERENCE);
-<a class="jxr_linenumber" name="L256" href="#L256">256</a> 		tokenizer.readColumns(columns);
-<a class="jxr_linenumber" name="L257" href="#L257">257</a> 		assertTrue(columns.size() == 2);
-<a class="jxr_linenumber" name="L258" href="#L258">258</a> 		assertEquals(<span class="jxr_string">"  quoted with leading spaces"</span>, columns.get(0));
-<a class="jxr_linenumber" name="L259" href="#L259">259</a> 		assertEquals(<span class="jxr_string">"two"</span>, columns.get(1));
+<a class="jxr_linenumber" name="L253" href="#L253">253</a> 		<strong class="jxr_keyword">final</strong> String input = <span class="jxr_string">"\&quot;one line\&quot;,\&quot;two\nlines\&quot;,\&quot;three\nlines\n!\&quot;"</span>;
+<a class="jxr_linenumber" name="L254" href="#L254">254</a> 		tokenizer = createTokenizer(input, NORMAL_PREFERENCE);
+<a class="jxr_linenumber" name="L255" href="#L255">255</a> 		tokenizer.readColumns(columns);
+<a class="jxr_linenumber" name="L256" href="#L256">256</a> 		assertTrue(columns.size() == 3);
+<a class="jxr_linenumber" name="L257" href="#L257">257</a> 		assertEquals(<span class="jxr_string">"one line"</span>, columns.get(0));
+<a class="jxr_linenumber" name="L258" href="#L258">258</a> 		assertEquals(<span class="jxr_string">"two\nlines"</span>, columns.get(1));
+<a class="jxr_linenumber" name="L259" href="#L259">259</a> 		assertEquals(<span class="jxr_string">"three\nlines\n!"</span>, columns.get(2));
 <a class="jxr_linenumber" name="L260" href="#L260">260</a> 		assertEquals(input, tokenizer.getUntokenizedRow());
 <a class="jxr_linenumber" name="L261" href="#L261">261</a> 		
-<a class="jxr_linenumber" name="L262" href="#L262">262</a> 		<em class="jxr_comment">// same input when surrounding spaces require quotes (leading spaces trimmed)</em>
+<a class="jxr_linenumber" name="L262" href="#L262">262</a> 		<em class="jxr_comment">// same input when surrounding spaces require quotes (results should be identical)</em>
 <a class="jxr_linenumber" name="L263" href="#L263">263</a> 		tokenizer = createTokenizer(input, SPACES_NEED_QUOTES_PREFERENCE);
 <a class="jxr_linenumber" name="L264" href="#L264">264</a> 		tokenizer.readColumns(columns);
-<a class="jxr_linenumber" name="L265" href="#L265">265</a> 		assertTrue(columns.size() == 2);
-<a class="jxr_linenumber" name="L266" href="#L266">266</a> 		assertEquals(<span class="jxr_string">"quoted with leading spaces"</span>, columns.get(0));
-<a class="jxr_linenumber" name="L267" href="#L267">267</a> 		assertEquals(<span class="jxr_string">"two"</span>, columns.get(1));
-<a class="jxr_linenumber" name="L268" href="#L268">268</a> 		assertEquals(input, tokenizer.getUntokenizedRow());
-<a class="jxr_linenumber" name="L269" href="#L269">269</a> 	}
-<a class="jxr_linenumber" name="L270" href="#L270">270</a> 	
-<a class="jxr_linenumber" name="L271" href="#L271">271</a> 	<em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L272" href="#L272">272</a> <em class="jxr_javadoccomment">	 * Tests the readColumns() method with a leading space before the last quoted field. This is not technically valid</em>
-<a class="jxr_linenumber" name="L273" href="#L273">273</a> <em class="jxr_javadoccomment">	 * CSV, but the tokenizer is lenient enough to allow it. The leading spaces will be trimmed off when surrounding</em>
-<a class="jxr_linenumber" name="L274" href="#L274">274</a> <em class="jxr_javadoccomment">	 * spaces require quotes, otherwise they will be part of the field.</em>
+<a class="jxr_linenumber" name="L265" href="#L265">265</a> 		assertTrue(columns.size() == 3);
+<a class="jxr_linenumber" name="L266" href="#L266">266</a> 		assertEquals(<span class="jxr_string">"one line"</span>, columns.get(0));
+<a class="jxr_linenumber" name="L267" href="#L267">267</a> 		assertEquals(<span class="jxr_string">"two\nlines"</span>, columns.get(1));
+<a class="jxr_linenumber" name="L268" href="#L268">268</a> 		assertEquals(<span class="jxr_string">"three\nlines\n!"</span>, columns.get(2));
+<a class="jxr_linenumber" name="L269" href="#L269">269</a> 		assertEquals(input, tokenizer.getUntokenizedRow());
+<a class="jxr_linenumber" name="L270" href="#L270">270</a> 	}
+<a class="jxr_linenumber" name="L271" href="#L271">271</a> 	
+<a class="jxr_linenumber" name="L272" href="#L272">272</a> 	
+<a class="jxr_linenumber" name="L273" href="#L273">273</a> 	<em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L274" href="#L274">274</a> <em class="jxr_javadoccomment">	 * Tests the readColumns() method when a quoted field has consecutive newlines.</em>
 <a class="jxr_linenumber" name="L275" href="#L275">275</a> <em class="jxr_javadoccomment">	 */</em>
 <a class="jxr_linenumber" name="L276" href="#L276">276</a> 	@Test
-<a class="jxr_linenumber" name="L277" href="#L277">277</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testQuotedLastFieldWithLeadingSpace() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L277" href="#L277">277</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testQuotedTextWithConsecutiveNewLines() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L278" href="#L278">278</a> 		
-<a class="jxr_linenumber" name="L279" href="#L279">279</a> 		<em class="jxr_comment">// last field has a leading space before quote (should be preserved)</em>
-<a class="jxr_linenumber" name="L280" href="#L280">280</a> 		<strong class="jxr_keyword">final</strong> String input = <span class="jxr_string">"one,two,  \&quot;quoted with leading spaces\&quot;"</span>;
+<a class="jxr_linenumber" name="L279" href="#L279">279</a> 		<em class="jxr_comment">// second field has consecutive newlines</em>
+<a class="jxr_linenumber" name="L280" href="#L280">280</a> 		<strong class="jxr_keyword">final</strong> String input = <span class="jxr_string">"one, \&quot;multiline\n\n\ntext\&quot;"</span>;
 <a class="jxr_linenumber" name="L281" href="#L281">281</a> 		tokenizer = createTokenizer(input, NORMAL_PREFERENCE);
 <a class="jxr_linenumber" name="L282" href="#L282">282</a> 		tokenizer.readColumns(columns);
-<a class="jxr_linenumber" name="L283" href="#L283">283</a> 		assertTrue(columns.size() == 3);
+<a class="jxr_linenumber" name="L283" href="#L283">283</a> 		assertEquals(2, columns.size());
 <a class="jxr_linenumber" name="L284" href="#L284">284</a> 		assertEquals(<span class="jxr_string">"one"</span>, columns.get(0));
-<a class="jxr_linenumber" name="L285" href="#L285">285</a> 		assertEquals(<span class="jxr_string">"two"</span>, columns.get(1));
-<a class="jxr_linenumber" name="L286" href="#L286">286</a> 		assertEquals(<span class="jxr_string">"  quoted with leading spaces"</span>, columns.get(2));
+<a class="jxr_linenumber" name="L285" href="#L285">285</a> 		assertEquals(<span class="jxr_string">" multiline\n\n\ntext"</span>, columns.get(1));
+<a class="jxr_linenumber" name="L286" href="#L286">286</a> 		assertEquals(4, tokenizer.getLineNumber());
 <a class="jxr_linenumber" name="L287" href="#L287">287</a> 		assertEquals(input, tokenizer.getUntokenizedRow());
 <a class="jxr_linenumber" name="L288" href="#L288">288</a> 		
-<a class="jxr_linenumber" name="L289" href="#L289">289</a> 		<em class="jxr_comment">// leading space should be trimmed off</em>
+<a class="jxr_linenumber" name="L289" href="#L289">289</a> 		<em class="jxr_comment">// should have exactly the same result when surrounding spaces need quotes</em>
 <a class="jxr_linenumber" name="L290" href="#L290">290</a> 		tokenizer = createTokenizer(input, SPACES_NEED_QUOTES_PREFERENCE);
 <a class="jxr_linenumber" name="L291" href="#L291">291</a> 		tokenizer.readColumns(columns);
-<a class="jxr_linenumber" name="L292" href="#L292">292</a> 		assertTrue(columns.size() == 3);
+<a class="jxr_linenumber" name="L292" href="#L292">292</a> 		assertTrue(columns.size() == 2);
 <a class="jxr_linenumber" name="L293" href="#L293">293</a> 		assertEquals(<span class="jxr_string">"one"</span>, columns.get(0));
-<a class="jxr_linenumber" name="L294" href="#L294">294</a> 		assertEquals(<span class="jxr_string">"two"</span>, columns.get(1));
-<a class="jxr_linenumber" name="L295" href="#L295">295</a> 		assertEquals(<span class="jxr_string">"quoted with leading spaces"</span>, columns.get(2));
-<a class="jxr_linenumber" name="L296" href="#L296">296</a> 		assertEquals(input, tokenizer.getUntokenizedRow());
-<a class="jxr_linenumber" name="L297" href="#L297">297</a> 	}
-<a class="jxr_linenumber" name="L298" href="#L298">298</a> 	
-<a class="jxr_linenumber" name="L299" href="#L299">299</a> 	<em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L300" href="#L300">300</a> <em class="jxr_javadoccomment">	 * Tests the readColumns() method with a trailing space after the first quoted field. This is not technically valid</em>
-<a class="jxr_linenumber" name="L301" href="#L301">301</a> <em class="jxr_javadoccomment">	 * CSV, but the tokenizer is lenient enough to allow it. The trailing spaces will be trimmed off when surrounding</em>
-<a class="jxr_linenumber" name="L302" href="#L302">302</a> <em class="jxr_javadoccomment">	 * spaces require quotes, otherwise they will be part of the field.</em>
-<a class="jxr_linenumber" name="L303" href="#L303">303</a> <em class="jxr_javadoccomment">	 */</em>
-<a class="jxr_linenumber" name="L304" href="#L304">304</a> 	@Test
-<a class="jxr_linenumber" name="L305" href="#L305">305</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testQuotedFirstFieldWithTrailingSpace() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L306" href="#L306">306</a> 		
-<a class="jxr_linenumber" name="L307" href="#L307">307</a> 		<em class="jxr_comment">// first field has a leading space before quote (should be preserved)</em>
-<a class="jxr_linenumber" name="L308" href="#L308">308</a> 		<strong class="jxr_keyword">final</strong> String input = <span class="jxr_string">"\&quot;quoted with trailing spaces\&quot;  ,two"</span>;
-<a class="jxr_linenumber" name="L309" href="#L309">309</a> 		tokenizer = createTokenizer(input, NORMAL_PREFERENCE);
-<a class="jxr_linenumber" name="L310" href="#L310">310</a> 		tokenizer.readColumns(columns);
-<a class="jxr_linenumber" name="L311" href="#L311">311</a> 		assertTrue(columns.size() == 2);
-<a class="jxr_linenumber" name="L312" href="#L312">312</a> 		assertEquals(<span class="jxr_string">"quoted with trailing spaces  "</span>, columns.get(0));
-<a class="jxr_linenumber" name="L313" href="#L313">313</a> 		assertEquals(<span class="jxr_string">"two"</span>, columns.get(1));
-<a class="jxr_linenumber" name="L314" href="#L314">314</a> 		assertEquals(input, tokenizer.getUntokenizedRow());
-<a class="jxr_linenumber" name="L315" href="#L315">315</a> 		
-<a class="jxr_linenumber" name="L316" href="#L316">316</a> 		<em class="jxr_comment">// trailing spaces should be trimmed</em>
-<a class="jxr_linenumber" name="L317" href="#L317">317</a> 		tokenizer = createTokenizer(input, SPACES_NEED_QUOTES_PREFERENCE);
-<a class="jxr_linenumber" name="L318" href="#L318">318</a> 		tokenizer.readColumns(columns);
-<a class="jxr_linenumber" name="L319" href="#L319">319</a> 		assertTrue(columns.size() == 2);
-<a class="jxr_linenumber" name="L320" href="#L320">320</a> 		assertEquals(<span class="jxr_string">"quoted with trailing spaces"</span>, columns.get(0));
-<a class="jxr_linenumber" name="L321" href="#L321">321</a> 		assertEquals(<span class="jxr_string">"two"</span>, columns.get(1));
-<a class="jxr_linenumber" name="L322" href="#L322">322</a> 		assertEquals(input, tokenizer.getUntokenizedRow());
-<a class="jxr_linenumber" name="L323" href="#L323">323</a> 	}
-<a class="jxr_linenumber" name="L324" href="#L324">324</a> 	
-<a class="jxr_linenumber" name="L325" href="#L325">325</a> 	<em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L326" href="#L326">326</a> <em class="jxr_javadoccomment">	 * Tests the readColumns() method with a trailing space after the last quoted field. This is not technically valid</em>
-<a class="jxr_linenumber" name="L327" href="#L327">327</a> <em class="jxr_javadoccomment">	 * CSV, but the tokenizer is lenient enough to allow it. The trailing spaces will be trimmed off when surrounding</em>
-<a class="jxr_linenumber" name="L328" href="#L328">328</a> <em class="jxr_javadoccomment">	 * spaces require quotes, otherwise they will be part of the field.</em>
-<a class="jxr_linenumber" name="L329" href="#L329">329</a> <em class="jxr_javadoccomment">	 */</em>
-<a class="jxr_linenumber" name="L330" href="#L330">330</a> 	@Test
-<a class="jxr_linenumber" name="L331" href="#L331">331</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testQuotedLastFieldWithTrailingSpace() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L332" href="#L332">332</a> 		
-<a class="jxr_linenumber" name="L333" href="#L333">333</a> 		<em class="jxr_comment">// last field has a leading space before quote (should be preserved)</em>
-<a class="jxr_linenumber" name="L334" href="#L334">334</a> 		<strong class="jxr_keyword">final</strong> String input = <span class="jxr_string">"one,two,\&quot;quoted with trailing spaces\&quot;  "</span>;
-<a class="jxr_linenumber" name="L335" href="#L335">335</a> 		tokenizer = createTokenizer(input, NORMAL_PREFERENCE);
+<a class="jxr_linenumber" name="L294" href="#L294">294</a> 		assertEquals(<span class="jxr_string">"multiline\n\n\ntext"</span>, columns.get(1));
+<a class="jxr_linenumber" name="L295" href="#L295">295</a> 		assertEquals(input, tokenizer.getUntokenizedRow());
+<a class="jxr_linenumber" name="L296" href="#L296">296</a> 	}
+<a class="jxr_linenumber" name="L297" href="#L297">297</a> 	
+<a class="jxr_linenumber" name="L298" href="#L298">298</a> 	<em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L299" href="#L299">299</a> <em class="jxr_javadoccomment">	 * Tests the readColumns() method when EOF is reached within quote scope.</em>
+<a class="jxr_linenumber" name="L300" href="#L300">300</a> <em class="jxr_javadoccomment">	 */</em>
+<a class="jxr_linenumber" name="L301" href="#L301">301</a> 	@Test
+<a class="jxr_linenumber" name="L302" href="#L302">302</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testQuotedFieldWithUnexpectedEOF() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L303" href="#L303">303</a> 		
+<a class="jxr_linenumber" name="L304" href="#L304">304</a> 		<em class="jxr_comment">// EOF reached within quote scope</em>
+<a class="jxr_linenumber" name="L305" href="#L305">305</a> 		<strong class="jxr_keyword">final</strong> String input = <span class="jxr_string">"\&quot;quoted spanning\ntwo lines with EOF reached before another quote"</span>;
+<a class="jxr_linenumber" name="L306" href="#L306">306</a> 		tokenizer = createTokenizer(input, NORMAL_PREFERENCE);
+<a class="jxr_linenumber" name="L307" href="#L307">307</a> 		<strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L308" href="#L308">308</a> 			tokenizer.readColumns(columns);
+<a class="jxr_linenumber" name="L309" href="#L309">309</a> 			fail(<span class="jxr_string">"should have thrown SuperCsvException"</span>);
+<a class="jxr_linenumber" name="L310" href="#L310">310</a> 		}
+<a class="jxr_linenumber" name="L311" href="#L311">311</a> 		<strong class="jxr_keyword">catch</strong>(SuperCsvException e) {
+<a class="jxr_linenumber" name="L312" href="#L312">312</a> 			assertEquals(<span class="jxr_string">"unexpected end of file while reading quoted column beginning on line 1 and ending on line 2"</span>,
+<a class="jxr_linenumber" name="L313" href="#L313">313</a> 				e.getMessage());
+<a class="jxr_linenumber" name="L314" href="#L314">314</a> 		}
+<a class="jxr_linenumber" name="L315" href="#L315">315</a> 	}
+<a class="jxr_linenumber" name="L316" href="#L316">316</a> 	
+<a class="jxr_linenumber" name="L317" href="#L317">317</a> 	<em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L318" href="#L318">318</a> <em class="jxr_javadoccomment">	 * Tests the readColumns() method with a leading space before the first quoted field. This is not technically valid</em>
+<a class="jxr_linenumber" name="L319" href="#L319">319</a> <em class="jxr_javadoccomment">	 * CSV, but the tokenizer is lenient enough to allow it. The leading spaces will be trimmed off when surrounding</em>
+<a class="jxr_linenumber" name="L320" href="#L320">320</a> <em class="jxr_javadoccomment">	 * spaces require quotes, otherwise they will be part of the field.</em>
+<a class="jxr_linenumber" name="L321" href="#L321">321</a> <em class="jxr_javadoccomment">	 */</em>
+<a class="jxr_linenumber" name="L322" href="#L322">322</a> 	@Test
+<a class="jxr_linenumber" name="L323" href="#L323">323</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testQuotedFirstFieldWithLeadingSpace() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L324" href="#L324">324</a> 		
+<a class="jxr_linenumber" name="L325" href="#L325">325</a> 		<em class="jxr_comment">// leading spaces should be preserved</em>
+<a class="jxr_linenumber" name="L326" href="#L326">326</a> 		<strong class="jxr_keyword">final</strong> String input = <span class="jxr_string">"  \&quot;quoted with leading spaces\&quot;,two"</span>;
+<a class="jxr_linenumber" name="L327" href="#L327">327</a> 		tokenizer = createTokenizer(input, NORMAL_PREFERENCE);
+<a class="jxr_linenumber" name="L328" href="#L328">328</a> 		tokenizer.readColumns(columns);
+<a class="jxr_linenumber" name="L329" href="#L329">329</a> 		assertTrue(columns.size() == 2);
+<a class="jxr_linenumber" name="L330" href="#L330">330</a> 		assertEquals(<span class="jxr_string">"  quoted with leading spaces"</span>, columns.get(0));
+<a class="jxr_linenumber" name="L331" href="#L331">331</a> 		assertEquals(<span class="jxr_string">"two"</span>, columns.get(1));
+<a class="jxr_linenumber" name="L332" href="#L332">332</a> 		assertEquals(input, tokenizer.getUntokenizedRow());
+<a class="jxr_linenumber" name="L333" href="#L333">333</a> 		
+<a class="jxr_linenumber" name="L334" href="#L334">334</a> 		<em class="jxr_comment">// same input when surrounding spaces require quotes (leading spaces trimmed)</em>
+<a class="jxr_linenumber" name="L335" href="#L335">335</a> 		tokenizer = createTokenizer(input, SPACES_NEED_QUOTES_PREFERENCE);
 <a class="jxr_linenumber" name="L336" href="#L336">336</a> 		tokenizer.readColumns(columns);
-<a class="jxr_linenumber" name="L337" href="#L337">337</a> 		assertTrue(columns.size() == 3);
-<a class="jxr_linenumber" name="L338" href="#L338">338</a> 		assertEquals(<span class="jxr_string">"one"</span>, columns.get(0));
+<a class="jxr_linenumber" name="L337" href="#L337">337</a> 		assertTrue(columns.size() == 2);
+<a class="jxr_linenumber" name="L338" href="#L338">338</a> 		assertEquals(<span class="jxr_string">"quoted with leading spaces"</span>, columns.get(0));
 <a class="jxr_linenumber" name="L339" href="#L339">339</a> 		assertEquals(<span class="jxr_string">"two"</span>, columns.get(1));
-<a class="jxr_linenumber" name="L340" href="#L340">340</a> 		assertEquals(<span class="jxr_string">"quoted with trailing spaces  "</span>, columns.get(2));
-<a class="jxr_linenumber" name="L341" href="#L341">341</a> 		assertEquals(input, tokenizer.getUntokenizedRow());
-<a class="jxr_linenumber" name="L342" href="#L342">342</a> 		
-<a class="jxr_linenumber" name="L343" href="#L343">343</a> 		<em class="jxr_comment">// trailing spaces should be trimmed off</em>
-<a class="jxr_linenumber" name="L344" href="#L344">344</a> 		tokenizer = createTokenizer(input, SPACES_NEED_QUOTES_PREFERENCE);
-<a class="jxr_linenumber" name="L345" href="#L345">345</a> 		tokenizer.readColumns(columns);
-<a class="jxr_linenumber" name="L346" href="#L346">346</a> 		assertTrue(columns.size() == 3);
-<a class="jxr_linenumber" name="L347" href="#L347">347</a> 		assertEquals(<span class="jxr_string">"one"</span>, columns.get(0));
-<a class="jxr_linenumber" name="L348" href="#L348">348</a> 		assertEquals(<span class="jxr_string">"two"</span>, columns.get(1));
-<a class="jxr_linenumber" name="L349" href="#L349">349</a> 		assertEquals(<span class="jxr_string">"quoted with trailing spaces"</span>, columns.get(2));
-<a class="jxr_linenumber" name="L350" href="#L350">350</a> 		assertEquals(input, tokenizer.getUntokenizedRow());
-<a class="jxr_linenumber" name="L351" href="#L351">351</a> 	}
-<a class="jxr_linenumber" name="L352" href="#L352">352</a> 	
-<a class="jxr_linenumber" name="L353" href="#L353">353</a> 	<em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L354" href="#L354">354</a> <em class="jxr_javadoccomment">	 * Tests the readColumns() method with a variety of quoted spaces.</em>
-<a class="jxr_linenumber" name="L355" href="#L355">355</a> <em class="jxr_javadoccomment">	 */</em>
-<a class="jxr_linenumber" name="L356" href="#L356">356</a> 	@Test
-<a class="jxr_linenumber" name="L357" href="#L357">357</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testQuotedSpaces() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L358" href="#L358">358</a> 		
-<a class="jxr_linenumber" name="L359" href="#L359">359</a> 		<strong class="jxr_keyword">final</strong> String input = <span class="jxr_string">"\&quot; one \&quot;,\&quot;  two  \&quot;,\&quot;   three   \&quot;"</span>;
-<a class="jxr_linenumber" name="L360" href="#L360">360</a> 		tokenizer = createTokenizer(input, NORMAL_PREFERENCE);
-<a class="jxr_linenumber" name="L361" href="#L361">361</a> 		tokenizer.readColumns(columns);
-<a class="jxr_linenumber" name="L362" href="#L362">362</a> 		assertTrue(columns.size() == 3);
-<a class="jxr_linenumber" name="L363" href="#L363">363</a> 		assertEquals(<span class="jxr_string">" one "</span>, columns.get(0));
-<a class="jxr_linenumber" name="L364" href="#L364">364</a> 		assertEquals(<span class="jxr_string">"  two  "</span>, columns.get(1));
-<a class="jxr_linenumber" name="L365" href="#L365">365</a> 		assertEquals(<span class="jxr_string">"   three   "</span>, columns.get(2));
-<a class="jxr_linenumber" name="L366" href="#L366">366</a> 		assertEquals(input, tokenizer.getUntokenizedRow());
-<a class="jxr_linenumber" name="L367" href="#L367">367</a> 		
-<a class="jxr_linenumber" name="L368" href="#L368">368</a> 		<em class="jxr_comment">// same input when surrounding spaces require quotes (results should be identical)</em>
-<a class="jxr_linenumber" name="L369" href="#L369">369</a> 		tokenizer = createTokenizer(input, SPACES_NEED_QUOTES_PREFERENCE);
-<a class="jxr_linenumber" name="L370" href="#L370">370</a> 		tokenizer.readColumns(columns);
-<a class="jxr_linenumber" name="L371" href="#L371">371</a> 		assertTrue(columns.size() == 3);
-<a class="jxr_linenumber" name="L372" href="#L372">372</a> 		assertEquals(<span class="jxr_string">" one "</span>, columns.get(0));
-<a class="jxr_linenumber" name="L373" href="#L373">373</a> 		assertEquals(<span class="jxr_string">"  two  "</span>, columns.get(1));
-<a class="jxr_linenumber" name="L374" href="#L374">374</a> 		assertEquals(<span class="jxr_string">"   three   "</span>, columns.get(2));
-<a class="jxr_linenumber" name="L375" href="#L375">375</a> 		assertEquals(input, tokenizer.getUntokenizedRow());
-<a class="jxr_linenumber" name="L376" href="#L376">376</a> 	}
-<a class="jxr_linenumber" name="L377" href="#L377">377</a> 	
-<a class="jxr_linenumber" name="L378" href="#L378">378</a> 	<em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L379" href="#L379">379</a> <em class="jxr_javadoccomment">	 * Tests the readColumns() method with a variety of unquoted spaces.</em>
-<a class="jxr_linenumber" name="L380" href="#L380">380</a> <em class="jxr_javadoccomment">	 */</em>
-<a class="jxr_linenumber" name="L381" href="#L381">381</a> 	@Test
-<a class="jxr_linenumber" name="L382" href="#L382">382</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testSpaces() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L383" href="#L383">383</a> 		
-<a class="jxr_linenumber" name="L384" href="#L384">384</a> 		<strong class="jxr_keyword">final</strong> String input = <span class="jxr_string">" one ,  two  ,   three   "</span>;
-<a class="jxr_linenumber" name="L385" href="#L385">385</a> 		tokenizer = createTokenizer(input, NORMAL_PREFERENCE);
-<a class="jxr_linenumber" name="L386" href="#L386">386</a> 		tokenizer.readColumns(columns);
-<a class="jxr_linenumber" name="L387" href="#L387">387</a> 		assertTrue(columns.size() == 3);
-<a class="jxr_linenumber" name="L388" href="#L388">388</a> 		assertEquals(<span class="jxr_string">" one "</span>, columns.get(0));
-<a class="jxr_linenumber" name="L389" href="#L389">389</a> 		assertEquals(<span class="jxr_string">"  two  "</span>, columns.get(1));
-<a class="jxr_linenumber" name="L390" href="#L390">390</a> 		assertEquals(<span class="jxr_string">"   three   "</span>, columns.get(2));
-<a class="jxr_linenumber" name="L391" href="#L391">391</a> 		assertEquals(input, tokenizer.getUntokenizedRow());
-<a class="jxr_linenumber" name="L392" href="#L392">392</a> 		
-<a class="jxr_linenumber" name="L393" href="#L393">393</a> 		<em class="jxr_comment">// same input when surrounding spaces require quotes</em>
-<a class="jxr_linenumber" name="L394" href="#L394">394</a> 		tokenizer = createTokenizer(input, SPACES_NEED_QUOTES_PREFERENCE);
-<a class="jxr_linenumber" name="L395" href="#L395">395</a> 		tokenizer.readColumns(columns);
-<a class="jxr_linenumber" name="L396" href="#L396">396</a> 		assertTrue(columns.size() == 3);
-<a class="jxr_linenumber" name="L397" href="#L397">397</a> 		assertEquals(<span class="jxr_string">"one"</span>, columns.get(0));
-<a class="jxr_linenumber" name="L398" href="#L398">398</a> 		assertEquals(<span class="jxr_string">"two"</span>, columns.get(1));
-<a class="jxr_linenumber" name="L399" href="#L399">399</a> 		assertEquals(<span class="jxr_string">"three"</span>, columns.get(2));
-<a class="jxr_linenumber" name="L400" href="#L400">400</a> 		assertEquals(input, tokenizer.getUntokenizedRow());
-<a class="jxr_linenumber" name="L401" href="#L401">401</a> 	}
-<a class="jxr_linenumber" name="L402" href="#L402">402</a> 	
-<a class="jxr_linenumber" name="L403" href="#L403">403</a> 	<em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L404" href="#L404">404</a> <em class="jxr_javadoccomment">	 * Tests the readColumns() method with a variety of spaces and tabs.</em>
-<a class="jxr_linenumber" name="L405" href="#L405">405</a> <em class="jxr_javadoccomment">	 */</em>
-<a class="jxr_linenumber" name="L406" href="#L406">406</a> 	@Test
-<a class="jxr_linenumber" name="L407" href="#L407">407</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testSpacesAndTabs() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L408" href="#L408">408</a> 		
-<a class="jxr_linenumber" name="L409" href="#L409">409</a> 		<em class="jxr_comment">// tabs should never be trimmed</em>
-<a class="jxr_linenumber" name="L410" href="#L410">410</a> 		<strong class="jxr_keyword">final</strong> String input = <span class="jxr_string">"\t, \tone\t ,  \ttwo\t  ,   \tthree\t   "</span>;
-<a class="jxr_linenumber" name="L411" href="#L411">411</a> 		tokenizer = createTokenizer(input, NORMAL_PREFERENCE);
-<a class="jxr_linenumber" name="L412" href="#L412">412</a> 		tokenizer.readColumns(columns);
-<a class="jxr_linenumber" name="L413" href="#L413">413</a> 		assertTrue(columns.size() == 4);
-<a class="jxr_linenumber" name="L414" href="#L414">414</a> 		assertEquals(<span class="jxr_string">"\t"</span>, columns.get(0));
-<a class="jxr_linenumber" name="L415" href="#L415">415</a> 		assertEquals(<span class="jxr_string">" \tone\t "</span>, columns.get(1));
-<a class="jxr_linenumber" name="L416" href="#L416">416</a> 		assertEquals(<span class="jxr_string">"  \ttwo\t  "</span>, columns.get(2));
-<a class="jxr_linenumber" name="L417" href="#L417">417</a> 		assertEquals(<span class="jxr_string">"   \tthree\t   "</span>, columns.get(3));
-<a class="jxr_linenumber" name="L418" href="#L418">418</a> 		assertEquals(input, tokenizer.getUntokenizedRow());
-<a class="jxr_linenumber" name="L419" href="#L419">419</a> 		
-<a class="jxr_linenumber" name="L420" href="#L420">420</a> 		<em class="jxr_comment">// same input when surrounding spaces require quotes</em>
-<a class="jxr_linenumber" name="L421" href="#L421">421</a> 		tokenizer = createTokenizer(input, SPACES_NEED_QUOTES_PREFERENCE);
-<a class="jxr_linenumber" name="L422" href="#L422">422</a> 		tokenizer.readColumns(columns);
-<a class="jxr_linenumber" name="L423" href="#L423">423</a> 		assertTrue(columns.size() == 4);
-<a class="jxr_linenumber" name="L424" href="#L424">424</a> 		assertEquals(<span class="jxr_string">"\t"</span>, columns.get(0));
-<a class="jxr_linenumber" name="L425" href="#L425">425</a> 		assertEquals(<span class="jxr_string">"\tone\t"</span>, columns.get(1));
-<a class="jxr_linenumber" name="L426" href="#L426">426</a> 		assertEquals(<span class="jxr_string">"\ttwo\t"</span>, columns.get(2));
-<a class="jxr_linenumber" name="L427" href="#L427">427</a> 		assertEquals(<span class="jxr_string">"\tthree\t"</span>, columns.get(3));
-<a class="jxr_linenumber" name="L428" href="#L428">428</a> 		assertEquals(input, tokenizer.getUntokenizedRow());
-<a class="jxr_linenumber" name="L429" href="#L429">429</a> 	}
-<a class="jxr_linenumber" name="L430" href="#L430">430</a> 	
-<a class="jxr_linenumber" name="L431" href="#L431">431</a> 	<em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L432" href="#L432">432</a> <em class="jxr_javadoccomment">	 * Tests the readColumns() method with spaces between words.</em>
-<a class="jxr_linenumber" name="L433" href="#L433">433</a> <em class="jxr_javadoccomment">	 */</em>
-<a class="jxr_linenumber" name="L434" href="#L434">434</a> 	@Test
-<a class="jxr_linenumber" name="L435" href="#L435">435</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testSpacesBetweenWords() <strong class="jxr_keyword">throws</strong> Exception {
-<a class="jxr_linenumber" name="L436" href="#L436">436</a> 		
-<a class="jxr_linenumber" name="L437" href="#L437">437</a> 		<strong class="jxr_keyword">final</strong> String input = <span class="jxr_string">" one partridge ,  two turtle doves  ,   three french hens   "</span>;
-<a class="jxr_linenumber" name="L438" href="#L438">438</a> 		tokenizer = createTokenizer(input, NORMAL_PREFERENCE);
-<a class="jxr_linenumber" name="L439" href="#L439">439</a> 		tokenizer.readColumns(columns);
-<a class="jxr_linenumber" name="L440" href="#L440">440</a> 		assertTrue(columns.size() == 3);
-<a class="jxr_linenumber" name="L441" href="#L441">441</a> 		assertEquals(<span class="jxr_string">" one partridge "</span>, columns.get(0));
-<a class="jxr_linenumber" name="L442" href="#L442">442</a> 		assertEquals(<span class="jxr_string">"  two turtle doves  "</span>, columns.get(1));
-<a class="jxr_linenumber" name="L443" href="#L443">443</a> 		assertEquals(<span class="jxr_string">"   three french hens   "</span>, columns.get(2));
-<a class="jxr_linenumber" name="L444" href="#L444">444</a> 		assertEquals(input, tokenizer.getUntokenizedRow());
-<a class="jxr_linenumber" name="L445" href="#L445">445</a> 		
-<a class="jxr_linenumber" name="L446" href="#L446">446</a> 		<em class="jxr_comment">// same input when surrounding spaces require quotes</em>
-<a class="jxr_linenumber" name="L447" href="#L447">447</a> 		tokenizer = createTokenizer(input, SPACES_NEED_QUOTES_PREFERENCE);
-<a class="jxr_linenumber" name="L448" href="#L448">448</a> 		tokenizer.readColumns(columns);
-<a class="jxr_linenumber" name="L449" href="#L449">449</a> 		assertTrue(columns.size() == 3);
-<a class="jxr_linenumber" name="L450" href="#L450">450</a> 		assertEquals(<span class="jxr_string">"one partridge"</span>, columns.get(0));
-<a class="jxr_linenumber" name="L451" href="#L451">451</a> 		assertEquals(<span class="jxr_string">"two turtle doves"</span>, columns.get(1));
-<a class="jxr_linenumber" name="L452" href="#L452">452</a> 		assertEquals(<span class="jxr_string">"three french hens"</span>, columns.get(2));
-<a class="jxr_linenumber" name="L453" href="#L453">453</a> 		assertEquals(input, tokenizer.getUntokenizedRow());
-<a class="jxr_linenumber" name="L454" href="#L454">454</a> 	}
-<a class="jxr_linenumber" name="L455" href="#L455">455</a> 	
-<a class="jxr_linenumber" name="L456" href="#L456">456</a> 	<em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L457" href="#L457">457</a> <em class="jxr_javadoccomment">	 * Tests that the CommentStartsWith comment matcher works (comments are skipped).</em>
-<a class="jxr_linenumber" name="L458" href="#L458">458</a> <em class="jxr_javadoccomment">	 */</em>
-<a class="jxr_linenumber" name="L459" href="#L459">459</a> 	@Test
-<a class="jxr_linenumber" name="L460" href="#L460">460</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testSkipCommentsStartsWith() <strong class="jxr_keyword">throws</strong> IOException {
-<a class="jxr_linenumber" name="L461" href="#L461">461</a> 		
-<a class="jxr_linenumber" name="L462" href="#L462">462</a> 		<strong class="jxr_keyword">final</strong> CsvPreference commentsStartWithPrefs = <strong class="jxr_keyword">new</strong> CsvPreference.Builder(EXCEL_PREFERENCE).skipComments(
-<a class="jxr_linenumber" name="L463" href="#L463">463</a> 			<strong class="jxr_keyword">new</strong> CommentStartsWith(<span class="jxr_string">"#"</span>)).build();
+<a class="jxr_linenumber" name="L340" href="#L340">340</a> 		assertEquals(input, tokenizer.getUntokenizedRow());
+<a class="jxr_linenumber" name="L341" href="#L341">341</a> 	}
+<a class="jxr_linenumber" name="L342" href="#L342">342</a> 	
+<a class="jxr_linenumber" name="L343" href="#L343">343</a> 	<em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L344" href="#L344">344</a> <em class="jxr_javadoccomment">	 * Tests the readColumns() method with a leading space before the last quoted field. This is not technically valid</em>
+<a class="jxr_linenumber" name="L345" href="#L345">345</a> <em class="jxr_javadoccomment">	 * CSV, but the tokenizer is lenient enough to allow it. The leading spaces will be trimmed off when surrounding</em>
+<a class="jxr_linenumber" name="L346" href="#L346">346</a> <em class="jxr_javadoccomment">	 * spaces require quotes, otherwise they will be part of the field.</em>
+<a class="jxr_linenumber" name="L347" href="#L347">347</a> <em class="jxr_javadoccomment">	 */</em>
+<a class="jxr_linenumber" name="L348" href="#L348">348</a> 	@Test
+<a class="jxr_linenumber" name="L349" href="#L349">349</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testQuotedLastFieldWithLeadingSpace() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L350" href="#L350">350</a> 		
+<a class="jxr_linenumber" name="L351" href="#L351">351</a> 		<em class="jxr_comment">// last field has a leading space before quote (should be preserved)</em>
+<a class="jxr_linenumber" name="L352" href="#L352">352</a> 		<strong class="jxr_keyword">final</strong> String input = <span class="jxr_string">"one,two,  \&quot;quoted with leading spaces\&quot;"</span>;
+<a class="jxr_linenumber" name="L353" href="#L353">353</a> 		tokenizer = createTokenizer(input, NORMAL_PREFERENCE);
+<a class="jxr_linenumber" name="L354" href="#L354">354</a> 		tokenizer.readColumns(columns);
+<a class="jxr_linenumber" name="L355" href="#L355">355</a> 		assertTrue(columns.size() == 3);
+<a class="jxr_linenumber" name="L356" href="#L356">356</a> 		assertEquals(<span class="jxr_string">"one"</span>, columns.get(0));
+<a class="jxr_linenumber" name="L357" href="#L357">357</a> 		assertEquals(<span class="jxr_string">"two"</span>, columns.get(1));
+<a class="jxr_linenumber" name="L358" href="#L358">358</a> 		assertEquals(<span class="jxr_string">"  quoted with leading spaces"</span>, columns.get(2));
+<a class="jxr_linenumber" name="L359" href="#L359">359</a> 		assertEquals(input, tokenizer.getUntokenizedRow());
+<a class="jxr_linenumber" name="L360" href="#L360">360</a> 		
+<a class="jxr_linenumber" name="L361" href="#L361">361</a> 		<em class="jxr_comment">// leading space should be trimmed off</em>
+<a class="jxr_linenumber" name="L362" href="#L362">362</a> 		tokenizer = createTokenizer(input, SPACES_NEED_QUOTES_PREFERENCE);
+<a class="jxr_linenumber" name="L363" href="#L363">363</a> 		tokenizer.readColumns(columns);
+<a class="jxr_linenumber" name="L364" href="#L364">364</a> 		assertTrue(columns.size() == 3);
+<a class="jxr_linenumber" name="L365" href="#L365">365</a> 		assertEquals(<span class="jxr_string">"one"</span>, columns.get(0));
+<a class="jxr_linenumber" name="L366" href="#L366">366</a> 		assertEquals(<span class="jxr_string">"two"</span>, columns.get(1));
+<a class="jxr_linenumber" name="L367" href="#L367">367</a> 		assertEquals(<span class="jxr_string">"quoted with leading spaces"</span>, columns.get(2));
+<a class="jxr_linenumber" name="L368" href="#L368">368</a> 		assertEquals(input, tokenizer.getUntokenizedRow());
+<a class="jxr_linenumber" name="L369" href="#L369">369</a> 	}
+<a class="jxr_linenumber" name="L370" href="#L370">370</a> 	
+<a class="jxr_linenumber" name="L371" href="#L371">371</a> 	<em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L372" href="#L372">372</a> <em class="jxr_javadoccomment">	 * Tests the readColumns() method with a trailing space after the first quoted field. This is not technically valid</em>
+<a class="jxr_linenumber" name="L373" href="#L373">373</a> <em class="jxr_javadoccomment">	 * CSV, but the tokenizer is lenient enough to allow it. The trailing spaces will be trimmed off when surrounding</em>
+<a class="jxr_linenumber" name="L374" href="#L374">374</a> <em class="jxr_javadoccomment">	 * spaces require quotes, otherwise they will be part of the field.</em>
+<a class="jxr_linenumber" name="L375" href="#L375">375</a> <em class="jxr_javadoccomment">	 */</em>
+<a class="jxr_linenumber" name="L376" href="#L376">376</a> 	@Test
+<a class="jxr_linenumber" name="L377" href="#L377">377</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testQuotedFirstFieldWithTrailingSpace() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L378" href="#L378">378</a> 		
+<a class="jxr_linenumber" name="L379" href="#L379">379</a> 		<em class="jxr_comment">// first field has a leading space before quote (should be preserved)</em>
+<a class="jxr_linenumber" name="L380" href="#L380">380</a> 		<strong class="jxr_keyword">final</strong> String input = <span class="jxr_string">"\&quot;quoted with trailing spaces\&quot;  ,two"</span>;
+<a class="jxr_linenumber" name="L381" href="#L381">381</a> 		tokenizer = createTokenizer(input, NORMAL_PREFERENCE);
+<a class="jxr_linenumber" name="L382" href="#L382">382</a> 		tokenizer.readColumns(columns);
+<a class="jxr_linenumber" name="L383" href="#L383">383</a> 		assertTrue(columns.size() == 2);
+<a class="jxr_linenumber" name="L384" href="#L384">384</a> 		assertEquals(<span class="jxr_string">"quoted with trailing spaces  "</span>, columns.get(0));
+<a class="jxr_linenumber" name="L385" href="#L385">385</a> 		assertEquals(<span class="jxr_string">"two"</span>, columns.get(1));
+<a class="jxr_linenumber" name="L386" href="#L386">386</a> 		assertEquals(input, tokenizer.getUntokenizedRow());
+<a class="jxr_linenumber" name="L387" href="#L387">387</a> 		
+<a class="jxr_linenumber" name="L388" href="#L388">388</a> 		<em class="jxr_comment">// trailing spaces should be trimmed</em>
+<a class="jxr_linenumber" name="L389" href="#L389">389</a> 		tokenizer = createTokenizer(input, SPACES_NEED_QUOTES_PREFERENCE);
+<a class="jxr_linenumber" name="L390" href="#L390">390</a> 		tokenizer.readColumns(columns);
+<a class="jxr_linenumber" name="L391" href="#L391">391</a> 		assertTrue(columns.size() == 2);
+<a class="jxr_linenumber" name="L392" href="#L392">392</a> 		assertEquals(<span class="jxr_string">"quoted with trailing spaces"</span>, columns.get(0));
+<a class="jxr_linenumber" name="L393" href="#L393">393</a> 		assertEquals(<span class="jxr_string">"two"</span>, columns.get(1));
+<a class="jxr_linenumber" name="L394" href="#L394">394</a> 		assertEquals(input, tokenizer.getUntokenizedRow());
+<a class="jxr_linenumber" name="L395" href="#L395">395</a> 	}
+<a class="jxr_linenumber" name="L396" href="#L396">396</a> 	
+<a class="jxr_linenumber" name="L397" href="#L397">397</a> 	<em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L398" href="#L398">398</a> <em class="jxr_javadoccomment">	 * Tests the readColumns() method with a trailing space after the last quoted field. This is not technically valid</em>
+<a class="jxr_linenumber" name="L399" href="#L399">399</a> <em class="jxr_javadoccomment">	 * CSV, but the tokenizer is lenient enough to allow it. The trailing spaces will be trimmed off when surrounding</em>
+<a class="jxr_linenumber" name="L400" href="#L400">400</a> <em class="jxr_javadoccomment">	 * spaces require quotes, otherwise they will be part of the field.</em>
+<a class="jxr_linenumber" name="L401" href="#L401">401</a> <em class="jxr_javadoccomment">	 */</em>
+<a class="jxr_linenumber" name="L402" href="#L402">402</a> 	@Test
+<a class="jxr_linenumber" name="L403" href="#L403">403</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testQuotedLastFieldWithTrailingSpace() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L404" href="#L404">404</a> 		
+<a class="jxr_linenumber" name="L405" href="#L405">405</a> 		<em class="jxr_comment">// last field has a leading space before quote (should be preserved)</em>
+<a class="jxr_linenumber" name="L406" href="#L406">406</a> 		<strong class="jxr_keyword">final</strong> String input = <span class="jxr_string">"one,two,\&quot;quoted with trailing spaces\&quot;  "</span>;
+<a class="jxr_linenumber" name="L407" href="#L407">407</a> 		tokenizer = createTokenizer(input, NORMAL_PREFERENCE);
+<a class="jxr_linenumber" name="L408" href="#L408">408</a> 		tokenizer.readColumns(columns);
+<a class="jxr_linenumber" name="L409" href="#L409">409</a> 		assertTrue(columns.size() == 3);
+<a class="jxr_linenumber" name="L410" href="#L410">410</a> 		assertEquals(<span class="jxr_string">"one"</span>, columns.get(0));
+<a class="jxr_linenumber" name="L411" href="#L411">411</a> 		assertEquals(<span class="jxr_string">"two"</span>, columns.get(1));
+<a class="jxr_linenumber" name="L412" href="#L412">412</a> 		assertEquals(<span class="jxr_string">"quoted with trailing spaces  "</span>, columns.get(2));
+<a class="jxr_linenumber" name="L413" href="#L413">413</a> 		assertEquals(input, tokenizer.getUntokenizedRow());
+<a class="jxr_linenumber" name="L414" href="#L414">414</a> 		
+<a class="jxr_linenumber" name="L415" href="#L415">415</a> 		<em class="jxr_comment">// trailing spaces should be trimmed off</em>
+<a class="jxr_linenumber" name="L416" href="#L416">416</a> 		tokenizer = createTokenizer(input, SPACES_NEED_QUOTES_PREFERENCE);
+<a class="jxr_linenumber" name="L417" href="#L417">417</a> 		tokenizer.readColumns(columns);
+<a class="jxr_linenumber" name="L418" href="#L418">418</a> 		assertTrue(columns.size() == 3);
+<a class="jxr_linenumber" name="L419" href="#L419">419</a> 		assertEquals(<span class="jxr_string">"one"</span>, columns.get(0));
+<a class="jxr_linenumber" name="L420" href="#L420">420</a> 		assertEquals(<span class="jxr_string">"two"</span>, columns.get(1));
+<a class="jxr_linenumber" name="L421" href="#L421">421</a> 		assertEquals(<span class="jxr_string">"quoted with trailing spaces"</span>, columns.get(2));
+<a class="jxr_linenumber" name="L422" href="#L422">422</a> 		assertEquals(input, tokenizer.getUntokenizedRow());
+<a class="jxr_linenumber" name="L423" href="#L423">423</a> 	}
+<a class="jxr_linenumber" name="L424" href="#L424">424</a> 	
+<a class="jxr_linenumber" name="L425" href="#L425">425</a> 	<em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L426" href="#L426">426</a> <em class="jxr_javadoccomment">	 * Tests the readColumns() method with a variety of quoted spaces.</em>
+<a class="jxr_linenumber" name="L427" href="#L427">427</a> <em class="jxr_javadoccomment">	 */</em>
+<a class="jxr_linenumber" name="L428" href="#L428">428</a> 	@Test
+<a class="jxr_linenumber" name="L429" href="#L429">429</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testQuotedSpaces() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L430" href="#L430">430</a> 		
+<a class="jxr_linenumber" name="L431" href="#L431">431</a> 		<strong class="jxr_keyword">final</strong> String input = <span class="jxr_string">"\&quot; one \&quot;,\&quot;  two  \&quot;,\&quot;   three   \&quot;"</span>;
+<a class="jxr_linenumber" name="L432" href="#L432">432</a> 		tokenizer = createTokenizer(input, NORMAL_PREFERENCE);
+<a class="jxr_linenumber" name="L433" href="#L433">433</a> 		tokenizer.readColumns(columns);
+<a class="jxr_linenumber" name="L434" href="#L434">434</a> 		assertTrue(columns.size() == 3);
+<a class="jxr_linenumber" name="L435" href="#L435">435</a> 		assertEquals(<span class="jxr_string">" one "</span>, columns.get(0));
+<a class="jxr_linenumber" name="L436" href="#L436">436</a> 		assertEquals(<span class="jxr_string">"  two  "</span>, columns.get(1));
+<a class="jxr_linenumber" name="L437" href="#L437">437</a> 		assertEquals(<span class="jxr_string">"   three   "</span>, columns.get(2));
+<a class="jxr_linenumber" name="L438" href="#L438">438</a> 		assertEquals(input, tokenizer.getUntokenizedRow());
+<a class="jxr_linenumber" name="L439" href="#L439">439</a> 		
+<a class="jxr_linenumber" name="L440" href="#L440">440</a> 		<em class="jxr_comment">// same input when surrounding spaces require quotes (results should be identical)</em>
+<a class="jxr_linenumber" name="L441" href="#L441">441</a> 		tokenizer = createTokenizer(input, SPACES_NEED_QUOTES_PREFERENCE);
+<a class="jxr_linenumber" name="L442" href="#L442">442</a> 		tokenizer.readColumns(columns);
+<a class="jxr_linenumber" name="L443" href="#L443">443</a> 		assertTrue(columns.size() == 3);
+<a class="jxr_linenumber" name="L444" href="#L444">444</a> 		assertEquals(<span class="jxr_string">" one "</span>, columns.get(0));
+<a class="jxr_linenumber" name="L445" href="#L445">445</a> 		assertEquals(<span class="jxr_string">"  two  "</span>, columns.get(1));
+<a class="jxr_linenumber" name="L446" href="#L446">446</a> 		assertEquals(<span class="jxr_string">"   three   "</span>, columns.get(2));
+<a class="jxr_linenumber" name="L447" href="#L447">447</a> 		assertEquals(input, tokenizer.getUntokenizedRow());
+<a class="jxr_linenumber" name="L448" href="#L448">448</a> 	}
+<a class="jxr_linenumber" name="L449" href="#L449">449</a> 	
+<a class="jxr_linenumber" name="L450" href="#L450">450</a> 	<em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L451" href="#L451">451</a> <em class="jxr_javadoccomment">	 * Tests the readColumns() method with a variety of unquoted spaces.</em>
+<a class="jxr_linenumber" name="L452" href="#L452">452</a> <em class="jxr_javadoccomment">	 */</em>
+<a class="jxr_linenumber" name="L453" href="#L453">453</a> 	@Test
+<a class="jxr_linenumber" name="L454" href="#L454">454</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testSpaces() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L455" href="#L455">455</a> 		
+<a class="jxr_linenumber" name="L456" href="#L456">456</a> 		<strong class="jxr_keyword">final</strong> String input = <span class="jxr_string">" one ,  two  ,   three   "</span>;
+<a class="jxr_linenumber" name="L457" href="#L457">457</a> 		tokenizer = createTokenizer(input, NORMAL_PREFERENCE);
+<a class="jxr_linenumber" name="L458" href="#L458">458</a> 		tokenizer.readColumns(columns);
+<a class="jxr_linenumber" name="L459" href="#L459">459</a> 		assertTrue(columns.size() == 3);
+<a class="jxr_linenumber" name="L460" href="#L460">460</a> 		assertEquals(<span class="jxr_string">" one "</span>, columns.get(0));
+<a class="jxr_linenumber" name="L461" href="#L461">461</a> 		assertEquals(<span class="jxr_string">"  two  "</span>, columns.get(1));
+<a class="jxr_linenumber" name="L462" href="#L462">462</a> 		assertEquals(<span class="jxr_string">"   three   "</span>, columns.get(2));
+<a class="jxr_linenumber" name="L463" href="#L463">463</a> 		assertEquals(input, tokenizer.getUntokenizedRow());
 <a class="jxr_linenumber" name="L464" href="#L464">464</a> 		
-<a class="jxr_linenumber" name="L465" href="#L465">465</a> 		<strong class="jxr_keyword">final</strong> String input = <span class="jxr_string">"#comment\nnot,a,comment\n# another comment\nalso,not,comment"</span>;
-<a class="jxr_linenumber" name="L466" href="#L466">466</a> 		<strong class="jxr_keyword">final</strong> Tokenizer tokenizer = createTokenizer(input, commentsStartWithPrefs);
+<a class="jxr_linenumber" name="L465" href="#L465">465</a> 		<em class="jxr_comment">// same input when surrounding spaces require quotes</em>
+<a class="jxr_linenumber" name="L466" href="#L466">466</a> 		tokenizer = createTokenizer(input, SPACES_NEED_QUOTES_PREFERENCE);
 <a class="jxr_linenumber" name="L467" href="#L467">467</a> 		tokenizer.readColumns(columns);
 <a class="jxr_linenumber" name="L468" href="#L468">468</a> 		assertTrue(columns.size() == 3);
-<a class="jxr_linenumber" name="L469" href="#L469">469</a> 		assertEquals(<span class="jxr_string">"not"</span>, columns.get(0));
-<a class="jxr_linenumber" name="L470" href="#L470">470</a> 		assertEquals(<span class="jxr_string">"a"</span>, columns.get(1));
-<a class="jxr_linenumber" name="L471" href="#L471">471</a> 		assertEquals(<span class="jxr_string">"comment"</span>, columns.get(2));
-<a class="jxr_linenumber" name="L472" href="#L472">472</a> 		
-<a class="jxr_linenumber" name="L473" href="#L473">473</a> 		tokenizer.readColumns(columns);
-<a class="jxr_linenumber" name="L474" href="#L474">474</a> 		assertTrue(columns.size() == 3);
-<a class="jxr_linenumber" name="L475" href="#L475">475</a> 		assertEquals(<span class="jxr_string">"also"</span>, columns.get(0));
-<a class="jxr_linenumber" name="L476" href="#L476">476</a> 		assertEquals(<span class="jxr_string">"not"</span>, columns.get(1));
-<a class="jxr_linenumber" name="L477" href="#L477">477</a> 		assertEquals(<span class="jxr_string">"comment"</span>, columns.get(2));
-<a class="jxr_linenumber" name="L478" href="#L478">478</a> 		
-<a class="jxr_linenumber" name="L479" href="#L479">479</a> 		assertFalse(tokenizer.readColumns(columns));
-<a class="jxr_linenumber" name="L480" href="#L480">480</a> 	}
-<a class="jxr_linenumber" name="L481" href="#L481">481</a> 	
-<a class="jxr_linenumber" name="L482" href="#L482">482</a> 	<em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L483" href="#L483">483</a> <em class="jxr_javadoccomment">	 * Tests that the CommentMatches comment matcher works (comments are skipped).</em>
-<a class="jxr_linenumber" name="L484" href="#L484">484</a> <em class="jxr_javadoccomment">	 */</em>
-<a class="jxr_linenumber" name="L485" href="#L485">485</a> 	@Test
-<a class="jxr_linenumber" name="L486" href="#L486">486</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testSkipCommentsMatches() <strong class="jxr_keyword">throws</strong> IOException {
-<a class="jxr_linenumber" name="L487" href="#L487">487</a> 		
-<a class="jxr_linenumber" name="L488" href="#L488">488</a> 		<strong class="jxr_keyword">final</strong> CsvPreference commentsMatchesPrefs = <strong class="jxr_keyword">new</strong> CsvPreference.Builder(EXCEL_PREFERENCE).skipComments(
-<a class="jxr_linenumber" name="L489" href="#L489">489</a> 			<strong class="jxr_keyword">new</strong> CommentMatches(<span class="jxr_string">"&lt;!--.*--&gt;"</span>)).build();
-<a class="jxr_linenumber" name="L490" href="#L490">490</a> 		
-<a class="jxr_linenumber" name="L491" href="#L491">491</a> 		<strong class="jxr_keyword">final</strong> String input = <span class="jxr_string">"&lt;!--comment--&gt;\nnot,a,comment\n&lt;!-- another comment--&gt;\nalso,not,comment"</span>;
-<a class="jxr_linenumber" name="L492" href="#L492">492</a> 		<strong class="jxr_keyword">final</strong> Tokenizer tokenizer = createTokenizer(input, commentsMatchesPrefs);
-<a class="jxr_linenumber" name="L493" href="#L493">493</a> 		tokenizer.readColumns(columns);
-<a class="jxr_linenumber" name="L494" href="#L494">494</a> 		assertTrue(columns.size() == 3);
-<a class="jxr_linenumber" name="L495" href="#L495">495</a> 		assertEquals(<span class="jxr_string">"not"</span>, columns.get(0));
-<a class="jxr_linenumber" name="L496" href="#L496">496</a> 		assertEquals(<span class="jxr_string">"a"</span>, columns.get(1));
-<a class="jxr_linenumber" name="L497" href="#L497">497</a> 		assertEquals(<span class="jxr_string">"comment"</span>, columns.get(2));
-<a class="jxr_linenumber" name="L498" href="#L498">498</a> 		
-<a class="jxr_linenumber" name="L499" href="#L499">499</a> 		tokenizer.readColumns(columns);
-<a class="jxr_linenumber" name="L500" href="#L500">500</a> 		assertTrue(columns.size() == 3);
-<a class="jxr_linenumber" name="L501" href="#L501">501</a> 		assertEquals(<span class="jxr_string">"also"</span>, columns.get(0));
-<a class="jxr_linenumber" name="L502" href="#L502">502</a> 		assertEquals(<span class="jxr_string">"not"</span>, columns.get(1));
-<a class="jxr_linenumber" name="L503" href="#L503">503</a> 		assertEquals(<span class="jxr_string">"comment"</span>, columns.get(2));
-<a class="jxr_linenumber" name="L504" href="#L504">504</a> 		
-<a class="jxr_linenumber" name="L505" href="#L505">505</a> 		assertFalse(tokenizer.readColumns(columns));
-<a class="jxr_linenumber" name="L506" href="#L506">506</a> 		
-<a class="jxr_linenumber" name="L507" href="#L507">507</a> 	}
-<a class="jxr_linenumber" name="L508" href="#L508">508</a> 	
-<a class="jxr_linenumber" name="L509" href="#L509">509</a> }
+<a class="jxr_linenumber" name="L469" href="#L469">469</a> 		assertEquals(<span class="jxr_string">"one"</span>, columns.get(0));
+<a class="jxr_linenumber" name="L470" href="#L470">470</a> 		assertEquals(<span class="jxr_string">"two"</span>, columns.get(1));
+<a class="jxr_linenumber" name="L471" href="#L471">471</a> 		assertEquals(<span class="jxr_string">"three"</span>, columns.get(2));
+<a class="jxr_linenumber" name="L472" href="#L472">472</a> 		assertEquals(input, tokenizer.getUntokenizedRow());
+<a class="jxr_linenumber" name="L473" href="#L473">473</a> 	}
+<a class="jxr_linenumber" name="L474" href="#L474">474</a> 	
+<a class="jxr_linenumber" name="L475" href="#L475">475</a> 	<em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L476" href="#L476">476</a> <em class="jxr_javadoccomment">	 * Tests the readColumns() method with a variety of spaces and tabs.</em>
+<a class="jxr_linenumber" name="L477" href="#L477">477</a> <em class="jxr_javadoccomment">	 */</em>
+<a class="jxr_linenumber" name="L478" href="#L478">478</a> 	@Test
+<a class="jxr_linenumber" name="L479" href="#L479">479</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testSpacesAndTabs() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L480" href="#L480">480</a> 		
+<a class="jxr_linenumber" name="L481" href="#L481">481</a> 		<em class="jxr_comment">// tabs should never be trimmed</em>
+<a class="jxr_linenumber" name="L482" href="#L482">482</a> 		<strong class="jxr_keyword">final</strong> String input = <span class="jxr_string">"\t, \tone\t ,  \ttwo\t  ,   \tthree\t   "</span>;
+<a class="jxr_linenumber" name="L483" href="#L483">483</a> 		tokenizer = createTokenizer(input, NORMAL_PREFERENCE);
+<a class="jxr_linenumber" name="L484" href="#L484">484</a> 		tokenizer.readColumns(columns);
+<a class="jxr_linenumber" name="L485" href="#L485">485</a> 		assertTrue(columns.size() == 4);
+<a class="jxr_linenumber" name="L486" href="#L486">486</a> 		assertEquals(<span class="jxr_string">"\t"</span>, columns.get(0));
+<a class="jxr_linenumber" name="L487" href="#L487">487</a> 		assertEquals(<span class="jxr_string">" \tone\t "</span>, columns.get(1));
+<a class="jxr_linenumber" name="L488" href="#L488">488</a> 		assertEquals(<span class="jxr_string">"  \ttwo\t  "</span>, columns.get(2));
+<a class="jxr_linenumber" name="L489" href="#L489">489</a> 		assertEquals(<span class="jxr_string">"   \tthree\t   "</span>, columns.get(3));
+<a class="jxr_linenumber" name="L490" href="#L490">490</a> 		assertEquals(input, tokenizer.getUntokenizedRow());
+<a class="jxr_linenumber" name="L491" href="#L491">491</a> 		
+<a class="jxr_linenumber" name="L492" href="#L492">492</a> 		<em class="jxr_comment">// same input when surrounding spaces require quotes</em>
+<a class="jxr_linenumber" name="L493" href="#L493">493</a> 		tokenizer = createTokenizer(input, SPACES_NEED_QUOTES_PREFERENCE);
+<a class="jxr_linenumber" name="L494" href="#L494">494</a> 		tokenizer.readColumns(columns);
+<a class="jxr_linenumber" name="L495" href="#L495">495</a> 		assertTrue(columns.size() == 4);
+<a class="jxr_linenumber" name="L496" href="#L496">496</a> 		assertEquals(<span class="jxr_string">"\t"</span>, columns.get(0));
+<a class="jxr_linenumber" name="L497" href="#L497">497</a> 		assertEquals(<span class="jxr_string">"\tone\t"</span>, columns.get(1));
+<a class="jxr_linenumber" name="L498" href="#L498">498</a> 		assertEquals(<span class="jxr_string">"\ttwo\t"</span>, columns.get(2));
+<a class="jxr_linenumber" name="L499" href="#L499">499</a> 		assertEquals(<span class="jxr_string">"\tthree\t"</span>, columns.get(3));
+<a class="jxr_linenumber" name="L500" href="#L500">500</a> 		assertEquals(input, tokenizer.getUntokenizedRow());
+<a class="jxr_linenumber" name="L501" href="#L501">501</a> 	}
+<a class="jxr_linenumber" name="L502" href="#L502">502</a> 	
+<a class="jxr_linenumber" name="L503" href="#L503">503</a> 	<em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L504" href="#L504">504</a> <em class="jxr_javadoccomment">	 * Tests the readColumns() method with spaces between words.</em>
+<a class="jxr_linenumber" name="L505" href="#L505">505</a> <em class="jxr_javadoccomment">	 */</em>
+<a class="jxr_linenumber" name="L506" href="#L506">506</a> 	@Test
+<a class="jxr_linenumber" name="L507" href="#L507">507</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testSpacesBetweenWords() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L508" href="#L508">508</a> 		
+<a class="jxr_linenumber" name="L509" href="#L509">509</a> 		<strong class="jxr_keyword">final</strong> String input = <span class="jxr_string">" one partridge ,  two turtle doves  ,   three french hens   "</span>;
+<a class="jxr_linenumber" name="L510" href="#L510">510</a> 		tokenizer = createTokenizer(input, NORMAL_PREFERENCE);
+<a class="jxr_linenumber" name="L511" href="#L511">511</a> 		tokenizer.readColumns(columns);
+<a class="jxr_linenumber" name="L512" href="#L512">512</a> 		assertTrue(columns.size() == 3);
+<a class="jxr_linenumber" name="L513" href="#L513">513</a> 		assertEquals(<span class="jxr_string">" one partridge "</span>, columns.get(0));
+<a class="jxr_linenumber" name="L514" href="#L514">514</a> 		assertEquals(<span class="jxr_string">"  two turtle doves  "</span>, columns.get(1));
+<a class="jxr_linenumber" name="L515" href="#L515">515</a> 		assertEquals(<span class="jxr_string">"   three french hens   "</span>, columns.get(2));
+<a class="jxr_linenumber" name="L516" href="#L516">516</a> 		assertEquals(input, tokenizer.getUntokenizedRow());
+<a class="jxr_linenumber" name="L517" href="#L517">517</a> 		
+<a class="jxr_linenumber" name="L518" href="#L518">518</a> 		<em class="jxr_comment">// same input when surrounding spaces require quotes</em>
+<a class="jxr_linenumber" name="L519" href="#L519">519</a> 		tokenizer = createTokenizer(input, SPACES_NEED_QUOTES_PREFERENCE);
+<a class="jxr_linenumber" name="L520" href="#L520">520</a> 		tokenizer.readColumns(columns);
+<a class="jxr_linenumber" name="L521" href="#L521">521</a> 		assertTrue(columns.size() == 3);
+<a class="jxr_linenumber" name="L522" href="#L522">522</a> 		assertEquals(<span class="jxr_string">"one partridge"</span>, columns.get(0));
+<a class="jxr_linenumber" name="L523" href="#L523">523</a> 		assertEquals(<span class="jxr_string">"two turtle doves"</span>, columns.get(1));
+<a class="jxr_linenumber" name="L524" href="#L524">524</a> 		assertEquals(<span class="jxr_string">"three french hens"</span>, columns.get(2));
+<a class="jxr_linenumber" name="L525" href="#L525">525</a> 		assertEquals(input, tokenizer.getUntokenizedRow());
+<a class="jxr_linenumber" name="L526" href="#L526">526</a> 	}
+<a class="jxr_linenumber" name="L527" href="#L527">527</a> 	
+<a class="jxr_linenumber" name="L528" href="#L528">528</a> 	<em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L529" href="#L529">529</a> <em class="jxr_javadoccomment">	 * Tests that the CommentStartsWith comment matcher works (comments are skipped).</em>
+<a class="jxr_linenumber" name="L530" href="#L530">530</a> <em class="jxr_javadoccomment">	 */</em>
+<a class="jxr_linenumber" name="L531" href="#L531">531</a> 	@Test
+<a class="jxr_linenumber" name="L532" href="#L532">532</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testSkipCommentsStartsWith() <strong class="jxr_keyword">throws</strong> IOException {
+<a class="jxr_linenumber" name="L533" href="#L533">533</a> 		
+<a class="jxr_linenumber" name="L534" href="#L534">534</a> 		<strong class="jxr_keyword">final</strong> CsvPreference commentsStartWithPrefs = <strong class="jxr_keyword">new</strong> CsvPreference.Builder(EXCEL_PREFERENCE).skipComments(
+<a class="jxr_linenumber" name="L535" href="#L535">535</a> 			<strong class="jxr_keyword">new</strong> CommentStartsWith(<span class="jxr_string">"#"</span>)).build();
+<a class="jxr_linenumber" name="L536" href="#L536">536</a> 		
+<a class="jxr_linenumber" name="L537" href="#L537">537</a> 		<strong class="jxr_keyword">final</strong> String input = <span class="jxr_string">"#comment\nnot,a,comment\n# another comment\nalso,not,comment"</span>;
+<a class="jxr_linenumber" name="L538" href="#L538">538</a> 		<strong class="jxr_keyword">final</strong> Tokenizer tokenizer = createTokenizer(input, commentsStartWithPrefs);
+<a class="jxr_linenumber" name="L539" href="#L539">539</a> 		tokenizer.readColumns(columns);
+<a class="jxr_linenumber" name="L540" href="#L540">540</a> 		assertTrue(columns.size() == 3);
+<a class="jxr_linenumber" name="L541" href="#L541">541</a> 		assertEquals(<span class="jxr_string">"not"</span>, columns.get(0));
+<a class="jxr_linenumber" name="L542" href="#L542">542</a> 		assertEquals(<span class="jxr_string">"a"</span>, columns.get(1));
+<a class="jxr_linenumber" name="L543" href="#L543">543</a> 		assertEquals(<span class="jxr_string">"comment"</span>, columns.get(2));
+<a class="jxr_linenumber" name="L544" href="#L544">544</a> 		
+<a class="jxr_linenumber" name="L545" href="#L545">545</a> 		tokenizer.readColumns(columns);
+<a class="jxr_linenumber" name="L546" href="#L546">546</a> 		assertTrue(columns.size() == 3);
+<a class="jxr_linenumber" name="L547" href="#L547">547</a> 		assertEquals(<span class="jxr_string">"also"</span>, columns.get(0));
+<a class="jxr_linenumber" name="L548" href="#L548">548</a> 		assertEquals(<span class="jxr_string">"not"</span>, columns.get(1));
+<a class="jxr_linenumber" name="L549" href="#L549">549</a> 		assertEquals(<span class="jxr_string">"comment"</span>, columns.get(2));
+<a class="jxr_linenumber" name="L550" href="#L550">550</a> 		
+<a class="jxr_linenumber" name="L551" href="#L551">551</a> 		assertFalse(tokenizer.readColumns(columns));
+<a class="jxr_linenumber" name="L552" href="#L552">552</a> 	}
+<a class="jxr_linenumber" name="L553" href="#L553">553</a> 	
+<a class="jxr_linenumber" name="L554" href="#L554">554</a> 	<em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L555" href="#L555">555</a> <em class="jxr_javadoccomment">	 * Tests that the CommentMatches comment matcher works (comments are skipped).</em>
+<a class="jxr_linenumber" name="L556" href="#L556">556</a> <em class="jxr_javadoccomment">	 */</em>
+<a class="jxr_linenumber" name="L557" href="#L557">557</a> 	@Test
+<a class="jxr_linenumber" name="L558" href="#L558">558</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testSkipCommentsMatches() <strong class="jxr_keyword">throws</strong> IOException {
+<a class="jxr_linenumber" name="L559" href="#L559">559</a> 		
+<a class="jxr_linenumber" name="L560" href="#L560">560</a> 		<strong class="jxr_keyword">final</strong> CsvPreference commentsMatchesPrefs = <strong class="jxr_keyword">new</strong> CsvPreference.Builder(EXCEL_PREFERENCE).skipComments(
+<a class="jxr_linenumber" name="L561" href="#L561">561</a> 			<strong class="jxr_keyword">new</strong> CommentMatches(<span class="jxr_string">"&lt;!--.*--&gt;"</span>)).build();
+<a class="jxr_linenumber" name="L562" href="#L562">562</a> 		
+<a class="jxr_linenumber" name="L563" href="#L563">563</a> 		<strong class="jxr_keyword">final</strong> String input = <span class="jxr_string">"&lt;!--comment--&gt;\nnot,a,comment\n&lt;!-- another comment--&gt;\nalso,not,comment"</span>;
+<a class="jxr_linenumber" name="L564" href="#L564">564</a> 		<strong class="jxr_keyword">final</strong> Tokenizer tokenizer = createTokenizer(input, commentsMatchesPrefs);
+<a class="jxr_linenumber" name="L565" href="#L565">565</a> 		tokenizer.readColumns(columns);
+<a class="jxr_linenumber" name="L566" href="#L566">566</a> 		assertTrue(columns.size() == 3);
+<a class="jxr_linenumber" name="L567" href="#L567">567</a> 		assertEquals(<span class="jxr_string">"not"</span>, columns.get(0));
+<a class="jxr_linenumber" name="L568" href="#L568">568</a> 		assertEquals(<span class="jxr_string">"a"</span>, columns.get(1));
+<a class="jxr_linenumber" name="L569" href="#L569">569</a> 		assertEquals(<span class="jxr_string">"comment"</span>, columns.get(2));
+<a class="jxr_linenumber" name="L570" href="#L570">570</a> 		
+<a class="jxr_linenumber" name="L571" href="#L571">571</a> 		tokenizer.readColumns(columns);
+<a class="jxr_linenumber" name="L572" href="#L572">572</a> 		assertTrue(columns.size() == 3);
+<a class="jxr_linenumber" name="L573" href="#L573">573</a> 		assertEquals(<span class="jxr_string">"also"</span>, columns.get(0));
+<a class="jxr_linenumber" name="L574" href="#L574">574</a> 		assertEquals(<span class="jxr_string">"not"</span>, columns.get(1));
+<a class="jxr_linenumber" name="L575" href="#L575">575</a> 		assertEquals(<span class="jxr_string">"comment"</span>, columns.get(2));
+<a class="jxr_linenumber" name="L576" href="#L576">576</a> 		
+<a class="jxr_linenumber" name="L577" href="#L577">577</a> 		assertFalse(tokenizer.readColumns(columns));
+<a class="jxr_linenumber" name="L578" href="#L578">578</a> 		
+<a class="jxr_linenumber" name="L579" href="#L579">579</a> 	}
+<a class="jxr_linenumber" name="L580" href="#L580">580</a> 	
+<a class="jxr_linenumber" name="L581" href="#L581">581</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2007&#x2013;2015 <a href="https://github.com/super-csv/super-csv">Super CSV</a>. All rights reserved.</div>
