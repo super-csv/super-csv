@@ -19,6 +19,16 @@
 
 Release notes
 
+* 2.3.1
+
+  <03/2015>
+  
+  Fixed a regression introduced in the last release.
+  
+  <<Bug fixes>>
+
+    * {{{https://github.com/super-csv/super-csv/issues/30}30}} - Fixed bug in <<<Tokenizer>>> where consecutive quoted newlines caused a <<<StringIndexOutOfBoundsException>>>
+
 * 2.3.0
 
   <02/2015>

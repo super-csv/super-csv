@@ -223,10 +223,60 @@ public class TokenizerTest {
 		assertEquals(input, tokenizer.getUntokenizedRow());
 	}
 	
+	/**
+	 * Tests the readColumns() method with a single quoted newline.
+	 */
 	@Test
-	public void testQuotedTextWithConsequtiveNewLines() throws Exception {
+	public void testQuotedNewline() throws Exception {
 		
-		// last field has a leading space before quote (should be preserved)
+		final String input = "\"\n\"";
+		tokenizer = createTokenizer(input, NORMAL_PREFERENCE);
+		tokenizer.readColumns(columns);
+		assertTrue(columns.size() == 1);
+		assertEquals("\n", columns.get(0));
+		assertEquals(input, tokenizer.getUntokenizedRow());
+		
+		// same input when surrounding spaces require quotes (results should be identical)
+		tokenizer = createTokenizer(input, SPACES_NEED_QUOTES_PREFERENCE);
+		tokenizer.readColumns(columns);
+		assertTrue(columns.size() == 1);
+		assertEquals("\n", columns.get(0));
+		assertEquals(input, tokenizer.getUntokenizedRow());
+	}
+	
+	/**
+	 * Tests the readColumns() method with a variety of quoted newlines.
+	 */
+	@Test
+	public void testQuotedNewlines() throws Exception {
+		
+		final String input = "\"one line\",\"two\nlines\",\"three\nlines\n!\"";
+		tokenizer = createTokenizer(input, NORMAL_PREFERENCE);
+		tokenizer.readColumns(columns);
+		assertTrue(columns.size() == 3);
+		assertEquals("one line", columns.get(0));
+		assertEquals("two\nlines", columns.get(1));
+		assertEquals("three\nlines\n!", columns.get(2));
+		assertEquals(input, tokenizer.getUntokenizedRow());
+		
+		// same input when surrounding spaces require quotes (results should be identical)
+		tokenizer = createTokenizer(input, SPACES_NEED_QUOTES_PREFERENCE);
+		tokenizer.readColumns(columns);
+		assertTrue(columns.size() == 3);
+		assertEquals("one line", columns.get(0));
+		assertEquals("two\nlines", columns.get(1));
+		assertEquals("three\nlines\n!", columns.get(2));
+		assertEquals(input, tokenizer.getUntokenizedRow());
+	}
+	
+	
+	/**
+	 * Tests the readColumns() method when a quoted field has consecutive newlines.
+	 */
+	@Test
+	public void testQuotedTextWithConsecutiveNewLines() throws Exception {
+		
+		// second field has consecutive newlines
 		final String input = "one, \"multiline\n\n\ntext\"";
 		tokenizer = createTokenizer(input, NORMAL_PREFERENCE);
 		tokenizer.readColumns(columns);
@@ -236,7 +286,7 @@ public class TokenizerTest {
 		assertEquals(4, tokenizer.getLineNumber());
 		assertEquals(input, tokenizer.getUntokenizedRow());
 		
-		// same input when surrounding spaces require quotes (leading spaces trimmed)
+		// should have exactly the same result when surrounding spaces need quotes
 		tokenizer = createTokenizer(input, SPACES_NEED_QUOTES_PREFERENCE);
 		tokenizer.readColumns(columns);
 		assertTrue(columns.size() == 2);

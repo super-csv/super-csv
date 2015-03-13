@@ -111,9 +111,9 @@ public class Tokenizer extends AbstractTokenizer {
 		int potentialSpaces = 0; // keep track of spaces (so leading/trailing space can be removed if required)
 		int charIndex = 0;
 		while( true ) {
-			boolean EOLReached = charIndex == line.length();
+			boolean endOfLineReached = charIndex == line.length();
 			
-			if( EOLReached )
+			if( endOfLineReached )
 			{
 				if( TokenizerState.NORMAL.equals(state) ) {
 					/*
@@ -150,8 +150,10 @@ public class Tokenizer extends AbstractTokenizer {
 					
 					currentRow.append(line); // update untokenized CSV row
 					
-				    if (line.length() == 0)
+				    if (line.length() == 0){
+				    	// consecutive newlines
                         continue;
+				    }
 				}
 			}
 			
