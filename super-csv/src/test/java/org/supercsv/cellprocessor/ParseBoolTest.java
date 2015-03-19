@@ -86,12 +86,12 @@ public class ParseBoolTest {
 	public void testValidInput() {
 		
 		// processors using default true/false values
-		for( CellProcessor processor : Arrays.asList(processor, processorChain) ) {
+		for( CellProcessor cp : Arrays.asList(processor, processorChain) ) {
 			for( String trueValue : MIXED_TRUE_VALUES ) {
-				assertTrue((Boolean) processor.execute(trueValue, ANONYMOUS_CSVCONTEXT));
+				assertTrue((Boolean) cp.execute(trueValue, ANONYMOUS_CSVCONTEXT));
 			}
 			for( String falseValue : MIXED_FALSE_VALUES ) {
-				assertFalse((Boolean) processor.execute(falseValue, ANONYMOUS_CSVCONTEXT));
+				assertFalse((Boolean) cp.execute(falseValue, ANONYMOUS_CSVCONTEXT));
 			}
 		}
 		
