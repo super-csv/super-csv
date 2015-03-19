@@ -313,7 +313,68 @@ public class TokenizerTest {
 				e.getMessage());
 		}
 	}
-	
+
+	/**
+	 * Tests the readColumns() method when a newline is reached in quote
+	 * scoped when a single line is only supposed to be read
+	 */
+	@Test
+	public void testQuotedFieldWithUnexpectedNewline() throws Exception {
+
+		// Row 2 has a missing trailing quote
+		final String input = "col1,col2\n" +
+				"\"foo\",\"bar\n" +
+				"\"baz\",\"zoo\"\n" +
+				"\"aaa\",\"bbb\"";
+		CsvPreference pref = new CsvPreference.Builder(NORMAL_PREFERENCE)
+				.maxLinesPerRow(1).build();
+
+		tokenizer = createTokenizer(input, pref);
+		try {
+			boolean first = tokenizer.readColumns(columns);
+			assertEquals(true , first);
+
+			tokenizer.readColumns(columns);
+			fail("should have thrown SuperCsvException");
+		}
+		catch(SuperCsvException e) {
+			assertEquals("unexpected end of line while reading quoted column on line 2",
+					e.getMessage());
+		}
+	}
+
+	/**
+	 * Tests the readColumns() method when a newline is reached in quote
+	 * scoped when two lines are only supposed to be read
+	 */
+	@Test
+	public void testQuotedFieldWithTwoMaxLines() throws Exception {
+
+		// Row 2 has a missing trailing quote
+		final String input = "col1,col2\n" +
+				"\"foo\",\"bar\n" +
+				"baz,zoo\n" +
+				"aaa,bbb";
+		CsvPreference pref = new CsvPreference.Builder(NORMAL_PREFERENCE)
+				.maxLinesPerRow(2).build();
+
+		tokenizer = createTokenizer(input, pref);
+		try {
+			boolean first = tokenizer.readColumns(columns);
+			assertEquals(true , first);
+
+			boolean second = tokenizer.readColumns(columns);
+			assertEquals(true , second);
+
+			tokenizer.readColumns(columns);
+			fail("should have thrown SuperCsvException");
+		}
+		catch(SuperCsvException e) {
+			assertEquals("max number of lines to read exceeded while reading quoted column beginning on line 2 and ending on line 4",
+					e.getMessage());
+		}
+	}
+
 	/**
 	 * Tests the readColumns() method with a leading space before the first quoted field. This is not technically valid
 	 * CSV, but the tokenizer is lenient enough to allow it. The leading spaces will be trimmed off when surrounding
