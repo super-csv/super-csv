@@ -51,6 +51,8 @@ public class Tokenizer extends AbstractTokenizer {
 	private final boolean ignoreEmptyLines;
 	
 	private final CommentMatcher commentMatcher;
+
+	private final int maxLinesPerRow;
 	
 	/**
 	 * Enumeration of tokenizer states. QUOTE_MODE is activated between quotes.
@@ -76,6 +78,7 @@ public class Tokenizer extends AbstractTokenizer {
 		this.surroundingSpacesNeedQuotes = preferences.isSurroundingSpacesNeedQuotes();
 		this.ignoreEmptyLines = preferences.isIgnoreEmptyLines();
 		this.commentMatcher = preferences.getCommentMatcher();
+		this.maxLinesPerRow = preferences.getMaxLinesPerRow();
 	}
 	
 	/**
@@ -131,16 +134,30 @@ public class Tokenizer extends AbstractTokenizer {
 					/*
 					 * Newline. Doesn't count as newline while in QUOTESCOPE. Add the newline char, reset the charIndex
 					 * (will update to 0 for next iteration), read in the next line, then then continue to next
-					 * character. For a large file with an unterminated quoted section (no trailing quote), this could
-					 * cause memory issues as it will keep reading lines looking for the trailing quote. Maybe there
-					 * should be a configurable limit on max lines to read in quoted mode?
+					 * character.
 					 */
 					currentColumn.append(NEWLINE);
 					currentRow.append(NEWLINE); // specific line terminator lost, \n will have to suffice
 					
 					charIndex = 0;
 					line = readLine();
-					if( line == null ) {
+
+					if (maxLinesPerRow > 0 && getLineNumber() - quoteScopeStartingLine + 1 > maxLinesPerRow) {
+						/*
+						 * The quoted section that is being parsed spans too many lines, so to avoid excessive memory
+						 * usage parsing something that is probably human error anyways, throw an exception. If each
+						 * row is suppose to be a single line and this has been exceeded, throw a more descriptive
+						 * exception
+						 */
+						String msg = maxLinesPerRow == 1 ?
+								String.format("unexpected end of line while reading quoted column on line %d",
+											  getLineNumber() - 1) :
+								String.format("max number of lines to read exceeded while reading quoted column" +
+											  " beginning on line %d and ending on line %d",
+											  quoteScopeStartingLine, getLineNumber());
+						throw new SuperCsvException(msg);
+					}
+					else if( line == null ) {
 						throw new SuperCsvException(
 							String
 								.format(

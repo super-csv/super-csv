@@ -134,7 +134,9 @@ public final class CsvPreference {
 	private final QuoteMode quoteMode;
 	
 	private final CommentMatcher commentMatcher;
-	
+
+	private int maxLinesPerRow = 0;
+
 	/**
 	 * Constructs a new <tt>CsvPreference</tt> from a Builder.
 	 */
@@ -147,6 +149,7 @@ public final class CsvPreference {
 		this.commentMatcher = builder.commentMatcher;
 		this.encoder = builder.encoder;
 		this.quoteMode = builder.quoteMode;
+		this.maxLinesPerRow = builder.maxLinesPerRow;
 	}
 	
 	/**
@@ -220,6 +223,15 @@ public final class CsvPreference {
 	public CommentMatcher getCommentMatcher() {
 		return commentMatcher;
 	}
+
+	/**
+	 * Returns the number of max lines a row can span.
+	 *
+	 * @return the number of max lines a row can span
+	 */
+	public int getMaxLinesPerRow() {
+		return maxLinesPerRow;
+	}
 	
 	/**
 	 * Builds immutable <tt>CsvPreference</tt> instances. The builder pattern allows for additional preferences to be
@@ -242,6 +254,8 @@ public final class CsvPreference {
 		private QuoteMode quoteMode;
 		
 		private CommentMatcher commentMatcher;
+
+		private int maxLinesPerRow = 0;
 		
 		/**
 		 * Constructs a Builder with all of the values from an existing <tt>CsvPreference</tt> instance. Useful if you
@@ -259,6 +273,7 @@ public final class CsvPreference {
 			this.encoder = preference.encoder;
 			this.quoteMode = preference.quoteMode;
 			this.commentMatcher = preference.commentMatcher;
+			this.maxLinesPerRow = preference.maxLinesPerRow;
 		}
 		
 		/**
@@ -373,6 +388,20 @@ public final class CsvPreference {
 				throw new NullPointerException("quoteMode should not be null");
 			}
 			this.quoteMode = quoteMode;
+			return this;
+		}
+
+		/**
+		 * Integer indicating how many lines to read parsing a single row before an exception is thrown. This option
+		 * is valuable when dealing with possible human errors in mistyping quotes and large files that would otherwise
+		 * exhaust memory. Zero or a negative value will disable this option. The default is <tt>0</tt>.
+		 *
+		 * @param maxLinesPerRow
+		 *            integer indicating the max number of lines a row can span before an exception is thrown
+		 * @return the updated Builder
+		 */
+		public Builder maxLinesPerRow(final int maxLinesPerRow) {
+			this.maxLinesPerRow = maxLinesPerRow;
 			return this;
 		}
 		
