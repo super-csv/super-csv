@@ -44,16 +44,16 @@ public class ParseBoolTest {
 	private static final String[] MIXED_FALSE_VALUES = new String[] { "0", "false", "False", "FALSE", "f", "F", "n",
 		"N" };
 	
-	private CellProcessor processor;
+	private CellProcessor processor1;
 	private CellProcessor processor2;
 	private CellProcessor processor3;
-	private CellProcessor processorChain;
+	private CellProcessor processorChain1;
 	private CellProcessor processorChain2;
 	private CellProcessor processorChain3;
-	private CellProcessor matchCaseProcessor;
+	private CellProcessor matchCaseProcessor1;
 	private CellProcessor matchCaseProcessor2;
 	private CellProcessor matchCaseProcessor3;
-	private CellProcessor matchCaseProcessorChain;
+	private CellProcessor matchCaseProcessorChain1;
 	private CellProcessor matchCaseProcessorChain2;
 	private CellProcessor matchCaseProcessorChain3;
 	
@@ -63,17 +63,17 @@ public class ParseBoolTest {
 	@Before
 	public void setUp() {
 		// so many constructors to test...sigh
-		processor = new ParseBool();
+		processor1 = new ParseBool();
 		processor2 = new ParseBool(TRUE_VALUE, FALSE_VALUE);
 		processor3 = new ParseBool(new String[] { TRUE_VALUE }, new String[] { FALSE_VALUE });
-		processorChain = new ParseBool(new IdentityTransform());
+		processorChain1 = new ParseBool(new IdentityTransform());
 		processorChain2 = new ParseBool(TRUE_VALUE, FALSE_VALUE, new IdentityTransform());
 		processorChain3 = new ParseBool(new String[] { TRUE_VALUE }, new String[] { FALSE_VALUE },
 			new IdentityTransform());
-		matchCaseProcessor = new ParseBool(false);
+		matchCaseProcessor1 = new ParseBool(false);
 		matchCaseProcessor2 = new ParseBool(TRUE_VALUE, FALSE_VALUE, false);
 		matchCaseProcessor3 = new ParseBool(new String[] { TRUE_VALUE }, new String[] { FALSE_VALUE }, false);
-		matchCaseProcessorChain = new ParseBool(false, new IdentityTransform());
+		matchCaseProcessorChain1 = new ParseBool(false, new IdentityTransform());
 		matchCaseProcessorChain2 = new ParseBool(TRUE_VALUE, FALSE_VALUE, false, new IdentityTransform());
 		matchCaseProcessorChain3 = new ParseBool(new String[] { TRUE_VALUE }, new String[] { FALSE_VALUE }, false,
 			new IdentityTransform());
@@ -86,7 +86,7 @@ public class ParseBoolTest {
 	public void testValidInput() {
 		
 		// processors using default true/false values
-		for( CellProcessor processor : Arrays.asList(processor, processorChain) ) {
+		for( CellProcessor processor : Arrays.asList(processor1, processorChain1) ) {
 			for( String trueValue : MIXED_TRUE_VALUES ) {
 				assertTrue((Boolean) processor.execute(trueValue, ANONYMOUS_CSVCONTEXT));
 			}
@@ -112,7 +112,7 @@ public class ParseBoolTest {
 	public void testMatchCaseProcessorsWithValidInput() {
 		
 		// processors using default true/false values
-		for( CellProcessor processor : Arrays.asList(matchCaseProcessor, matchCaseProcessorChain) ) {
+		for( CellProcessor processor : Arrays.asList(matchCaseProcessor1, matchCaseProcessorChain1) ) {
 			for( String trueValue : DEFAULT_TRUE_VALUES ) {
 				assertTrue((Boolean) processor.execute(trueValue, ANONYMOUS_CSVCONTEXT));
 			}
@@ -136,8 +136,8 @@ public class ParseBoolTest {
 	@Test
 	public void testMatchCaseProcessorsWithInvalidInput() {
 		
-		for( CellProcessor processor : Arrays.asList(matchCaseProcessor, matchCaseProcessor2, matchCaseProcessor3,
-			matchCaseProcessorChain, matchCaseProcessorChain2, matchCaseProcessorChain3) ) {
+		for( CellProcessor processor : Arrays.asList(matchCaseProcessor1, matchCaseProcessor2, matchCaseProcessor3,
+			matchCaseProcessorChain1, matchCaseProcessorChain2, matchCaseProcessorChain3) ) {
 			try {
 				assertTrue((Boolean) processor.execute(TRUE_VALUE.toUpperCase(), ANONYMOUS_CSVCONTEXT));
 				fail("expecting SuperCsvCellProcessorException");
@@ -157,7 +157,7 @@ public class ParseBoolTest {
 	 */
 	@Test(expected = SuperCsvCellProcessorException.class)
 	public void testWithNonBooleanString() {
-		processor.execute("not a boolean!", ANONYMOUS_CSVCONTEXT);
+		processor1.execute("not a boolean!", ANONYMOUS_CSVCONTEXT);
 	}
 	
 	/**
@@ -165,7 +165,7 @@ public class ParseBoolTest {
 	 */
 	@Test(expected = SuperCsvCellProcessorException.class)
 	public void testWithNonString() {
-		processor.execute(1, ANONYMOUS_CSVCONTEXT);
+		processor1.execute(1, ANONYMOUS_CSVCONTEXT);
 	}
 	
 	/**
@@ -173,7 +173,7 @@ public class ParseBoolTest {
 	 */
 	@Test(expected = SuperCsvCellProcessorException.class)
 	public void testWithNull() {
-		processor.execute(null, ANONYMOUS_CSVCONTEXT);
+		processor1.execute(null, ANONYMOUS_CSVCONTEXT);
 	}
 	
 	/**
@@ -181,7 +181,7 @@ public class ParseBoolTest {
 	 */
 	@Test(expected = SuperCsvCellProcessorException.class)
 	public void testWithEmptyString() {
-		processor.execute("", ANONYMOUS_CSVCONTEXT);
+		processor1.execute("", ANONYMOUS_CSVCONTEXT);
 	}
 	
 	/**

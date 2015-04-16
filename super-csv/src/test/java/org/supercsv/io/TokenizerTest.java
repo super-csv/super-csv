@@ -28,9 +28,13 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hamcrest.Matcher;
+import org.hamcrest.core.StringStartsWith;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.supercsv.comment.CommentMatches;
 import org.supercsv.comment.CommentStartsWith;
 import org.supercsv.exception.SuperCsvException;
@@ -578,4 +582,66 @@ public class TokenizerTest {
 		
 	}
 	
+	@Rule
+	public ExpectedException exception = ExpectedException.none();
+
+	/**
+	 * Test that a missing ending quote triggers the maximum quoted column lines threshold.
+	 */
+	@Test
+	public void testMaxQuotedColumnLines() throws IOException {
+		exception.expect(SuperCsvException.class);
+		exception.expectMessage(new StringStartsWith("Quoted column beginning on line"));
+		
+		final CsvPreference quotedColumnPrefs = new CsvPreference.Builder('"', ',', "\n", 3).build();
+		
+		StringBuilder inputBuf = new StringBuilder();
+		inputBuf.append("able,baker,charlie,delta,eagle,falcon\n");
+		inputBuf.append("able,baker,char\"lie,delta,eagle,falcon\n");
+		inputBuf.append("able,baker,charlie,delta,eagle,falcon\n");
+		inputBuf.append("able,baker,charlie,delta,eagle,falcon\n");
+		inputBuf.append("able,baker,charlie,delta,eagle,falcon\n");
+		final String input = inputBuf.toString();
+		final Tokenizer tokenizer = createTokenizer(input, quotedColumnPrefs);
+
+		tokenizer.readColumns(columns);
+		assertTrue(columns.size() == 6);
+		assertEquals("able", columns.get(0));
+		assertEquals("baker", columns.get(1));
+		assertEquals("charlie", columns.get(2));
+		assertEquals("delta", columns.get(3));
+		assertEquals("eagle", columns.get(4));
+		assertEquals("falcon", columns.get(5));
+		
+		tokenizer.readColumns(columns);
+	}
+
+	/**
+	 * Test that a missing ending quote triggers the unexpected EOF exception.
+	 */
+	@Test
+	public void testMissingQuoteAtEOF() throws IOException {
+		exception.expect(SuperCsvException.class);
+		exception.expectMessage(new StringStartsWith("unexpected end of file while reading quoted column"));
+		
+		final CsvPreference quotedColumnPrefs = new CsvPreference.Builder('"', ',', "\n", 3).build();
+		
+		StringBuilder inputBuf = new StringBuilder();
+		inputBuf.append("able,baker,charlie,delta,eagle,falcon\n");
+		inputBuf.append("able,baker,char\"lie,delta,eagle,falcon\n");
+		inputBuf.append("able,baker,charlie,delta,eagle,falcon\n");
+		final String input = inputBuf.toString();
+		final Tokenizer tokenizer = createTokenizer(input, quotedColumnPrefs);
+
+		tokenizer.readColumns(columns);
+		assertTrue(columns.size() == 6);
+		assertEquals("able", columns.get(0));
+		assertEquals("baker", columns.get(1));
+		assertEquals("charlie", columns.get(2));
+		assertEquals("delta", columns.get(3));
+		assertEquals("eagle", columns.get(4));
+		assertEquals("falcon", columns.get(5));
+		
+		tokenizer.readColumns(columns);
+	}
 }
