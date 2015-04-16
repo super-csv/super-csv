@@ -74,6 +74,22 @@ public class CsvPreferenceTest {
 	}
 	
 	/**
+	 * Tests a custom CsvPreference with default optional values including maximum quoted column lines.
+	 */
+	@Test
+	public void testCustomPreferenceWithDefaultsIncludingMaxQuotedColumnLines() {
+		final CsvPreference custom = new CsvPreference.Builder('"', ',', "\n", -1).build();
+		assertEquals('"', custom.getQuoteChar());
+		assertEquals(',', custom.getDelimiterChar());
+		assertEquals("\n", custom.getEndOfLineSymbols());
+		assertFalse(custom.isSurroundingSpacesNeedQuotes());
+		assertNull(custom.getCommentMatcher());
+		assertTrue(custom.getEncoder() instanceof DefaultCsvEncoder);
+		assertTrue(custom.getQuoteMode() instanceof NormalQuoteMode);
+		assertTrue(custom.getMaxQuotedColumnLines() == -1);
+	}
+	
+	/**
 	 * Tests a custom CsvPreference with supplied optional values.
 	 */
 	@Test
@@ -86,6 +102,7 @@ public class CsvPreferenceTest {
 		assertTrue(custom.isSurroundingSpacesNeedQuotes());
 		assertTrue(custom.getEncoder() instanceof DefaultCsvEncoder);
 		assertTrue(custom.getQuoteMode() instanceof AlwaysQuoteMode);
+		assertTrue(custom.getMaxQuotedColumnLines() < 1);
 	}
 	
 	/**
@@ -100,6 +117,7 @@ public class CsvPreferenceTest {
 		assertEquals(EXCEL_PREFERENCE.isSurroundingSpacesNeedQuotes(), custom.isSurroundingSpacesNeedQuotes());
 		assertEquals(EXCEL_PREFERENCE.getEncoder(), custom.getEncoder());
 		assertEquals(EXCEL_PREFERENCE.getQuoteMode(), custom.getQuoteMode());
+		assertEquals(EXCEL_PREFERENCE.getMaxQuotedColumnLines(), custom.getMaxQuotedColumnLines());
 	}
 	
 	/**
@@ -115,6 +133,7 @@ public class CsvPreferenceTest {
 		assertTrue(custom.isSurroundingSpacesNeedQuotes());
 		assertTrue(custom.getEncoder() instanceof DefaultCsvEncoder);
 		assertTrue(custom.getQuoteMode() instanceof AlwaysQuoteMode);
+		assertTrue(custom.getMaxQuotedColumnLines() < 1);
 	}
 	
 	/**

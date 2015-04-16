@@ -27,9 +27,12 @@ import java.io.StringReader;
 import java.util.Arrays;
 import java.util.List;
 
+import org.hamcrest.core.StringStartsWith;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.supercsv.exception.SuperCsvException;
 import org.supercsv.prefs.CsvPreference;
 
@@ -46,15 +49,29 @@ public class AbstractCsvReaderTest {
 	private static final CsvPreference SURROUNDING_SPACES_NEED_QUOTES_PREFS = new CsvPreference.Builder(
 		CsvPreference.STANDARD_PREFERENCE).surroundingSpacesNeedQuotes(true).build();
 	
+	private static final CsvPreference MISSING_END_QUOTE_MAX_PREFS = new CsvPreference.Builder(
+		'"', ',', "\n", 3).build();
+	
+	private static final CsvPreference MISSING_END_QUOTE_EOF_PREFS = new CsvPreference.Builder(
+		'"', ',', "\n", 3).build();
+	
 	private Reader reader;
 	
 	private Reader surroundingSpacesNeedQuotesReader;
+	
+	private Reader missingEndQuoteMaxReader;
+	
+	private Reader missingEndQuoteEOFReader;
 	
 	private AbstractCsvReader abstractReader;
 	
 	private AbstractCsvReader tokenizerAbstractReader;
 	
 	private AbstractCsvReader surroundingSpacesNeedQuotesAbstractReader;
+	
+	private AbstractCsvReader missingEndQuoteAbstractMaxReader;
+	
+	private AbstractCsvReader missingEndQuoteAbstractEOFReader;
 	
 	private ITokenizer tokenizer;
 	
@@ -89,6 +106,27 @@ public class AbstractCsvReaderTest {
 			+ " John , Smith, 23 , \n" + "Harry, Potter, , \"Gryffindor\nHogwarts Castle\nUK\" ");
 		surroundingSpacesNeedQuotesAbstractReader = new MockCsvReader(surroundingSpacesNeedQuotesReader,
 			SURROUNDING_SPACES_NEED_QUOTES_PREFS);
+		
+		missingEndQuoteMaxReader = new StringReader(
+			"firstName,lastName,age,address\n" + 
+			"Fred,Flintstone,42,111 Main St.\n" +
+			"John,Smith,23,\"222 Main St.\n" +
+			"Wilma,Flintstone,42,111 Main St.\n" +
+			"Henry,Smith,23,222 Main St.\n" +
+			"Harry,Potter,16,333 Main St."
+			);
+		missingEndQuoteAbstractMaxReader = new MockCsvReader(missingEndQuoteMaxReader,
+			MISSING_END_QUOTE_MAX_PREFS);
+		
+		missingEndQuoteEOFReader = new StringReader(
+			"firstName,lastName,age,address\n" + 
+			"Fred,Flintstone,42,111 Main St.\n" +
+			"John,Smith,23,\"222 Main St.\n" +
+			"Wilma,Flintstone,42,111 Main St.\n" +
+			"Henry,Smith,23,222 Main St.\n"
+			);
+		missingEndQuoteAbstractEOFReader = new MockCsvReader(missingEndQuoteEOFReader,
+			MISSING_END_QUOTE_EOF_PREFS);
 	}
 	
 	/**
@@ -99,6 +137,8 @@ public class AbstractCsvReaderTest {
 		abstractReader.close();
 		tokenizerAbstractReader.close();
 		surroundingSpacesNeedQuotesAbstractReader.close();
+		missingEndQuoteAbstractMaxReader.close();
+		missingEndQuoteAbstractEOFReader.close();
 	}
 	
 	/**
@@ -334,4 +374,112 @@ public class AbstractCsvReaderTest {
 		new CsvListReader(tokenizer, null);
 	}
 	
+	@Rule
+	public ExpectedException exception = ExpectedException.none();
+	
+	/**
+	 * Tests a reading scenario where a quoted column is missing the end quote and the maximum
+	 * number of lines in a quoted column is exceeded.
+	 */
+	@Test
+	public void testReadingWithMissingEndQuoteMaxReader() throws IOException {
+		exception.expect(SuperCsvException.class);
+		exception.expectMessage(new StringStartsWith("Quoted column beginning on line"));
+		
+		AbstractCsvReader csvReader = missingEndQuoteAbstractMaxReader;
+		
+		assertEquals(MISSING_END_QUOTE_MAX_PREFS, csvReader.getPreferences());
+		
+		assertEquals(0, csvReader.getLineNumber());
+		assertEquals(0, csvReader.getRowNumber());
+		assertEquals("", csvReader.getUntokenizedRow());
+		assertEquals(0, csvReader.length());
+		
+		// read the header
+		final String[] header = csvReader.getHeader(true);
+		assertEquals(4, header.length);
+		assertEquals("firstName", header[0]);
+		assertEquals("lastName", header[1]);
+		assertEquals("age", header[2]);
+		assertEquals("address", header[3]);
+		
+		assertEquals(1, csvReader.getLineNumber());
+		assertEquals(1, csvReader.getRowNumber());
+		assertEquals("firstName,lastName,age,address", csvReader.getUntokenizedRow());
+		assertEquals(4, csvReader.length());
+		
+		// read the first data row
+		assertTrue(csvReader.readRow());
+		List<String> line = csvReader.getColumns(); // John , Smith, 23 , \"1 Sesame St\nNew York\"
+		assertEquals(4, csvReader.length());
+		assertEquals("Fred", line.get(0));
+		assertEquals("Flintstone", line.get(1));
+		assertEquals("42", line.get(2));
+		assertEquals("111 Main St.", line.get(3));
+		
+		// get() should return the same values as the List from read()
+		assertTrue(Arrays.equals(line.toArray(), new Object[] { csvReader.get(1), csvReader.get(2), csvReader.get(3),
+			csvReader.get(4) }));
+		
+		assertEquals(2, csvReader.getLineNumber());
+		assertEquals(2, csvReader.getRowNumber());
+		assertEquals("Fred,Flintstone,42,111 Main St.", csvReader.getUntokenizedRow());
+		assertEquals(4, csvReader.length());
+		
+		// read the second data row
+		assertTrue(csvReader.readRow());
+	}
+	
+	/**
+	 * Tests a reading scenario where a quoted column is missing the end quote and the EOF is
+	 * reached before the maximum number of lines in a quoted column is exceeded.
+	 */
+	@Test
+	public void testReadingWithMissingEndQuoteEOFReader() throws IOException {
+		exception.expect(SuperCsvException.class);
+		exception.expectMessage(new StringStartsWith("unexpected end of file while reading quoted column"));
+		
+		AbstractCsvReader csvReader = missingEndQuoteAbstractEOFReader;
+		
+		assertEquals(MISSING_END_QUOTE_EOF_PREFS, csvReader.getPreferences());
+		
+		assertEquals(0, csvReader.getLineNumber());
+		assertEquals(0, csvReader.getRowNumber());
+		assertEquals("", csvReader.getUntokenizedRow());
+		assertEquals(0, csvReader.length());
+		
+		// read the header
+		final String[] header = csvReader.getHeader(true);
+		assertEquals(4, header.length);
+		assertEquals("firstName", header[0]);
+		assertEquals("lastName", header[1]);
+		assertEquals("age", header[2]);
+		assertEquals("address", header[3]);
+		
+		assertEquals(1, csvReader.getLineNumber());
+		assertEquals(1, csvReader.getRowNumber());
+		assertEquals("firstName,lastName,age,address", csvReader.getUntokenizedRow());
+		assertEquals(4, csvReader.length());
+		
+		// read the first data row
+		assertTrue(csvReader.readRow());
+		List<String> line = csvReader.getColumns(); // John , Smith, 23 , \"1 Sesame St\nNew York\"
+		assertEquals(4, csvReader.length());
+		assertEquals("Fred", line.get(0));
+		assertEquals("Flintstone", line.get(1));
+		assertEquals("42", line.get(2));
+		assertEquals("111 Main St.", line.get(3));
+		
+		// get() should return the same values as the List from read()
+		assertTrue(Arrays.equals(line.toArray(), new Object[] { csvReader.get(1), csvReader.get(2), csvReader.get(3),
+			csvReader.get(4) }));
+		
+		assertEquals(2, csvReader.getLineNumber());
+		assertEquals(2, csvReader.getRowNumber());
+		assertEquals("Fred,Flintstone,42,111 Main St.", csvReader.getUntokenizedRow());
+		assertEquals(4, csvReader.length());
+		
+		// read the second data row
+		assertTrue(csvReader.readRow());
+	}
 }

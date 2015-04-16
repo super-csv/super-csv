@@ -135,6 +135,8 @@ public final class CsvPreference {
 	
 	private final CommentMatcher commentMatcher;
 	
+	private final int maxQuotedColumnLines;
+
 	/**
 	 * Constructs a new <tt>CsvPreference</tt> from a Builder.
 	 */
@@ -147,6 +149,7 @@ public final class CsvPreference {
 		this.commentMatcher = builder.commentMatcher;
 		this.encoder = builder.encoder;
 		this.quoteMode = builder.quoteMode;
+		this.maxQuotedColumnLines = builder.maxQuotedColumnLines;
 	}
 	
 	/**
@@ -174,6 +177,15 @@ public final class CsvPreference {
 	 */
 	public int getQuoteChar() {
 		return quoteChar;
+	}
+	
+	/**
+	 * Returns the maximum number of lines allowed in a quoted column.
+	 * 
+	 * @return the maximum number of lines allowed in a quoted column
+	 */
+	public int getMaxQuotedColumnLines() {
+		return maxQuotedColumnLines;
 	}
 	
 	/**
@@ -243,6 +255,8 @@ public final class CsvPreference {
 		
 		private CommentMatcher commentMatcher;
 		
+		private final int maxQuotedColumnLines;
+
 		/**
 		 * Constructs a Builder with all of the values from an existing <tt>CsvPreference</tt> instance. Useful if you
 		 * want to base your preferences off one of the existing CsvPreference constants.
@@ -259,6 +273,7 @@ public final class CsvPreference {
 			this.encoder = preference.encoder;
 			this.quoteMode = preference.quoteMode;
 			this.commentMatcher = preference.commentMatcher;
+			this.maxQuotedColumnLines = preference.maxQuotedColumnLines;
 		}
 		
 		/**
@@ -276,6 +291,28 @@ public final class CsvPreference {
 		 *             if endOfLineSymbols is null
 		 */
 		public Builder(final char quoteChar, final int delimiterChar, final String endOfLineSymbols) {
+			this(quoteChar, delimiterChar, endOfLineSymbols, -1);
+		}
+		
+		/**
+		 * Constructs a Builder with the mandatory preference values.
+		 * 
+		 * @param quoteChar
+		 *            matching pairs of this character are used to escape columns containing the delimiter
+		 * @param delimiterChar
+		 *            the character separating each column
+		 * @param endOfLineSymbols
+		 *            one or more symbols terminating the line, e.g. "\n". Only used for writing.
+		 * @param maxQuotedColumnLines
+		 *            the maximum number of lines that a quoted column can contain.
+		 *            Helpful for failing fast on large files with a missing ending quote.
+		 *            A positive integer value will be treated as a maximum.  Anything else will signify that there is not a maximum to check for.
+		 * @throws IllegalArgumentException
+		 *             if quoteChar and delimiterChar are the same character
+		 * @throws NullPointerException
+		 *             if endOfLineSymbols is null
+		 */
+		public Builder(final char quoteChar, final int delimiterChar, final String endOfLineSymbols, final int maxQuotedColumnLines) {
 			if( quoteChar == delimiterChar ) {
 				throw new IllegalArgumentException(String.format(
 					"quoteChar and delimiterChar should not be the same character: %c", quoteChar));
@@ -285,6 +322,7 @@ public final class CsvPreference {
 			this.quoteChar = quoteChar;
 			this.delimiterChar = delimiterChar;
 			this.endOfLineSymbols = endOfLineSymbols;
+			this.maxQuotedColumnLines = maxQuotedColumnLines;
 		}
 		
 		/**

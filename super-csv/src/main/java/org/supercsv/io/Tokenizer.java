@@ -52,6 +52,8 @@ public class Tokenizer extends AbstractTokenizer {
 	
 	private final CommentMatcher commentMatcher;
 	
+	private final int maxQuotedColumnLines;
+	
 	/**
 	 * Enumeration of tokenizer states. QUOTE_MODE is activated between quotes.
 	 */
@@ -76,6 +78,7 @@ public class Tokenizer extends AbstractTokenizer {
 		this.surroundingSpacesNeedQuotes = preferences.isSurroundingSpacesNeedQuotes();
 		this.ignoreEmptyLines = preferences.isIgnoreEmptyLines();
 		this.commentMatcher = preferences.getCommentMatcher();
+		this.maxQuotedColumnLines = preferences.getMaxQuotedColumnLines();
 	}
 	
 	/**
@@ -131,9 +134,7 @@ public class Tokenizer extends AbstractTokenizer {
 					/*
 					 * Newline. Doesn't count as newline while in QUOTESCOPE. Add the newline char, reset the charIndex
 					 * (will update to 0 for next iteration), read in the next line, then then continue to next
-					 * character. For a large file with an unterminated quoted section (no trailing quote), this could
-					 * cause memory issues as it will keep reading lines looking for the trailing quote. Maybe there
-					 * should be a configurable limit on max lines to read in quoted mode?
+					 * character.
 					 */
 					currentColumn.append(NEWLINE);
 					currentRow.append(NEWLINE); // specific line terminator lost, \n will have to suffice
@@ -146,6 +147,19 @@ public class Tokenizer extends AbstractTokenizer {
 								.format(
 									"unexpected end of file while reading quoted column beginning on line %d and ending on line %d",
 									quoteScopeStartingLine, getLineNumber()));
+					}
+					
+					/*
+					 * For a large file with an unterminated quoted section (no trailing quote), this could
+					 * cause memory issues as it will keep reading lines looking for the trailing quote.
+					 * Check the configurable limit on max lines to read in quoted mode and fail fast if it has been exceeded.
+					 */
+					if ( maxQuotedColumnLines > 0 && (getLineNumber() - quoteScopeStartingLine) >= maxQuotedColumnLines ) {
+						throw new SuperCsvException(
+							String
+								.format( /* TODO: Change message */
+									"Quoted column beginning on line %d has exceed the maximum allowed lines of %d for quoted columns",
+									quoteScopeStartingLine, maxQuotedColumnLines));
 					}
 					
 					currentRow.append(line); // update untokenized CSV row
