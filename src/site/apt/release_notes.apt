@@ -19,6 +19,16 @@
 
 Release notes
 
+* 2.4.0
+
+  <TBA>
+  
+  TODO
+  
+  <<New features>>
+  
+    * {{{https://github.com/super-csv/super-csv/issues/3}3}} - New <<<maxLinesPerRow>>> preference
+
 * 2.3.1
 
   <03/2015>

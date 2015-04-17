@@ -92,6 +92,8 @@ import org.supercsv.quote.QuoteMode;
  * <li>using a custom {@link CommentMatcher} to skip comments when reading CSV. You can use the existing
  * {@link org.supercsv.comment.CommentStartsWith CommentStartsWith}, {@link org.supercsv.comment.CommentMatches
  * CommentMatches}, or supply your own.</li>
+ * <li>ignoring empty lines (enabled by default)</li>
+ * <li>setting the maximum number of lines a row of CSV can span (useful for debugging files with mismatched quotes)</li>
  * </ul>
  * 
  * @author Kasper B. Graversen
@@ -134,9 +136,9 @@ public final class CsvPreference {
 	private final QuoteMode quoteMode;
 	
 	private final CommentMatcher commentMatcher;
-
+	
 	private int maxLinesPerRow = 0;
-
+	
 	/**
 	 * Constructs a new <tt>CsvPreference</tt> from a Builder.
 	 */
@@ -145,7 +147,7 @@ public final class CsvPreference {
 		this.delimiterChar = builder.delimiterChar;
 		this.endOfLineSymbols = builder.endOfLineSymbols;
 		this.surroundingSpacesNeedQuotes = builder.surroundingSpacesNeedQuotes;
-		this.ignoreEmptyLines = builder.ignoreEmptyLines; 
+		this.ignoreEmptyLines = builder.ignoreEmptyLines;
 		this.commentMatcher = builder.commentMatcher;
 		this.encoder = builder.encoder;
 		this.quoteMode = builder.quoteMode;
@@ -196,7 +198,7 @@ public final class CsvPreference {
 	public boolean isIgnoreEmptyLines() {
 		return ignoreEmptyLines;
 	}
-
+	
 	/**
 	 * Returns the CSV encoder.
 	 * 
@@ -223,11 +225,11 @@ public final class CsvPreference {
 	public CommentMatcher getCommentMatcher() {
 		return commentMatcher;
 	}
-
+	
 	/**
-	 * Returns the number of max lines a row can span.
+	 * Returns the maximum number of lines a row can span.
 	 *
-	 * @return the number of max lines a row can span
+	 * @return the maximum number of lines a row can span
 	 */
 	public int getMaxLinesPerRow() {
 		return maxLinesPerRow;
@@ -254,7 +256,7 @@ public final class CsvPreference {
 		private QuoteMode quoteMode;
 		
 		private CommentMatcher commentMatcher;
-
+		
 		private int maxLinesPerRow = 0;
 		
 		/**
@@ -390,14 +392,17 @@ public final class CsvPreference {
 			this.quoteMode = quoteMode;
 			return this;
 		}
-
+		
 		/**
-		 * Integer indicating how many lines to read parsing a single row before an exception is thrown. This option
-		 * is valuable when dealing with possible human errors in mistyping quotes and large files that would otherwise
-		 * exhaust memory. Zero or a negative value will disable this option. The default is <tt>0</tt>.
-		 *
+		 * The maximum number of lines that a row can span before an exception is thrown (only applicable when reading
+		 * CSV). This option allows CSV readers to fail fast when encountering CSV with mismatching quotes - the normal
+		 * behaviour would be to continue reading until the matching quote is found, which could potentially mean
+		 * reading the whole file (and exhausting all available memory). Zero or a negative value will disable this
+		 * option. The default is <tt>0</tt>.
+		 * 
+		 * @since 2.4.0
 		 * @param maxLinesPerRow
-		 *            integer indicating the max number of lines a row can span before an exception is thrown
+		 *            the maximum number of lines a row can span before an exception is thrown
 		 * @return the updated Builder
 		 */
 		public Builder maxLinesPerRow(final int maxLinesPerRow) {

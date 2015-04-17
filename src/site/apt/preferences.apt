@@ -41,6 +41,10 @@ CSV Preferences
     []
     
     [ignoreEmptyLines] Whether empty lines (i.e. containing only end of line symbols) are ignored. The default value is true (empty lines are ignored).
+
+    []
+    
+    [maxLinesPerRow] The maximum number of lines a row of CSV can span (useful for debugging large files with mismatched quotes, as it ensures fast failure and prevents OutOfMemoryErrors when trying to find the matching quote).
     
     []
     
@@ -83,6 +87,8 @@ CSV Preferences
 *----------------------------+-------------------------------------------------------------------------------------*
  ignoreEmptyLines            | true
 *----------------------------+-------------------------------------------------------------------------------------*
+ maxLinesPerRow              | 0 (disabled)
+*----------------------------+-------------------------------------------------------------------------------------*
  encoder                     | {{{./apidocs/org/supercsv/encoder/DefaultCsvEncoder.html}DefaultCsvEncoder}}
 *----------------------------+-------------------------------------------------------------------------------------*
  quoteMode                   | {{{./apidocs/org/supercsv/quote/NormalQuoteMode.html}NormalQuoteMode}}
@@ -123,6 +129,27 @@ private static final CsvPreference STANDARD_SURROUNDING_SPACES_NEED_QUOTES =
 +------------------------------------------------------------------------------------------------------------------------------------------------+
   
   Prior to Super CSV 2.0.0, this behaviour wasn't configurable and surrounding spaces were always trimmed.
+
+* Ignoring empty lines
+
+  By default, all empty lines (which aren't quoted) are ignored when reading CSV. This is useful if your CSV file has leading or trailing
+  empty lines. If you with to disable this behaviour and allow empty lines to be read you can use the <<<ignoreEmptyLines>>> preference:
+
++----------------------------------------------------------------------------------------------------+
+private static final CsvPreference ALLOW_EMPTY_LINES = 
+    new CsvPreference.Builder(CsvPreference.STANDARD_PREFERENCE).ignoreEmptyLines(false).build();
++----------------------------------------------------------------------------------------------------+
+
+* Limiting the maximum number of lines per row when reading CSV
+
+  If your CSV file isn't quoted property (is missing a trailing quote, for example), then it's possible that Super CSV will keep reading
+  lines in an attempt to locate the end of the row - for large files this can cause an <<<OutOfMemoryException>>>. By setting the <<<maxLinesPerRow>>>
+  preference Super CSV will fail fast, giving you a chance to locate the row in error and fix it:
+
++----------------------------------------------------------------------------------------------------+
+private static final CsvPreference DISABLE_MULTILINE_ROWS = 
+    new CsvPreference.Builder(CsvPreference.STANDARD_PREFERENCE).maxLinesPerRow(10).build();
++----------------------------------------------------------------------------------------------------+
 
 * Custom quote mode
 
