@@ -28,6 +28,10 @@ Release notes
   <<New features>>
   
     * {{{https://github.com/super-csv/super-csv/issues/3}3}} - New <<<maxLinesPerRow>>> preference
+    
+  <<Bug fixes>>
+    
+    * {{{https://github.com/super-csv/super-csv/issues/33}33}} - Fixed misleading Exception for a CSV file with mismatched quotes
 
 * 2.3.1
 
