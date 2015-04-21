@@ -1,6 +1,8 @@
 super-csv
 =========
 
+[![Join the chat at https://gitter.im/super-csv/super-csv](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/super-csv/super-csv?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![Build Status](https://travis-ci.org/super-csv/super-csv.svg?branch=master)](https://travis-ci.org/super-csv/super-csv)
 
 Super CSV is a fast, programmer-friendly, open-source library for reading and writing CSV files with Java. It is used by a number of large projects and is being downloaded 19000+ times/month from the Maven repository.
