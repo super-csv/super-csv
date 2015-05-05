@@ -124,13 +124,13 @@ public class CsvContext implements Serializable, Cloneable {
 	@Override
 	public CsvContext clone()  {
 		try {
-			CsvContext bobafett = (CsvContext)super.clone();
+			CsvContext clone = (CsvContext)super.clone();
 			
 			if (this.rowSource != null) {
-				bobafett.rowSource = new ArrayList<Object>(this.rowSource.size());
-				bobafett.rowSource.addAll(this.rowSource);   // Can't clone java.lang.Object so stuck with a shallow copy
+				clone.rowSource = new ArrayList<Object>(this.rowSource.size());
+				clone.rowSource.addAll(this.rowSource);   // Can't clone java.lang.Object so stuck with a shallow copy
 			}
-			return bobafett;	
+			return clone;	
 		}
 		catch(CloneNotSupportedException e) {
 			throw new UnsupportedOperationException("Forgot to implement Cloneable. File a bug report");
