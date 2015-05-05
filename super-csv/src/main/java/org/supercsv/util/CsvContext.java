@@ -16,6 +16,7 @@
 package org.supercsv.util;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,7 +28,7 @@ import java.util.List;
  * @author Kasper B. Graversen
  * @author James Bassett
  */
-public class CsvContext implements Serializable {
+public class CsvContext implements Serializable, Cloneable {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -117,6 +118,23 @@ public class CsvContext implements Serializable {
 	 */
 	public void setRowSource(List<Object> rowSource) {
 		this.rowSource = rowSource;
+	}
+	
+	
+	@Override
+	public CsvContext clone()  {
+		try {
+			CsvContext bobafett = (CsvContext)super.clone();
+			
+			if (this.rowSource != null) {
+				bobafett.rowSource = new ArrayList<Object>(this.rowSource.size());
+				bobafett.rowSource.addAll(this.rowSource);   // Can't clone java.lang.Object so stuck with a shallow copy
+			}
+			return bobafett;	
+		}
+		catch(CloneNotSupportedException e) {
+			throw new UnsupportedOperationException("Forgot to implement Cloneabel. File a bug report");
+		}
 	}
 	
 	/**

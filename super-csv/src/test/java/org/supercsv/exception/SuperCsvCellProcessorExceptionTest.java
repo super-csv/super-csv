@@ -99,4 +99,29 @@ public class SuperCsvCellProcessorExceptionTest {
 		}
 	}
 	
+	/**
+	 * Tests the integrity of the CsvContext in a <code>SuperCsvCellProcessorException</code>
+	 */
+	@Test
+	public void testCsvContext() {
+		// This is my reference context. It is the control object to use as the reference for assertions
+		CsvContext rc = new CsvContext(1, 2, 3);   // line, row, col
+		
+		// This is the test context object to use for the test. It must have the same
+		// values as the reference context. 
+		CsvContext tc = new CsvContext(rc.getLineNumber(), rc.getRowNumber(), rc.getColumnNumber()); 
+		
+		SuperCsvCellProcessorException e = new SuperCsvCellProcessorException
+			(String.class, 123, tc, PROCESSOR);
+
+		// Pre-condition check
+		assertEquals(rc, e.getCsvContext());
+		
+		// Test steps
+		tc.setColumnNumber(2*rc.getColumnNumber() + 50);   // Set a column # that is different than the reference
+		
+		// Check that the exception still returns the context that it was created with
+		assertEquals(rc, e.getCsvContext());
+	}
+	
 }
