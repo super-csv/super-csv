@@ -133,7 +133,7 @@ public class CsvContext implements Serializable, Cloneable {
 			return bobafett;	
 		}
 		catch(CloneNotSupportedException e) {
-			throw new UnsupportedOperationException("Forgot to implement Cloneabel. File a bug report");
+			throw new UnsupportedOperationException("Forgot to implement Cloneable. File a bug report");
 		}
 	}
 	
