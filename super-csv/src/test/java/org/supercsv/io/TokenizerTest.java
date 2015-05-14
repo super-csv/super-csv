@@ -375,6 +375,83 @@ public class TokenizerTest {
 		}
 	}
 
+	@Test
+	public void testQuotedFieldWithUnexpectedNewlineNoNextLineRead() throws Exception {
+
+		// Row 2 has a missing trailing quote
+		final String input = "col1,col2\n" +
+				"\"foo\",\"bar\n" +
+				"\"baz\",\"zoo\"\n" +
+				"\"aaa\",\"bbb\"";
+		CsvPreference pref = new CsvPreference.Builder(NORMAL_PREFERENCE)
+				.maxLinesPerRow(1).build();
+
+		tokenizer = createTokenizer(input, pref);
+		try {
+			final boolean first = tokenizer.readColumns(columns);
+			assertEquals(true , first);
+			assertEquals("[col1, col2]" , columns.toString());
+
+			tokenizer.readColumns(columns);
+			fail("should have thrown SuperCsvException");
+		}
+		catch(SuperCsvException e) {
+			assertEquals("unexpected end of line while reading quoted column on line 2",
+					e.getMessage());
+		}
+		final boolean third = tokenizer.readColumns(columns);
+		assertEquals(true , third);
+		assertEquals("[baz, zoo]" , columns.toString());
+
+		final boolean fourth = tokenizer.readColumns(columns);
+		assertEquals(true , fourth);
+		assertEquals("[aaa, bbb]" , columns.toString());
+
+		//line 4 was the last 
+		final boolean fifth = tokenizer.readColumns(columns);
+		assertEquals(false , fifth);
+	}
+
+	/**
+	 * Tests the readColumns() method when a newline is reached in quote
+	 * scoped when two lines are only supposed to be read
+	 */
+	@Test
+	public void testQuotedFieldWithTwoMaxLinesNoMoreLinesRead() throws Exception {
+
+		// Row 2 has a missing trailing quote
+		final String input = "col1,col2\n" +
+				"\"foo,bar\n" +
+				"baz,zoo\n" +
+				"aaa,bbb";
+		CsvPreference pref = new CsvPreference.Builder(NORMAL_PREFERENCE)
+				.maxLinesPerRow(2).build();
+
+		tokenizer = createTokenizer(input, pref);
+		try {
+			boolean first = tokenizer.readColumns(columns);
+			assertEquals(true , first);
+			assertEquals("[col1, col2]" , columns.toString());
+			
+
+			boolean second = tokenizer.readColumns(columns);
+			assertEquals(true , second);
+			assertEquals("[\"foo,bar]" , columns.toString());
+
+
+			tokenizer.readColumns(columns);
+			fail("should have thrown SuperCsvException");
+		}
+		catch(SuperCsvException e) {
+			assertEquals("max number of lines to read exceeded while reading quoted column beginning on line 2 and ending on line 3",
+					e.getMessage());
+		}
+		boolean fourth = tokenizer.readColumns(columns);
+		assertEquals(true , fourth);
+		assertEquals("[aaa, bbb]" , columns.toString());
+		
+	}
+
 	/**
 	 * Tests the readColumns() method with a leading space before the first quoted field. This is not technically valid
 	 * CSV, but the tokenizer is lenient enough to allow it. The leading spaces will be trimmed off when surrounding
