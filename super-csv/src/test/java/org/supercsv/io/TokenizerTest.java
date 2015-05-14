@@ -370,7 +370,7 @@ public class TokenizerTest {
 			fail("should have thrown SuperCsvException");
 		}
 		catch(SuperCsvException e) {
-			assertEquals("max number of lines to read exceeded while reading quoted column beginning on line 2 and ending on line 4",
+			assertEquals("max number of lines to read exceeded while reading quoted column beginning on line 2 and ending on line 3",
 					e.getMessage());
 		}
 	}

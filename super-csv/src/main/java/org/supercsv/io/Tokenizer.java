@@ -140,9 +140,8 @@ public class Tokenizer extends AbstractTokenizer {
 					currentRow.append(NEWLINE); // specific line terminator lost, \n will have to suffice
 					
 					charIndex = 0;
-					line = readLine();
 
-					if (maxLinesPerRow > 0 && getLineNumber() - quoteScopeStartingLine + 1 > maxLinesPerRow) {
+					if (maxLinesPerRow > 0 && getLineNumber() - quoteScopeStartingLine + 1 >= maxLinesPerRow) {
 						/*
 						 * The quoted section that is being parsed spans too many lines, so to avoid excessive memory
 						 * usage parsing something that is probably human error anyways, throw an exception. If each
@@ -151,13 +150,13 @@ public class Tokenizer extends AbstractTokenizer {
 						 */
 						String msg = maxLinesPerRow == 1 ?
 								String.format("unexpected end of line while reading quoted column on line %d",
-											  getLineNumber() - 1) :
+											  getLineNumber()) :
 								String.format("max number of lines to read exceeded while reading quoted column" +
 											  " beginning on line %d and ending on line %d",
 											  quoteScopeStartingLine, getLineNumber());
 						throw new SuperCsvException(msg);
 					}
-					else if( line == null ) {
+					else if( (line = readLine()) == null ) {
 						throw new SuperCsvException(
 							String
 								.format(
