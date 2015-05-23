@@ -16,14 +16,17 @@
 package org.supercsv.io.dozer;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.Arrays;
 
+import java.util.List;
 import org.dozer.DozerBeanMapper;
 import org.junit.After;
 import org.junit.Before;
@@ -32,6 +35,7 @@ import org.supercsv.cellprocessor.Optional;
 import org.supercsv.cellprocessor.ParseBool;
 import org.supercsv.cellprocessor.ParseInt;
 import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.exception.SuperCsvException;
 import org.supercsv.io.ITokenizer;
 import org.supercsv.io.Tokenizer;
 import org.supercsv.mock.dozer.Answer;
@@ -75,7 +79,13 @@ public class CsvDozerBeanReaderTest {
 		+ "23,Y,1,Nikola Tesla,2,\"\"\"A brief history of time\"\" by Steven Hawking\",3,Theoretical physicist\n"
 		+ "16,Y,1,Genghis Kahn,2,\"\"\"Monsoon\"\" by Wilbur Smith\",3,\n"
 		+ "44,Y,1,,2,,3,\"I hate surveys, thanks for wasting my time!\"";
-	
+
+	private static final String BROKEN_CSV = "age,consentGiven,questionNo1,answer1,questionNo2,answer2,questionNo3,answer3\n"
+			+ "23,Y,1,Nikola Tesla\",2,A brief history of time by Steven Hawking,3,Theoretical physicist\n"
+			+ "16,Y,1,Genghis Kahn,2,Monsoon by Wilbur Smith,3,\n"
+			+ "44,Y,1,,2,,3,\"I hate surveys, thanks for wasting my time!\"";
+
+
 	/**
 	 * Sets up the readers for the tests (all four constructor varieties are tested!).
 	 */
@@ -239,6 +249,44 @@ public class CsvDozerBeanReaderTest {
 	public void testReadForBeanReaderWithConfiguredMapperUsingProcessorsWithExistingBean() throws IOException {
 		testRead(beanReaderWithConfiguredMapper, USE_PROCESSORS, CONFIGURED, EXISTING_BEAN);
 	}
+
+	@Test
+	public void testReadForBeanReaderWithBrokenMaxSingleLineQuotes() throws IOException {
+		reader = new StringReader(BROKEN_CSV);
+		final CsvDozerBeanReader brokenCsvBeanReader = new CsvDozerBeanReader(reader, new CsvPreference.Builder(PREFS).maxLinesPerRow(1).build(), beanMapper);
+		final List<SurveyResponse> responses = new ArrayList<SurveyResponse>();
+		testReadForBrokenCSV(brokenCsvBeanReader, responses, "unexpected end of line while reading quoted column on line 2", 2);
+	}
+
+	@Test
+	public void testReadForBeanReaderWithBrokenMaxTwoLineQuotes() throws IOException {
+		reader = new StringReader(BROKEN_CSV);
+		final CsvDozerBeanReader brokenCsvBeanReader = new CsvDozerBeanReader(reader, new CsvPreference.Builder(PREFS).maxLinesPerRow(2).build(), beanMapper);
+		final List<SurveyResponse> responses = new ArrayList<SurveyResponse>();
+		testReadForBrokenCSV(brokenCsvBeanReader, responses, "max number of lines to read exceeded while reading quoted column beginning on line 2 and ending on line 3", 1);
+	}
+
+	private void testReadForBrokenCSV(final CsvDozerBeanReader brokenCsvBeanReader, final List<SurveyResponse> responses,
+			final String expectedMessage, final int expectedRowsRead) throws IOException {
+		brokenCsvBeanReader.getHeader(true);
+		brokenCsvBeanReader.configureBeanMapping(SurveyResponse.class, FIELD_MAPPING);
+		Exception expected = null;
+		for(int i = 0; i < 4; i++) {
+			try{
+				final SurveyResponse response = readSurveyResponse(brokenCsvBeanReader, USE_PROCESSORS, EXISTING_BEAN);
+				if(response != null) {
+					responses.add(response);
+				}
+			} catch (final SuperCsvException e) {
+				expected = e;
+			}
+		}
+		assertNotNull(expected);
+		assertEquals(expectedMessage, expected.getLocalizedMessage());
+		assertEquals(expectedRowsRead, responses.size());
+	}
+
+	
 	
 	/**
 	 * Tests the read() method without any processors for a bean reader with custom tokenizer and DozerBeanMapper.
