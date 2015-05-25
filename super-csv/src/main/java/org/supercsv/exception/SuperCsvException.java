@@ -50,7 +50,9 @@ public class SuperCsvException extends RuntimeException {
 	 */
 	public SuperCsvException(final String msg, final CsvContext context) {
 		super(msg);
-		this.csvContext = context;
+		if (context != null) {
+			this.csvContext = new CsvContext(context);
+		}
 	}
 	
 	/**
@@ -65,7 +67,9 @@ public class SuperCsvException extends RuntimeException {
 	 */
 	public SuperCsvException(final String msg, final CsvContext context, final Throwable t) {
 		super(msg, t);
-		this.csvContext = context;
+		if (context != null) {
+			this.csvContext = new CsvContext(context);
+		}
 	}
 	
 	/**

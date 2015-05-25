@@ -16,6 +16,7 @@
 package org.supercsv.util;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,7 +28,7 @@ import java.util.List;
  * @author Kasper B. Graversen
  * @author James Bassett
  */
-public class CsvContext implements Serializable {
+public final class CsvContext implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -57,6 +58,22 @@ public class CsvContext implements Serializable {
 		this.lineNumber = lineNumber;
 		this.rowNumber = rowNumber;
 		this.columnNumber = columnNumber;
+	}
+	
+	/**
+	 * Constructs a new <tt>CsvContext</tt> that is a copy of the provided <tt>CsvContext</tt>. 
+	 * 
+	 * @param c the context to be copied
+	 */
+	public CsvContext(final CsvContext c)  {
+		this (c.lineNumber, c.rowNumber, c.columnNumber);
+		
+		if (c.rowSource != null) {
+			// Shallow clone is OK here. A deep clone implementation would be tricky
+			// because the declared type of the items in the array is "Object" which does not 
+			// have an exposed copy constructor or clone method.
+			this.rowSource = new ArrayList<Object>(c.rowSource);
+		}
 	}
 	
 	/**
