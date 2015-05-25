@@ -130,23 +130,23 @@ public class CsvContextTest {
 	}
 	
 	@Test
-	public void testClone() {
-		// Test clone with the mandatory parameters. The rowSource is not set
-		// to make sure that clone() does not dereference a null
+	public void testCopyConstructor() {
+		// Test with the mandatory parameters. The rowSource is not set
+		// to make sure that copy constructor does not dereference a null
 		CsvContext original = new CsvContext(1,2,3);
-		CsvContext clone = original.clone();
+		CsvContext clone = new CsvContext(original);
 		assertFalse(original == clone);   // The clone is a new object
 		assertEquals(original, clone);    // that passes the equals test
 		
 		// Test with a homogeneous rowSource
 		original.setRowSource(Arrays.asList(new Object[] { "four", "five", "six" }));
-		CsvContext clone2 = original.clone();
+		CsvContext clone2 = new CsvContext(original);
 		assertFalse(original == clone2);   // The clone is a new object
 		assertEquals(original, clone2);    // that passes the equals test
 		
 		// Corner cases
 		original.setRowSource(Arrays.asList(new Object[] { null, "five", new Integer(6) }));
-		CsvContext clone3 = original.clone();
+		CsvContext clone3 = new CsvContext(original);
 		assertFalse(original == clone3);   // The clone is a new object
 		assertEquals(original, clone3);    // that passes the equals test
 	}
