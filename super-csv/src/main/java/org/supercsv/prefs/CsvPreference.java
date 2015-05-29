@@ -177,7 +177,7 @@ public final class CsvPreference {
 	 * 
 	 * @return the quote character
 	 */
-	public int getQuoteChar() {
+	public char getQuoteChar() {
 		return quoteChar;
 	}
 	
