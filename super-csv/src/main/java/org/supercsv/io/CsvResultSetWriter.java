@@ -24,7 +24,6 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.supercsv.cellprocessor.Optional;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.prefs.CsvPreference;
 import org.supercsv.util.Util;
@@ -59,20 +58,14 @@ public class CsvResultSetWriter extends AbstractCsvWriter implements ICsvResultS
 	 * 
 	 */
 	public void write(ResultSet resultSet) throws SQLException, IOException {
-		CellProcessor[] dummyProcessors = getDummyProcessors(resultSet);
-		write(resultSet, dummyProcessors);
+		if (resultSet == null) {
+			throw new NullPointerException("ResultSet cannot be null");
+		}
+		
+		writeHeaders(resultSet); // increments row and line number
+		writeContents(resultSet); // increments row and line number before writing of each row
 	}
 	
-	// Creates an array of dummy processors which perform no processing
-	private CellProcessor[] getDummyProcessors(ResultSet resultSet) throws SQLException {
-		int numberOfColumns = resultSet.getMetaData().getColumnCount();
-		CellProcessor[] dummyProcessors = new CellProcessor[numberOfColumns];
-		for (int i = 0; i < dummyProcessors.length; i++) {
-			dummyProcessors[i] = new Optional();
-		}
-		return dummyProcessors;
-	}
-
 	/**
 	 * {@inheritDoc}
 	 * 
@@ -99,6 +92,19 @@ public class CsvResultSetWriter extends AbstractCsvWriter implements ICsvResultS
 			headers.add(meta.getColumnName(columnIndex));
 		}
 		super.writeRow(headers);
+	}
+	
+	private void writeContents(ResultSet resultSet) throws SQLException, IOException {
+		final int numberOfColumns = resultSet.getMetaData().getColumnCount();
+		List<Object> objects = new LinkedList<Object>();
+		while (resultSet.next()) {
+			super.incrementRowAndLineNo(); // This will allow the correct row/line numbers to be used in any exceptions thrown before writing occurs
+			objects.clear();
+			for (int columnIndex = 1; columnIndex <= numberOfColumns; columnIndex++) {
+				objects.add(resultSet.getObject(columnIndex));
+			}
+			super.writeRow(objects);
+		}
 	}
 	
 	private void writeContents(ResultSet resultSet, CellProcessor[] writeProcessors) throws SQLException, IOException {
