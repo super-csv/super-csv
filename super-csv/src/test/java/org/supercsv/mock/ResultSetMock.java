@@ -46,7 +46,7 @@ public class ResultSetMock implements ResultSet {
 	private Object[][] data;
 	private ResultSetMetaData meta;
 		
-	public ResultSetMock(Object[][] data, String[] headers) {
+	public ResultSetMock(final Object[][] data, final String[] headers) {
 		this.data = data;
 		meta = new ResultSetMetaDataMock(headers);
 	}

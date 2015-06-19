@@ -64,7 +64,7 @@ public class CsvResultSetWriterTest {
 	 */
 	@Test
 	public void testWrite() throws IOException, SQLException {
-		ResultSet resultSetMock = new ResultSetMock(TEST_DATA_STRINGS, HEADER);
+		final ResultSet resultSetMock = new ResultSetMock(TEST_DATA_STRINGS, HEADER);
 		csvResultSetWriter.write(resultSetMock);
 		csvResultSetWriter.flush();
 		assertEquals(CSV_FILE, writer.toString());
@@ -77,7 +77,7 @@ public class CsvResultSetWriterTest {
 	 */
 	@Test
 	public void testWriteWithProcessors() throws SQLException, IOException {
-		ResultSet resultSetMock = new ResultSetMock(TEST_DATA_VARIOUS_TYPES, HEADER);
+		final ResultSet resultSetMock = new ResultSetMock(TEST_DATA_VARIOUS_TYPES, HEADER);
 		csvResultSetWriter.write(resultSetMock, WRITE_PROCESSORS);
 		csvResultSetWriter.flush();
 		assertEquals(CSV_FILE, writer.toString());
@@ -130,7 +130,7 @@ public class CsvResultSetWriterTest {
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testWriteNullProcessors() throws SQLException, IOException {
-		ResultSet resultSet = new ResultSetMock(TEST_DATA_VARIOUS_TYPES, HEADER);
+		final ResultSet resultSet = new ResultSetMock(TEST_DATA_VARIOUS_TYPES, HEADER);
 		csvResultSetWriter.write(resultSet, null);
 	}
 
@@ -143,21 +143,21 @@ public class CsvResultSetWriterTest {
 	public void testRowLineNumberCorrectness() throws SQLException, IOException {
 		final int LINE_NUMBER = 5;
 		final int ROW_NUMBER = 4;
-		Object[][] causesException = {
+		final Object[][] causesException = {
 			{"1", "Alexander\r\nGraham", date(1945, 6, 13), },
 			{"2", "Bob", date(1919, 2, 25), }, 
 			{"3", "Alice", "CAUSES EXCEPTION", },
 			{"4", "Bill", date(1973, 7, 10), },
 			{"5", "Miranda", date(1999, 1, 3), },
 		};
-		String[] headers = {"customerNo", "firstName", "birthDate"};
-		ResultSet resultSet = new ResultSetMock(causesException, headers);
-		CellProcessor[] cellProcessors = {null, null, new FmtDate("dd/MM/yyyy")};
+		final String[] headers = {"customerNo", "firstName", "birthDate"};
+		final ResultSet resultSet = new ResultSetMock(causesException, headers);
+		final CellProcessor[] cellProcessors = {null, null, new FmtDate("dd/MM/yyyy")};
 		try {
 			csvResultSetWriter.write(resultSet, cellProcessors);
 		} catch(SuperCsvCellProcessorException e) {
-			int actualLineNumber = e.getCsvContext().getLineNumber();
-			int actualRowNumber = e.getCsvContext().getRowNumber();
+			final int actualLineNumber = e.getCsvContext().getLineNumber();
+			final int actualRowNumber = e.getCsvContext().getRowNumber();
 			assertEquals("line number not correct", LINE_NUMBER, actualLineNumber);
 			assertEquals("row number not correct", ROW_NUMBER, actualRowNumber);
 			throw e;

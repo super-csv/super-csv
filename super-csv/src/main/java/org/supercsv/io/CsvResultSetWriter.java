@@ -49,7 +49,7 @@ public class CsvResultSetWriter extends AbstractCsvWriter implements ICsvResultS
 	 * @throws 	NullPointerException
 	 *          	if writer or preference are null
 	 */
-	public CsvResultSetWriter(Writer writer, CsvPreference preference) {
+	public CsvResultSetWriter(final Writer writer, final CsvPreference preference) {
 		super(writer, preference);
 	}
 	
@@ -57,7 +57,7 @@ public class CsvResultSetWriter extends AbstractCsvWriter implements ICsvResultS
 	 * {@inheritDoc}
 	 * 
 	 */
-	public void write(ResultSet resultSet) throws SQLException, IOException {
+	public void write(final ResultSet resultSet) throws SQLException, IOException {
 		if (resultSet == null) {
 			throw new NullPointerException("ResultSet cannot be null");
 		}
@@ -85,9 +85,9 @@ public class CsvResultSetWriter extends AbstractCsvWriter implements ICsvResultS
 	private void writeHeaders(ResultSet resultSet) throws SQLException, IOException {
 		super.incrementRowAndLineNo(); // This will allow the correct row/line numbers to be used in any exceptions thrown before writing occurs
 		
-		ResultSetMetaData meta = resultSet.getMetaData();
+		final ResultSetMetaData meta = resultSet.getMetaData();
 		final int numberOfColumns = meta.getColumnCount();
-		List<Object> headers = new LinkedList<Object>();
+		final List<Object> headers = new LinkedList<Object>();
 		for (int columnIndex = 1; columnIndex <= numberOfColumns; columnIndex++) {
 			headers.add(meta.getColumnName(columnIndex));
 		}
@@ -96,7 +96,7 @@ public class CsvResultSetWriter extends AbstractCsvWriter implements ICsvResultS
 	
 	private void writeContents(ResultSet resultSet) throws SQLException, IOException {
 		final int numberOfColumns = resultSet.getMetaData().getColumnCount();
-		List<Object> objects = new LinkedList<Object>();
+		final List<Object> objects = new LinkedList<Object>();
 		while (resultSet.next()) {
 			super.incrementRowAndLineNo(); // This will allow the correct row/line numbers to be used in any exceptions thrown before writing occurs
 			objects.clear();
@@ -109,8 +109,8 @@ public class CsvResultSetWriter extends AbstractCsvWriter implements ICsvResultS
 	
 	private void writeContents(ResultSet resultSet, CellProcessor[] writeProcessors) throws SQLException, IOException {
 		final int numberOfColumns = resultSet.getMetaData().getColumnCount();
-		List<Object> objects = new LinkedList<Object>();
-		List<Object> processedColumns = new LinkedList<Object>();
+		final List<Object> objects = new LinkedList<Object>();
+		final List<Object> processedColumns = new LinkedList<Object>();
 		while (resultSet.next()) {
 			super.incrementRowAndLineNo(); // This will allow the correct row/line numbers to be used in any exceptions thrown before writing occurs
 			objects.clear();

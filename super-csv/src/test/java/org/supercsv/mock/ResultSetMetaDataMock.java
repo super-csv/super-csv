@@ -25,7 +25,7 @@ class ResultSetMetaDataMock implements ResultSetMetaData {
 	
 	private String[] headers;
 	
-	public ResultSetMetaDataMock(String[] headers) {
+	public ResultSetMetaDataMock(final String[] headers) {
 		this.headers = headers;
 	}
 
@@ -33,7 +33,7 @@ class ResultSetMetaDataMock implements ResultSetMetaData {
 		return headers.length;
 	}
 	
-	public String getColumnName(int column) throws SQLException {
+	public String getColumnName(final int column) throws SQLException {
 		return headers[column - 1];
 	}
 	
