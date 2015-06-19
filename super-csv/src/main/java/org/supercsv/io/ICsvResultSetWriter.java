@@ -53,7 +53,7 @@ public interface ICsvResultSetWriter {
 	 *             if there was a general exception while writing
 	 * @since 	2.4.0
 	 */
-	public void write(ResultSet resultSet) throws SQLException, IOException;
+	void write(ResultSet resultSet) throws SQLException, IOException;
 	
 	/**
 	 * Writes a JDBC {@code ResultSet} as a CSV file. Each column in CSV file 
@@ -85,6 +85,6 @@ public interface ICsvResultSetWriter {
 	 *             if there was a general exception while writing/processing 
 	 * @since 	2.4.0
 	 */
-	public void write(ResultSet resultSet, CellProcessor[] cellProcessors) 
+	void write(ResultSet resultSet, CellProcessor[] cellProcessors) 
 		throws SQLException, IOException;
 }
