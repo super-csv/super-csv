@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Vyacheslav Pushkin (https://github.com/singularityfx)
+ * Copyright 2007 Kasper B. Graversen
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
