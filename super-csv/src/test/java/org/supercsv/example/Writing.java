@@ -16,6 +16,7 @@
 package org.supercsv.example;
 
 import java.io.FileWriter;
+import java.sql.ResultSet;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -34,10 +35,13 @@ import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.io.CsvBeanWriter;
 import org.supercsv.io.CsvListWriter;
 import org.supercsv.io.CsvMapWriter;
+import org.supercsv.io.CsvResultSetWriter;
 import org.supercsv.io.ICsvBeanWriter;
 import org.supercsv.io.ICsvListWriter;
 import org.supercsv.io.ICsvMapWriter;
+import org.supercsv.io.ICsvResultSetWriter;
 import org.supercsv.mock.CustomerBean;
+import org.supercsv.mock.ResultSetMock;
 import org.supercsv.prefs.CsvPreference;
 
 /**
@@ -47,6 +51,7 @@ public class Writing {
 	
 	public static void main(String[] args) throws Exception {
 		writeWithCsvBeanWriter();
+		writeWithResultSetWriter();
 		writeWithCsvListWriter();
 		writeWithCsvMapWriter();
 		partialWriteWithCsvBeanWriter();
@@ -121,6 +126,40 @@ public class Writing {
 	}
 	
 	/**
+	 * An example of writing using CsvResultSetWriter
+	 */
+	private static void writeWithResultSetWriter() throws Exception {
+		// create ResultSet mock
+		final String[] header = new String[] { "customerNo", "firstName", "lastName", "birthDate",
+			"mailingAddress", "married", "numberOfKids", "favouriteQuote", "email", "loyaltyPoints" };
+		final Object[][] johnData = new Object[][] {{"1", "John", "Dunbar",
+			new GregorianCalendar(1945, Calendar.JUNE, 13).getTime(),
+			"1600 Amphitheatre Parkway\nMountain View, CA 94043\nUnited States", null, null,
+			"\"May the Force be with you.\" - Star Wars", "jdunbar@gmail.com", 0L}};
+		final ResultSet john = new ResultSetMock(johnData, header);
+		final Object[][] bobData = new Object[][] {{"2", "Bob", "Down",
+			new GregorianCalendar(1919, Calendar.FEBRUARY, 25).getTime(),
+			"1601 Willow Rd.\nMenlo Park, CA 94025\nUnited States", true, 0,
+			"\"Frankly, my dear, I don't give a damn.\" - Gone With The Wind", "bobdown@hotmail.com", 123456L}};
+		final ResultSet bob = new ResultSetMock(bobData, header);
+		
+		ICsvResultSetWriter resultSetWriter = null;
+		try {
+			resultSetWriter = new CsvResultSetWriter(new FileWriter("target/writeWithCsvResultSetWriter.csv"),
+				CsvPreference.STANDARD_PREFERENCE);
+			final CellProcessor[] processors = getProcessors();
+			
+			// writer csv file from ResultSet
+			resultSetWriter.write(john, processors);
+			resultSetWriter.write(bob, processors);
+		} finally {
+			if ( resultSetWriter != null ) {
+				resultSetWriter.close();
+			}
+		}
+	}
+	
+	/**
 	 * An example of reading using CsvListWriter.
 	 */
 	private static void writeWithCsvListWriter() throws Exception {
@@ -154,7 +193,7 @@ public class Writing {
 			
 		}
 		finally {
-			if( listWriter != null ) {
+			if ( listWriter != null ) {
 				listWriter.close();
 			}
 		}
