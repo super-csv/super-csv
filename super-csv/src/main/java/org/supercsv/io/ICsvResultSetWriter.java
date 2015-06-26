@@ -30,7 +30,7 @@ import org.supercsv.exception.SuperCsvReflectionException;
  * @author SingularityFX
  *
  */
-public interface ICsvResultSetWriter {
+public interface ICsvResultSetWriter extends ICsvWriter {
 	
 	/**
 	 * Writes a JDBC {@code ResultSet} as a CSV file. Each column in CSV file 
