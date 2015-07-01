@@ -250,9 +250,10 @@ private static void writeWithDozerCsvBeanWriter() throws Exception {
   Output:
   
 ---------------------------------------------------------------------------------------------------------------
-lineNo=2, rowNo=2, surveyResponse=SurveyResponse [age=18, consentGiven=true, answers=[Answer [questionNo=1, answer=Twelve], Answer [questionNo=2, answer=Albert Einstein], Answer [questionNo=3, answer=Big Bang Theory]]]
-lineNo=3, rowNo=3, surveyResponse=SurveyResponse [age=null, consentGiven=true, answers=[Answer [questionNo=1, answer=Thirteen], Answer [questionNo=2, answer=Nikola Tesla], Answer [questionNo=3, answer=Stargate]]]
-lineNo=4, rowNo=4, surveyResponse=SurveyResponse [age=42, consentGiven=false, answers=[Answer [questionNo=1, answer=null], Answer [questionNo=2, answer=Carl Sagan], Answer [questionNo=3, answer=Star Wars]]]
+age,consentGiven,questionNo1,answer1,questionNo2,answer2,questionNo3,answer3
+18,Y,1,Twelve,2,Albert Einstein,3,Big Bang Theory
+age not supplied,Y,1,Thirteen,2,Nikola Tesla,3,Stargate
+42,N,1,not answered,2,Carl Sagan,3,Star Wars
 ---------------------------------------------------------------------------------------------------------------
   
 * Partial writing with CsvDozerBeanWriter
