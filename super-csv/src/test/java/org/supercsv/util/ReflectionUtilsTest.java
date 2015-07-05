@@ -173,6 +173,26 @@ public class ReflectionUtilsTest {
 		findSetter(bean, "iPad", String.class).invoke(bean, value);
 		assertEquals(value, bean.getiPad());
 	}
+
+	/**
+	 * Tests the findGetter() method with a getter which checks "Turkey Test" support.
+	 */
+	@Test
+	public void testFindIsTurkishGetter() throws Exception {
+		final boolean value = true;
+		bean.setIsTurkish(value);
+		assertEquals(value, findGetter(bean, "isTurkish").invoke(bean));
+	}
+
+	/**
+	 * Tests the findSetter() method with a setter which checks "Turkey Test" support.
+	 */
+	@Test
+	public void testFindIsTurkishSetter() throws Exception {
+		final boolean value = true;
+		findSetter(bean, "isTurkish", Boolean.class).invoke(bean, value);
+		assertEquals(value, bean.getIsTurkish());
+	}
 	
 	/**
 	 * Tests the findSetter() method by passing primitives and wrapper classes to setters that expect wrapper classes

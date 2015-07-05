@@ -289,6 +289,13 @@
 			</properties>
 		</profile>
 		<profile>
+			<!-- enable this profile to run tests with a Turkish locale -->
+			<id>turkishLocale</id>
+			<properties>
+				<surefireArgs>-Duser.country=TR -Duser.language=tr</surefireArgs>
+			</properties>
+		</profile>
+		<profile>
 			<!-- enable this profile to run tests with a UK locale -->
 			<id>englishLocale</id>
 			<properties>

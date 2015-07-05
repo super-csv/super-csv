@@ -44,6 +44,7 @@ public class ReflectionBean {
 	private Boolean booleanWrapper2;
 	private String URL;
 	private String iPad;
+	private boolean isTurkish;
 	
 	public String getName() {
 		
@@ -241,5 +242,12 @@ public class ReflectionBean {
 	public void setiPad(String iPad) {
 		this.iPad = iPad;
 	}
-	
+
+	public boolean getIsTurkish() {
+		return isTurkish;
+	}
+
+	public void setIsTurkish(boolean isTurkish) {
+		this.isTurkish = isTurkish;
+	}
 }
