@@ -51,6 +51,13 @@
 			<classifier>jar-with-dependencies</classifier>
 			<version>${project.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>net.sf.supercsv</groupId>
+			<artifactId>super-csv-java8</artifactId>
+			<type>zip</type>
+			<classifier>jar-with-dependencies</classifier>
+			<version>${project.version}</version>
+		</dependency>
 	</dependencies>
 
 	<build>
