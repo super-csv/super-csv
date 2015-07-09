@@ -1,0 +1,125 @@
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~ Copyright 2007 Kasper B. Graversen
+~~ 
+~~ Licensed under the Apache License, Version 2.0 (the "License");
+~~ you may not use this file except in compliance with the License.
+~~ You may obtain a copy of the License at
+~~ 
+~~     http://www.apache.org/licenses/LICENSE-2.0
+~~ 
+~~ Unless required by applicable law or agreed to in writing, software
+~~ distributed under the License is distributed on an "AS IS" BASIS,
+~~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~~ See the License for the specific language governing permissions and
+~~ limitations under the License.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+                                    -----------------------------------------
+                                    Writing CSV files with CsvResultSetWriter
+                                    -----------------------------------------
+
+Writing CSV files with CsvResultSetWriter
+
+  This page contains an example of writing a CSV file using Super CSV CsvResultSetWriter.
+  You can view the full source of the example {{{./xref-test/org/supercsv/example/Writing.html}here}}.
+
+* Example cell processor configuration
+
+  Example use the following {{{./cell_processors.html}cell processor}} configuration.
+  
+  It demonstrates:
+  
+  * mandatory columns (<<<new NotNull()>>>)
+  
+  * optional columns (<<<new Optional()>>>), with further processing
+  
+  * formatting of Dates (<<<new FmtDate()>>>) and Booleans (<<<new FmtBool()>>>)
+  
+  * constraint validation of numeric ranges (<<<new LMinMax()>>>) and uniqueness (<<<new UniqueHashCode()>>>)
+  
+  []
+  
+  Don't forget that you can {{{./examples_new_cell_processor.html}write your own cell processors}} if you want!
+  
++-------------------------------------------------------------------------------------------------------------+
+/**
+ * Sets up the processors used for the examples. There are 10 CSV columns, so 10 processors are defined. All values
+ * are converted to Strings before writing (there's no need to convert them), and null values will be written as
+ * empty columns (no need to convert them to "").
+ * 
+ * @return the cell processors
+ */
+private static CellProcessor[] getProcessors() {
+	
+	final CellProcessor[] processors = new CellProcessor[] { 
+		new UniqueHashCode(), // customerNo (must be unique)
+		new NotNull(), // firstName
+		new NotNull(), // lastName
+		new FmtDate("dd/MM/yyyy"), // birthDate
+		new NotNull(), // mailingAddress
+		new Optional(new FmtBool("Y", "N")), // married
+		new Optional(), // numberOfKids
+		new NotNull(), // favouriteQuote
+		new NotNull(), // email
+		new LMinMax(0L, LMinMax.MAX_LONG) // loyaltyPoints
+	};
+	
+	return processors;
+}
++-------------------------------------------------------------------------------------------------------------+
+
+* Writing with CsvResultSetWriter
+
+  The example writes a {{{./xref-test/org/supercsv/mock/ResultSetMock.html}mock implementation}} of <<<java.sql.ResultSet>>> to a CSV file.
+  
+  Note that the cell processors are compatible with their associated field types in the ResultSet 
+  (e.g. <<<birthDate>>> is a <<<java.util.Date>>> in the ResultSet, and uses the <<<FmtDate>>> cell processor).
+  
++-------------------------------------------------------------------------------------------------------------+
+/**
+ * An example of writing using CsvResultSetWriter
+ */
+private static void writeWithResultSetWriter() throws Exception {
+	// create ResultSet mock
+	final String[] header = new String[] { "customerNo", "firstName", "lastName", "birthDate",
+		"mailingAddress", "married", "numberOfKids", "favouriteQuote", "email", "loyaltyPoints" };
+	final Object[][] johnData = new Object[][] {{"1", "John", "Dunbar",
+		new GregorianCalendar(1945, Calendar.JUNE, 13).getTime(),
+		"1600 Amphitheatre Parkway\nMountain View, CA 94043\nUnited States", null, null,
+		"\"May the Force be with you.\" - Star Wars", "jdunbar@gmail.com", 0L}};
+	final ResultSet john = new ResultSetMock(johnData, header);
+	final Object[][] bobData = new Object[][] {{"2", "Bob", "Down",
+		new GregorianCalendar(1919, Calendar.FEBRUARY, 25).getTime(),
+		"1601 Willow Rd.\nMenlo Park, CA 94025\nUnited States", true, 0,
+		"\"Frankly, my dear, I don't give a damn.\" - Gone With The Wind", "bobdown@hotmail.com", 123456L}};
+	final ResultSet bob = new ResultSetMock(bobData, header);
+	
+	ICsvResultSetWriter resultSetWriter = null;
+	try {
+		resultSetWriter = new CsvResultSetWriter(new FileWriter("target/writeWithCsvResultSetWriter.csv"),
+			CsvPreference.STANDARD_PREFERENCE);
+		final CellProcessor[] processors = getProcessors();
+		
+		// writer csv file from ResultSet
+		resultSetWriter.write(john, processors);
+		resultSetWriter.write(bob, processors);
+	} finally {
+		if ( resultSetWriter != null ) {
+			resultSetWriter.close();
+		}
+	}
+}
++-------------------------------------------------------------------------------------------------------------+
+
+  Output:
+
+---------------------------------------------------------------------------------------------------------------  
+customerNo,firstName,lastName,birthDate,mailingAddress,married,numberOfKids,favouriteQuote,email,loyaltyPoints
+1,John,Dunbar,13/06/1945,"1600 Amphitheatre Parkway
+Mountain View, CA 94043
+United States",,,"""May the Force be with you."" - Star Wars",jdunbar@gmail.com,0
+customerNo,firstName,lastName,birthDate,mailingAddress,married,numberOfKids,favouriteQuote,email,loyaltyPoints
+2,Bob,Down,25/02/1919,"1601 Willow Rd.
+Menlo Park, CA 94025
+United States",Y,0,"""Frankly, my dear, I don't give a damn."" - Gone With The Wind",bobdown@hotmail.com,123456
+---------------------------------------------------------------------------------------------------------------    

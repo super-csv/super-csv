@@ -66,6 +66,7 @@
 			<item name="Partial reading" href="examples_partial_reading.html" />
 			<item name="Partial writing" href="examples_partial_writing.html" />
 			<item name="Reading and writing CSV files with Dozer" href="examples_dozer.html" />
+			<item name="Writing CSV files with CsvResultSetWriter" href="examples_jdbc.html" />
 			<item name="Custom cell processors" href="examples_new_cell_processor.html" />
 		</menu>
 		<menu name="Documentation">
