@@ -21,28 +21,28 @@ import java.time.format.DateTimeFormatter;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 
 /**
- * Converts a String to a {@link LocalDate}.
- * 
- * @since 2.4.0
+ * Converts a String to a LocalDate.
+ *
  * @author James Bassett
+ * @since 2.4.0
  */
-public class ParseLocalDate extends AbstractTemporalParsingProcessor<LocalDate> {
+public class ParseLocalDate extends AbstractTemporalAccessorParsingProcessor<LocalDate> {
 
 	/**
-	 * Constructs a new <tt>ParseLocalDate</tt> processor, which parses a String
+	 * Constructs a new <tt>ParseLocalDate</tt> processor,
+	 * which parses a String recognised by {@link LocalDate#parse(CharSequence)}
 	 * as a LocalDate.
 	 */
 	public ParseLocalDate() {
 	}
 
 	/**
-	 * Constructs a new <tt>ParseLocalDate</tt> processor, which parses a String
+	 * Constructs a new <tt>ParseLocalDate</tt> processor,
+	 * which parses a String recognised by {@link LocalDate#parse(CharSequence)}
 	 * as a LocalDate, then calls the next processor in the chain.
-	 * 
-	 * @param next
-	 *            the next processor in the chain
-	 * @throws NullPointerException
-	 *             if next is null
+	 *
+	 * @param next the next processor in the chain
+	 * @throws NullPointerException if next is null
 	 */
 	public ParseLocalDate(final CellProcessor next) {
 		super(next);
@@ -51,11 +51,9 @@ public class ParseLocalDate extends AbstractTemporalParsingProcessor<LocalDate> 
 	/**
 	 * Constructs a new <tt>ParseLocalDate</tt> processor, which parses a String
 	 * as a LocalDate using the supplied formatter.
-	 * 
-	 * @param formatter
-	 *            the formatter used for parsing
-	 * @throws NullPointerException
-	 *             if formatter is null
+	 *
+	 * @param formatter the formatter used for parsing
+	 * @throws NullPointerException if formatter is null
 	 */
 	public ParseLocalDate(final DateTimeFormatter formatter) {
 		super(formatter);
@@ -65,16 +63,12 @@ public class ParseLocalDate extends AbstractTemporalParsingProcessor<LocalDate> 
 	 * Constructs a new <tt>ParseLocalDate</tt> processor, which parses a String
 	 * as a LocalDate using the supplied formatter, then calls the next
 	 * processor in the chain.
-	 * 
-	 * @param formatter
-	 *            the formatter used for parsing
-	 * @param next
-	 *            the next processor in the chain
-	 * @throws NullPointerException
-	 *             if formatter or next is null
+	 *
+	 * @param formatter the formatter used for parsing
+	 * @param next      the next processor in the chain
+	 * @throws NullPointerException if formatter or next is null
 	 */
-	public ParseLocalDate(final DateTimeFormatter formatter,
-			final CellProcessor next) {
+	public ParseLocalDate(final DateTimeFormatter formatter, final CellProcessor next) {
 		super(formatter, next);
 	}
 
@@ -90,8 +84,7 @@ public class ParseLocalDate extends AbstractTemporalParsingProcessor<LocalDate> 
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected LocalDate parse(final String string,
-			final DateTimeFormatter formatter) {
+	protected LocalDate parse(final String string, final DateTimeFormatter formatter) {
 		return LocalDate.parse(string, formatter);
 	}
 }
