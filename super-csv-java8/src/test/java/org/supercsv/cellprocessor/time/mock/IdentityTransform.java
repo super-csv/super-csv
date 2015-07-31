@@ -16,12 +16,7 @@
 package org.supercsv.cellprocessor.time.mock;
 
 import org.supercsv.cellprocessor.CellProcessorAdaptor;
-import org.supercsv.cellprocessor.ift.BoolCellProcessor;
-import org.supercsv.cellprocessor.ift.CellProcessor;
-import org.supercsv.cellprocessor.ift.DateCellProcessor;
-import org.supercsv.cellprocessor.ift.DoubleCellProcessor;
-import org.supercsv.cellprocessor.ift.LongCellProcessor;
-import org.supercsv.cellprocessor.ift.StringCellProcessor;
+import org.supercsv.cellprocessor.ift.*;
 import org.supercsv.util.CsvContext;
 
 /**
@@ -38,17 +33,7 @@ public class IdentityTransform extends CellProcessorAdaptor implements BoolCellP
 	public IdentityTransform() {
 		super();
 	}
-	
-	/**
-	 * Constructs a new <tt>IdentityTransform</tt> processor which just calls the next processor in the chain.
-	 * 
-	 * @param next
-	 *            the next processor in the chain
-	 */
-	public IdentityTransform(CellProcessor next) {
-		super(next);
-	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
