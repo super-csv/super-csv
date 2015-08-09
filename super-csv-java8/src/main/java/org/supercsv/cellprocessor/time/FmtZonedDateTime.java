@@ -34,7 +34,7 @@ import org.supercsv.cellprocessor.ift.CellProcessor;
  * @author Ludovico Fischer
  * @since 2.4.0
  */
-public class FmtZonedDateTime extends AbstractTemporalAccessorFormattingProcessor {
+public class FmtZonedDateTime extends AbstractTemporalAccessorFormattingProcessor<ZonedDateTime> {
 
 	/**
 	 * Constructs a new <tt>FmtZonedDateTime</tt> processor, which formats a

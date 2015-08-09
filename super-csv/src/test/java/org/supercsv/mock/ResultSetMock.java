@@ -16,8 +16,6 @@
 
 package org.supercsv.mock;
 
-import static org.supercsv.SuperCsvTestUtils.*;
-
 import java.io.InputStream;
 import java.io.Reader;
 import java.math.BigDecimal;

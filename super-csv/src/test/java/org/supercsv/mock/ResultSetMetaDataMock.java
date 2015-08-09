@@ -19,8 +19,6 @@ package org.supercsv.mock;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
-import org.supercsv.SuperCsvTestUtils;
-
 class ResultSetMetaDataMock implements ResultSetMetaData {
 	
 	private String[] headers;

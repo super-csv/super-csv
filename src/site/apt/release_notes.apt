@@ -21,18 +21,29 @@ Release notes
 
 * 2.4.0
 
-  <TBA>
+  <08/2015>
   
-  TODO
+  Some long overdue features and bug fixes, plus some exciting new features from our new contributors :)
   
   <<New features>>
   
     * {{{https://github.com/super-csv/super-csv/issues/3}3}} - New <<<maxLinesPerRow>>> preference
     
+    * {{{https://github.com/super-csv/super-csv/issues/6}6}} - New <<<CsvResultSetWriter>>> for writing JDBC result sets
+    
+    * {{{https://github.com/super-csv/super-csv/issues/53}53}} - Cell Processors for Java 8 (time)
+    
   <<Bug fixes>>
     
     * {{{https://github.com/super-csv/super-csv/issues/33}33}} - Fixed misleading Exception for a CSV file with mismatched quotes
-
+    
+    * {{{https://github.com/super-csv/super-csv/issues/42}42}} - <<<CsvContext>>> is no longer being reset when exceptions are ignored
+    
+  <<General enhancements>>
+  
+    * {{{https://github.com/super-csv/super-csv/issues/32}32}} - <<<CsvPreference.getQuoteChar()>>> now returns a <<<char>>> instead of an <<<int>>>
+    
+    
 * 2.3.1
 
   <03/2015>

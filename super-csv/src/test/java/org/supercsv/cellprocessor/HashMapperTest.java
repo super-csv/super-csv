@@ -21,7 +21,6 @@ import static org.junit.Assert.assertNull;
 import static org.supercsv.SuperCsvTestUtils.ANONYMOUS_CSVCONTEXT;
 
 import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Locale;

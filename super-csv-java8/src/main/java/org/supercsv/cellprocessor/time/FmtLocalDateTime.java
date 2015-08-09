@@ -35,7 +35,7 @@ import org.supercsv.cellprocessor.ift.CellProcessor;
  * @author Ludovico Fischer
  * @since 2.4.0
  */
-public class FmtLocalDateTime extends AbstractTemporalAccessorFormattingProcessor {
+public class FmtLocalDateTime extends AbstractTemporalAccessorFormattingProcessor<LocalDateTime> {
 
 	/**
 	 * Constructs a new <tt>FmtLocalDateTime</tt> processor, which formats a
