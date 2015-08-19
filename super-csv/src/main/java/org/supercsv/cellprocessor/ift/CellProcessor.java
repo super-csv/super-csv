@@ -32,5 +32,5 @@ public interface CellProcessor {
 	 * @return the result of cell processor execution
 	 * @since 1.0
 	 */
-	Object execute(final Object value, final CsvContext context);
+	<T> T execute(final Object value, final CsvContext context);
 }
