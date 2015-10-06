@@ -15,6 +15,7 @@
  */
 package org.supercsv.cellprocessor;
 
+import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -23,14 +24,13 @@ import java.util.Locale;
 import org.supercsv.cellprocessor.ift.DateCellProcessor;
 
 /**
- * Converts a String to a Date using the {@link SimpleDateFormat} class. If you want to convert from a Date to a String,
- * use the {@link FmtDate} processor.
+ * Converts a String to a Time using the {@link SimpleDateFormat} class. If you want to convert from a Time to a String,
+ * use the {@link FmtSqlTime} processor.
  * <p>
  * Some example date formats you can use are:<br>
- * <code>"dd/MM/yyyy"</code> (parses a date formatted as "25/12/2011")<br>
- * <code>"dd-MMM-yy"</code> (parses a date formatted as "25-Dec-11")<br>
- * <code>"yyyy.MM.dd.HH.mm.ss"</code> (parses a date formatted as "2011.12.25.08.36.33"<br>
- * <code>"E, dd MMM yyyy HH:mm:ss Z"</code> (parses a date formatted as "Tue, 25 Dec 2011 08:36:33 -0500")<br>
+ * <code>"HH:mm:ss"</code> (formats a time as "05:20:00")<br>
+ * <code>"HHmmss"</code> (formats a time as "052000")<br>
+ * <code>"HH.mm.ss"</code> (formats a date as "05.20.00"<br>
  * <p>
  * This processor caters for lenient or non-lenient date interpretations (the default is false for constructors without
  * a 'lenient' parameter). See {@link SimpleDateFormat#setLenient(boolean)} for more information.
@@ -38,51 +38,50 @@ import org.supercsv.cellprocessor.ift.DateCellProcessor;
  * If you don't wish to use the default Locale when parsing Dates (your data is formatted for a different Locale), then
  * use the constructor that accepts a Locale.
  * 
- * @author Kasper B. Graversen
- * @author James Bassett
  * @author Pietro Aragona
+ * @since 2.4.1
  */
-public class ParseDate extends ParseDateTimeAbstract {
+public class ParseSqlTime extends ParseDateTimeAbstract {
 	
 	/**
 	 * {@inheritDoc}
 	 */
-	public ParseDate(String dateFormat, boolean lenient, DateCellProcessor next) {
+	public ParseSqlTime(String dateFormat, boolean lenient, DateCellProcessor next) {
 		super(dateFormat, lenient, next);
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 */
-	public ParseDate(String dateFormat, boolean lenient, Locale locale, DateCellProcessor next) {
+	public ParseSqlTime(String dateFormat, boolean lenient, Locale locale, DateCellProcessor next) {
 		super(dateFormat, lenient, locale, next);
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 */
-	public ParseDate(String dateFormat, boolean lenient, Locale locale) {
+	public ParseSqlTime(String dateFormat, boolean lenient, Locale locale) {
 		super(dateFormat, lenient, locale);
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 */
-	public ParseDate(String dateFormat, boolean lenient) {
+	public ParseSqlTime(String dateFormat, boolean lenient) {
 		super(dateFormat, lenient);
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 */
-	public ParseDate(String dateFormat, DateCellProcessor next) {
+	public ParseSqlTime(String dateFormat, DateCellProcessor next) {
 		super(dateFormat, next);
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 */
-	public ParseDate(String dateFormat) {
+	public ParseSqlTime(String dateFormat) {
 		super(dateFormat);
 	}
 	
@@ -91,7 +90,8 @@ public class ParseDate extends ParseDateTimeAbstract {
 	 */
 	@Override
 	protected Object parseValue(Object value) throws ParseException {
-		final Date result = formatter.parse((String) value);
+		final Date date = formatter.parse((String) value);
+		final Time result = new Time(date.getTime());
 		return result;
 	}
 	

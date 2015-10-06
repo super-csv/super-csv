@@ -15,6 +15,7 @@
  */
 package org.supercsv.mock;
 
+import java.sql.Time;
 import java.util.Date;
 
 /**
@@ -22,6 +23,7 @@ import java.util.Date;
  * 
  * @author Kasper B. Graversen
  * @author James Bassett
+ * @author Pietro Aragona
  */
 public class PersonBean {
 	
@@ -31,6 +33,8 @@ public class PersonBean {
 	
 	private Date birthDate;
 	
+	private Time birthTime;
+
 	private Boolean married;
 	
 	private Integer numberOfKids;
@@ -56,8 +60,8 @@ public class PersonBean {
 	 * @param favouriteQuote
 	 * @param email
 	 */
-	public PersonBean(final String firstName, final String lastName, final Date birthDate, final Boolean married,
-		final Integer numberOfKids, final String favouriteQuote, final String email) {
+	public PersonBean(final String firstName, final String lastName, final Date birthDate, final Time birthTime,
+		final Boolean married, final Integer numberOfKids, final String favouriteQuote, final String email) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.birthDate = birthDate;
@@ -65,6 +69,7 @@ public class PersonBean {
 		this.numberOfKids = numberOfKids;
 		this.favouriteQuote = favouriteQuote;
 		this.email = email;
+		this.birthTime = birthTime;
 	}
 	
 	/**
@@ -110,6 +115,21 @@ public class PersonBean {
 	 */
 	public void setBirthDate(Date birthDate) {
 		this.birthDate = birthDate;
+	}
+	
+	/**
+	 * @return the birthTime
+	 */
+	public Time getBirthTime() {
+		return birthTime;
+	}
+	
+	/**
+	 * @param birthTime
+	 *            the birthTime to set
+	 */
+	public void setBirthTime(Time birthTime) {
+		this.birthTime = birthTime;
 	}
 	
 	/**
@@ -177,6 +197,7 @@ public class PersonBean {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((birthDate == null) ? 0 : birthDate.hashCode());
+		result = prime * result + ((birthTime == null) ? 0 : birthTime.hashCode());
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		result = prime * result + ((favouriteQuote == null) ? 0 : favouriteQuote.hashCode());
 		result = prime * result + ((firstName == null) ? 0 : firstName.hashCode());
@@ -203,6 +224,13 @@ public class PersonBean {
 				return false;
 			}
 		} else if( !birthDate.equals(other.birthDate) ) {
+			return false;
+		}
+		if( birthTime == null ) {
+			if( other.birthTime != null ) {
+				return false;
+			}
+		} else if( !birthTime.toString().equals(other.birthTime.toString()) ) {
 			return false;
 		}
 		if( email == null ) {
@@ -252,10 +280,9 @@ public class PersonBean {
 	
 	@Override
 	public String toString() {
-		return String
-			.format(
-				"PersonBean [firstName=%s, lastName=%s, birthDate=%s, married=%s, numberOfKids=%s, favouriteQuote=%s, email=%s]",
-				firstName, lastName, birthDate, married, numberOfKids, favouriteQuote, email);
+		return String.format(
+			"PersonBean [firstName=%s, lastName=%s, birthDate=%s, birthTime=%s, married=%s, numberOfKids=%s, favouriteQuote=%s, email=%s]",
+			firstName, lastName, birthDate, birthTime, married, numberOfKids, favouriteQuote, email);
 	}
 	
 }

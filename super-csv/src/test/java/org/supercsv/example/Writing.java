@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.supercsv.SuperCsvTestUtils;
 import org.supercsv.cellprocessor.ConvertNullTo;
 import org.supercsv.cellprocessor.FmtBool;
 import org.supercsv.cellprocessor.FmtDate;
@@ -90,11 +91,11 @@ public class Writing {
 		
 		// create the customer beans
 		final CustomerBean john = new CustomerBean("1", "John", "Dunbar",
-			new GregorianCalendar(1945, Calendar.JUNE, 13).getTime(),
+			new GregorianCalendar(1945, Calendar.JUNE, 13).getTime(),SuperCsvTestUtils.time(10, 20, 0),
 			"1600 Amphitheatre Parkway\nMountain View, CA 94043\nUnited States", null, null,
 			"\"May the Force be with you.\" - Star Wars", "jdunbar@gmail.com", 0L);
 		final CustomerBean bob = new CustomerBean("2", "Bob", "Down",
-			new GregorianCalendar(1919, Calendar.FEBRUARY, 25).getTime(),
+			new GregorianCalendar(1919, Calendar.FEBRUARY, 25).getTime(),SuperCsvTestUtils.time(10, 20, 0),
 			"1601 Willow Rd.\nMenlo Park, CA 94025\nUnited States", true, 0,
 			"\"Frankly, my dear, I don't give a damn.\" - Gone With The Wind", "bobdown@hotmail.com", 123456L);
 		final List<CustomerBean> customers = Arrays.asList(john, bob);
@@ -261,11 +262,11 @@ public class Writing {
 		
 		// create the customer beans
 		final CustomerBean john = new CustomerBean("1", "John", "Dunbar",
-			new GregorianCalendar(1945, Calendar.JUNE, 13).getTime(),
+			new GregorianCalendar(1945, Calendar.JUNE, 13).getTime(),SuperCsvTestUtils.time(10, 20, 0),
 			"1600 Amphitheatre Parkway\nMountain View, CA 94043\nUnited States", null, null,
 			"\"May the Force be with you.\" - Star Wars", "jdunbar@gmail.com", 0L);
 		final CustomerBean bob = new CustomerBean("2", "Bob", "Down",
-			new GregorianCalendar(1919, Calendar.FEBRUARY, 25).getTime(),
+			new GregorianCalendar(1919, Calendar.FEBRUARY, 25).getTime(),SuperCsvTestUtils.time(10, 20, 0),
 			"1601 Willow Rd.\nMenlo Park, CA 94025\nUnited States", true, 0,
 			"\"Frankly, my dear, I don't give a damn.\" - Gone With The Wind", "bobdown@hotmail.com", 123456L);
 		final List<CustomerBean> customers = Arrays.asList(john, bob);
