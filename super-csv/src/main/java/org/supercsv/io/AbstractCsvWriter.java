@@ -33,7 +33,7 @@ import org.supercsv.util.Util;
  */
 public abstract class AbstractCsvWriter implements ICsvWriter {
 	
-	private final BufferedWriter writer;
+	private final Writer writer;
 	
 	private final CsvPreference preference;
 	
@@ -59,13 +59,30 @@ public abstract class AbstractCsvWriter implements ICsvWriter {
 	 *             if writer or preference are null
 	 */
 	public AbstractCsvWriter(final Writer writer, final CsvPreference preference) {
+		this(writer, preference, true);
+	}
+	
+	/**
+	 * Constructs a new <tt>AbstractCsvWriter</tt> with the supplied writer, preferences and option
+	 * to wrap the writer.
+	 * 
+	 * @param writer
+	 *            the stream to write to
+	 * @param preference
+	 *            the CSV preferences
+	 * @param bufferizeWriter
+	 *            indicates if the writer should be wrapped internally with a BufferedWriter
+	 * @throws NullPointerException
+	 *             if writer or preference are null
+	 */
+	public AbstractCsvWriter(final Writer writer, final CsvPreference preference, boolean bufferizeWriter) {
 		if( writer == null ) {
 			throw new NullPointerException("writer should not be null");
 		} else if( preference == null ) {
 			throw new NullPointerException("preference should not be null");
 		}
 		
-		this.writer = new BufferedWriter(writer);
+		this.writer = bufferizeWriter ? new BufferedWriter(writer) : writer;
 		this.preference = preference;
 		this.encoder = preference.getEncoder();
 	}
@@ -163,25 +180,27 @@ public abstract class AbstractCsvWriter implements ICsvWriter {
 				lineNumber));
 		}
 		
+		StringBuilder builder = new StringBuilder();
 		for( int i = 0; i < columns.length; i++ ) {
 			
 			columnNumber = i + 1; // column no used by CsvEncoder
 			
 			if( i > 0 ) {
-				writer.write(preference.getDelimiterChar()); // delimiter
+				builder.append((char) preference.getDelimiterChar()); // delimiter
 			}
 			
 			final String csvElement = columns[i];
 			if( csvElement != null ) {
 				final CsvContext context = new CsvContext(lineNumber, rowNumber, columnNumber);
 				final String escapedCsv = encoder.encode(csvElement, context, preference);
-				writer.write(escapedCsv);
+				builder.append(escapedCsv);
 				lineNumber = context.getLineNumber(); // line number can increment when encoding multi-line columns
 			}
 			
 		}
 		
-		writer.write(preference.getEndOfLineSymbols()); // EOL
+		builder.append(preference.getEndOfLineSymbols()); // EOL
+		writer.write(builder.toString());
 	}
 	
 	/**
@@ -195,8 +214,7 @@ public abstract class AbstractCsvWriter implements ICsvWriter {
 			throw new NullPointerException(String.format("comment to write should not be null on line %d", lineNumber));
 		}
 		
-		writer.write(comment);
-		writer.write(preference.getEndOfLineSymbols());
+		writer.write(comment + preference.getEndOfLineSymbols());
 		
 	}
 	
