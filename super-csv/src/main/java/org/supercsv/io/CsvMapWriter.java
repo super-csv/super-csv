@@ -51,7 +51,26 @@ public class CsvMapWriter extends AbstractCsvWriter implements ICsvMapWriter {
 	public CsvMapWriter(final Writer writer, final CsvPreference preference) {
 		super(writer, preference);
 	}
-	
+
+	/**
+	 * Constructs a new <tt>CsvMapWriter</tt> with the supplied Writer, CSV preferences and option
+	 * to bufferize the writer.
+	 *
+	 * @param writer
+	 *            the writer
+	 * @param preference
+	 *            the CSV preferences
+	 * @param bufferizeWriter
+	 *            if {@code true}, the <tt>writer</tt> will be wrapped in
+	 *            a <tt>BufferedWriter</tt> before accessed.
+	 * @throws NullPointerException
+	 *             if writer or preference are null
+	 * @since 1.0
+	 */
+	public CsvMapWriter(final Writer writer, final CsvPreference preference, boolean bufferizeWriter) {
+		super(writer, preference, bufferizeWriter);
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
