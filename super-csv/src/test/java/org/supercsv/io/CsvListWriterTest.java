@@ -39,6 +39,7 @@ import org.supercsv.prefs.CsvPreference;
  * Tests the CsvListWriter class.
  * 
  * @author James Bassett
+ * @author Pietro Aragona
  */
 public class CsvListWriterTest {
 	
@@ -73,9 +74,9 @@ public class CsvListWriterTest {
 		listWriter.writeHeader(HEADER);
 		for( CustomerBean customer : CUSTOMERS ) {
 			final List<Object> customerList = Arrays.asList(new Object[] { customer.getCustomerNo(),
-				customer.getFirstName(), customer.getLastName(), customer.getBirthDate(), customer.getMailingAddress(),
-				customer.getMarried(), customer.getNumberOfKids(), customer.getFavouriteQuote(), customer.getEmail(),
-				customer.getLoyaltyPoints() });
+				customer.getFirstName(), customer.getLastName(), customer.getBirthDate(), customer.getBirthTime(),
+				customer.getMailingAddress(), customer.getMarried(), customer.getNumberOfKids(),
+				customer.getFavouriteQuote(), customer.getEmail(), customer.getLoyaltyPoints() });
 			listWriter.write(customerList, WRITE_PROCESSORS);
 		}
 		listWriter.flush();
@@ -106,9 +107,9 @@ public class CsvListWriterTest {
 		listWriter.writeHeader(HEADER);
 		for( CustomerStringBean customer : STRING_CUSTOMERS ) {
 			final List<Object> customerList = Arrays.asList(new Object[] { customer.getCustomerNo(),
-				customer.getFirstName(), customer.getLastName(), customer.getBirthDate(), customer.getMailingAddress(),
-				customer.getMarried(), customer.getNumberOfKids(), customer.getFavouriteQuote(), customer.getEmail(),
-				customer.getLoyaltyPoints() });
+				customer.getFirstName(), customer.getLastName(), customer.getBirthDate(), customer.getBirthTime(),
+				customer.getMailingAddress(), customer.getMarried(), customer.getNumberOfKids(),
+				customer.getFavouriteQuote(), customer.getEmail(), customer.getLoyaltyPoints() });
 			listWriter.write(customerList);
 		}
 		listWriter.flush();
@@ -131,8 +132,8 @@ public class CsvListWriterTest {
 		listWriter.writeHeader(HEADER);
 		for( CustomerStringBean customer : STRING_CUSTOMERS ) {
 			final Object[] customerArray = new Object[] { customer.getCustomerNo(), customer.getFirstName(),
-				customer.getLastName(), customer.getBirthDate(), customer.getMailingAddress(), customer.getMarried(),
-				customer.getNumberOfKids(), customer.getFavouriteQuote(), customer.getEmail(),
+				customer.getLastName(), customer.getBirthDate(), customer.getBirthTime(), customer.getMailingAddress(),
+				customer.getMarried(), customer.getNumberOfKids(), customer.getFavouriteQuote(), customer.getEmail(),
 				customer.getLoyaltyPoints() };
 			listWriter.write(customerArray);
 		}
@@ -156,8 +157,8 @@ public class CsvListWriterTest {
 		listWriter.writeHeader(HEADER);
 		for( CustomerStringBean customer : STRING_CUSTOMERS ) {
 			final String[] customerArray = new String[] { customer.getCustomerNo(), customer.getFirstName(),
-				customer.getLastName(), customer.getBirthDate(), customer.getMailingAddress(), customer.getMarried(),
-				customer.getNumberOfKids(), customer.getFavouriteQuote(), customer.getEmail(),
+				customer.getLastName(), customer.getBirthDate(), customer.getBirthTime(), customer.getMailingAddress(),
+				customer.getMarried(), customer.getNumberOfKids(), customer.getFavouriteQuote(), customer.getEmail(),
 				customer.getLoyaltyPoints() };
 			listWriter.write(customerArray);
 		}

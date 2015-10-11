@@ -21,6 +21,7 @@ import java.text.SimpleDateFormat;
  * Bean with String values only - for testing reading/writing without processors.
  * 
  * @author James Bassett
+ * @author Pietro Aragona
  */
 public class CustomerStringBean {
 	
@@ -28,6 +29,7 @@ public class CustomerStringBean {
 	private String firstName;
 	private String lastName;
 	private String birthDate;
+	private String birthTime;
 	private String mailingAddress;
 	private String married;
 	private String numberOfKids;
@@ -51,6 +53,7 @@ public class CustomerStringBean {
 		this.firstName = customerBean.getFirstName();
 		this.lastName = customerBean.getLastName();
 		this.birthDate = new SimpleDateFormat("dd/MM/yyyy").format(customerBean.getBirthDate());
+		this.birthTime = new SimpleDateFormat("HH:mm:ss").format(customerBean.getBirthTime());
 		this.mailingAddress = customerBean.getMailingAddress();
 		if( customerBean.getMarried() != null ) {
 			this.married = customerBean.getMarried() ? "Y" : "N";
@@ -118,6 +121,21 @@ public class CustomerStringBean {
 	 */
 	public String getBirthDate() {
 		return birthDate;
+	}
+	
+	/**
+	 * @param birthDate
+	 *            the birthDate to set
+	 */
+	public void setBirthTime(String birthTime) {
+		this.birthTime = birthTime;
+	}
+	
+	/**
+	 * @return the birthDate
+	 */
+	public String getBirthTime() {
+		return birthTime;
 	}
 	
 	/**
@@ -223,6 +241,7 @@ public class CustomerStringBean {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((birthDate == null) ? 0 : birthDate.hashCode());
+		result = prime * result + ((birthTime == null) ? 0 : birthTime.hashCode());
 		result = prime * result + ((customerNo == null) ? 0 : customerNo.hashCode());
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		result = prime * result + ((favouriteQuote == null) ? 0 : favouriteQuote.hashCode());
@@ -252,6 +271,13 @@ public class CustomerStringBean {
 				return false;
 			}
 		} else if( !birthDate.equals(other.birthDate) ) {
+			return false;
+		}
+		if( birthTime == null ) {
+			if( other.birthTime != null ) {
+				return false;
+			}
+		} else if( !birthTime.toString().equals(other.birthTime.toString()) ) {
 			return false;
 		}
 		if( customerNo == null ) {
