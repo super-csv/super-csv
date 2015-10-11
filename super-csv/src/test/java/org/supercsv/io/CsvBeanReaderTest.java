@@ -64,6 +64,7 @@ import org.supercsv.prefs.CsvPreference;
  * Tests the CsvBeanReader class.
  * 
  * @author James Bassett
+ * @author Pietro Aragona
  */
 public class CsvBeanReaderTest {
 	
@@ -259,9 +260,9 @@ public class CsvBeanReaderTest {
 		assertArrayEquals(HEADER, beanReader.getHeader(true));
 		
 		// only map the fields relevant to the interface
-		final String[] header = new String[] { "customerNo", null, null, null, "mailingAddress", null, null, null,
+		final String[] header = new String[] { "customerNo", null, null, null, null, "mailingAddress", null, null, null,
 			null, "loyaltyPoints" };
-		
+			
 		int i = 0;
 		Customer customer;
 		while( (customer = beanReader.read(Customer.class, header, READ_PROCESSORS)) != null ) {

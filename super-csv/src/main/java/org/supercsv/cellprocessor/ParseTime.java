@@ -16,41 +16,83 @@
 package org.supercsv.cellprocessor;
 
 import java.sql.Time;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
+
 import org.supercsv.cellprocessor.ift.DateCellProcessor;
-import org.supercsv.exception.SuperCsvCellProcessorException;
-import org.supercsv.util.CsvContext;
 
 /**
- * Converts a Date to a Time.
+ * Converts a String to a Time using the {@link SimpleDateFormat} class. If you want to convert from a Time to a String,
+ * use the {@link FmtTime} processor.
+ * <p>
+ * Some example date formats you can use are:<br>
+ * <code>"HH:mm:ss"</code> (formats a time as "05:20:00")<br>
+ * <code>"HHmmss"</code> (formats a time as "052000")<br>
+ * <code>"HH.mm.ss"</code> (formats a date as "05.20.00"<br>
+ * <p>
+ * This processor caters for lenient or non-lenient date interpretations (the default is false for constructors without
+ * a 'lenient' parameter). See {@link SimpleDateFormat#setLenient(boolean)} for more information.
+ * <p>
+ * If you don't wish to use the default Locale when parsing Dates (your data is formatted for a different Locale), then
+ * use the constructor that accepts a Locale.
  * 
  * @author Pietro Aragona
  * @since 2.4.0
  */
-public class ParseTime extends CellProcessorAdaptor implements DateCellProcessor {
+public class ParseTime extends ParseDateTimeAbstract {
 	
 	/**
-	 * Constructs a new <tt>ParseTime</tt> processor, which converts a Date to a Time.
+	 * {@inheritDoc}
 	 */
-	public ParseTime() {
-		super();
+	public ParseTime(String dateFormat, boolean lenient, DateCellProcessor next) {
+		super(dateFormat, lenient, next);
 	}
 	
 	/**
 	 * {@inheritDoc}
-	 * 
-	 * @throws SuperCsvCellProcessorException
-	 *             if value is null, isn't a Long or String, or can't be parsed as a Long
 	 */
-	public Object execute(Object value, CsvContext context) {
-		validateInputNotNull(value, context);
-		
-		if( !(value instanceof Date) ) {
-			throw new SuperCsvCellProcessorException(Date.class, value, context, this);
-		}
-		final Time result = new Time(((Date) value).getTime());
-		return next.execute(result, context);
-		
+	public ParseTime(String dateFormat, boolean lenient, Locale locale, DateCellProcessor next) {
+		super(dateFormat, lenient, locale, next);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public ParseTime(String dateFormat, boolean lenient, Locale locale) {
+		super(dateFormat, lenient, locale);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public ParseTime(String dateFormat, boolean lenient) {
+		super(dateFormat, lenient);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public ParseTime(String dateFormat, DateCellProcessor next) {
+		super(dateFormat, next);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public ParseTime(String dateFormat) {
+		super(dateFormat);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected Object parseValue(Object value) throws ParseException {
+		final Date date = formatter.parse((String) value);
+		final Time result = new Time(date.getTime());
+		return result;
 	}
 	
 }

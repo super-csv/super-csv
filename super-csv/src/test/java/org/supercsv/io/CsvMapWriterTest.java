@@ -41,6 +41,7 @@ import org.supercsv.util.Util;
  * Tests the CsvMapWriter class.
  * 
  * @author James Bassett
+ * @author Pietro Aragona
  */
 public class CsvMapWriterTest {
 	
@@ -99,9 +100,9 @@ public class CsvMapWriterTest {
 				customerMap,
 				HEADER,
 				Arrays.asList(new String[] { customer.getCustomerNo(), customer.getFirstName(), customer.getLastName(),
-					customer.getBirthDate(), customer.getMailingAddress(), customer.getMarried(),
-					customer.getNumberOfKids(), customer.getFavouriteQuote(), customer.getEmail(),
-					customer.getLoyaltyPoints() }));
+					customer.getBirthDate(), customer.getBirthTime(), customer.getMailingAddress(),
+					customer.getMarried(), customer.getNumberOfKids(), customer.getFavouriteQuote(),
+					customer.getEmail(), customer.getLoyaltyPoints() }));
 			mapWriter.write(customerMap, HEADER);
 		}
 		mapWriter.flush();
@@ -120,9 +121,9 @@ public class CsvMapWriterTest {
 				customerMap,
 				HEADER,
 				Arrays.asList(new Object[] { customer.getCustomerNo(), customer.getFirstName(), customer.getLastName(),
-					customer.getBirthDate(), customer.getMailingAddress(), customer.getMarried(),
-					customer.getNumberOfKids(), customer.getFavouriteQuote(), customer.getEmail(),
-					customer.getLoyaltyPoints() }));
+					customer.getBirthDate(), customer.getBirthTime(), customer.getMailingAddress(),
+					customer.getMarried(), customer.getNumberOfKids(), customer.getFavouriteQuote(),
+					customer.getEmail(), customer.getLoyaltyPoints() }));
 			mapWriter.write(customerMap, HEADER, WRITE_PROCESSORS);
 		}
 		mapWriter.flush();

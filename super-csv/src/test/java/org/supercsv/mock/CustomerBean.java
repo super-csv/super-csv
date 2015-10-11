@@ -15,12 +15,14 @@
  */
 package org.supercsv.mock;
 
+import java.sql.Time;
 import java.util.Date;
 
 /**
  * Superclass bean to use when testing bean reading/writing.
  * 
  * @author James Bassett
+ * @author Pietro Aragona
  */
 public class CustomerBean extends PersonBean implements Customer {
 	
@@ -43,6 +45,7 @@ public class CustomerBean extends PersonBean implements Customer {
 	 * @param firstName
 	 * @param lastName
 	 * @param birthDate
+	 * @param birthTime
 	 * @param mailingAddress
 	 * @param married
 	 * @param numberOfKids
@@ -51,9 +54,9 @@ public class CustomerBean extends PersonBean implements Customer {
 	 * @param loyaltyPoints
 	 */
 	public CustomerBean(final String customerNo, final String firstName, final String lastName, final Date birthDate,
-		final String mailingAddress, final Boolean married, final Integer numberOfKids, final String favouriteQuote,
-		final String email, final long loyaltyPoints) {
-		super(firstName, lastName, birthDate, married, numberOfKids, favouriteQuote, email);
+		final Time birthTime, final String mailingAddress, final Boolean married, final Integer numberOfKids,
+		final String favouriteQuote, final String email, final long loyaltyPoints) {
+		super(firstName, lastName, birthDate, birthTime, married, numberOfKids, favouriteQuote, email);
 		this.customerNo = customerNo;
 		this.loyaltyPoints = loyaltyPoints;
 		this.mailingAddress = mailingAddress;
@@ -148,11 +151,10 @@ public class CustomerBean extends PersonBean implements Customer {
 	
 	@Override
 	public String toString() {
-		return String
-			.format(
-				"CustomerBean [customerNo=%s, firstName=%s, lastName=%s, birthDate=%s, mailingAddress=%s, married=%s, numberOfKids=%s, favouriteQuote=%s, email=%s, loyaltyPoints=%s]",
-				customerNo, getFirstName(), getLastName(), getBirthDate(), mailingAddress, getMarried(),
-				getNumberOfKids(), getFavouriteQuote(), getEmail(), loyaltyPoints);
+		return String.format(
+			"CustomerBean [customerNo=%s, firstName=%s, lastName=%s, birthDate=%s, birthTime=%s, mailingAddress=%s, married=%s, numberOfKids=%s, favouriteQuote=%s, email=%s, loyaltyPoints=%s]",
+			customerNo, getFirstName(), getLastName(), getBirthDate(), getBirthTime(),mailingAddress, getMarried(), getNumberOfKids(),
+			getFavouriteQuote(), getEmail(), loyaltyPoints);
 	}
 	
 }

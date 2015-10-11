@@ -21,9 +21,6 @@ import java.util.Date;
 import java.util.Locale;
 
 import org.supercsv.cellprocessor.ift.DateCellProcessor;
-import org.supercsv.cellprocessor.ift.StringCellProcessor;
-import org.supercsv.exception.SuperCsvCellProcessorException;
-import org.supercsv.util.CsvContext;
 
 /**
  * Converts a String to a Date using the {@link SimpleDateFormat} class. If you want to convert from a Date to a String,
@@ -43,185 +40,59 @@ import org.supercsv.util.CsvContext;
  * 
  * @author Kasper B. Graversen
  * @author James Bassett
+ * @author Pietro Aragona
  */
-public class ParseDate extends CellProcessorAdaptor implements StringCellProcessor {
-	
-	private final String dateFormat;
-	
-	private final boolean lenient;
-	
-	private final Locale locale;
+public class ParseDate extends ParseDateTimeAbstract {
 	
 	/**
-	 * Constructs a new <tt>ParseDate</tt> processor which converts a String to a Date using the supplied date format.
-	 * This constructor uses non-lenient Date interpretation.
-	 * 
-	 * @param dateFormat
-	 *            the date format to use
-	 * @throws NullPointerException
-	 *             if dateFormat is null
+	 * {@inheritDoc}
 	 */
-	public ParseDate(final String dateFormat) {
-		this(dateFormat, false);
-	}
-	
-	/**
-	 * Constructs a new <tt>ParseDate</tt> processor which converts a String to a Date using the supplied date format.
-	 * 
-	 * @param dateFormat
-	 *            the date format to use
-	 * @param lenient
-	 *            whether date interpretation is lenient
-	 * @throws NullPointerException
-	 *             if dateFormat is null
-	 */
-	public ParseDate(final String dateFormat, final boolean lenient) {
-		super();
-		checkPreconditions(dateFormat);
-		this.dateFormat = dateFormat;
-		this.lenient = lenient;
-		this.locale = null;
-	}
-	
-	/**
-	 * Constructs a new <tt>ParseDate</tt> processor which converts a String to a Date using the supplied date format
-	 * and Locale.
-	 * 
-	 * @param dateFormat
-	 *            the date format to use
-	 * @param lenient
-	 *            whether date interpretation is lenient
-	 * @param locale
-	 *            the Locale used to parse the date
-	 * @throws NullPointerException
-	 *             if dateFormat or locale is null
-	 */
-	public ParseDate(final String dateFormat, final boolean lenient, final Locale locale) {
-		super();
-		checkPreconditions(dateFormat, locale);
-		this.dateFormat = dateFormat;
-		this.lenient = lenient;
-		this.locale = locale;
-	}
-	
-	/**
-	 * Constructs a new <tt>ParseDate</tt> processor which converts a String to a Date using the supplied date format,
-	 * then calls the next processor in the chain. This constructor uses non-lenient Date interpretation.
-	 * 
-	 * @param dateFormat
-	 *            the date format to use
-	 * @param next
-	 *            the next processor in the chain
-	 * @throws NullPointerException
-	 *             if dateFormat or next is null
-	 */
-	public ParseDate(final String dateFormat, final DateCellProcessor next) {
-		this(dateFormat, false, next);
-	}
-	
-	/**
-	 * Constructs a new <tt>ParseDate</tt> processor which converts a String to a Date using the supplied date format,
-	 * then calls the next processor in the chain.
-	 * 
-	 * @param dateFormat
-	 *            the date format to use
-	 * @param lenient
-	 *            whether date interpretation is lenient
-	 * @param next
-	 *            the next processor in the chain
-	 * @throws NullPointerException
-	 *             if dateFormat or next is null
-	 */
-	public ParseDate(final String dateFormat, final boolean lenient, final DateCellProcessor next) {
-		super(next);
-		checkPreconditions(dateFormat);
-		this.dateFormat = dateFormat;
-		this.lenient = lenient;
-		this.locale = null;
-	}
-	
-	/**
-	 * Constructs a new <tt>ParseDate</tt> processor which converts a String to a Date using the supplied date format
-	 * and Locale, then calls the next processor in the chain.
-	 * 
-	 * @param dateFormat
-	 *            the date format to use
-	 * @param lenient
-	 *            whether date interpretation is lenient
-	 * @param locale
-	 *            the Locale used to parse the date
-	 * @param next
-	 *            the next processor in the chain
-	 * @throws NullPointerException
-	 *             if dateFormat, locale, or next is null
-	 */
-	public ParseDate(final String dateFormat, final boolean lenient, final Locale locale, final DateCellProcessor next) {
-		super(next);
-		checkPreconditions(dateFormat, locale);
-		this.dateFormat = dateFormat;
-		this.lenient = lenient;
-		this.locale = locale;
-	}
-	
-	/**
-	 * Checks the preconditions for creating a new ParseDate processor with a date format.
-	 * 
-	 * @param dateFormat
-	 *            the date format to use
-	 * @throws NullPointerException
-	 *             if dateFormat is null
-	 */
-	private static void checkPreconditions(final String dateFormat) {
-		if( dateFormat == null ) {
-			throw new NullPointerException("dateFormat should not be null");
-		}
-	}
-	
-	/**
-	 * Checks the preconditions for creating a new ParseDate processor with date format and locale.
-	 * 
-	 * @param dateFormat
-	 *            the date format to use
-	 * @param locale
-	 *            the Locale used to parse the date
-	 * @throws NullPointerException
-	 *             if dateFormat or locale is null
-	 */
-	private static void checkPreconditions(final String dateFormat, final Locale locale) {
-		if( dateFormat == null ) {
-			throw new NullPointerException("dateFormat should not be null");
-		} else if( locale == null ) {
-			throw new NullPointerException("locale should not be null");
-		}
+	public ParseDate(String dateFormat, boolean lenient, DateCellProcessor next) {
+		super(dateFormat, lenient, next);
 	}
 	
 	/**
 	 * {@inheritDoc}
-	 * 
-	 * @throws SuperCsvCellProcessorException
-	 *             if value is null, isn't a String, or can't be parsed to a Date
 	 */
-	public Object execute(final Object value, final CsvContext context) {
-		validateInputNotNull(value, context);
-		
-		if( !(value instanceof String) ) {
-			throw new SuperCsvCellProcessorException(String.class, value, context, this);
-		}
-		
-		try {
-			final SimpleDateFormat formatter;
-			if( locale == null ) {
-				formatter = new SimpleDateFormat(dateFormat);
-			} else {
-				formatter = new SimpleDateFormat(dateFormat, locale);
-			}
-			formatter.setLenient(lenient);
-			final Date result = formatter.parse((String) value);
-			return next.execute(result, context);
-		}
-		catch(final ParseException e) {
-			throw new SuperCsvCellProcessorException(String.format("'%s' could not be parsed as a Date", value),
-				context, this, e);
-		}
+	public ParseDate(String dateFormat, boolean lenient, Locale locale, DateCellProcessor next) {
+		super(dateFormat, lenient, locale, next);
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public ParseDate(String dateFormat, boolean lenient, Locale locale) {
+		super(dateFormat, lenient, locale);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public ParseDate(String dateFormat, boolean lenient) {
+		super(dateFormat, lenient);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public ParseDate(String dateFormat, DateCellProcessor next) {
+		super(dateFormat, next);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public ParseDate(String dateFormat) {
+		super(dateFormat);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected Object parseValue(Object value) throws ParseException {
+		final Date result = formatter.parse((String) value);
+		return result;
+	}
+	
 }

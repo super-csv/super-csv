@@ -39,6 +39,7 @@ import org.supercsv.prefs.CsvPreference;
  * Tests the CsvListReader class.
  * 
  * @author James Bassett
+ * @author Pietro Aragona
  */
 public class CsvListReaderTest {
 	
@@ -94,12 +95,13 @@ public class CsvListReaderTest {
 			assertEquals(STRING_CUSTOMERS.get(i).getFirstName(), customer.get(1));
 			assertEquals(STRING_CUSTOMERS.get(i).getLastName(), customer.get(2));
 			assertEquals(STRING_CUSTOMERS.get(i).getBirthDate(), customer.get(3));
-			assertEquals(STRING_CUSTOMERS.get(i).getMailingAddress(), customer.get(4));
-			assertEquals(STRING_CUSTOMERS.get(i).getMarried(), customer.get(5));
-			assertEquals(STRING_CUSTOMERS.get(i).getNumberOfKids(), customer.get(6));
-			assertEquals(STRING_CUSTOMERS.get(i).getFavouriteQuote(), customer.get(7));
-			assertEquals(STRING_CUSTOMERS.get(i).getEmail(), customer.get(8));
-			assertEquals(STRING_CUSTOMERS.get(i).getLoyaltyPoints(), customer.get(9));
+			assertEquals(STRING_CUSTOMERS.get(i).getBirthTime().toString(), customer.get(4).toString());
+			assertEquals(STRING_CUSTOMERS.get(i).getMailingAddress(), customer.get(5));
+			assertEquals(STRING_CUSTOMERS.get(i).getMarried(), customer.get(6));
+			assertEquals(STRING_CUSTOMERS.get(i).getNumberOfKids(), customer.get(7));
+			assertEquals(STRING_CUSTOMERS.get(i).getFavouriteQuote(), customer.get(8));
+			assertEquals(STRING_CUSTOMERS.get(i).getEmail(), customer.get(9));
+			assertEquals(STRING_CUSTOMERS.get(i).getLoyaltyPoints(), customer.get(10));
 		}
 		
 		assertEquals(STRING_CUSTOMERS.size() + 1, listReader.getRowNumber());
@@ -128,12 +130,13 @@ public class CsvListReaderTest {
 			assertEquals(CUSTOMERS.get(i).getFirstName(), customer.get(1));
 			assertEquals(CUSTOMERS.get(i).getLastName(), customer.get(2));
 			assertEquals(CUSTOMERS.get(i).getBirthDate(), customer.get(3));
-			assertEquals(CUSTOMERS.get(i).getMailingAddress(), customer.get(4));
-			assertEquals(CUSTOMERS.get(i).getMarried(), customer.get(5));
-			assertEquals(CUSTOMERS.get(i).getNumberOfKids(), customer.get(6));
-			assertEquals(CUSTOMERS.get(i).getFavouriteQuote(), customer.get(7));
-			assertEquals(CUSTOMERS.get(i).getEmail(), customer.get(8));
-			assertEquals(CUSTOMERS.get(i).getLoyaltyPoints(), customer.get(9));
+			assertEquals(CUSTOMERS.get(i).getBirthTime().toString(), customer.get(4).toString());
+			assertEquals(CUSTOMERS.get(i).getMailingAddress(), customer.get(5));
+			assertEquals(CUSTOMERS.get(i).getMarried(), customer.get(6));
+			assertEquals(CUSTOMERS.get(i).getNumberOfKids(), customer.get(7));
+			assertEquals(CUSTOMERS.get(i).getFavouriteQuote(), customer.get(8));
+			assertEquals(CUSTOMERS.get(i).getEmail(), customer.get(9));
+			assertEquals(CUSTOMERS.get(i).getLoyaltyPoints(), customer.get(10));
 		}
 		
 		assertEquals(CUSTOMERS.size() + 1, listReader.getRowNumber());
@@ -162,12 +165,13 @@ public class CsvListReaderTest {
 			assertEquals(CUSTOMERS.get(i).getFirstName(), customer.get(1));
 			assertEquals(CUSTOMERS.get(i).getLastName(), customer.get(2));
 			assertEquals(CUSTOMERS.get(i).getBirthDate(), customer.get(3));
-			assertEquals(CUSTOMERS.get(i).getMailingAddress(), customer.get(4));
-			assertEquals(CUSTOMERS.get(i).getMarried(), customer.get(5));
-			assertEquals(CUSTOMERS.get(i).getNumberOfKids(), customer.get(6));
-			assertEquals(CUSTOMERS.get(i).getFavouriteQuote(), customer.get(7));
-			assertEquals(CUSTOMERS.get(i).getEmail(), customer.get(8));
-			assertEquals(CUSTOMERS.get(i).getLoyaltyPoints(), customer.get(9));
+			assertEquals(CUSTOMERS.get(i).getBirthTime().toString(), customer.get(4).toString());
+			assertEquals(CUSTOMERS.get(i).getMailingAddress(), customer.get(5));
+			assertEquals(CUSTOMERS.get(i).getMarried(), customer.get(6));
+			assertEquals(CUSTOMERS.get(i).getNumberOfKids(), customer.get(7));
+			assertEquals(CUSTOMERS.get(i).getFavouriteQuote(), customer.get(8));
+			assertEquals(CUSTOMERS.get(i).getEmail(), customer.get(9));
+			assertEquals(CUSTOMERS.get(i).getLoyaltyPoints(), customer.get(10));
 		}
 		
 		assertEquals(CUSTOMERS.size() + 1, listReader.getRowNumber());
@@ -197,12 +201,13 @@ public class CsvListReaderTest {
 			assertEquals(STRING_CUSTOMERS.get(i).getFirstName(), customer.get(1));
 			assertEquals(STRING_CUSTOMERS.get(i).getLastName(), customer.get(2));
 			assertEquals(STRING_CUSTOMERS.get(i).getBirthDate(), customer.get(3));
-			assertEquals(STRING_CUSTOMERS.get(i).getMailingAddress(), customer.get(4));
-			assertEquals(STRING_CUSTOMERS.get(i).getMarried(), customer.get(5));
-			assertEquals(STRING_CUSTOMERS.get(i).getNumberOfKids(), customer.get(6));
-			assertEquals(STRING_CUSTOMERS.get(i).getFavouriteQuote(), customer.get(7));
-			assertEquals(STRING_CUSTOMERS.get(i).getEmail(), customer.get(8));
-			assertEquals(STRING_CUSTOMERS.get(i).getLoyaltyPoints(), customer.get(9));
+			assertEquals(STRING_CUSTOMERS.get(i).getBirthTime().toString(), customer.get(4).toString());
+			assertEquals(STRING_CUSTOMERS.get(i).getMailingAddress(), customer.get(5));
+			assertEquals(STRING_CUSTOMERS.get(i).getMarried(), customer.get(6));
+			assertEquals(STRING_CUSTOMERS.get(i).getNumberOfKids(), customer.get(7));
+			assertEquals(STRING_CUSTOMERS.get(i).getFavouriteQuote(), customer.get(8));
+			assertEquals(STRING_CUSTOMERS.get(i).getEmail(), customer.get(9));
+			assertEquals(STRING_CUSTOMERS.get(i).getLoyaltyPoints(), customer.get(10));
 		}
 		
 		assertEquals(STRING_CUSTOMERS.size() + 1, tokenizerListReader.getRowNumber());
