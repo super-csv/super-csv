@@ -18,12 +18,16 @@ package org.supercsv.io;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.exception.SuperCsvConstraintViolationException;
 import org.supercsv.exception.SuperCsvException;
 import org.supercsv.prefs.CsvPreference;
+import org.supercsv.util.CsvContext;
 import org.supercsv.util.Util;
 
 /**
@@ -31,13 +35,21 @@ import org.supercsv.util.Util;
  * 
  * @author Kasper B. Graversen
  * @author James Bassett
+ * @author Vyacheslav Pushkin
  */
 public abstract class AbstractCsvReader implements ICsvReader {
 	
+	private static final String COLUMN_NAME_NOT_FOUND =
+		"Column name not found: columnMapping contains column name that is not actually present in CSV header";
+	private static final String COLUMN_NOT_FOUND =
+		"Column not found: current row does not contain a column specified by columnMapping";
+
 	private final ITokenizer tokenizer;
 	
 	private final CsvPreference preferences;
 	
+	private List<String> csvHeader;
+
 	// the current tokenized columns
 	private final List<String> columns = new ArrayList<String>();
 	
@@ -204,4 +216,111 @@ public abstract class AbstractCsvReader implements ICsvReader {
 		return processedColumns;
 	}
 	
+	/**
+	 * 
+	 * Template method used by concrete CsvReader classes as part of implementation of certain read() methods.
+	 *
+	 * Uses the following methods containing implementation-specific details:
+	 * <ul>
+	 *   <li>getCellProcessorFromMapEntryValue(M mapping)</li>
+	 *   <li>{@literal addValueToDestination(T destination, Object cellValue, Entry<String, M> entry)}</li>
+	 * </ul>
+	 *
+	 * @param columnMapping
+	 *             map where key is CSV column name and value can be different depending on concrete CsvReader implementation
+	 * @param <M>
+	 *             type of columnMapping map value
+	 * @param destination
+	 *             object to be filled with data read from CSV row
+	 * @param <T>
+	 *             type of destination
+	 * @return object filled with data read from CSV row or null if EOF
+	 * @throws IOException
+	 *             if an I/O error occurred
+	 * @throws IllegalArgumentException
+	 * 			   if columnMapping contains column name that is not actually present in CSV header
+	 * @throws SuperCsvConstraintViolationException
+	 *             if a CellProcessor constraint failed
+	 * @throws SuperCsvException
+	 *             if current row does not contain a column specified by columnMapping, or CellProcessor execution failed
+	 */
+	protected <T, M> T readWithColumnMapping(final Map<String, M> columnMapping, final T destination) throws IOException {
+
+		// Obtain CSV header (actual column names from CSV file) if it hasn't been done already
+		if( csvHeader == null ) {
+			csvHeader = Arrays.asList(getHeader(true));
+		}
+
+		if( readRow() ) {
+			for (Entry<String, M> entry : columnMapping.entrySet()) {
+				// find column number by looking up the columnName in the CSV header
+				int i = csvHeader.indexOf(entry.getKey());
+				if( i == -1 ) {
+					throw new IllegalArgumentException(COLUMN_NAME_NOT_FOUND);
+				}
+
+				Object cellValue;
+				CellProcessor processor;
+
+				if( (processor = getCellProcessorFromMapEntryValue(entry.getValue())) == null ) {
+					cellValue = getColumns().get(i);
+				} else {
+					final CsvContext context = new CsvContext(getLineNumber(), getRowNumber(), i + 1);
+					context.setRowSource(new ArrayList<Object>(getColumns()));
+					try {
+						cellValue = processor.execute((Object)getColumns().get(i), context);
+					} catch (IndexOutOfBoundsException e) {
+						throw new SuperCsvException(COLUMN_NOT_FOUND, context);
+					}
+				}
+
+				addValueToDestination(destination, cellValue, entry);
+			}
+			return destination;
+		}
+
+		return null; // EOF
+	}
+
+	/**
+	 * 
+	 * Takes an object which either contains a CellProcessor or is a CellProcessor itself
+	 * (depending on concrete CsvReader implementation) and returns a CellProcessor.
+	 *
+	 * Used by template method <tt>readWithColumnMapping()</tt>. Optional method (default implementation throws
+	 * <tt>UnsupportedOperationException</tt>).
+	 *
+	 * @param cellProcessorOrItsContainer
+	 *             object which either contains a CellProcessor or is a CellProcessor itself
+	 *             (depending on CsvReader implementation) and returns a CellProcessor
+	 * @param <M>
+	 *             type of cellProcessorOrItsContainer
+	 * @return CellProcessor instance
+	 */
+	protected <M> CellProcessor getCellProcessorFromMapEntryValue(M cellProcessorOrItsContainer) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * 
+	 * Adds a value read from a single cell in CSV file row to a destination object (which exact type is determined by concrete CsvReader implementation).
+	 *
+	 * Used by template method <tt>readWithColumnMapping()</tt>. Optional method (default implementation throws
+	 * <tt>UnsupportedOperationException</tt>).
+	 *
+	 * @param destination
+	 *             object to be filled with data read from CSV row
+	 * @param <T>
+	 *             type of destination
+	 * @param cellValue
+	 *             value from a single cell in CSV file row
+	 * @param entry
+	 *             Map entry where key is CSV column name and value can be different depending on concrete CsvReader implementation
+	 * @param <M>
+	 *             type of map the <tt>entry</tt> is coming from
+	 */
+	protected <T, M> void addValueToDestination(T destination, Object cellValue, Entry<String, M> entry) {
+		throw new UnsupportedOperationException();
+	}
+
 }

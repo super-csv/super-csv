@@ -1,0 +1,268 @@
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~ Copyright 2007 Kasper B. Graversen
+~~ 
+~~ Licensed under the Apache License, Version 2.0 (the "License");
+~~ you may not use this file except in compliance with the License.
+~~ You may obtain a copy of the License at
+~~ 
+~~     http://www.apache.org/licenses/LICENSE-2.0
+~~ 
+~~ Unless required by applicable law or agreed to in writing, software
+~~ distributed under the License is distributed on an "AS IS" BASIS,
+~~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~~ See the License for the specific language governing permissions and
+~~ limitations under the License.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                                    ------------------------------------------
+                                    Reading CSV files with a large number of columns
+                                    ------------------------------------------
+
+Reading CSV files with a large number of columns
+
+  CsvBeanReader, CsvListReader and CsvMapReader supports alternative read() methods which are using a Map argument
+  where key is column name in CSV file and value is:
+  
+  * In case of CsvBeanReader: a BeanField instance, which is a holder for bean field name and a CellProcessor
+  
+  * In case of CsvListReader and CsvMapReader: a CellProcessor
+
+  []
+
+  These methods are useful when: 
+
+  * CSV column names are different from bean field names
+  
+  * Not all columns in CSV file are needed to be added to the bean/List/Map (in case of CsvListReader this
+    is the only method providing this feature)
+
+  []
+
+  These methods are more convenient than using <<<nameMapping>>> array when number of columns in CSV file is large,
+  because you don't have to create a large array with a lot of nulls and worry about columns order. 
+  However, a header (column names) must be present in CSV file.
+
+* Example CSV file
+
+  Here is an example CSV file. It has a header and 4 rows of data, all with 11 columns.
+  One of the columns (called <<<unrelated column>>>) shall be ignored.
+  Column names are different from field names in our bean (<<<CustomerBean>>>). 
+  The <<<mailingAddress>>> column contains data that spans multiple lines and the <<<favouriteQuote>>> column
+  contains data with escaped quotes.
+  
+---------------------------------------------------------------------------------------------------------------  
+customer id,unrelated column,first name,last name,birth date,mailing address,married,number of kids,favourite quote,E-Mail,loyalty points
+1,unrelated data,John,Dunbar,13/06/1945,"1600 Amphitheatre Parkway
+Mountain View, CA 94043
+United States",,,"""May the Force be with you."" - Star Wars",jdunbar@gmail.com,0
+2,unrelated data,Bob,Down,25/02/1919,"1601 Willow Rd.
+Menlo Park, CA 94025
+United States",Y,0,"""Frankly, my dear, I don't give a damn."" - Gone With The Wind",bobdown@hotmail.com,123456
+3,unrelated data,Alice,Wunderland,08/08/1985,"One Microsoft Way
+Redmond, WA 98052-6399
+United States",Y,0,"""Play it, Sam. Play ""As Time Goes By."""" - Casablanca",throughthelookingglass@yahoo.com,2255887799
+4,unrelated data,Bill,Jobs,10/07/1973,"2701 San Tomas Expressway
+Santa Clara, CA 95050
+United States",Y,3,"""You've got to ask yourself one question: ""Do I feel lucky?"" Well, do ya, punk?"" - Dirty Harry",billy34@hotmail.com,36
+---------------------------------------------------------------------------------------------------------------
+
+* Example cell processor configuration
+
+  All of the examples on this page use the following {{{./cell_processors.html}cell processor}} configuration.
+  
+  It demonstrates:
+  
+  * mandatory columns (<<<new NotNull()>>>)
+  
+  * optional columns (<<<new Optional()>>>), with further processing
+  
+  * conversion to Date (<<<new ParseDate()>>>), Boolean (<<<new ParseBool()>>>) and Integer (<<<new ParseInt()>>>) types
+  
+  * constraint validation against regular expressions (<<<new StrRegEx()>>>), numeric ranges (<<<new LMinMax()>>>) and uniqueness (<<<new UniqueHashCode()>>>)
+  
+  []
+  
+  Don't forget that you can {{{./examples_new_cell_processor.html}write your own cell processors}} if you want!
+  
++-------------------------------------------------------------------------------------------------------------+
+	private static final String EMAIL_REGEX = "[a-z0-9\\._]+@[a-z0-9\\.]+"; // just an example, not very robust!
+
+	/**
+	 * Sets up the processors used for the examples (Bean reader).
+	 * 
+	 * @return the cell processors
+	 */
+	private static Map<String, BeanField> getColumnMappingBean() {
+		// Create map where key is CSV column name and value is BeanField object which contains bean field name 
+		// and optional cell processor instance
+		Map<String, BeanField> columnMapping = new HashMap<String, BeanField>();
+		// CSV column name and bean field name doesn't have to be the same.
+		// You don't have to include all CSV columns to the map (not included columns will be ignored).
+		columnMapping.put("customer id", BeanField.of("customerNo", new UniqueHashCode()));
+		columnMapping.put("first name", BeanField.of("firstName", new NotNull()));
+		columnMapping.put("birth date", BeanField.of("birthDate", new ParseDate("dd/MM/yyyy")));
+		columnMapping.put("mailing address", BeanField.of("mailingAddress", new NotNull()));
+		columnMapping.put("married", BeanField.of("married", new Optional(new ParseBool())));
+		columnMapping.put("number of kids", BeanField.of("numberOfKids", new Optional(new ParseInt())));
+		columnMapping.put("favourite quote", BeanField.of("favouriteQuote", new NotNull()));
+		columnMapping.put("E-Mail", BeanField.of("email", new StrRegEx(EMAIL_REGEX)));
+		columnMapping.put("loyalty points", BeanField.of("loyaltyPoints", new LMinMax(0L, LMinMax.MAX_LONG)));
+		return columnMapping;
+	}
++-------------------------------------------------------------------------------------------------------------+
+
++-------------------------------------------------------------------------------------------------------------+
+	private static final String EMAIL_REGEX = "[a-z0-9\\._]+@[a-z0-9\\.]+"; // just an example, not very robust!
+
+	/**
+	 * Sets up the processors used for the examples (List and Map readers).
+	 * 
+	 * @return the cell processors
+	 */
+	private static Map<String, CellProcessor> getColumnMappingListMap() {
+		// Create map where key is CSV column name and value is an optional cell processor instance.
+		// You shall use an ordered map implementation in order to preserve the order of columns.
+		// in resulting List when using CsvListReader.
+		Map<String, CellProcessor> columnMapping = new LinkedHashMap<String, CellProcessor>();
+		// CSV column name and bean field name doesn't have to be the same.
+		// You don't have to include all CSV columns to the map (not included columns will be ignored).
+		columnMapping.put("customer id", new UniqueHashCode());
+		columnMapping.put("first name", new NotNull());
+		columnMapping.put("birth date", new ParseDate("dd/MM/yyyy"));
+		columnMapping.put("mailing address", new NotNull());
+		columnMapping.put("married", new Optional(new ParseBool()));
+		columnMapping.put("number of kids", new Optional(new ParseInt()));
+		columnMapping.put("favourite quote", new NotNull());
+		columnMapping.put("E-Mail", new StrRegEx(EMAIL_REGEX));
+		columnMapping.put("loyalty points", new LMinMax(0L, LMinMax.MAX_LONG));
+		return columnMapping;
+	}
++-------------------------------------------------------------------------------------------------------------+
+
+* Reading with CsvBeanReader
+
++-------------------------------------------------------------------------------------------------------------+
+	private static void readWithCsvBeanReaderMapArg() throws IOException {
+		
+		ICsvBeanReader beanReader = null;
+		try {
+			beanReader = new CsvBeanReader(new FileReader(CSV_FILENAME_MAP_ARG), CsvPreference.STANDARD_PREFERENCE);
+			
+			Map<String, BeanField> columnMapping = getColumnMappingBean();
+			
+			CustomerBean customer;
+			while( (customer = beanReader.read(CustomerBean.class, columnMapping)) != null ) {
+				System.out.println(String.format("lineNo=%s, rowNo=%s, customer=%s", beanReader.getLineNumber(),
+					beanReader.getRowNumber(), customer));
+			}
+			
+		} finally {
+			if( beanReader != null ) {
+				beanReader.close();
+			}
+		}
+	}
++-------------------------------------------------------------------------------------------------------------+
+
+  Output:
+  
+---------------------------------------------------------------------------------------------------------------
+lineNo=4, rowNo=2, customer=CustomerBean [customerNo=1, firstName=John, lastName=null, birthDate=Wed Jun 13 00:00:00 BRT 1945, mailingAddress=1600 Amphitheatre Parkway
+Mountain View, CA 94043
+United States, married=null, numberOfKids=null, favouriteQuote="May the Force be with you." - Star Wars, email=jdunbar@gmail.com, loyaltyPoints=0]
+lineNo=7, rowNo=3, customer=CustomerBean [customerNo=2, firstName=Bob, lastName=null, birthDate=Tue Feb 25 00:00:00 BRT 1919, mailingAddress=1601 Willow Rd.
+Menlo Park, CA 94025
+United States, married=true, numberOfKids=0, favouriteQuote="Frankly, my dear, I don't give a damn." - Gone With The Wind, email=bobdown@hotmail.com, loyaltyPoints=123456]
+lineNo=10, rowNo=4, customer=CustomerBean [customerNo=3, firstName=Alice, lastName=null, birthDate=Thu Aug 08 00:00:00 BRT 1985, mailingAddress=One Microsoft Way
+Redmond, WA 98052-6399
+United States, married=true, numberOfKids=0, favouriteQuote="Play it, Sam. Play "As Time Goes By."" - Casablanca, email=throughthelookingglass@yahoo.com, loyaltyPoints=2255887799]
+lineNo=13, rowNo=5, customer=CustomerBean [customerNo=4, firstName=Bill, lastName=null, birthDate=Tue Jul 10 00:00:00 BRT 1973, mailingAddress=2701 San Tomas Expressway
+Santa Clara, CA 95050
+United States, married=true, numberOfKids=3, favouriteQuote="You've got to ask yourself one question: "Do I feel lucky?" Well, do ya, punk?" - Dirty Harry, email=billy34@hotmail.com, loyaltyPoints=36]
+---------------------------------------------------------------------------------------------------------------
+
+* Reading with CsvListReader
+
++-------------------------------------------------------------------------------------------------------------+
+	private static void readWithCsvListReaderMapArg() throws IOException {
+		
+		ICsvListReader listReader = null;
+		try {
+			listReader = new CsvListReader(new FileReader(CSV_FILENAME_MAP_ARG), CsvPreference.STANDARD_PREFERENCE);
+			
+			// Create map where key is CSV column name and value is optional cell processor instance
+			Map<String, CellProcessor> columnMapping = getColumnMapping();
+			
+			List<Object> customer;
+			while( (customer = listReader.read(columnMapping)) != null ) {
+				System.out.println(String.format("lineNo=%s, rowNo=%s, customer=%s", listReader.getLineNumber(),
+					listReader.getRowNumber(), customer));
+			}
+			
+		} finally {
+			if( listReader != null ) {
+				listReader.close();
+			}
+		}
+	}
++-------------------------------------------------------------------------------------------------------------+
+
+  Output:
+  
+---------------------------------------------------------------------------------------------------------------
+lineNo=4, rowNo=2, customer=[1, John, Wed Jun 13 00:00:00 BRT 1945, 1600 Amphitheatre Parkway
+Mountain View, CA 94043
+United States, null, null, "May the Force be with you." - Star Wars, jdunbar@gmail.com, 0]
+lineNo=7, rowNo=3, customer=[2, Bob, Tue Feb 25 00:00:00 BRT 1919, 1601 Willow Rd.
+Menlo Park, CA 94025
+United States, true, 0, "Frankly, my dear, I don't give a damn." - Gone With The Wind, bobdown@hotmail.com, 123456]
+lineNo=10, rowNo=4, customer=[3, Alice, Thu Aug 08 00:00:00 BRT 1985, One Microsoft Way
+Redmond, WA 98052-6399
+United States, true, 0, "Play it, Sam. Play "As Time Goes By."" - Casablanca, throughthelookingglass@yahoo.com, 2255887799]
+lineNo=13, rowNo=5, customer=[4, Bill, Tue Jul 10 00:00:00 BRT 1973, 2701 San Tomas Expressway
+Santa Clara, CA 95050
+United States, true, 3, "You've got to ask yourself one question: "Do I feel lucky?" Well, do ya, punk?" - Dirty Harry, billy34@hotmail.com, 36]
+---------------------------------------------------------------------------------------------------------------
+
+* Reading with CsvMapReader
+
++-------------------------------------------------------------------------------------------------------------+
+	private static void readWithCsvMapReaderMapArg() throws IOException {
+		
+		ICsvMapReader mapReader = null;
+		try {
+			mapReader = new CsvMapReader(new FileReader(CSV_FILENAME_MAP_ARG), CsvPreference.STANDARD_PREFERENCE);
+			
+			// Create map where key is CSV column name and value is optional cell processor instance
+			Map<String, CellProcessor> columnMapping = getColumnMapping();
+			
+			Map<String, Object> customer;
+			while( (customer = mapReader.read(columnMapping)) != null ) {
+				System.out.println(String.format("lineNo=%s, rowNo=%s, customer=%s", mapReader.getLineNumber(),
+					mapReader.getRowNumber(), customer));
+			}
+			
+		} finally {
+			if( mapReader != null ) {
+				mapReader.close();
+			}
+		}
+	}
++-------------------------------------------------------------------------------------------------------------+
+
+  Output:
+  
+---------------------------------------------------------------------------------------------------------------
+lineNo=4, rowNo=2, customer={favourite quote="May the Force be with you." - Star Wars, number of kids=null, customer id=1, loyalty points=0, E-Mail=jdunbar@gmail.com, first name=John, mailing address=1600 Amphitheatre Parkway
+Mountain View, CA 94043
+United States, married=null, birth date=Wed Jun 13 00:00:00 BRT 1945}
+lineNo=7, rowNo=3, customer={favourite quote="Frankly, my dear, I don't give a damn." - Gone With The Wind, number of kids=0, customer id=2, loyalty points=123456, E-Mail=bobdown@hotmail.com, first name=Bob, mailing address=1601 Willow Rd.
+Menlo Park, CA 94025
+United States, married=true, birth date=Tue Feb 25 00:00:00 BRT 1919}
+lineNo=10, rowNo=4, customer={favourite quote="Play it, Sam. Play "As Time Goes By."" - Casablanca, number of kids=0, customer id=3, loyalty points=2255887799, E-Mail=throughthelookingglass@yahoo.com, first name=Alice, mailing address=One Microsoft Way
+Redmond, WA 98052-6399
+United States, married=true, birth date=Thu Aug 08 00:00:00 BRT 1985}
+lineNo=13, rowNo=5, customer={favourite quote="You've got to ask yourself one question: "Do I feel lucky?" Well, do ya, punk?" - Dirty Harry, number of kids=3, customer id=4, loyalty points=36, E-Mail=billy34@hotmail.com, first name=Bill, mailing address=2701 San Tomas Expressway
+Santa Clara, CA 95050
+United States, married=true, birth date=Tue Jul 10 00:00:00 BRT 1973}
+---------------------------------------------------------------------------------------------------------------
+

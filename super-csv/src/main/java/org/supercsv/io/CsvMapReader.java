@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.prefs.CsvPreference;
@@ -32,6 +33,7 @@ import org.supercsv.util.Util;
  * 
  * @author Kasper B. Graversen
  * @author James Bassett
+ * @author Vyacheslav Pushkin
  */
 public class CsvMapReader extends AbstractCsvReader implements ICsvMapReader {
 	
@@ -106,5 +108,34 @@ public class CsvMapReader extends AbstractCsvReader implements ICsvMapReader {
 		}
 		
 		return null; // EOF
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Map<String, Object> read(final Map<String, CellProcessor> columnMapping) throws IOException {
+
+		if( columnMapping == null) {
+			throw new NullPointerException("columnMapping should not be null");
+		}
+
+		return readWithColumnMapping(columnMapping, new HashMap<String, Object>());
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected <M> CellProcessor getCellProcessorFromMapEntryValue(final M cellProcessor) {
+		return (CellProcessor)cellProcessor;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	protected <T, M> void addValueToDestination(final T destination, final Object cellValue, final Entry<String, M> entry) {
+		((Map<String, Object>)destination).put(entry.getKey(), cellValue);
 	}
 }

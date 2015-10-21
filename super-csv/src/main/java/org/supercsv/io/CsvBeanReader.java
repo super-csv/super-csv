@@ -20,12 +20,15 @@ import java.io.Reader;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.exception.SuperCsvConstraintViolationException;
 import org.supercsv.exception.SuperCsvException;
 import org.supercsv.exception.SuperCsvReflectionException;
 import org.supercsv.prefs.CsvPreference;
+import org.supercsv.util.BeanField;
 import org.supercsv.util.BeanInterfaceProxy;
 import org.supercsv.util.MethodCache;
 
@@ -37,6 +40,7 @@ import org.supercsv.util.MethodCache;
  * 
  * @author Kasper B. Graversen
  * @author James Bassett
+ * @author Vyacheslav Pushkin
  */
 public class CsvBeanReader extends AbstractCsvReader implements ICsvBeanReader {
 	
@@ -220,6 +224,32 @@ public class CsvBeanReader extends AbstractCsvReader implements ICsvBeanReader {
 	}
 	
 	/**
+	 * {@inheritDoc}
+	 */
+	public <T> T read(final Class<T> clazz, final Map<String, BeanField> columnMapping) throws IOException {
+		if( clazz == null ) {
+			throw new NullPointerException("clazz should not be null");
+		} else if( columnMapping == null) {
+			throw new NullPointerException("columnMapping should not be null");
+		}
+
+		return readWithColumnMapping(columnMapping, instantiateBean(clazz));
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public <T> T read(final T bean, final Map<String, BeanField> columnMapping) throws IOException {
+		if( bean == null ) {
+			throw new NullPointerException("bean should not be null");
+		} else if( columnMapping == null) {
+			throw new NullPointerException("columnMapping should not be null");
+		}
+
+		return readWithColumnMapping(columnMapping, bean);
+	}
+
+	/**
 	 * Reads a row of a CSV file and populates the bean, using the supplied name mapping to map column values to the
 	 * appropriate fields. If processors are supplied then they are used, otherwise the raw String values will be used.
 	 * 
@@ -267,4 +297,28 @@ public class CsvBeanReader extends AbstractCsvReader implements ICsvBeanReader {
 		return null; // EOF
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected <M> CellProcessor getCellProcessorFromMapEntryValue(final M beanField) {
+		return ((BeanField)beanField).getCellProcessor();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected <T, M> void addValueToDestination(final T destination, final Object cellValue, final Entry<String, M> entry) {
+		// don't call a set-method in the bean if there is no result to store
+		if( cellValue == null ) {
+			return;
+		}
+
+		// invoke the setter on the bean
+		String fieldName = ((BeanField)entry.getValue()).getFieldName();
+		Method setMethod = cache.getSetMethod(destination, fieldName, cellValue.getClass());
+		invokeSetter(destination, setMethod, cellValue);
+	}
+
 }

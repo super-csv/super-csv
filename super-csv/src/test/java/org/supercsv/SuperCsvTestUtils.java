@@ -20,7 +20,9 @@ import static org.junit.Assert.assertEquals;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.supercsv.cellprocessor.FmtBool;
 import org.supercsv.cellprocessor.FmtDate;
@@ -144,6 +146,17 @@ public class SuperCsvTestUtils {
 		.append(MIRANDA_CSV).append("\r\n").append(STEVE_CSV).append("\r\n").append(ADA_CSV).append("\r\n")
 		.append(SERGEI_CSV).append("\r\n").append(LARRY_CSV).append("\r\n").append(GRACE_CSV).append("\r\n").toString();
 	
+	/**
+	 * The CSV file to use for testing of reading with custom field mapping
+	 */
+	public static final String CSV_FILE_CUSTOM_FIELD_MAPPING =
+		"first name,last name,unrelated column 1,date of birth,unrelated column 2,mailing address,marital status,number of kids,favourite quote,email address,loyalty points,customer id\r\n"
+		+ "John,Dunbar,unrelated data 1,13/06/1945,unrelated data 2,\"1600 Amphitheatre Parkway\r\nMountain View, CA 94043\r\nUnited States\",,,\"\"\"May the Force be with you.\"\" - Star Wars\",jdunbar@gmail.com,0,1\r\n"
+		+ "Bob,Down,unrelated data 1,25/02/1919,unrelated data 2,\"1601 Willow Rd.\r\nMenlo Park, CA 94025\r\nUnited States\",Y,0,\"\"\"Frankly, my dear, I don't give a damn.\"\" - Gone With The Wind\",bobdown@hotmail.com,123456,2\r\n"
+		+ "Alice,Wunderland,unrelated data 1,08/08/1985,unrelated data 2,\"One Microsoft Way\r\nRedmond, WA 98052-6399\r\nUnited States\",Y,0,\"\"\"Play it, Sam. Play \"\"As Time Goes By.\"\"\"\" - Casablanca\",throughthelookingglass@yahoo.com,2255887799,3\r\n"
+		+ "Bill,Jobs,unrelated data 1,10/07/1973,unrelated data 2,\"2701 San Tomas Expressway\r\nSanta Clara, CA 95050\r\nUnited States\",Y,3,\"\"\"You've got to ask yourself one question: \"\"Do I feel lucky?\"\" Well, do ya, punk?\"\" - Dirty Harry\",billy34@hotmail.com,36,4\r\n"
+		+ "Miranda,Feist,unrelated data 1,03/01/1999,unrelated data 2,\"2-4 Rue du Sablon\r\nMorges, 1110\r\nSwitzerland\",,,\"\"\"You had me at \"\"hello.\"\"\"\" - Jerry Maguire\",miranda_feist@gmail.com,54623,5";
+
 	/** List of populated customer beans to use for testing */
 	public static final List<CustomerBean> CUSTOMERS = Arrays.asList(JOHN, BOB, ALICE, BILL, MIRANDA, STEVE, ADA,
 		SERGEI, LARRY, GRACE);
@@ -211,4 +224,40 @@ public class SuperCsvTestUtils {
 		assertEquals(expectedOutput, processor.execute(input, ANONYMOUS_CSVCONTEXT));
 	}
 	
+	/**
+	 * Creates columnMapping used in testing of CsvReader's read(Map<String, CellProcessor> columnMapping) method.
+	 * All processors are null.
+	 *
+	 * @return columnMapping
+	 */
+	public static Map<String, CellProcessor> createColumnMapping() {
+		Map<String, CellProcessor> columnMapping = new LinkedHashMap<String, CellProcessor>();
+		columnMapping.put("first name", null);
+		columnMapping.put("last name", null);
+		columnMapping.put("date of birth", null);
+		columnMapping.put("mailing address", null);
+		columnMapping.put("marital status", null);
+		columnMapping.put("number of kids", null);
+		columnMapping.put("favourite quote", null);
+		columnMapping.put("email address", null);
+		columnMapping.put("loyalty points", null);
+		columnMapping.put("customer id", null);
+		return columnMapping;
+	}
+
+	/**
+	 * Creates columnMapping used in testing of CsvReader's read(Map<String, CellProcessor> columnMapping) method.
+	 * Some processors present (not null).
+	 *
+	 * @return columnMapping
+	 */
+	public static Map<String, CellProcessor> createColumnMappingWithProcessors() {
+		Map<String, CellProcessor> columnMapping =
+			new LinkedHashMap<String, CellProcessor>(createColumnMapping());
+		columnMapping.put("date of birth", new ParseDate("dd/MM/yyyy"));
+		columnMapping.put("marital status", new Optional(new ParseBool()));
+		columnMapping.put("number of kids", new Optional(new ParseInt()));
+		columnMapping.put("loyalty points", new ParseLong());
+		return columnMapping;
+	}
 }
