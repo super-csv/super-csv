@@ -21,9 +21,9 @@ Release notes
 
 * 2.4.0
 
-  <08/2015>
+  <10/2015>
   
-  Some long overdue features and bug fixes, plus some exciting new features from our new contributors :)
+  Some long overdue features and bug fixes, plus some exciting new features from our new contributors.
   
   <<New features>>
   
@@ -31,19 +31,30 @@ Release notes
     
     * {{{https://github.com/super-csv/super-csv/issues/6}6}} - New <<<CsvResultSetWriter>>> for writing JDBC result sets
     
-    * {{{https://github.com/super-csv/super-csv/issues/53}53}} - Cell Processors for Java 8 (time)
-    
+    * {{{https://github.com/super-csv/super-csv/issues/53}53}} - Cell Processors for Java 8 time related classes: <<<Duration>>>, <<<LocalDate>>>, <<<LocalDateTime>>>, etc.
+
+    * {{{https://github.com/super-csv/super-csv/issues/71}71}} - Improve write performance in multi-threaded environment. Added new <<<AbstractCsvWriter>>> constructor which allows to define whether given writer should be wrapped by <<<BufferedWriter>>> class or not.
+
   <<Bug fixes>>
     
     * {{{https://github.com/super-csv/super-csv/issues/33}33}} - Fixed misleading Exception for a CSV file with mismatched quotes
     
     * {{{https://github.com/super-csv/super-csv/issues/42}42}} - <<<CsvContext>>> is no longer being reset when exceptions are ignored
-    
+
   <<General enhancements>>
   
     * {{{https://github.com/super-csv/super-csv/issues/32}32}} - <<<CsvPreference.getQuoteChar()>>> now returns a <<<char>>> instead of an <<<int>>>
-    
-    
+
+    * {{{https://github.com/super-csv/super-csv/pull/66}66}} - <<<CellProcessor.execute(final Object value, final CsvContext context)>>> now returns generic <<<T>>> instead of an <<<Object>>>
+
+  <<Minor changes>>
+
+    * {{{https://github.com/super-csv/super-csv/issues/16}16}} - super-csv passes "Turkey Test"
+
+    * {{{https://github.com/super-csv/super-csv/issues/49}49}} - Fixed documentation for <<<CsvDozerBeanWriter>>> class
+
+    * {{{https://github.com/super-csv/super-csv/issues/56}56}} - Created test suite due to {{{http://csveed.org/comparison-matrix.html}Comparison matrix}} page
+
 * 2.3.1
 
   <03/2015>
