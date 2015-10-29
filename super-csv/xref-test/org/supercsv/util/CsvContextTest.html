@@ -137,7 +137,28 @@
 <a class="jxr_linenumber" name="L129" href="#L129">129</a> 		assertTrue(contextWithSource.equals(same));
 <a class="jxr_linenumber" name="L130" href="#L130">130</a> 	}
 <a class="jxr_linenumber" name="L131" href="#L131">131</a> 	
-<a class="jxr_linenumber" name="L132" href="#L132">132</a> }
+<a class="jxr_linenumber" name="L132" href="#L132">132</a> 	@Test
+<a class="jxr_linenumber" name="L133" href="#L133">133</a> 	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testCopyConstructor() {
+<a class="jxr_linenumber" name="L134" href="#L134">134</a> 		<em class="jxr_comment">// Test with the mandatory parameters. The rowSource is not set</em>
+<a class="jxr_linenumber" name="L135" href="#L135">135</a> 		<em class="jxr_comment">// to make sure that copy constructor does not dereference a null</em>
+<a class="jxr_linenumber" name="L136" href="#L136">136</a> 		CsvContext original = <strong class="jxr_keyword">new</strong> CsvContext(1,2,3);
+<a class="jxr_linenumber" name="L137" href="#L137">137</a> 		CsvContext clone = <strong class="jxr_keyword">new</strong> CsvContext(original);
+<a class="jxr_linenumber" name="L138" href="#L138">138</a> 		assertFalse(original == clone);   <em class="jxr_comment">// The clone is a new object</em>
+<a class="jxr_linenumber" name="L139" href="#L139">139</a> 		assertEquals(original, clone);    <em class="jxr_comment">// that passes the equals test</em>
+<a class="jxr_linenumber" name="L140" href="#L140">140</a> 		
+<a class="jxr_linenumber" name="L141" href="#L141">141</a> 		<em class="jxr_comment">// Test with a homogeneous rowSource</em>
+<a class="jxr_linenumber" name="L142" href="#L142">142</a> 		original.setRowSource(Arrays.asList(<strong class="jxr_keyword">new</strong> Object[] { <span class="jxr_string">"four"</span>, <span class="jxr_string">"five"</span>, <span class="jxr_string">"six"</span> }));
+<a class="jxr_linenumber" name="L143" href="#L143">143</a> 		CsvContext clone2 = <strong class="jxr_keyword">new</strong> CsvContext(original);
+<a class="jxr_linenumber" name="L144" href="#L144">144</a> 		assertFalse(original == clone2);   <em class="jxr_comment">// The clone is a new object</em>
+<a class="jxr_linenumber" name="L145" href="#L145">145</a> 		assertEquals(original, clone2);    <em class="jxr_comment">// that passes the equals test</em>
+<a class="jxr_linenumber" name="L146" href="#L146">146</a> 		
+<a class="jxr_linenumber" name="L147" href="#L147">147</a> 		<em class="jxr_comment">// Corner cases</em>
+<a class="jxr_linenumber" name="L148" href="#L148">148</a> 		original.setRowSource(Arrays.asList(<strong class="jxr_keyword">new</strong> Object[] { <strong class="jxr_keyword">null</strong>, <span class="jxr_string">"five"</span>, <strong class="jxr_keyword">new</strong> Integer(6) }));
+<a class="jxr_linenumber" name="L149" href="#L149">149</a> 		CsvContext clone3 = <strong class="jxr_keyword">new</strong> CsvContext(original);
+<a class="jxr_linenumber" name="L150" href="#L150">150</a> 		assertFalse(original == clone3);   <em class="jxr_comment">// The clone is a new object</em>
+<a class="jxr_linenumber" name="L151" href="#L151">151</a> 		assertEquals(original, clone3);    <em class="jxr_comment">// that passes the equals test</em>
+<a class="jxr_linenumber" name="L152" href="#L152">152</a> 	}
+<a class="jxr_linenumber" name="L153" href="#L153">153</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2007&#x2013;2015 <a href="https://github.com/super-csv/super-csv">Super CSV</a>. All rights reserved.</div>
