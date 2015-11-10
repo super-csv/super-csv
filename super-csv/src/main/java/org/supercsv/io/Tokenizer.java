@@ -30,6 +30,7 @@ import org.supercsv.prefs.CsvPreference;
  * 
  * @author Kasper B. Graversen
  * @author James Bassett
+ * @author Pietro Aragona
  */
 public class Tokenizer extends AbstractTokenizer {
 	
@@ -53,6 +54,8 @@ public class Tokenizer extends AbstractTokenizer {
 	private final CommentMatcher commentMatcher;
 
 	private final int maxLinesPerRow;
+	
+	private final EmptyColumnParsing emptyColumnParsing;
 	
 	/**
 	 * Enumeration of tokenizer states. QUOTE_MODE is activated between quotes.
@@ -79,6 +82,7 @@ public class Tokenizer extends AbstractTokenizer {
 		this.ignoreEmptyLines = preferences.isIgnoreEmptyLines();
 		this.commentMatcher = preferences.getCommentMatcher();
 		this.maxLinesPerRow = preferences.getMaxLinesPerRow();
+		this.emptyColumnParsing = preferences.getEmptyColumnParsing();
 	}
 	
 	/**
@@ -126,7 +130,7 @@ public class Tokenizer extends AbstractTokenizer {
 					if( !surroundingSpacesNeedQuotes ) {
 						appendSpaces(currentColumn, potentialSpaces);
 					}
-					columns.add(currentColumn.length() > 0 ? currentColumn.toString() : null); // "" -> null
+					addColumn(columns, line, charIndex);
 					return true;
 				}
 				else
@@ -188,7 +192,7 @@ public class Tokenizer extends AbstractTokenizer {
 					if( !surroundingSpacesNeedQuotes ) {
 						appendSpaces(currentColumn, potentialSpaces);
 					}
-					columns.add(currentColumn.length() > 0 ? currentColumn.toString() : null); // "" -> null
+					addColumn(columns, line, charIndex);
 					potentialSpaces = 0;
 					currentColumn.setLength(0);
 					
@@ -260,6 +264,27 @@ public class Tokenizer extends AbstractTokenizer {
 			}
 			
 			charIndex++; // read next char of the line
+		}
+	}
+/**
+ * Adds the currentColumn to columns list managing the case with currentColumn.length() == 0
+ * It was introduced to manage the emptyColumnParsing.
+ * 
+ * @param columns
+ * @param line
+ * @param charIndex
+ */
+	private void addColumn(final List<String> columns, String line, int charIndex) {
+		
+		if(currentColumn.length() > 0){
+			columns.add(currentColumn.toString());
+		}
+		else{
+			int previousCharIndex = charIndex - 1;
+			boolean availableCharacters = previousCharIndex >= 0 ;
+			boolean previousCharIsQuote = availableCharacters && line.charAt(previousCharIndex) == quoteChar;
+			String noValue = ( (previousCharIsQuote) && emptyColumnParsing.equals(EmptyColumnParsing.ParseEmptyColumnsAsEmptyString)) ? "" : null;
+			columns.add(noValue);
 		}
 	}
 	

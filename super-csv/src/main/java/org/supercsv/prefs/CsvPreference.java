@@ -18,6 +18,7 @@ package org.supercsv.prefs;
 import org.supercsv.comment.CommentMatcher;
 import org.supercsv.encoder.CsvEncoder;
 import org.supercsv.encoder.DefaultCsvEncoder;
+import org.supercsv.io.EmptyColumnParsing;
 import org.supercsv.quote.NormalQuoteMode;
 import org.supercsv.quote.QuoteMode;
 
@@ -98,6 +99,7 @@ import org.supercsv.quote.QuoteMode;
  * 
  * @author Kasper B. Graversen
  * @author James Bassett
+ * @author Pietro Aragona
  */
 public final class CsvPreference {
 	
@@ -139,6 +141,8 @@ public final class CsvPreference {
 	
 	private int maxLinesPerRow = 0;
 	
+	private final EmptyColumnParsing emptyColumnParsing;
+	
 	/**
 	 * Constructs a new <tt>CsvPreference</tt> from a Builder.
 	 */
@@ -152,6 +156,7 @@ public final class CsvPreference {
 		this.encoder = builder.encoder;
 		this.quoteMode = builder.quoteMode;
 		this.maxLinesPerRow = builder.maxLinesPerRow;
+		this.emptyColumnParsing = builder.emptyColumnParsing;
 	}
 	
 	/**
@@ -236,6 +241,17 @@ public final class CsvPreference {
 	}
 	
 	/**
+	 * Returns the EmptyColumnParsing to determine whether empty String (i.e. "") should be read as empty string or as
+	 * null.
+	 * 
+	 * @return the emptyColumnParsing
+	 */
+	
+	public EmptyColumnParsing getEmptyColumnParsing() {
+		return emptyColumnParsing;
+	}
+
+	/**
 	 * Builds immutable <tt>CsvPreference</tt> instances. The builder pattern allows for additional preferences to be
 	 * added in the future.
 	 */
@@ -259,6 +275,8 @@ public final class CsvPreference {
 		
 		private int maxLinesPerRow = 0;
 		
+		private EmptyColumnParsing emptyColumnParsing;
+		
 		/**
 		 * Constructs a Builder with all of the values from an existing <tt>CsvPreference</tt> instance. Useful if you
 		 * want to base your preferences off one of the existing CsvPreference constants.
@@ -276,6 +294,7 @@ public final class CsvPreference {
 			this.quoteMode = preference.quoteMode;
 			this.commentMatcher = preference.commentMatcher;
 			this.maxLinesPerRow = preference.maxLinesPerRow;
+			this.emptyColumnParsing = preference.emptyColumnParsing;
 		}
 		
 		/**
@@ -411,6 +430,23 @@ public final class CsvPreference {
 		}
 		
 		/**
+		 * Uses an EmptyColumnParsing to determine whether empty String (i.e. "") should be read as empty string instead as null. 
+		 * The default is <tt>ParseEmptyColumnsAsNull</tt>.
+		 * 
+		 * @since 2.4.1
+		 * @param emptyColumnParsing
+		 *            the emptyColumnParsing
+		 * @return the updated Builder
+		 */		
+		public Builder setEmptyColumnParsing(final EmptyColumnParsing emptyColumnParsing) {
+			if( emptyColumnParsing == null ) {
+				throw new NullPointerException("emptyColumnParsing should not be null");
+			}
+			this.emptyColumnParsing = emptyColumnParsing;
+			return this;
+		}
+		
+		/**
 		 * Builds the CsvPreference instance.
 		 * 
 		 * @return the immutable CsvPreference instance
@@ -423,6 +459,10 @@ public final class CsvPreference {
 			
 			if( quoteMode == null ) {
 				quoteMode = new NormalQuoteMode();
+			}
+			
+			if( emptyColumnParsing == null ) {
+				emptyColumnParsing = EmptyColumnParsing.ParseEmptyColumnsAsNull;
 			}
 			
 			return new CsvPreference(this);
