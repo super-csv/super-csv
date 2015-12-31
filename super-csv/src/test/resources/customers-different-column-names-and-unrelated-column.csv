@@ -1,0 +1,13 @@
+customer id,unrelated column,first name,last name,birth date,mailing address,married,number of kids,favourite quote,E-Mail,loyalty points
+1,unrelated data,John,Dunbar,13/06/1945,"1600 Amphitheatre Parkway
+Mountain View, CA 94043
+United States",,,"""May the Force be with you."" - Star Wars",jdunbar@gmail.com,0
+2,unrelated data,Bob,Down,25/02/1919,"1601 Willow Rd.
+Menlo Park, CA 94025
+United States",Y,0,"""Frankly, my dear, I don't give a damn."" - Gone With The Wind",bobdown@hotmail.com,123456
+3,unrelated data,Alice,Wunderland,08/08/1985,"One Microsoft Way
+Redmond, WA 98052-6399
+United States",Y,0,"""Play it, Sam. Play ""As Time Goes By."""" - Casablanca",throughthelookingglass@yahoo.com,2255887799
+4,unrelated data,Bill,Jobs,10/07/1973,"2701 San Tomas Expressway
+Santa Clara, CA 95050
+United States",Y,3,"""You've got to ask yourself one question: ""Do I feel lucky?"" Well, do ya, punk?"" - Dirty Harry",billy34@hotmail.com,36

@@ -24,6 +24,9 @@ Partial reading
   
   The examples on this page use the same example CSV file as the {{{./examples_reading.html}reading examples}}, and
   the full source can be found {{{./xref-test/org/supercsv/example/Reading.html}here}}.
+  
+  Alternative method of partial reading which is useful in case when CSV file has large number of columns
+  is described {{{./examples_reading_column_mapping.html}here}}. Also this is the only method available for CsvListReader.
 
 * Partial reading with CsvBeanReader
 
@@ -128,3 +131,7 @@ lineNo=7, rowNo=3, customerMap={lastName=Down, customerNo=2, firstName=Bob}
 lineNo=10, rowNo=4, customerMap={lastName=Wunderland, customerNo=3, firstName=Alice}
 lineNo=13, rowNo=5, customerMap={lastName=Jobs, customerNo=4, firstName=Bill}
 ---------------------------------------------------------------------------------------------------------------
+
+* Partial reading with CsvListReader
+
+  See {{{./examples_reading_column_mapping.html}here}}.

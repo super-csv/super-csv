@@ -17,6 +17,7 @@ package org.supercsv.io;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.exception.SuperCsvConstraintViolationException;
@@ -27,6 +28,7 @@ import org.supercsv.exception.SuperCsvException;
  * 
  * @author Kasper B. Graversen
  * @author James Bassett
+ * @author Vyacheslav Pushkin
  */
 public interface ICsvListReader extends ICsvReader {
 	
@@ -69,6 +71,38 @@ public interface ICsvListReader extends ICsvReader {
 	 */
 	List<Object> read(CellProcessor... processors) throws IOException;
 	
+	/**
+	 * <p>Reads a row of a CSV file and returns a List of Objects containing each column, using the supplied Map where key
+	 * is column name and value is CellProcessor instance which processes the data before adding it to the List.
+	 * CellProcessor can be <tt>null</tt>, which indicates no further processing is required (the unprocessed String value will
+	 * be added to the List). Column names which are not included to the Map will be ignored (not added to the List).</p>
+	 *
+	 * <p>This method is useful when not all columns in CSV file are needed to be added to the List.
+	 * However, a header (column names) must be present in CSV file.</p>
+	 *
+	 * <p>Order of elements in the resulting List is based on order of map
+	 * entries. Use ordered map (e.g. <tt>LinkedHashMap</tt>) if elements order is important.</p>
+	 *
+	 * @param columnMapping
+	 *             a map where key is CSV column name and value is optional CellProcessor instance. Columns which names
+	 *             are not included in the map are ignored (not added to the List).
+	 *             Use ordered map (e.g. LinkedHashMap) if elements order is important.
+	 * @return the List of columns, or null if EOF
+	 * @throws IOException
+	 *             if an I/O error occurred
+	 * @throws NullPointerException
+	 *             if columnMapping is null
+	 * @throws IllegalArgumentException
+	 * 			   if columnMapping contains column name that is not actually present in CSV header
+	 * @throws SuperCsvConstraintViolationException
+	 *             if a CellProcessor constraint failed
+	 * @throws SuperCsvException
+	 *             if current row does not contain a column specified by columnMapping, or CellProcessor execution failed
+	 * @since 2.5.0
+	 *
+	 */
+	List<Object> read(Map<String, CellProcessor> columnMapping) throws IOException;
+
 	/**
 	 * Executes the supplied cell processors on the last row of CSV that was read. This should only be used when the
 	 * number of CSV columns is unknown before the row is read, and you are forced to use {@link #read()} instead of

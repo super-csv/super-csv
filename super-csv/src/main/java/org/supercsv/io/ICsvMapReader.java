@@ -27,6 +27,7 @@ import org.supercsv.exception.SuperCsvException;
  * 
  * @author Kasper B. Graversen
  * @author James Bassett
+ * @author Vyacheslav Pushkin
  */
 public interface ICsvMapReader extends ICsvReader {
 	
@@ -75,4 +76,33 @@ public interface ICsvMapReader extends ICsvReader {
 	 */
 	Map<String, Object> read(String[] nameMapping, CellProcessor[] processors) throws IOException;
 	
+	/**
+	 * <p>Reads a row of a CSV file into a Map, using the supplied Map where key
+	 * is column name and value is CellProcessor instance which processes the data before adding it to the Map.
+	 * CellProcessor can be <tt>null</tt>, which indicates no further processing is required (the unprocessed String value will
+	 * be added to the Map). Column names which are not included to the supplied Map will be ignored (not added to the
+	 * resulting Map).</p>
+	 *
+	 * <p>This method can be used when not all columns in CSV file are needed to be added to the resulting Map and is more
+	 * convenient than <tt>read(String... nameMapping)</tt> when number of columns in CSV file is large.
+	 * However, a header (column names) must be present in CSV file.</p>
+	 *
+	 * @param columnMapping
+	 *             a map where key is CSV column name and value is optional CellProcessor instance. Columns which names
+	 *             are not included in the map are ignored (not added to the Map).
+	 * @return a Map of column names to column values, or null if EOF
+	 * @throws IOException
+	 *             if an I/O error occurred
+	 * @throws NullPointerException
+	 *             if columnMapping is null
+	 * @throws IllegalArgumentException
+	 * 			   if columnMapping contains column name that is not actually present in CSV header
+	 * @throws SuperCsvConstraintViolationException
+	 *             if a CellProcessor constraint failed
+	 * @throws SuperCsvException
+	 *             if current row does not contain a column specified by columnMapping, or CellProcessor execution failed
+	 * @since 2.5.0
+	 *
+	 */
+	Map<String, Object> read(Map<String, CellProcessor> columnMapping) throws IOException;
 }

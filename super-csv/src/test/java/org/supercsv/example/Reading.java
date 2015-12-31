@@ -16,6 +16,9 @@
 package org.supercsv.example;
 
 import java.io.FileReader;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,6 +39,7 @@ import org.supercsv.io.ICsvListReader;
 import org.supercsv.io.ICsvMapReader;
 import org.supercsv.mock.CustomerBean;
 import org.supercsv.prefs.CsvPreference;
+import org.supercsv.util.BeanField;
 
 /**
  * Examples of reading CSV files.
@@ -46,6 +50,10 @@ public class Reading {
 	
 	private static final String VARIABLE_CSV_FILENAME = "src/test/resources/customerswithvariablecolumns.csv";
 	
+	private static final String CSV_FILENAME_MAP_ARG = "src/test/resources/customers-different-column-names-and-unrelated-column.csv";
+	
+	private static final String EMAIL_REGEX = "[a-z0-9\\._]+@[a-z0-9\\.]+"; // just an example, not very robust!
+	
 	public static void main(String[] args) throws Exception {
 		readWithCsvBeanReader();
 		readWithCsvListReader();
@@ -53,6 +61,9 @@ public class Reading {
 		readWithCsvMapReader();
 		partialReadWithCsvBeanReader();
 		partialReadWithCsvMapReader();
+		readWithCsvBeanReaderMapArg();
+		readWithCsvListReaderMapArg();
+		readWithCsvMapReaderMapArg();
 	}
 	
 	/**
@@ -63,8 +74,7 @@ public class Reading {
 	 */
 	private static CellProcessor[] getProcessors() {
 		
-		final String emailRegex = "[a-z0-9\\._]+@[a-z0-9\\.]+"; // just an example, not very robust!
-		StrRegEx.registerMessage(emailRegex, "must be a valid email address");
+		StrRegEx.registerMessage(EMAIL_REGEX, "must be a valid email address");
 		
 		final CellProcessor[] processors = new CellProcessor[] { new UniqueHashCode(), // customerNo (must be unique)
 			new NotNull(), // firstName
@@ -74,7 +84,7 @@ public class Reading {
 			new Optional(new ParseBool()), // married
 			new Optional(new ParseInt()), // numberOfKids
 			new NotNull(), // favouriteQuote
-			new StrRegEx(emailRegex), // email
+			new StrRegEx(EMAIL_REGEX), // email
 			new LMinMax(0L, LMinMax.MAX_LONG) // loyaltyPoints
 		};
 		
@@ -272,6 +282,143 @@ public class Reading {
 				mapReader.close();
 			}
 		}
+	}
+	
+	/**
+	 * <p>Example of reading using CsvBeanReader's read(Map<String, BeanField> columnMapping) method</p>
+	 * 
+	 * <p>This method is useful when:</p>
+	 *
+	 * <ul>
+	 *   <li>CSV column names are different from bean field names</li>
+	 *   <li>Quantity of columns in CSV file is large and only small number of them is needed to instantiate the bean </li>
+	 * </ul>
+	 * 
+	 */
+	private static void readWithCsvBeanReaderMapArg() throws IOException {
+		
+		ICsvBeanReader beanReader = null;
+		try {
+			beanReader = new CsvBeanReader(new FileReader(CSV_FILENAME_MAP_ARG), CsvPreference.STANDARD_PREFERENCE);
+			
+			Map<String, BeanField> columnMapping = getColumnMappingBean();
+			
+			CustomerBean customer;
+			while( (customer = beanReader.read(CustomerBean.class, columnMapping)) != null ) {
+				System.out.println(String.format("lineNo=%s, rowNo=%s, customer=%s", beanReader.getLineNumber(),
+					beanReader.getRowNumber(), customer));
+			}
+			
+		} finally {
+			if( beanReader != null ) {
+				beanReader.close();
+			}
+		}
+	}
+	
+	/**
+	 * <p>Example of reading using CsvListReader's read(Map<String, BeanField> columnMapping) method</p>
+	 * 
+	 * <p>This method is useful when not all columns in CSV file are needed to be added to the List.</p>
+	 * 
+	 */
+	private static void readWithCsvListReaderMapArg() throws IOException {
+		
+		ICsvListReader listReader = null;
+		try {
+			listReader = new CsvListReader(new FileReader(CSV_FILENAME_MAP_ARG), CsvPreference.STANDARD_PREFERENCE);
+			
+			// Create map where key is CSV column name and value is optional cell processor instance
+			Map<String, CellProcessor> columnMapping = getColumnMappingListMap();
+			
+			List<Object> customer;
+			while( (customer = listReader.read(columnMapping)) != null ) {
+				System.out.println(String.format("lineNo=%s, rowNo=%s, customer=%s", listReader.getLineNumber(),
+					listReader.getRowNumber(), customer));
+			}
+			
+		} finally {
+			if( listReader != null ) {
+				listReader.close();
+			}
+		}
+	}
+	
+	
+	/**
+	 * <p>Example of reading using CsvMapReader's read(Map<String, BeanField> columnMapping) method</p>
+	 * 
+	 * <p>This method can be used when not all columns in CSV file are needed to be added to the resulting Map and is more
+	 * convenient than <tt>read(String... nameMapping)</tt> when number of columns in CSV fle is large.</p>
+	 * 
+	 */
+	private static void readWithCsvMapReaderMapArg() throws IOException {
+		
+		ICsvMapReader mapReader = null;
+		try {
+			mapReader = new CsvMapReader(new FileReader(CSV_FILENAME_MAP_ARG), CsvPreference.STANDARD_PREFERENCE);
+			
+			// Create map where key is CSV column name and value is optional cell processor instance
+			Map<String, CellProcessor> columnMapping = getColumnMappingListMap();
+			
+			Map<String, Object> customer;
+			while( (customer = mapReader.read(columnMapping)) != null ) {
+				System.out.println(String.format("lineNo=%s, rowNo=%s, customer=%s", mapReader.getLineNumber(),
+					mapReader.getRowNumber(), customer));
+			}
+			
+		} finally {
+			if( mapReader != null ) {
+				mapReader.close();
+			}
+		}
+	}
+	
+	/**
+	 * Sets up the processors used for the examples (Bean reader).
+	 * 
+	 * @return the cell processors
+	 */
+	private static Map<String, BeanField> getColumnMappingBean() {
+		// Create map where key is CSV column name and value is BeanField object which contains bean field name 
+		// and optional cell processor instance
+		Map<String, BeanField> columnMapping = new HashMap<String, BeanField>();
+		// CSV column name and bean field name doesn't have to be the same.
+		// You don't have to include all CSV columns to the map (not included columns will be ignored).
+		columnMapping.put("customer id", BeanField.of("customerNo", new UniqueHashCode()));
+		columnMapping.put("first name", BeanField.of("firstName", new NotNull()));
+		columnMapping.put("birth date", BeanField.of("birthDate", new ParseDate("dd/MM/yyyy")));
+		columnMapping.put("mailing address", BeanField.of("mailingAddress", new NotNull()));
+		columnMapping.put("married", BeanField.of("married", new Optional(new ParseBool())));
+		columnMapping.put("number of kids", BeanField.of("numberOfKids", new Optional(new ParseInt())));
+		columnMapping.put("favourite quote", BeanField.of("favouriteQuote", new NotNull()));
+		columnMapping.put("E-Mail", BeanField.of("email", new StrRegEx(EMAIL_REGEX)));
+		columnMapping.put("loyalty points", BeanField.of("loyaltyPoints", new LMinMax(0L, LMinMax.MAX_LONG)));
+		return columnMapping;
+	}
+	
+	/**
+	 * Sets up the processors used for the examples (List and Map readers).
+	 * 
+	 * @return the cell processors
+	 */
+	private static Map<String, CellProcessor> getColumnMappingListMap() {
+		// Create map where key is CSV column name and value is an optional cell processor instance.
+		// You shall use an ordered map implementation in order to preserve the order of columns.
+		// in resulting List when using CsvListReader.
+		Map<String, CellProcessor> columnMapping = new LinkedHashMap<String, CellProcessor>();
+		// CSV column name and bean field name doesn't have to be the same.
+		// You don't have to include all CSV columns to the map (not included columns will be ignored).
+		columnMapping.put("customer id", new UniqueHashCode());
+		columnMapping.put("first name", new NotNull());
+		columnMapping.put("birth date", new ParseDate("dd/MM/yyyy"));
+		columnMapping.put("mailing address", new NotNull());
+		columnMapping.put("married", new Optional(new ParseBool()));
+		columnMapping.put("number of kids", new Optional(new ParseInt()));
+		columnMapping.put("favourite quote", new NotNull());
+		columnMapping.put("E-Mail", new StrRegEx(EMAIL_REGEX));
+		columnMapping.put("loyalty points", new LMinMax(0L, LMinMax.MAX_LONG));
+		return columnMapping;
 	}
 	
 }

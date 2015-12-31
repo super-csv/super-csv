@@ -23,6 +23,9 @@ Reading CSV files
   You can view the full source of the examples {{{./xref-test/org/supercsv/example/Reading.html}here}}.
   For examples of reading CSV files with Dozer (using CsvDozerBeanReader), click {{{./examples_dozer.html}here}}.
   
+  Alternative method of reading which is useful in case when CSV file has large number of columns
+  is described {{{./examples_reading_column_mapping.html}here}}.
+  
 * Example CSV file
 
   Here is an example CSV file. It has a header and 4 rows of data, all with 10 columns. 
