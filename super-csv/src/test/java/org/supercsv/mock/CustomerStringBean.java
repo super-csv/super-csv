@@ -124,8 +124,8 @@ public class CustomerStringBean {
 	}
 	
 	/**
-	 * @param birthDate
-	 *            the birthDate to set
+	 * @param birthTime
+	 *            the birthTime to set
 	 */
 	public void setBirthTime(String birthTime) {
 		this.birthTime = birthTime;

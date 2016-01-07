@@ -104,6 +104,7 @@ public class CsvMapReaderTest {
 			assertEquals(STRING_CUSTOMERS.get(i).getFirstName(), customer.get("firstName"));
 			assertEquals(STRING_CUSTOMERS.get(i).getLastName(), customer.get("lastName"));
 			assertEquals(STRING_CUSTOMERS.get(i).getBirthDate(), customer.get("birthDate"));
+			assertEquals(STRING_CUSTOMERS.get(i).getBirthTime().toString(), customer.get("birthTime").toString());
 			assertEquals(STRING_CUSTOMERS.get(i).getMailingAddress(), customer.get("mailingAddress"));
 			assertEquals(STRING_CUSTOMERS.get(i).getMarried(), customer.get("married"));
 			assertEquals(STRING_CUSTOMERS.get(i).getNumberOfKids(), customer.get("numberOfKids"));
@@ -131,6 +132,7 @@ public class CsvMapReaderTest {
 			assertEquals(STRING_CUSTOMERS.get(i).getFirstName(), customer.get("firstName"));
 			assertEquals(STRING_CUSTOMERS.get(i).getLastName(), customer.get("lastName"));
 			assertNull(customer.get("birthDate"));
+			assertNull(customer.get("birthTime"));
 			assertNull(customer.get("mailingAddress"));
 			assertNull(customer.get("married"));
 			assertNull(customer.get("numberOfKids"));
@@ -159,6 +161,7 @@ public class CsvMapReaderTest {
 			assertEquals(CUSTOMERS.get(i).getFirstName(), customer.get("firstName"));
 			assertEquals(CUSTOMERS.get(i).getLastName(), customer.get("lastName"));
 			assertEquals(CUSTOMERS.get(i).getBirthDate(), customer.get("birthDate"));
+			assertEquals(CUSTOMERS.get(i).getBirthTime().toString(), customer.get("birthTime").toString());
 			assertEquals(CUSTOMERS.get(i).getMailingAddress(), customer.get("mailingAddress"));
 			assertEquals(CUSTOMERS.get(i).getMarried(), customer.get("married"));
 			assertEquals(CUSTOMERS.get(i).getNumberOfKids(), customer.get("numberOfKids"));
@@ -186,6 +189,7 @@ public class CsvMapReaderTest {
 			assertEquals(CUSTOMERS.get(i).getFirstName(), customer.get("firstName"));
 			assertEquals(CUSTOMERS.get(i).getLastName(), customer.get("lastName"));
 			assertNull(customer.get("birthDate"));
+			assertNull(customer.get("birthTime"));
 			assertNull(customer.get("mailingAddress"));
 			assertNull(customer.get("married"));
 			assertNull(customer.get("numberOfKids"));
@@ -215,6 +219,7 @@ public class CsvMapReaderTest {
 			assertEquals(STRING_CUSTOMERS.get(i).getFirstName(), customer.get("firstName"));
 			assertEquals(STRING_CUSTOMERS.get(i).getLastName(), customer.get("lastName"));
 			assertEquals(STRING_CUSTOMERS.get(i).getBirthDate(), customer.get("birthDate"));
+			assertEquals(STRING_CUSTOMERS.get(i).getBirthTime().toString(), customer.get("birthTime").toString());
 			assertEquals(STRING_CUSTOMERS.get(i).getMailingAddress(), customer.get("mailingAddress"));
 			assertEquals(STRING_CUSTOMERS.get(i).getMarried(), customer.get("married"));
 			assertEquals(STRING_CUSTOMERS.get(i).getNumberOfKids(), customer.get("numberOfKids"));
@@ -240,10 +245,11 @@ public class CsvMapReaderTest {
 		Map<String, Object> customer;
 		List<Map<String, Object>> customers = new ArrayList<Map<String, Object>>();
 		while( (customer = mapReader.read(columnMapping)) != null ) {
-			assertEquals(10, customer.entrySet().size());
+			assertEquals(11, customer.entrySet().size());
 			assertEquals(STRING_CUSTOMERS.get(i).getFirstName(), customer.get("first name"));
 			assertEquals(STRING_CUSTOMERS.get(i).getLastName(), customer.get("last name"));
 			assertEquals(STRING_CUSTOMERS.get(i).getBirthDate(), customer.get("date of birth"));
+			assertEquals(STRING_CUSTOMERS.get(i).getBirthTime().toString(), customer.get("time of birth").toString());
 			assertEquals(STRING_CUSTOMERS.get(i).getMailingAddress(), customer.get("mailing address"));
 			assertEquals(STRING_CUSTOMERS.get(i).getMarried(), customer.get("marital status"));
 			assertEquals(STRING_CUSTOMERS.get(i).getNumberOfKids(), customer.get("number of kids"));
@@ -270,10 +276,11 @@ public class CsvMapReaderTest {
 		Map<String, Object> customer;
 		List<Map<String, Object>> customers = new ArrayList<Map<String, Object>>();
 		while( (customer = mapReader.read(columnMappingProc)) != null ) {
-			assertEquals(10, customer.entrySet().size());
+			assertEquals(11, customer.entrySet().size());
 			assertEquals(CUSTOMERS.get(i).getFirstName(), customer.get("first name"));
 			assertEquals(CUSTOMERS.get(i).getLastName(), customer.get("last name"));
 			assertEquals(CUSTOMERS.get(i).getBirthDate(), customer.get("date of birth"));
+			assertEquals(CUSTOMERS.get(i).getBirthTime().toString(), customer.get("time of birth").toString());
 			assertEquals(CUSTOMERS.get(i).getMailingAddress(), customer.get("mailing address"));
 			assertEquals(CUSTOMERS.get(i).getMarried(), customer.get("marital status"));
 			assertEquals(CUSTOMERS.get(i).getNumberOfKids(), customer.get("number of kids"));

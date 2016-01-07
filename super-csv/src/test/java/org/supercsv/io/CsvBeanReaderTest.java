@@ -56,11 +56,7 @@ import java.util.Map;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.supercsv.cellprocessor.Optional;
-import org.supercsv.cellprocessor.ParseBool;
-import org.supercsv.cellprocessor.ParseDate;
-import org.supercsv.cellprocessor.ParseInt;
-import org.supercsv.cellprocessor.ParseLong;
+import org.supercsv.cellprocessor.*;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.exception.SuperCsvCellProcessorException;
 import org.supercsv.exception.SuperCsvException;
@@ -107,6 +103,7 @@ public class CsvBeanReaderTest {
 		columnMapping.put("first name", BeanField.of("firstName"));
 		columnMapping.put("last name", BeanField.of("lastName"));
 		columnMapping.put("date of birth", BeanField.of("birthDate"));
+        columnMapping.put("time of birth", BeanField.of("birthTime"));
 		columnMapping.put("mailing address", BeanField.of("mailingAddress"));
 		columnMapping.put("marital status", BeanField.of("married"));
 		columnMapping.put("number of kids", BeanField.of("numberOfKids"));
@@ -117,6 +114,7 @@ public class CsvBeanReaderTest {
 
 		columnMappingProc = new HashMap<String, BeanField>(columnMapping);
 		columnMappingProc.put("date of birth", BeanField.of("birthDate", new ParseDate("dd/MM/yyyy")));
+        columnMappingProc.put("time of birth", BeanField.of("birthTime", new ParseSqlTime("HH:mm:ss")));
 		columnMappingProc.put("marital status", BeanField.of("married", new Optional(new ParseBool())));
 		columnMappingProc.put("number of kids", BeanField.of("numberOfKids", new Optional(new ParseInt())));
 		columnMappingProc.put("loyalty points", BeanField.of("loyaltyPoints", new ParseLong()));
@@ -316,7 +314,7 @@ public class CsvBeanReaderTest {
 	 */
 	@Test
 	public void testReadWithCustomFieldMappingWithProcessors() throws IOException {
-		reader = new StringReader(CSV_FILE_CUSTOM_FIELD_MAPPING);
+        reader = new StringReader(CSV_FILE_CUSTOM_FIELD_MAPPING);
 		beanReader = new CsvBeanReader(reader, PREFS);
 
 		int i = 0;
@@ -375,8 +373,11 @@ public class CsvBeanReaderTest {
 	}
 
 	private void compareCustomers(int i, CustomerBean customer) {
-		assertEquals(CUSTOMERS.get(i), customer);
+        System.out.println(CUSTOMERS.get(i).toString());
+        System.out.println(customer.toString());
+        assertEquals(CUSTOMERS.get(i), customer);
 		assertEquals(CUSTOMERS.get(i).getBirthDate(), customer.getBirthDate());
+        assertEquals(CUSTOMERS.get(i).getBirthTime().toString(), customer.getBirthTime().toString());
 		assertEquals(CUSTOMERS.get(i).getCustomerNo(), customer.getCustomerNo());
 		assertEquals(CUSTOMERS.get(i).getEmail(), customer.getEmail());
 		assertEquals(CUSTOMERS.get(i).getFavouriteQuote(), customer.getFavouriteQuote());
@@ -391,6 +392,7 @@ public class CsvBeanReaderTest {
 	private void compareCustomers(int i, CustomerStringBean customer) {
 		assertEquals(STRING_CUSTOMERS.get(i), customer);
 		assertEquals(STRING_CUSTOMERS.get(i).getBirthDate(), customer.getBirthDate());
+        assertEquals(STRING_CUSTOMERS.get(i).getBirthTime().toString(), customer.getBirthTime().toString());
 		assertEquals(STRING_CUSTOMERS.get(i).getCustomerNo(), customer.getCustomerNo());
 		assertEquals(STRING_CUSTOMERS.get(i).getEmail(), customer.getEmail());
 		assertEquals(STRING_CUSTOMERS.get(i).getFavouriteQuote(), customer.getFavouriteQuote());

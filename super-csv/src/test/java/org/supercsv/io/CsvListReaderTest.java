@@ -241,7 +241,7 @@ public class CsvListReaderTest {
 		final List<List<Object>> customers = new ArrayList<List<Object>>();
 		List<Object> customer;
 		while( (customer = listReader.read(columnMapping)) != null ) {
-			assertEquals(10, customer.size());
+			assertEquals(11, customer.size());
 			customers.add(customer);
 		}
 
@@ -253,13 +253,13 @@ public class CsvListReaderTest {
 			assertEquals(STRING_CUSTOMERS.get(i).getFirstName(), customer.get(0));
 			assertEquals(STRING_CUSTOMERS.get(i).getLastName(), customer.get(1));
 			assertEquals(STRING_CUSTOMERS.get(i).getBirthDate(), customer.get(2));
-			assertEquals(STRING_CUSTOMERS.get(i).getMailingAddress(), customer.get(3));
-			assertEquals(STRING_CUSTOMERS.get(i).getMarried(), customer.get(4));
-			assertEquals(STRING_CUSTOMERS.get(i).getNumberOfKids(), customer.get(5));
-			assertEquals(STRING_CUSTOMERS.get(i).getFavouriteQuote(), customer.get(6));
-			assertEquals(STRING_CUSTOMERS.get(i).getEmail(), customer.get(7));
-			assertEquals(STRING_CUSTOMERS.get(i).getLoyaltyPoints(), customer.get(8));
-			assertEquals(STRING_CUSTOMERS.get(i).getCustomerNo(), customer.get(9));
+			assertEquals(STRING_CUSTOMERS.get(i).getMailingAddress(), customer.get(4));
+			assertEquals(STRING_CUSTOMERS.get(i).getMarried(), customer.get(5));
+			assertEquals(STRING_CUSTOMERS.get(i).getNumberOfKids(), customer.get(6));
+			assertEquals(STRING_CUSTOMERS.get(i).getFavouriteQuote(), customer.get(7));
+			assertEquals(STRING_CUSTOMERS.get(i).getEmail(), customer.get(8));
+			assertEquals(STRING_CUSTOMERS.get(i).getLoyaltyPoints(), customer.get(9));
+			assertEquals(STRING_CUSTOMERS.get(i).getCustomerNo(), customer.get(10));
 		}
 	}
 
@@ -276,7 +276,7 @@ public class CsvListReaderTest {
 		final List<List<Object>> customers = new ArrayList<List<Object>>();
 		List<Object> customer;
 		while( (customer = listReader.read(columnMappingProc)) != null ) {
-			assertEquals(10, customer.size());
+			assertEquals(11, customer.size());
 			customers.add(customer);
 		}
 
@@ -288,13 +288,13 @@ public class CsvListReaderTest {
 			assertEquals(CUSTOMERS.get(i).getFirstName(), customer.get(0));
 			assertEquals(CUSTOMERS.get(i).getLastName(), customer.get(1));
 			assertEquals(CUSTOMERS.get(i).getBirthDate(), customer.get(2));
-			assertEquals(CUSTOMERS.get(i).getMailingAddress(), customer.get(3));
-			assertEquals(CUSTOMERS.get(i).getMarried(), customer.get(4));
-			assertEquals(CUSTOMERS.get(i).getNumberOfKids(), customer.get(5));
-			assertEquals(CUSTOMERS.get(i).getFavouriteQuote(), customer.get(6));
-			assertEquals(CUSTOMERS.get(i).getEmail(), customer.get(7));
-			assertEquals(CUSTOMERS.get(i).getLoyaltyPoints(), customer.get(8));
-			assertEquals(CUSTOMERS.get(i).getCustomerNo(), customer.get(9));
+			assertEquals(CUSTOMERS.get(i).getMailingAddress(), customer.get(4));
+			assertEquals(CUSTOMERS.get(i).getMarried(), customer.get(5));
+			assertEquals(CUSTOMERS.get(i).getNumberOfKids(), customer.get(6));
+			assertEquals(CUSTOMERS.get(i).getFavouriteQuote(), customer.get(7));
+			assertEquals(CUSTOMERS.get(i).getEmail(), customer.get(8));
+			assertEquals(CUSTOMERS.get(i).getLoyaltyPoints(), customer.get(9));
+			assertEquals(CUSTOMERS.get(i).getCustomerNo(), customer.get(10));
 		}
 	}
 
