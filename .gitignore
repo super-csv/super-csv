@@ -3,3 +3,6 @@ target/
 #IntelliJ Idea
 *.iml
 .idea
+
+#Netbeans
+nb-configuration.xml
