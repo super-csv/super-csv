@@ -17,7 +17,7 @@ package org.supercsv.io;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.lang.reflect.Method;
+import java.lang.reflect.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +37,7 @@ import org.supercsv.util.MethodCache;
  * 
  * @author Kasper B. Graversen
  * @author James Bassett
+ * @author Fabian Seifert
  */
 public class CsvBeanReader extends AbstractCsvReader implements ICsvBeanReader {
 	
@@ -92,13 +93,22 @@ public class CsvBeanReader extends AbstractCsvReader implements ICsvBeanReader {
 			bean = BeanInterfaceProxy.createProxy(clazz);
 		} else {
 			try {
-				bean = clazz.newInstance();
+				Constructor<T> c = clazz.getDeclaredConstructor(new Class[0]);
+                                c.setAccessible(true);
+                                bean = c.newInstance(new Object[0]);
 			}
 			catch(InstantiationException e) {
 				throw new SuperCsvReflectionException(String.format(
 					"error instantiating bean, check that %s has a default no-args constructor", clazz.getName()), e);
 			}
+                        catch(NoSuchMethodException e) {
+				throw new SuperCsvReflectionException(String.format(
+					"error instantiating bean, check that %s has a default no-args constructor", clazz.getName()), e);
+			}
 			catch(IllegalAccessException e) {
+				throw new SuperCsvReflectionException("error instantiating bean", e);
+			}
+                        catch(InvocationTargetException e) {
 				throw new SuperCsvReflectionException("error instantiating bean", e);
 			}
 		}
@@ -120,6 +130,7 @@ public class CsvBeanReader extends AbstractCsvReader implements ICsvBeanReader {
 	 */
 	private static void invokeSetter(final Object bean, final Method setMethod, final Object fieldValue) {
 		try {
+                        setMethod.setAccessible(true);
 			setMethod.invoke(bean, fieldValue);
 		}
 		catch(final Exception e) {
