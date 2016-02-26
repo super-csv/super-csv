@@ -62,9 +62,9 @@ public class CsvBeanReaderReflectionTest {
 		reader = new StringReader(CSV_FILE);
 		beanReader = new CsvBeanReader(reader, PREFS);
 	}
-        
-        public void none() {
-        }
+	
+	public void none() {
+	}
 	
 	/**
 	 * Closes the readers after the test.
@@ -73,8 +73,8 @@ public class CsvBeanReaderReflectionTest {
 	public void tearDown() throws IOException {
 		beanReader.close();
 	}
-        
-        /**
+	
+	/**
 	 * Tests the read() method with no processors, populating an existing non-public bean.
 	 */
 	@Test
@@ -83,20 +83,30 @@ public class CsvBeanReaderReflectionTest {
 		final String[] header = beanReader.getHeader(true);
 		assertArrayEquals(HEADER, header);
 		
-		assertEquals(new CustomerStringProtectedBean(JOHN_STRING), beanReader.read(new CustomerStringProtectedBean(), header));
-		assertEquals(new CustomerStringProtectedBean(BOB_STRING), beanReader.read(new CustomerStringProtectedBean(), header));
-		assertEquals(new CustomerStringProtectedBean(ALICE_STRING), beanReader.read(new CustomerStringProtectedBean(), header));
-		assertEquals(new CustomerStringProtectedBean(BILL_STRING), beanReader.read(new CustomerStringProtectedBean(), header));
-		assertEquals(new CustomerStringProtectedBean(MIRANDA_STRING), beanReader.read(new CustomerStringProtectedBean(), header));
-		assertEquals(new CustomerStringProtectedBean(STEVE_STRING), beanReader.read(new CustomerStringProtectedBean(), header));
-		assertEquals(new CustomerStringProtectedBean(ADA_STRING), beanReader.read(new CustomerStringProtectedBean(), header));
-		assertEquals(new CustomerStringProtectedBean(SERGEI_STRING), beanReader.read(new CustomerStringProtectedBean(), header));
-		assertEquals(new CustomerStringProtectedBean(LARRY_STRING), beanReader.read(new CustomerStringProtectedBean(), header));
-		assertEquals(new CustomerStringProtectedBean(GRACE_STRING), beanReader.read(new CustomerStringProtectedBean(), header));
+		assertEquals(new CustomerStringProtectedBean(JOHN_STRING),
+			beanReader.read(new CustomerStringProtectedBean(), header));
+		assertEquals(new CustomerStringProtectedBean(BOB_STRING),
+			beanReader.read(new CustomerStringProtectedBean(), header));
+		assertEquals(new CustomerStringProtectedBean(ALICE_STRING),
+			beanReader.read(new CustomerStringProtectedBean(), header));
+		assertEquals(new CustomerStringProtectedBean(BILL_STRING),
+			beanReader.read(new CustomerStringProtectedBean(), header));
+		assertEquals(new CustomerStringProtectedBean(MIRANDA_STRING),
+			beanReader.read(new CustomerStringProtectedBean(), header));
+		assertEquals(new CustomerStringProtectedBean(STEVE_STRING),
+			beanReader.read(new CustomerStringProtectedBean(), header));
+		assertEquals(new CustomerStringProtectedBean(ADA_STRING),
+			beanReader.read(new CustomerStringProtectedBean(), header));
+		assertEquals(new CustomerStringProtectedBean(SERGEI_STRING),
+			beanReader.read(new CustomerStringProtectedBean(), header));
+		assertEquals(new CustomerStringProtectedBean(LARRY_STRING),
+			beanReader.read(new CustomerStringProtectedBean(), header));
+		assertEquals(new CustomerStringProtectedBean(GRACE_STRING),
+			beanReader.read(new CustomerStringProtectedBean(), header));
 		assertNull(beanReader.read(new CustomerStringProtectedBean(), header));
 	}
-        
-        /**
+	
+	/**
 	 * Tests the read() method with no processors for a non-public bean class.
 	 */
 	@Test
@@ -105,16 +115,26 @@ public class CsvBeanReaderReflectionTest {
 		final String[] header = beanReader.getHeader(true);
 		assertArrayEquals(HEADER, header);
 		
-		assertEquals(new CustomerStringProtectedBean(JOHN_STRING), beanReader.read(CustomerStringProtectedBean.class, header));
-		assertEquals(new CustomerStringProtectedBean(BOB_STRING), beanReader.read(CustomerStringProtectedBean.class, header));
-		assertEquals(new CustomerStringProtectedBean(ALICE_STRING), beanReader.read(CustomerStringProtectedBean.class, header));
-		assertEquals(new CustomerStringProtectedBean(BILL_STRING), beanReader.read(CustomerStringProtectedBean.class, header));
-		assertEquals(new CustomerStringProtectedBean(MIRANDA_STRING), beanReader.read(CustomerStringProtectedBean.class, header));
-		assertEquals(new CustomerStringProtectedBean(STEVE_STRING), beanReader.read(CustomerStringProtectedBean.class, header));
-		assertEquals(new CustomerStringProtectedBean(ADA_STRING), beanReader.read(CustomerStringProtectedBean.class, header));
-		assertEquals(new CustomerStringProtectedBean(SERGEI_STRING), beanReader.read(CustomerStringProtectedBean.class, header));
-		assertEquals(new CustomerStringProtectedBean(LARRY_STRING), beanReader.read(CustomerStringProtectedBean.class, header));
-		assertEquals(new CustomerStringProtectedBean(GRACE_STRING), beanReader.read(CustomerStringProtectedBean.class, header));
+		assertEquals(new CustomerStringProtectedBean(JOHN_STRING),
+			beanReader.read(CustomerStringProtectedBean.class, header));
+		assertEquals(new CustomerStringProtectedBean(BOB_STRING),
+			beanReader.read(CustomerStringProtectedBean.class, header));
+		assertEquals(new CustomerStringProtectedBean(ALICE_STRING),
+			beanReader.read(CustomerStringProtectedBean.class, header));
+		assertEquals(new CustomerStringProtectedBean(BILL_STRING),
+			beanReader.read(CustomerStringProtectedBean.class, header));
+		assertEquals(new CustomerStringProtectedBean(MIRANDA_STRING),
+			beanReader.read(CustomerStringProtectedBean.class, header));
+		assertEquals(new CustomerStringProtectedBean(STEVE_STRING),
+			beanReader.read(CustomerStringProtectedBean.class, header));
+		assertEquals(new CustomerStringProtectedBean(ADA_STRING),
+			beanReader.read(CustomerStringProtectedBean.class, header));
+		assertEquals(new CustomerStringProtectedBean(SERGEI_STRING),
+			beanReader.read(CustomerStringProtectedBean.class, header));
+		assertEquals(new CustomerStringProtectedBean(LARRY_STRING),
+			beanReader.read(CustomerStringProtectedBean.class, header));
+		assertEquals(new CustomerStringProtectedBean(GRACE_STRING),
+			beanReader.read(CustomerStringProtectedBean.class, header));
 		assertNull(beanReader.read(CustomerStringProtectedBean.class, header));
 	}
 }

@@ -96,21 +96,21 @@ public class CsvBeanReader extends AbstractCsvReader implements ICsvBeanReader {
 		} else {
 			try {
 				Constructor<T> c = clazz.getDeclaredConstructor(new Class[0]);
-                                c.setAccessible(true);
-                                bean = c.newInstance(new Object[0]);
+				c.setAccessible(true);
+				bean = c.newInstance(new Object[0]);
 			}
 			catch(InstantiationException e) {
 				throw new SuperCsvReflectionException(String.format(
 					"error instantiating bean, check that %s has a default no-args constructor", clazz.getName()), e);
 			}
-                        catch(NoSuchMethodException e) {
+			catch(NoSuchMethodException e) {
 				throw new SuperCsvReflectionException(String.format(
 					"error instantiating bean, check that %s has a default no-args constructor", clazz.getName()), e);
 			}
 			catch(IllegalAccessException e) {
 				throw new SuperCsvReflectionException("error instantiating bean", e);
 			}
-                        catch(InvocationTargetException e) {
+			catch(InvocationTargetException e) {
 				throw new SuperCsvReflectionException("error instantiating bean", e);
 			}
 		}
@@ -132,7 +132,7 @@ public class CsvBeanReader extends AbstractCsvReader implements ICsvBeanReader {
 	 */
 	private static void invokeSetter(final Object bean, final Method setMethod, final Object fieldValue) {
 		try {
-                        setMethod.setAccessible(true);
+			setMethod.setAccessible(true);
 			setMethod.invoke(bean, fieldValue);
 		}
 		catch(final Exception e) {

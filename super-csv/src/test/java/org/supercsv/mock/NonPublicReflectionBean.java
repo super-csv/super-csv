@@ -21,21 +21,19 @@ package org.supercsv.mock;
  * @author Fabian Seifert
  */
 class NonPublicReflectionBean {
-        
-        private String name;
-        
-        protected NonPublicReflectionBean() {
-                
-        }
-
-        protected String getName() {
-                return name;
-        }
-
-        protected void setName(String name) {
-                this.name = name;
-        }
-        
-        
-        
+	
+	private String name;
+	
+	protected NonPublicReflectionBean() {
+	
+	}
+	
+	protected String getName() {
+		return name;
+	}
+	
+	protected void setName(String name) {
+		this.name = name;
+	}
+	
 }

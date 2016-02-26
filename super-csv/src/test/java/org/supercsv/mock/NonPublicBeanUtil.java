@@ -21,13 +21,13 @@ package org.supercsv.mock;
  * @author Fabian Seifert
  */
 public class NonPublicBeanUtil {
-        
-        public static Object getNonPublicReflectionBean() {
-                return new NonPublicReflectionBean();
-        }
-        
-        public static Object getExtendedReflectionBean() {
-                return new ExtendedReflectionBean();
-        }
-    
+	
+	public static Object getNonPublicReflectionBean() {
+		return new NonPublicReflectionBean();
+	}
+	
+	public static Object getExtendedReflectionBean() {
+		return new ExtendedReflectionBean();
+	}
+	
 }

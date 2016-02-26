@@ -209,24 +209,24 @@ public final class ReflectionUtils {
 	private static Method findSetterWithCompatibleParamType(final Class<?> clazz, final String setterName,
 		final Class<?> argumentType) {
 		
-                Class<?> actualType = clazz;
-                Method compatibleSetter = null;
-                while(actualType != null && compatibleSetter == null) {
-                        Method[] methods = actualType.getDeclaredMethods();
-                        for(Method method: methods) {
-                                if (!setterName.equalsIgnoreCase(method.getName()) || method.getParameterTypes().length != 1) {
-                                        continue; // setter must have correct name and only 1 parameter
-                                }
-
-                                final Class<?> parameterType = method.getParameterTypes()[0];
-                                if (parameterType.equals(argumentType)) {
-                                        return method;
-                                } else if (parameterType.isAssignableFrom(argumentType)) {
-                                        compatibleSetter = method; // potential match, but keep looking for exact match
-                                }
-                        }
-                        actualType = actualType.getSuperclass();
-                }
+		Class<?> actualType = clazz;
+		Method compatibleSetter = null;
+		while( actualType != null && compatibleSetter == null ) {
+			Method[] methods = actualType.getDeclaredMethods();
+			for( Method method : methods ) {
+				if( !setterName.equalsIgnoreCase(method.getName()) || method.getParameterTypes().length != 1 ) {
+					continue; // setter must have correct name and only 1 parameter
+				}
+				
+				final Class<?> parameterType = method.getParameterTypes()[0];
+				if( parameterType.equals(argumentType) ) {
+					return method;
+				} else if( parameterType.isAssignableFrom(argumentType) ) {
+					compatibleSetter = method; // potential match, but keep looking for exact match
+				}
+			}
+			actualType = actualType.getSuperclass();
+		}
 		
 		return compatibleSetter;
 	}

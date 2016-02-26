@@ -17,23 +17,23 @@ package org.supercsv.mock;
 
 /**
  * ExtendedReflectionBean simple bean extending other bean with non-public access
+ * 
  * @author Fabian Seifert
  */
 public class ExtendedReflectionBean extends NonPublicReflectionBean {
-        
-        private Long age;
-        
-        protected ExtendedReflectionBean() {
-                
-        }
-        
-        protected Long getAge() {
-                return age;
-        }
-
-        protected void setAge(Long age) {
-                this.age = age;
-        }
-        
-        
+	
+	private Long age;
+	
+	protected ExtendedReflectionBean() {
+	
+	}
+	
+	protected Long getAge() {
+		return age;
+	}
+	
+	protected void setAge(Long age) {
+		this.age = age;
+	}
+	
 }

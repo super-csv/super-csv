@@ -32,9 +32,9 @@ import static org.supercsv.util.ReflectionUtils.findSetter;
  * @author Fabian Seifert
  */
 public class ReflectionUtilsNonPublicTest {
-        
-        private Object nonPublicBean;
-        private Object extendedNonPublicBean;
+	
+	private Object nonPublicBean;
+	private Object extendedNonPublicBean;
 	
 	/**
 	 * Sets up before the test.
@@ -42,7 +42,7 @@ public class ReflectionUtilsNonPublicTest {
 	@Before
 	public void setUp() {
 		nonPublicBean = NonPublicBeanUtil.getNonPublicReflectionBean();
-                extendedNonPublicBean = NonPublicBeanUtil.getExtendedReflectionBean();
+		extendedNonPublicBean = NonPublicBeanUtil.getExtendedReflectionBean();
 	}
 	
 	/**
@@ -51,28 +51,28 @@ public class ReflectionUtilsNonPublicTest {
 	@After
 	public void tearDown() {
 		nonPublicBean = null;
-                extendedNonPublicBean = null;
+		extendedNonPublicBean = null;
 	}
-        
-        /**
+	
+	/**
 	 * Tests the findSetter() method.
 	 */
 	@Test
 	public void testFindSetter() throws Exception {
 		Method setter = findSetter(nonPublicBean, "name", String.class);
-                assertFalse(setter.isAccessible());
+		assertFalse(setter.isAccessible());
 	}
-        
-        /**
+	
+	/**
 	 * Tests the findSetter() method.
 	 */
 	@Test
 	public void testFindSetterExtended() throws Exception {
 		Method ageSetter = findSetter(extendedNonPublicBean, "age", Long.class);
-                assertFalse(ageSetter.isAccessible());
-                
-                Method nameSetter = findSetter(extendedNonPublicBean, "name", String.class);
-                assertFalse(nameSetter.isAccessible());	
+		assertFalse(ageSetter.isAccessible());
+		
+		Method nameSetter = findSetter(extendedNonPublicBean, "name", String.class);
+		assertFalse(nameSetter.isAccessible());
 	}
-        
+	
 }

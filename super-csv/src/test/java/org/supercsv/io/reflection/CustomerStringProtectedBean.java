@@ -37,31 +37,31 @@ class CustomerStringProtectedBean {
 	private String favouriteQuote;
 	private String email;
 	private String loyaltyPoints;
-
-    	/**
+	
+	/**
 	 * Default Constructor.
 	 */
 	protected CustomerStringProtectedBean() {
 	}
-        
-        /**
+	
+	/**
 	 * Constructs a CustomerStringProtectedBean from a CustomerStringBean.
 	 * 
 	 * @param customerStringBean
 	 */
-        protected CustomerStringProtectedBean(CustomerStringBean customerStringBean) {
-                this.customerNo = customerStringBean.getCustomerNo();
-                this.firstName = customerStringBean.getFirstName();
-                this.lastName = customerStringBean.getLastName();
-                this.birthDate = customerStringBean.getBirthDate();
-                this.birthTime = customerStringBean.getBirthTime();
-                this.mailingAddress = customerStringBean.getMailingAddress();
-                this.married = customerStringBean.getMarried();
-                this.numberOfKids = customerStringBean.getNumberOfKids();
-                this.favouriteQuote = customerStringBean.getFavouriteQuote();
-                this.email = customerStringBean.getEmail();
-                this.loyaltyPoints = customerStringBean.getLoyaltyPoints();
-        }
+	protected CustomerStringProtectedBean(CustomerStringBean customerStringBean) {
+		this.customerNo = customerStringBean.getCustomerNo();
+		this.firstName = customerStringBean.getFirstName();
+		this.lastName = customerStringBean.getLastName();
+		this.birthDate = customerStringBean.getBirthDate();
+		this.birthTime = customerStringBean.getBirthTime();
+		this.mailingAddress = customerStringBean.getMailingAddress();
+		this.married = customerStringBean.getMarried();
+		this.numberOfKids = customerStringBean.getNumberOfKids();
+		this.favouriteQuote = customerStringBean.getFavouriteQuote();
+		this.email = customerStringBean.getEmail();
+		this.loyaltyPoints = customerStringBean.getLoyaltyPoints();
+	}
 	
 	/**
 	 * @return the customerNo
@@ -212,8 +212,8 @@ class CustomerStringProtectedBean {
 	protected void setEmail(String email) {
 		this.email = email;
 	}
-        
-        /**
+	
+	/**
 	 * @return the loyaltyPoints
 	 */
 	public String getLoyaltyPoints() {
