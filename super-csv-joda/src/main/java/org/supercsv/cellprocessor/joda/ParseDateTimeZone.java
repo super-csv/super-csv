@@ -19,6 +19,7 @@ import org.joda.time.DateTimeZone;
 import org.supercsv.cellprocessor.CellProcessorAdaptor;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.exception.SuperCsvCellProcessorException;
+import org.supercsv.i18n.SuperCsvMessages;
 import org.supercsv.util.CsvContext;
 
 /**
@@ -65,8 +66,7 @@ public class ParseDateTimeZone extends CellProcessorAdaptor {
 		try {
 			result = DateTimeZone.forID((String) value);
 		} catch (IllegalArgumentException e) {
-			throw new SuperCsvCellProcessorException(
-					"Failed to parse value as a DateTimeZone", context, this, e);
+			throw new SuperCsvCellProcessorException(SuperCsvMessages.getMessage("org.supercsv.exception.cellprocessor.joda.InvalidDateTimeZone.message"), context, this, e);
 		}
 		return next.execute(result, context);
 

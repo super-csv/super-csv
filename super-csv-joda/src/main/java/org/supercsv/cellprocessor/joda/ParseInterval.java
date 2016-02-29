@@ -19,6 +19,7 @@ import org.joda.time.Interval;
 import org.supercsv.cellprocessor.CellProcessorAdaptor;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.exception.SuperCsvCellProcessorException;
+import org.supercsv.i18n.SuperCsvMessages;
 import org.supercsv.util.CsvContext;
 
 /**
@@ -64,7 +65,7 @@ public class ParseInterval extends CellProcessorAdaptor {
 			result = Interval.parse((String) value);
 		} catch (IllegalArgumentException e) {
 			throw new SuperCsvCellProcessorException(
-					"Failed to parse value as an Interval", context, this, e);
+					SuperCsvMessages.getMessage("org.supercsv.exception.cellprocessor.joda.InvalidInterval.message"), context, this, e);
 		}
 		return next.execute(result, context);
 	}

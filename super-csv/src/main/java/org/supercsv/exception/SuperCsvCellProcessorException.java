@@ -16,6 +16,7 @@
 package org.supercsv.exception;
 
 import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.i18n.SuperCsvMessages;
 import org.supercsv.util.CsvContext;
 
 /**
@@ -100,7 +101,7 @@ public class SuperCsvCellProcessorException extends SuperCsvException {
 		}
 		String expectedClassName = expectedType.getName();
 		String actualClassName = (actualValue != null) ? actualValue.getClass().getName() : "null";
-		return String.format("the input value should be of type %s but is %s", expectedClassName, actualClassName);
+		return SuperCsvMessages.getMessage("org.supercsv.exception.cellprocessor.UnexpectedType.message", expectedClassName, actualClassName);
 	}
 	
 	/**

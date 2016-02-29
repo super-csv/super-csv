@@ -21,6 +21,7 @@ import java.text.DecimalFormatSymbols;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.exception.SuperCsvCellProcessorException;
+import org.supercsv.i18n.SuperCsvMessages;
 import org.supercsv.util.CsvContext;
 
 /**
@@ -130,8 +131,7 @@ public class ParseBigDecimal extends CellProcessorAdaptor implements StringCellP
 				}
 			}
 			catch(final NumberFormatException e) {
-				throw new SuperCsvCellProcessorException(String.format("'%s' could not be parsed as a BigDecimal",
-					value), context, this, e);
+				throw new SuperCsvCellProcessorException(SuperCsvMessages.getMessage("org.supercsv.exception.cellprocessor.InvalidBigDecimalValue.message", value), context, this, e);
 			}
 		} else {
 			throw new SuperCsvCellProcessorException(String.class, value, context, this);

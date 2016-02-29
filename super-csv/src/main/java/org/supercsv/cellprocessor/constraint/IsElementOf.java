@@ -25,6 +25,7 @@ import org.supercsv.cellprocessor.ift.DoubleCellProcessor;
 import org.supercsv.cellprocessor.ift.LongCellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.exception.SuperCsvConstraintViolationException;
+import org.supercsv.i18n.SuperCsvMessages;
 import org.supercsv.util.CsvContext;
 
 /**
@@ -94,8 +95,8 @@ public class IsElementOf extends CellProcessorAdaptor implements BoolCellProcess
 	public Object execute(final Object value, final CsvContext context) {
 		
 		if( !collection.contains(value) ) {
-			throw new SuperCsvConstraintViolationException(String.format(
-				"'%s' is not an element of the supplied Collection", value), context, this);
+			throw new SuperCsvConstraintViolationException(SuperCsvMessages.getMessage(
+				"org.supercsv.exception.cellprocessor.constraint.iselementof.NotAnElementOf.message", value), context, this);
 		}
 		
 		return next.execute(value, context);

@@ -6,6 +6,7 @@ import org.joda.time.format.DateTimeFormatter;
 import org.supercsv.cellprocessor.CellProcessorAdaptor;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.exception.SuperCsvCellProcessorException;
+import org.supercsv.i18n.SuperCsvMessages;
 import org.supercsv.util.CsvContext;
 
 /**
@@ -275,7 +276,7 @@ public abstract class AbstractJodaFormattingProcessor<T> extends
 			}
 		} catch (IllegalArgumentException e) {
 			throw new SuperCsvCellProcessorException(
-					String.format("Failed to format value as a %s",
+					SuperCsvMessages.getMessage("org.supercsv.exception.cellprocessor.joda.InvalidFormat.message",
 							jodaClass.getSimpleName()), context, this, e);
 		}
 	}

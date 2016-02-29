@@ -24,6 +24,7 @@ import org.supercsv.cellprocessor.CellProcessorAdaptor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.exception.SuperCsvCellProcessorException;
 import org.supercsv.exception.SuperCsvConstraintViolationException;
+import org.supercsv.i18n.SuperCsvMessages;
 import org.supercsv.util.CsvContext;
 
 /**
@@ -115,11 +116,11 @@ public class StrRegEx extends CellProcessorAdaptor implements StringCellProcesso
 		if( !matches ) {
 			final String msg = REGEX_MSGS.get(regex);
 			if( msg == null ) {
-				throw new SuperCsvConstraintViolationException(String.format(
-					"'%s' does not match the regular expression '%s'", value, regex), context, this);
+				throw new SuperCsvConstraintViolationException(SuperCsvMessages.getMessage(
+					"org.supercsv.exception.cellprocessor.constraint.strregex.RegexMismatch.message", value, regex), context, this);
 			} else {
 				throw new SuperCsvConstraintViolationException(
-					String.format("'%s' does not match the constraint '%s' defined by the regular expression '%s'",
+					SuperCsvMessages.getMessage("org.supercsv.exception.cellprocessor.constraint.strregex.LabeledRegexMismatch.message",
 						value, msg, regex), context, this);
 			}
 		}

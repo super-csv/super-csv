@@ -15,9 +15,12 @@
  */
 package org.supercsv.prefs;
 
+import java.util.Locale;
+
 import org.supercsv.comment.CommentMatcher;
 import org.supercsv.encoder.CsvEncoder;
 import org.supercsv.encoder.DefaultCsvEncoder;
+import org.supercsv.i18n.SuperCsvMessages;
 import org.supercsv.io.EmptyColumnParsing;
 import org.supercsv.quote.NormalQuoteMode;
 import org.supercsv.quote.QuoteMode;
@@ -143,6 +146,8 @@ public final class CsvPreference {
 	
 	private final EmptyColumnParsing emptyColumnParsing;
 	
+	private Locale defaultLocale;
+	
 	/**
 	 * Constructs a new <tt>CsvPreference</tt> from a Builder.
 	 */
@@ -157,6 +162,8 @@ public final class CsvPreference {
 		this.quoteMode = builder.quoteMode;
 		this.maxLinesPerRow = builder.maxLinesPerRow;
 		this.emptyColumnParsing = builder.emptyColumnParsing;
+		this.defaultLocale = builder.defaultLocale == null ? Locale.getDefault() : builder.defaultLocale;
+		SuperCsvMessages.setDefaultLocale(this.defaultLocale);
 	}
 	
 	/**
@@ -252,11 +259,20 @@ public final class CsvPreference {
 	}
 
 	/**
+	 * Returns the default locale for used for I18N
+	 * 
+	 * @return the default locale
+	 */
+	public Locale getDefaultLocale() {
+		return defaultLocale;
+	}
+	
+	/**
 	 * Builds immutable <tt>CsvPreference</tt> instances. The builder pattern allows for additional preferences to be
 	 * added in the future.
 	 */
 	public static class Builder {
-		
+
 		private final char quoteChar;
 		
 		private final int delimiterChar;
@@ -277,6 +293,8 @@ public final class CsvPreference {
 		
 		private EmptyColumnParsing emptyColumnParsing;
 		
+		private Locale defaultLocale;
+		
 		/**
 		 * Constructs a Builder with all of the values from an existing <tt>CsvPreference</tt> instance. Useful if you
 		 * want to base your preferences off one of the existing CsvPreference constants.
@@ -295,6 +313,7 @@ public final class CsvPreference {
 			this.commentMatcher = preference.commentMatcher;
 			this.maxLinesPerRow = preference.maxLinesPerRow;
 			this.emptyColumnParsing = preference.emptyColumnParsing;
+			this.defaultLocale = preference.defaultLocale;
 		}
 		
 		/**
@@ -443,6 +462,23 @@ public final class CsvPreference {
 				throw new NullPointerException("emptyColumnParsing should not be null");
 			}
 			this.emptyColumnParsing = emptyColumnParsing;
+			return this;
+		}
+		
+		/**
+		 * Uses provided locale to resolve I18N messages. 
+		 * The default is <tt>java.util.Locale.getDefault()</tt>.
+		 * 
+		 * @since 2.4.2
+		 * @param defaultLocale
+		 *            the locale to use
+		 * @return the updated Builder
+		 */		
+		public Builder setDefaultLocale(final Locale defaultLocale){
+			if( defaultLocale == null ) {
+				throw new NullPointerException("defaultLocale should not be null");
+			}
+			this.defaultLocale = defaultLocale;
 			return this;
 		}
 		

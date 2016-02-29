@@ -20,6 +20,7 @@ import org.supercsv.cellprocessor.ift.LongCellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.exception.SuperCsvCellProcessorException;
 import org.supercsv.exception.SuperCsvConstraintViolationException;
+import org.supercsv.i18n.SuperCsvMessages;
 import org.supercsv.util.CsvContext;
 
 /**
@@ -147,14 +148,14 @@ public class LMinMax extends CellProcessorAdaptor implements StringCellProcessor
 				result = Long.parseLong(value.toString());
 			}
 			catch(final NumberFormatException e) {
-				throw new SuperCsvCellProcessorException(String.format("'%s' could not be parsed as a Long", value),
+				throw new SuperCsvCellProcessorException(SuperCsvMessages.getMessage("org.supercsv.exception.cellprocessor.InvalidLongValue.message", value),
 					context, this, e);
 			}
 		}
 		
 		if( result < min || result > max ) {
-			throw new SuperCsvConstraintViolationException(String.format(
-				"%d does not lie between the min (%d) and max (%d) values (inclusive)", result, min, max), context,
+			throw new SuperCsvConstraintViolationException(SuperCsvMessages.getMessage(
+				"org.supercsv.exception.cellprocessor.constraint.lminmax.InvalidLongRange.message", result, min, max), context,
 				this);
 		}
 		

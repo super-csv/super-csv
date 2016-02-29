@@ -21,6 +21,7 @@ import java.time.format.DateTimeParseException;
 import org.supercsv.cellprocessor.CellProcessorAdaptor;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.exception.SuperCsvCellProcessorException;
+import org.supercsv.i18n.SuperCsvMessages;
 import org.supercsv.util.CsvContext;
 
 /**
@@ -71,7 +72,7 @@ public class ParsePeriod extends CellProcessorAdaptor {
 			result = Period.parse(string);
 		}
 		catch(DateTimeParseException e) {
-			throw new SuperCsvCellProcessorException("Failed to parse value as a Period", context, this, e);
+			throw new SuperCsvCellProcessorException(SuperCsvMessages.getMessage("org.supercsv.exception.cellprocessor.jdk8.InvalidPeriod.message"), context, this, e);
 		}
 
 		return next.execute(result, context);

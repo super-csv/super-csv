@@ -24,6 +24,7 @@ import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.exception.SuperCsvCellProcessorException;
 import org.supercsv.exception.SuperCsvConstraintViolationException;
+import org.supercsv.i18n.SuperCsvMessages;
 import org.supercsv.util.CsvContext;
 
 /**
@@ -205,8 +206,8 @@ public class ForbidSubStr extends CellProcessorAdaptor implements StringCellProc
 		
 		for( String forbidden : forbiddenSubStrings ) {
 			if( stringValue.contains(forbidden) ) {
-				throw new SuperCsvConstraintViolationException(String.format(
-					"'%s' contains the forbidden substring '%s'", value, forbidden), context, this);
+				throw new SuperCsvConstraintViolationException(SuperCsvMessages.getMessage(
+					"org.supercsv.exception.cellprocessor.constraint.forbidsubstr.ContainsForbiddenSubstring.message", value, forbidden), context, this);
 			}
 		}
 		

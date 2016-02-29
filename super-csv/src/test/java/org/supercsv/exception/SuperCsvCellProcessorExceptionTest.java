@@ -20,8 +20,12 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 import static org.supercsv.SuperCsvTestUtils.ANONYMOUS_CSVCONTEXT;
 
+import java.util.Locale;
+
+import org.junit.Before;
 import org.junit.Test;
 import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.i18n.SuperCsvMessages;
 import org.supercsv.mock.IdentityTransform;
 import org.supercsv.util.CsvContext;
 
@@ -35,6 +39,11 @@ public class SuperCsvCellProcessorExceptionTest {
 	private static final String MSG = "Cell processing failed!";
 	private static final Throwable THROWABLE = new RuntimeException("I'm the cause of the problem");
 	private static final CellProcessor PROCESSOR = new IdentityTransform();
+	
+	@Before
+	public void setUp(){
+		SuperCsvMessages.setDefaultLocale(Locale.ENGLISH);
+	}
 	
 	/**
 	 * Tests the first constructor.

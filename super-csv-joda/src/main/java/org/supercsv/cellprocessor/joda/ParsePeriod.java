@@ -23,6 +23,7 @@ import org.joda.time.format.PeriodFormatterBuilder;
 import org.supercsv.cellprocessor.CellProcessorAdaptor;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.exception.SuperCsvCellProcessorException;
+import org.supercsv.i18n.SuperCsvMessages;
 import org.supercsv.util.CsvContext;
 
 /**
@@ -141,7 +142,7 @@ public class ParsePeriod extends CellProcessorAdaptor {
 			}
 		} catch (IllegalArgumentException e) {
 			throw new SuperCsvCellProcessorException(
-					"Failed to parse value as a Period", context, this, e);
+					SuperCsvMessages.getMessage("org.supercsv.exception.cellprocessor.joda.InvalidPeriod.message"), context, this, e);
 		}
 
 		return next.execute(result, context);

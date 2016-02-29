@@ -21,6 +21,7 @@ import org.supercsv.cellprocessor.ift.DoubleCellProcessor;
 import org.supercsv.cellprocessor.ift.LongCellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.exception.SuperCsvCellProcessorException;
+import org.supercsv.i18n.SuperCsvMessages;
 import org.supercsv.util.CsvContext;
 
 /**
@@ -171,7 +172,7 @@ public class FmtNumber extends CellProcessorAdaptor implements DoubleCellProcess
 		}
 		catch(IllegalArgumentException e) {
 			throw new SuperCsvCellProcessorException(
-				String.format("'%s' is not a valid decimal format", decimalFormat), context, this, e);
+				SuperCsvMessages.getMessage("org.supercsv.exception.cellprocessor.InvalidDecimalPattern.message", decimalFormat), context, this, e);
 		}
 		
 		final String result = decimalFormatter.format(value);

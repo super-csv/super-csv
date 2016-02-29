@@ -22,6 +22,7 @@ import org.supercsv.cellprocessor.CellProcessorAdaptor;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.exception.SuperCsvCellProcessorException;
 import org.supercsv.exception.SuperCsvConstraintViolationException;
+import org.supercsv.i18n.SuperCsvMessages;
 import org.supercsv.util.CsvContext;
 
 /**
@@ -73,7 +74,7 @@ public class Unique extends CellProcessorAdaptor {
 		validateInputNotNull(value, context);
 		
 		if( !encounteredElements.add(value) ) {
-			throw new SuperCsvConstraintViolationException(String.format("duplicate value '%s' encountered", value), context, this);
+			throw new SuperCsvConstraintViolationException(SuperCsvMessages.getMessage("org.supercsv.exception.cellprocessor.constraint.unique.DuplicatedValue.message", value), context, this);
 		}
 		
 		return next.execute(value, context);

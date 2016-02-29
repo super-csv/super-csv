@@ -22,6 +22,7 @@ import java.util.Set;
 import org.supercsv.cellprocessor.ift.BoolCellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.exception.SuperCsvCellProcessorException;
+import org.supercsv.i18n.SuperCsvMessages;
 import org.supercsv.util.CsvContext;
 
 /**
@@ -337,7 +338,7 @@ public class ParseBool extends CellProcessorAdaptor implements StringCellProcess
 		} else if( contains(falseValues, stringValue, ignoreCase) ) {
 			result = Boolean.FALSE;
 		} else {
-			throw new SuperCsvCellProcessorException(String.format("'%s' could not be parsed as a Boolean", value),
+			throw new SuperCsvCellProcessorException(SuperCsvMessages.getMessage("org.supercsv.exception.cellprocessor.InvalidBooleanValue.message", value),
 				context, this);
 		}
 		
