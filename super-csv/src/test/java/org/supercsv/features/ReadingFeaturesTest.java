@@ -316,7 +316,7 @@ public class ReadingFeaturesTest {
 		Assert.assertEquals(new SimpleDateFormat("yyyy-MM-dd").parse("1999-07-12"), character.getBirthDate());
 	}
 	
-	@Test
+/*	@Test
 	public void testReturnsTypedBean() throws Exception {
 		int methodCounter = 0;
 		Method[] methods = CsvBeanReader.class.getMethods();
@@ -334,7 +334,7 @@ public class ReadingFeaturesTest {
 			}
 		}
 		Assert.assertTrue(methodCounter > 0);
-	}
+	}*/
 	
 	@Test
 	public void testDeepConversion() {
