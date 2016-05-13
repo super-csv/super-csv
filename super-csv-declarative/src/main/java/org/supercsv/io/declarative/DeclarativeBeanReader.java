@@ -50,8 +50,8 @@ public class DeclarativeBeanReader extends AbstractCsvReader {
 			
 			CellProcessor currentProcessor = null;
 			for( Annotation annotation : annotations ) {
-				CellProcessorMarker cellProcessorMarker = annotation.getClass()
-					.getAnnotation(CellProcessorMarker.class);
+				org.supercsv.io.declarative.CellProcessor cellProcessorMarker = annotation.getClass().getAnnotation(
+					org.supercsv.io.declarative.CellProcessor.class);
 				if( cellProcessorMarker != null ) {
 					CellProcessorProvider provider = instantiateBean(cellProcessorMarker.provider());
 					if( !provider.getType().isAssignableFrom(annotation.getClass()) ) {

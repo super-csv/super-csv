@@ -9,6 +9,6 @@ import org.supercsv.io.declarative.provider.CellProcessorProvider;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.ANNOTATION_TYPE })
-public @interface CellProcessorMarker {
+public @interface CellProcessor {
 	Class<? extends CellProcessorProvider> provider();
 }
