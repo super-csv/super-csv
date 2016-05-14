@@ -6,10 +6,10 @@ import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.exception.SuperCsvReflectionException;
 import org.supercsv.util.Form;
 
-public class DefaultCellProcessorProvider<T extends CellProcessor> implements CellProcessorProvider<Annotation> {
+abstract class AbstractCellProcessorProvider<T extends CellProcessor> implements CellProcessorProvider<Annotation> {
 	private Class<T> cellProcessorClass;
 	
-	public DefaultCellProcessorProvider(Class<T> cellProcessorClass) {
+	public AbstractCellProcessorProvider(Class<T> cellProcessorClass) {
 		this.cellProcessorClass = cellProcessorClass;
 	}
 	

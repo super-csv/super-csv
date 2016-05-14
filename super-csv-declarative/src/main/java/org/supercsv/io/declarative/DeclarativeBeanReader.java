@@ -25,7 +25,6 @@ import org.supercsv.exception.SuperCsvReflectionException;
 import org.supercsv.io.AbstractCsvReader;
 import org.supercsv.io.ITokenizer;
 import org.supercsv.io.declarative.provider.CellProcessorProvider;
-import org.supercsv.io.declarative.provider.ChainableCellProcessor;
 import org.supercsv.prefs.CsvPreference;
 import org.supercsv.util.BeanInterfaceProxy;
 import org.supercsv.util.Form;
@@ -62,12 +61,28 @@ public class DeclarativeBeanReader extends AbstractCsvReader {
 			throw new IllegalArgumentException("clazz should not be null");
 		}
 		
-		Field[] fields = clazz.getDeclaredFields();
+		List<Field> fields = new ArrayList<Field>();
+		extractFields(clazz, fields);
+		
 		return readIntoBean(instantiateBean(clazz), fields, getCellProcessors(clazz, fields));
 	}
 	
+	/**
+	 * Extracts fields from class hierarchy in "reverse" order
+	 * 
+	 * @param clazz
+	 * @param fields
+	 */
+	private void extractFields(Class<?> clazz, List<Field> fields) {
+		if( clazz.getSuperclass() != Object.class ) {
+			extractFields(clazz.getSuperclass(), fields);
+		}
+		
+		fields.addAll(Arrays.asList(clazz.getDeclaredFields()));
+	}
+	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private <T> List<CellProcessor> getCellProcessors(Class<T> clazz, Field[] fields) {
+	private <T> List<CellProcessor> getCellProcessors(Class<T> clazz, List<Field> fields) {
 		List<CellProcessor> result = new ArrayList<CellProcessor>();
 		for( Field field : fields ) {
 			List<Annotation> annotations = Arrays.asList(field.getAnnotations());
@@ -76,8 +91,8 @@ public class DeclarativeBeanReader extends AbstractCsvReader {
 			CellProcessor currentProcessor = mapFieldToDefaultProcessor(field);
 			
 			for( Annotation annotation : annotations ) {
-				org.supercsv.io.declarative.CellProcessor cellProcessorMarker = annotation.getClass().getAnnotation(
-					org.supercsv.io.declarative.CellProcessor.class);
+				org.supercsv.io.declarative.CellProcessor cellProcessorMarker = annotation.annotationType()
+					.getAnnotation(org.supercsv.io.declarative.CellProcessor.class);
 				if( cellProcessorMarker != null ) {
 					CellProcessorProvider provider = instantiateBean(cellProcessorMarker.provider());
 					if( !provider.getType().isAssignableFrom(annotation.getClass()) ) {
@@ -132,20 +147,21 @@ public class DeclarativeBeanReader extends AbstractCsvReader {
 		return bean;
 	}
 	
-	private <T> T populateBean(final T resultBean, Field[] fields) {
-		for( int i = 0; i < fields.length; i++ ) {
+	private <T> T populateBean(final T resultBean, List<Field> fields) {
+		for( int i = 0; i < fields.size(); i++ ) {
 			final Object fieldValue = processedColumns.get(i);
 			
-			if( fields[i] == null || fieldValue == null ) {
+			Field field = fields.get(i);
+			if( field == null || fieldValue == null ) {
 				continue;
 			}
 			
 			try {
-				fields[i].setAccessible(true);
-				fields[i].set(resultBean, fieldValue);
+				field.setAccessible(true);
+				field.set(resultBean, fieldValue);
 			}
 			catch(IllegalAccessException e) {
-				throw new SuperCsvReflectionException(Form.at("Cannot set value on field '{}'", fields[i].getName()), e);
+				throw new SuperCsvReflectionException(Form.at("Cannot set value on field '{}'", field.getName()), e);
 			}
 			
 		}
@@ -153,7 +169,8 @@ public class DeclarativeBeanReader extends AbstractCsvReader {
 		return resultBean;
 	}
 	
-	private <T> T readIntoBean(final T bean, Field[] fields, final List<CellProcessor> processors) throws IOException {
+	private <T> T readIntoBean(final T bean, List<Field> fields, final List<CellProcessor> processors)
+		throws IOException {
 		
 		if( readRow() ) {
 			if( processors.size() < length() ) {

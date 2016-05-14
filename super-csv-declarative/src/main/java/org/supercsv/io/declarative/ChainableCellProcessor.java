@@ -1,4 +1,4 @@
-package org.supercsv.io.declarative.provider;
+package org.supercsv.io.declarative;
 
 import org.supercsv.cellprocessor.CellProcessorAdaptor;
 import org.supercsv.cellprocessor.ift.CellProcessor;
@@ -13,6 +13,6 @@ public class ChainableCellProcessor extends CellProcessorAdaptor {
 	}
 	
 	public <T> T execute(Object value, CsvContext context) {
-		return next.execute(adaptee.execute(value, context), context);
+		return adaptee.execute(next.execute(value, context), context);
 	}
 }
