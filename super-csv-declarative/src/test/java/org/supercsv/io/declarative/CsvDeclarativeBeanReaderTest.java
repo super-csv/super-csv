@@ -1,3 +1,18 @@
+/*
+ * Copyright 2007 Kasper B. Graversen
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.supercsv.io.declarative;
 
 import static org.junit.Assert.assertEquals;
@@ -10,7 +25,13 @@ import org.junit.After;
 import org.junit.Test;
 import org.supercsv.prefs.CsvPreference;
 
-public class DeclarativeBeanReaderTest {
+/**
+ * Tests the {@link CsvDeclarativeBeanReader}
+ * 
+ * @since 2.5
+ * @author Dominik Schlosser
+ */
+public class CsvDeclarativeBeanReaderTest {
 	private static final CsvPreference PREFS = CsvPreference.STANDARD_PREFERENCE;
 	
 	// naming things is hard
@@ -18,7 +39,7 @@ public class DeclarativeBeanReaderTest {
 	private static final String SIMPLE_BEAN_SIMPLE_ANNOTATIONS_CSV = "/simpleBeanWithSimpleAnnotations.csv";
 	private static final String BEAN_WITH_INHERITED_PROPERTIES = "/beanWithInheritedProperties.csv";
 	
-	private DeclarativeBeanReader beanReader;
+	private CsvDeclarativeBeanReader beanReader;
 	
 	@After
 	public void tearDown() throws IOException {
@@ -70,7 +91,7 @@ public class DeclarativeBeanReaderTest {
 	}
 	
 	private void setupBeanReader(String inputFileName) {
-		beanReader = new DeclarativeBeanReader(new InputStreamReader(
-			DeclarativeBeanReaderTest.class.getResourceAsStream(inputFileName)), PREFS);
+		beanReader = new CsvDeclarativeBeanReader(new InputStreamReader(
+			CsvDeclarativeBeanReaderTest.class.getResourceAsStream(inputFileName)), PREFS);
 	}
 }

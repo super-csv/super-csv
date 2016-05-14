@@ -13,25 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.supercsv.io.declarative.provider;
+package org.supercsv.io.declarative.annotation;
 
-import org.supercsv.cellprocessor.ift.CellProcessor;
-import org.supercsv.io.declarative.annotation.FmtBool;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-/**
- * CellProcessorProvider for FmtBool
- * 
- * @since 2.5
- * @author Dominik Schlosser
- */
-public class FmtBoolCellProcessorProvider implements CellProcessorProvider<FmtBool> {
-	
-	public CellProcessor create(FmtBool annotation) {
-		return new org.supercsv.cellprocessor.FmtBool(annotation.trueValue(), annotation.falseValue());
-	}
-	
-	public Class<FmtBool> getType() {
-		return FmtBool.class;
-	}
-	
+import org.supercsv.io.declarative.CellProcessor;
+import org.supercsv.io.declarative.provider.CsvKeyValueMapperCellProcessorProvider;
+
+@CellProcessor(provider = CsvKeyValueMapperCellProcessorProvider.class)
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ ElementType.FIELD })
+public @interface Map {
+	Class<? extends CsvKeyValueMapper> value();
 }

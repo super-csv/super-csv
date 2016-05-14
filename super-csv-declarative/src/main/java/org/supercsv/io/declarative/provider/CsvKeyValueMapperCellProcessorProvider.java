@@ -16,22 +16,24 @@
 package org.supercsv.io.declarative.provider;
 
 import org.supercsv.cellprocessor.ift.CellProcessor;
-import org.supercsv.io.declarative.annotation.FmtBool;
+import org.supercsv.io.declarative.annotation.CsvKeyValueMapper;
+import org.supercsv.io.declarative.annotation.Map;
+import org.supercsv.util.ReflectionUtils;
 
 /**
- * CellProcessorProvider for FmtBool
+ * CellProcessorProvider for {@link CsvKeyValueMapper}
  * 
  * @since 2.5
  * @author Dominik Schlosser
  */
-public class FmtBoolCellProcessorProvider implements CellProcessorProvider<FmtBool> {
+public class CsvKeyValueMapperCellProcessorProvider implements CellProcessorProvider<Map> {
 	
-	public CellProcessor create(FmtBool annotation) {
-		return new org.supercsv.cellprocessor.FmtBool(annotation.trueValue(), annotation.falseValue());
+	public CellProcessor create(Map annotation) {
+		return new org.supercsv.cellprocessor.Mapper(ReflectionUtils.instantiateBean(annotation.value()));
 	}
 	
-	public Class<FmtBool> getType() {
-		return FmtBool.class;
+	public Class<Map> getType() {
+		return Map.class;
 	}
 	
 }

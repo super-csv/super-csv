@@ -1,3 +1,18 @@
+/*
+ * Copyright 2007 Kasper B. Graversen
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.supercsv.io.declarative;
 
 import java.io.IOException;
@@ -21,16 +36,26 @@ import org.supercsv.cellprocessor.ParseEnum;
 import org.supercsv.cellprocessor.ParseInt;
 import org.supercsv.cellprocessor.ParseLong;
 import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.exception.SuperCsvException;
 import org.supercsv.exception.SuperCsvReflectionException;
 import org.supercsv.io.AbstractCsvReader;
 import org.supercsv.io.ITokenizer;
 import org.supercsv.io.declarative.provider.CellProcessorProvider;
 import org.supercsv.prefs.CsvPreference;
-import org.supercsv.util.BeanInterfaceProxy;
 import org.supercsv.util.CsvContext;
 import org.supercsv.util.Form;
+import org.supercsv.util.ReflectionUtils;
 
-public class DeclarativeBeanReader extends AbstractCsvReader {
+/**
+ * This reader maps csv files to beans via conventions and {@link org.supercsv.io.declarative.CellProcessor}
+ * -annotations. The fields in the bean must match the csv's fields in type and order. {@link CellProcessor}s are
+ * created automatically for all known types. Additional processors can be added by annotating fields with their
+ * respective annotations. Annotation-order defines processor call-order.
+ * 
+ * @since 2.5
+ * @author Dominik Schlosser
+ */
+public class CsvDeclarativeBeanReader extends AbstractCsvReader {
 	
 	private final List<Object> processedColumns = new ArrayList<Object>();
 	
@@ -49,14 +74,57 @@ public class DeclarativeBeanReader extends AbstractCsvReader {
 		DEFAULT_PROCESSORS.put(long.class, new ParseLong());
 	}
 	
-	public DeclarativeBeanReader(final Reader reader, final CsvPreference preferences) {
+	/**
+	 * Constructs a new <tt>CsvBeanReader</tt> with the supplied Reader and CSV preferences. Note that the
+	 * <tt>reader</tt> will be wrapped in a <tt>BufferedReader</tt> before accessed.
+	 * 
+	 * @param reader
+	 *            the reader
+	 * @param preferences
+	 *            the CSV preferences
+	 * @throws NullPointerException
+	 *             if reader or preferences are null
+	 */
+	public CsvDeclarativeBeanReader(final Reader reader, final CsvPreference preferences) {
 		super(reader, preferences);
 	}
 	
-	public DeclarativeBeanReader(final ITokenizer tokenizer, final CsvPreference preferences) {
+	/**
+	 * Constructs a new <tt>CsvBeanReader</tt> with the supplied (custom) Tokenizer and CSV preferences. The tokenizer
+	 * should be set up with the Reader (CSV input) and CsvPreference beforehand.
+	 * 
+	 * @param tokenizer
+	 *            the tokenizer
+	 * @param preferences
+	 *            the CSV preferences
+	 * @throws NullPointerException
+	 *             if tokenizer or preferences are null
+	 */
+	public CsvDeclarativeBeanReader(final ITokenizer tokenizer, final CsvPreference preferences) {
 		super(tokenizer, preferences);
 	}
 	
+	/**
+	 * Reads a row of a CSV file and populates an instance of the specified class, using the conventional mappings and
+	 * provided {@link org.supercsv.io.declarative.CellProcessor}-annotations
+	 * 
+	 * @param clazz
+	 *            the type to instantiate. If the type is a class then a new instance will be created using the default
+	 *            no-args constructor. If the type is an interface, a proxy object which implements the interface will
+	 *            be created instead.
+	 * @param <T>
+	 *            the bean type
+	 * @return a populated bean or null if EOF
+	 * @throws IOException
+	 *             if an I/O error occurred
+	 * @throws IllegalArgumentException
+	 *             if nameMapping.length != number of columns read or clazz is null
+	 * @throws SuperCsvException
+	 *             if there was a general exception while reading/processing
+	 * @throws SuperCsvReflectionException
+	 *             if there was an reflection exception while mapping the values to the bean
+	 * @since 2.5
+	 */
 	public <T> T read(final Class<T> clazz) throws IOException {
 		if( clazz == null ) {
 			throw new IllegalArgumentException("clazz should not be null");
@@ -65,7 +133,7 @@ public class DeclarativeBeanReader extends AbstractCsvReader {
 		List<Field> fields = new ArrayList<Field>();
 		extractFields(clazz, fields);
 		
-		return readIntoBean(instantiateBean(clazz), fields, getCellProcessors(clazz, fields));
+		return readIntoBean(ReflectionUtils.instantiateBean(clazz), fields, getCellProcessors(clazz, fields));
 	}
 	
 	private void extractFields(Class<?> clazz, List<Field> fields) {
@@ -89,7 +157,7 @@ public class DeclarativeBeanReader extends AbstractCsvReader {
 				org.supercsv.io.declarative.CellProcessor cellProcessorMarker = annotation.annotationType()
 					.getAnnotation(org.supercsv.io.declarative.CellProcessor.class);
 				if( cellProcessorMarker != null ) {
-					CellProcessorProvider provider = instantiateBean(cellProcessorMarker.provider());
+					CellProcessorProvider provider = ReflectionUtils.instantiateBean(cellProcessorMarker.provider());
 					if( !provider.getType().isAssignableFrom(annotation.getClass()) ) {
 						throw new SuperCsvReflectionException(
 							Form.at(
@@ -122,26 +190,6 @@ public class DeclarativeBeanReader extends AbstractCsvReader {
 		return cellProcessor;
 	}
 	
-	private static <T> T instantiateBean(final Class<T> clazz) {
-		final T bean;
-		if( clazz.isInterface() ) {
-			bean = BeanInterfaceProxy.createProxy(clazz);
-		} else {
-			try {
-				bean = clazz.newInstance();
-			}
-			catch(InstantiationException e) {
-				throw new SuperCsvReflectionException(String.format(
-					"error instantiating bean, check that %s has a default no-args constructor", clazz.getName()), e);
-			}
-			catch(IllegalAccessException e) {
-				throw new SuperCsvReflectionException("error instantiating bean", e);
-			}
-		}
-		
-		return bean;
-	}
-	
 	private <T> T populateBean(final T resultBean, List<Field> fields) {
 		for( int i = 0; i < fields.size(); i++ ) {
 			final Object fieldValue = processedColumns.get(i);
@@ -168,12 +216,6 @@ public class DeclarativeBeanReader extends AbstractCsvReader {
 		throws IOException {
 		
 		if( readRow() ) {
-			if( processors.size() < length() ) {
-				for( int i = processors.size(); i < length(); i++ ) {
-					processors.add(new Transient());
-				}
-			}
-			
 			executeProcessors(processedColumns, processors.toArray(new CellProcessor[processors.size()]));
 			
 			return populateBean(bean, fields);

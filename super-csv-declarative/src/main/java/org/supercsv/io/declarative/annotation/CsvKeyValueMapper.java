@@ -13,25 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.supercsv.io.declarative.provider;
-
-import org.supercsv.cellprocessor.ift.CellProcessor;
-import org.supercsv.io.declarative.annotation.FmtBool;
+package org.supercsv.io.declarative.annotation;
 
 /**
- * CellProcessorProvider for FmtBool
+ * Implement this interface and annotate a field with {@link Map} for custom mappings
  * 
  * @since 2.5
  * @author Dominik Schlosser
  */
-public class FmtBoolCellProcessorProvider implements CellProcessorProvider<FmtBool> {
-	
-	public CellProcessor create(FmtBool annotation) {
-		return new org.supercsv.cellprocessor.FmtBool(annotation.trueValue(), annotation.falseValue());
-	}
-	
-	public Class<FmtBool> getType() {
-		return FmtBool.class;
-	}
-	
+public interface CsvKeyValueMapper {
+	/**
+	 * Maps a csv-value to another value
+	 * 
+	 * @param key
+	 *            a value from csv (possibly already transformed by other processors)
+	 * @returns a replacement for the passed value
+	 */
+	Object map(Object key);
 }
