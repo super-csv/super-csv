@@ -168,11 +168,6 @@ public class DeclarativeBeanReader extends AbstractCsvReader {
 		throws IOException {
 		
 		if( readRow() ) {
-			for( CellProcessor cellProcessor : processors ) {
-				
-				System.out.println(cellProcessor.getClass().getCanonicalName());
-			}
-			System.out.println("---");
 			if( processors.size() < length() ) {
 				for( int i = processors.size(); i < length(); i++ ) {
 					processors.add(new Transient());
