@@ -6,11 +6,14 @@ import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.exception.SuperCsvReflectionException;
 import org.supercsv.util.Form;
 
-abstract class AbstractCellProcessorProvider<T extends CellProcessor> implements CellProcessorProvider<Annotation> {
+abstract class AbstractCellProcessorProvider<T extends CellProcessor, A extends Annotation> implements
+	CellProcessorProvider<A> {
 	private Class<T> cellProcessorClass;
+	private Class<A> annotationClass;
 	
-	public AbstractCellProcessorProvider(Class<T> cellProcessorClass) {
+	public AbstractCellProcessorProvider(Class<T> cellProcessorClass, Class<A> annotationClass) {
 		this.cellProcessorClass = cellProcessorClass;
+		this.annotationClass = annotationClass;
 	}
 	
 	public CellProcessor create(Annotation annotation) {
@@ -27,8 +30,8 @@ abstract class AbstractCellProcessorProvider<T extends CellProcessor> implements
 		}
 	}
 	
-	public Class<Annotation> getType() {
-		return Annotation.class;
+	public Class<A> getType() {
+		return annotationClass;
 	}
 	
 }
