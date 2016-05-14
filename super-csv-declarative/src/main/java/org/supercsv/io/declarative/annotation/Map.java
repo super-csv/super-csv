@@ -27,5 +27,8 @@ import org.supercsv.io.declarative.provider.CsvKeyValueMapperCellProcessorProvid
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.FIELD })
 public @interface Map {
+	/**
+	 * The mapper-type
+	 */
 	Class<? extends CsvKeyValueMapper> value();
 }

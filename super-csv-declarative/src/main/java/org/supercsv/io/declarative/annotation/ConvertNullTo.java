@@ -33,5 +33,8 @@ import org.supercsv.io.declarative.provider.ConvertToNullCellProcessorProvider;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.FIELD })
 public @interface ConvertNullTo {
+	/**
+	 * The String to use if the value is null
+	 */
 	String value();
 }

@@ -28,10 +28,16 @@ import org.supercsv.util.ReflectionUtils;
  */
 public class CsvKeyValueMapperCellProcessorProvider implements CellProcessorProvider<Map> {
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public CellProcessor create(Map annotation) {
 		return new org.supercsv.cellprocessor.Mapper(ReflectionUtils.instantiateBean(annotation.value()));
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public Class<Map> getType() {
 		return Map.class;
 	}

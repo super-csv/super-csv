@@ -26,10 +26,16 @@ import org.supercsv.io.declarative.annotation.Truncate;
  */
 public class TruncateCellProcessorProvider implements CellProcessorProvider<Truncate> {
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public CellProcessor create(Truncate annotation) {
 		return new org.supercsv.cellprocessor.Truncate(annotation.maxSize(), annotation.suffix());
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public Class<Truncate> getType() {
 		return Truncate.class;
 	}

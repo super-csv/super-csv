@@ -32,11 +32,20 @@ abstract class AbstractCellProcessorProvider<T extends CellProcessor, A extends 
 	private Class<T> cellProcessorClass;
 	private Class<A> annotationClass;
 	
+	/**
+	 * @param cellProcessorClass
+	 *            the class of the cell processor to create
+	 * @param annotationClass
+	 *            the class of the cell processor annotation
+	 */
 	public AbstractCellProcessorProvider(Class<T> cellProcessorClass, Class<A> annotationClass) {
 		this.cellProcessorClass = cellProcessorClass;
 		this.annotationClass = annotationClass;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public CellProcessor create(Annotation annotation) {
 		try {
 			return cellProcessorClass.newInstance();
@@ -51,6 +60,9 @@ abstract class AbstractCellProcessorProvider<T extends CellProcessor, A extends 
 		}
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public Class<A> getType() {
 		return annotationClass;
 	}

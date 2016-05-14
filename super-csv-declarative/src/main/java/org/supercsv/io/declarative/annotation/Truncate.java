@@ -33,7 +33,13 @@ import org.supercsv.io.declarative.provider.TruncateCellProcessorProvider;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.FIELD })
 public @interface Truncate {
+	/**
+	 * the maximum size of the String
+	 */
 	int maxSize();
 	
+	/**
+	 * the String to append if the input is truncated (e.g. "...")
+	 */
 	String suffix() default "";
 }

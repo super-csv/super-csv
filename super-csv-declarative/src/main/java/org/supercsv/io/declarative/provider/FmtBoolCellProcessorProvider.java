@@ -26,10 +26,16 @@ import org.supercsv.io.declarative.annotation.FmtBool;
  */
 public class FmtBoolCellProcessorProvider implements CellProcessorProvider<FmtBool> {
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public CellProcessor create(FmtBool annotation) {
 		return new org.supercsv.cellprocessor.FmtBool(annotation.trueValue(), annotation.falseValue());
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public Class<FmtBool> getType() {
 		return FmtBool.class;
 	}

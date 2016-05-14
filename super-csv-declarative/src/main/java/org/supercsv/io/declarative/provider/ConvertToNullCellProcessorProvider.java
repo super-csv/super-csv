@@ -26,10 +26,16 @@ import org.supercsv.io.declarative.annotation.ConvertNullTo;
 
 public class ConvertToNullCellProcessorProvider implements CellProcessorProvider<ConvertNullTo> {
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public CellProcessor create(ConvertNullTo annotation) {
 		return new org.supercsv.cellprocessor.ConvertNullTo(annotation.value());
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public Class<ConvertNullTo> getType() {
 		return ConvertNullTo.class;
 	}

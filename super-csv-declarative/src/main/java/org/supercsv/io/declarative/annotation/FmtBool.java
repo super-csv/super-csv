@@ -33,7 +33,13 @@ import org.supercsv.io.declarative.provider.FmtBoolCellProcessorProvider;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.FIELD })
 public @interface FmtBool {
+	/**
+	 * The String to use if the value is true
+	 */
 	String trueValue();
 	
+	/**
+	 * The String to use if the value is false
+	 */
 	String falseValue();
 }

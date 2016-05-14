@@ -19,6 +19,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.text.SimpleDateFormat;
 
 import org.supercsv.io.declarative.CellProcessor;
 import org.supercsv.io.declarative.provider.FmtDateCellProcessorProvider;
@@ -33,5 +34,8 @@ import org.supercsv.io.declarative.provider.FmtDateCellProcessorProvider;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.FIELD })
 public @interface FmtDate {
+	/**
+	 * The date format String (see {@link SimpleDateFormat})
+	 */
 	String format() default "";
 }

@@ -26,10 +26,16 @@ import org.supercsv.io.declarative.annotation.FmtDate;
  */
 public class FmtDateCellProcessorProvider implements CellProcessorProvider<FmtDate> {
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public CellProcessor create(FmtDate annotation) {
 		return new org.supercsv.cellprocessor.FmtDate(annotation.format());
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public Class<FmtDate> getType() {
 		return FmtDate.class;
 	}
