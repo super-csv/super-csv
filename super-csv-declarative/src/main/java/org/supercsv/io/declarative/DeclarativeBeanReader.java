@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.supercsv.cellprocessor.CellProcessorAdaptor;
 import org.supercsv.cellprocessor.ParseBigDecimal;
 import org.supercsv.cellprocessor.ParseBool;
 import org.supercsv.cellprocessor.ParseChar;
@@ -19,7 +20,6 @@ import org.supercsv.cellprocessor.ParseDouble;
 import org.supercsv.cellprocessor.ParseEnum;
 import org.supercsv.cellprocessor.ParseInt;
 import org.supercsv.cellprocessor.ParseLong;
-import org.supercsv.cellprocessor.Transient;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.exception.SuperCsvReflectionException;
 import org.supercsv.io.AbstractCsvReader;
@@ -27,6 +27,7 @@ import org.supercsv.io.ITokenizer;
 import org.supercsv.io.declarative.provider.CellProcessorProvider;
 import org.supercsv.prefs.CsvPreference;
 import org.supercsv.util.BeanInterfaceProxy;
+import org.supercsv.util.CsvContext;
 import org.supercsv.util.Form;
 
 public class DeclarativeBeanReader extends AbstractCsvReader {
@@ -67,12 +68,6 @@ public class DeclarativeBeanReader extends AbstractCsvReader {
 		return readIntoBean(instantiateBean(clazz), fields, getCellProcessors(clazz, fields));
 	}
 	
-	/**
-	 * Extracts fields from class hierarchy in "reverse" order
-	 * 
-	 * @param clazz
-	 * @param fields
-	 */
 	private void extractFields(Class<?> clazz, List<Field> fields) {
 		if( clazz.getSuperclass() != Object.class ) {
 			extractFields(clazz.getSuperclass(), fields);
@@ -173,6 +168,11 @@ public class DeclarativeBeanReader extends AbstractCsvReader {
 		throws IOException {
 		
 		if( readRow() ) {
+			for( CellProcessor cellProcessor : processors ) {
+				
+				System.out.println(cellProcessor.getClass().getCanonicalName());
+			}
+			System.out.println("---");
 			if( processors.size() < length() ) {
 				for( int i = processors.size(); i < length(); i++ ) {
 					processors.add(new Transient());
@@ -185,5 +185,12 @@ public class DeclarativeBeanReader extends AbstractCsvReader {
 		}
 		
 		return null; // EOF
+	}
+	
+	private static class Transient extends CellProcessorAdaptor {
+		public <T> T execute(Object value, CsvContext context) {
+			return next.execute(value, context);
+		}
+		
 	}
 }
