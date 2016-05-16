@@ -42,6 +42,7 @@ public class CsvDeclarativeBeanReaderTest {
 	private static final String SIMPLE_BEAN_CSV = "/simpleBean.csv";
 	private static final String SIMPLE_BEAN_SIMPLE_ANNOTATIONS_CSV = "/simpleBeanWithSimpleAnnotations.csv";
 	private static final String BEAN_WITH_INHERITED_PROPERTIES = "/beanWithInheritedProperties.csv";
+	private static final String BEAN_FOR_DEFAULT_OVERRIDING_TEST = "/beanForDefaultOverridingTest.csv";
 	
 	private CsvDeclarativeBeanReader beanReader;
 	
@@ -93,6 +94,17 @@ public class CsvDeclarativeBeanReaderTest {
 		
 		assertEquals(john, beanReader.read(BeanWithInheritedProperties.class));
 		assertEquals(max, beanReader.read(BeanWithInheritedProperties.class));
+		assertNull(beanReader.read(BeanWithInheritedProperties.class));
+	}
+	
+	@Test
+	public void overrideDefaultProcessor() throws IOException {
+		setupBeanReader(BEAN_FOR_DEFAULT_OVERRIDING_TEST);
+		BeanForDefaultOverridingTest firstRow = new BeanForDefaultOverridingTest(true);
+		BeanForDefaultOverridingTest secondRow = new BeanForDefaultOverridingTest(false);
+		
+		assertEquals(firstRow, beanReader.read(BeanForDefaultOverridingTest.class));
+		assertEquals(secondRow, beanReader.read(BeanForDefaultOverridingTest.class));
 		assertNull(beanReader.read(BeanWithInheritedProperties.class));
 	}
 	

@@ -145,7 +145,6 @@ public class CsvDeclarativeBeanReader extends AbstractCsvReader {
 		fields.addAll(Arrays.asList(clazz.getDeclaredFields()));
 	}
 	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private <T> List<CellProcessor> getCellProcessors(Class<T> clazz, List<Field> fields) {
 		if( cellProcessors != null ) {
 			return cellProcessors;
@@ -153,32 +152,47 @@ public class CsvDeclarativeBeanReader extends AbstractCsvReader {
 		
 		cellProcessors = new ArrayList<CellProcessor>();
 		for( Field field : fields ) {
-			List<Annotation> annotations = Arrays.asList(field.getAnnotations());
-			Collections.reverse(annotations);
-			
-			CellProcessor currentProcessor = mapFieldToDefaultProcessor(field);
-			
-			for( Annotation annotation : annotations ) {
-				org.supercsv.io.declarative.CellProcessor cellProcessorMarker = annotation.annotationType()
-					.getAnnotation(org.supercsv.io.declarative.CellProcessor.class);
-				if( cellProcessorMarker != null ) {
-					CellProcessorProvider provider = ReflectionUtils.instantiateBean(cellProcessorMarker.provider());
-					if( !provider.getType().isAssignableFrom(annotation.getClass()) ) {
-						throw new SuperCsvReflectionException(
-							Form.at(
-								"Provider declared in annotation of type '{}' cannot be used since accepted annotation-type is not compatible",
-								annotation.getClass().getName()));
-					}
-					CellProcessor processor = provider.create(annotation);
-					
-					currentProcessor = new ChainableCellProcessor(currentProcessor, processor);
+			List<CellProcessor> allAnnotatedProcessors = extractCellProcessors(field);
+			if( allAnnotatedProcessors.isEmpty() ) {
+				cellProcessors.add(mapFieldToDefaultProcessor(field));
+			} else {
+				CellProcessor chainedProcessor = new Transient();
+				
+				for( CellProcessor processor : allAnnotatedProcessors ) {
+					chainedProcessor = new ChainableCellProcessor(chainedProcessor, processor);
 				}
+				
+				cellProcessors.add(chainedProcessor);
 			}
-			
-			cellProcessors.add(currentProcessor);
 		}
 		
 		return cellProcessors;
+	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private List<CellProcessor> extractCellProcessors(Field field) {
+		List<CellProcessor> result = new ArrayList<CellProcessor>();
+		List<Annotation> annotations = Arrays.asList(field.getAnnotations());
+		Collections.reverse(annotations);
+		
+		for( Annotation annotation : annotations ) {
+			org.supercsv.io.declarative.CellProcessor cellProcessorMarker = annotation.annotationType().getAnnotation(
+				org.supercsv.io.declarative.CellProcessor.class);
+			if( cellProcessorMarker != null ) {
+				CellProcessorProvider provider = ReflectionUtils.instantiateBean(cellProcessorMarker.provider());
+				if( !provider.getType().isAssignableFrom(annotation.getClass()) ) {
+					throw new SuperCsvReflectionException(
+						Form.at(
+							"Provider declared in annotation of type '{}' cannot be used since accepted annotation-type is not compatible",
+							annotation.getClass().getName()));
+				}
+				CellProcessor processor = provider.create(annotation);
+				
+				result.add(processor);
+			}
+		}
+		
+		return result;
 	}
 	
 	@SuppressWarnings("unchecked")
