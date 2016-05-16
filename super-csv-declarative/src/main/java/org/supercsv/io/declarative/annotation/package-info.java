@@ -15,6 +15,7 @@
  */
 /**
  * This package contains annotations which are used by {@link org.supercsv.io.declarative.CsvDeclarativeBeanReader} 
+ * and {@link org.supercsv.io.declarative.CsvDeclarativeBeanWriter}
  * to create {@link org.supercsv.cellprocessor.ift.CellProcessor}-chains for all fields of a bean
  */
 package org.supercsv.io.declarative.annotation;
