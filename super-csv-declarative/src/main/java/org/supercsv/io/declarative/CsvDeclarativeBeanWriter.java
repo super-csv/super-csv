@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.exception.SuperCsvException;
 import org.supercsv.exception.SuperCsvReflectionException;
 import org.supercsv.io.AbstractCsvWriter;
 import org.supercsv.prefs.CsvPreference;
@@ -56,9 +57,26 @@ public class CsvDeclarativeBeanWriter extends AbstractCsvWriter {
 	}
 	
 	/**
-	 * {@inheritDoc}
+	 * Writes a row of a CSV file, using the conventions and mappings provided
+	 * {@link org.supercsv.io.declarative.CellProcessor}-annotations
+	 * 
+	 * @param source
+	 *            The bean-instance to write
+	 * @throws IOException
+	 *             if an I/O error occurred
+	 * @throws IllegalArgumentException
+	 *             if source is null
+	 * @throws SuperCsvException
+	 *             if there was a general exception while writing/processing
+	 * @throws SuperCsvReflectionException
+	 *             if there was an reflection exception
+	 * @since 2.5
 	 */
 	public void write(final Object source) throws IOException {
+		if( source == null ) {
+			throw new IllegalArgumentException("source must not be null");
+		}
+		
 		incrementRowAndLineNo();
 		
 		List<Field> fields = ReflectionUtils.getFields(source.getClass());

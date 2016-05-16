@@ -86,13 +86,8 @@ public class CsvDeclarativeBeanWriterTest {
 		assertEquals("John,Doe,42,100.5,Note 1\r\nMax,Mustermann,22,21.4,Note 2\r\n", result.toString());
 	}
 	
-	@Test(expected = NullPointerException.class)
+	@Test(expected = IllegalArgumentException.class)
 	public void writeWithNullBeanClass() throws IOException {
-		beanWriter.write(null);
-	}
-	
-	@Test(expected = NullPointerException.class)
-	public void writeProcessorsWithNullBeanClass() throws IOException {
 		beanWriter.write(null);
 	}
 	
