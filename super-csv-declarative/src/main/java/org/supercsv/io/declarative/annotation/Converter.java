@@ -16,12 +16,12 @@
 package org.supercsv.io.declarative.annotation;
 
 /**
- * Implement this interface and annotate a field with {@link Map} for custom mappings
+ * Implement this interface and annotate a field with {@link Convert} for custom mappings
  * 
  * @since 2.5
  * @author Dominik Schlosser
  */
-public interface CsvKeyValueMapper {
+public interface Converter {
 	/**
 	 * Maps a csv-value to another value
 	 * 
@@ -29,5 +29,5 @@ public interface CsvKeyValueMapper {
 	 *            a value from csv (possibly already transformed by other processors)
 	 * @returns a replacement for the passed value
 	 */
-	Object map(Object key);
+	Object convert(Object key);
 }

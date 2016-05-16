@@ -16,30 +16,30 @@
 package org.supercsv.io.declarative.provider;
 
 import org.supercsv.cellprocessor.ift.CellProcessor;
-import org.supercsv.io.declarative.annotation.CsvKeyValueMapper;
-import org.supercsv.io.declarative.annotation.Map;
+import org.supercsv.io.declarative.annotation.Converter;
+import org.supercsv.io.declarative.annotation.Convert;
 import org.supercsv.util.ReflectionUtils;
 
 /**
- * CellProcessorProvider for {@link CsvKeyValueMapper}
+ * CellProcessorProvider for {@link Converter}
  * 
  * @since 2.5
  * @author Dominik Schlosser
  */
-public class CsvKeyValueMapperCellProcessorProvider implements CellProcessorProvider<Map> {
+public class CsvKeyValueMapperCellProcessorProvider implements CellProcessorProvider<Convert> {
 	
 	/**
 	 * {@inheritDoc}
 	 */
-	public CellProcessor create(Map annotation) {
-		return new org.supercsv.cellprocessor.Mapper(ReflectionUtils.instantiateBean(annotation.value()));
+	public CellProcessor create(Convert annotation) {
+		return new org.supercsv.cellprocessor.Convert(ReflectionUtils.instantiateBean(annotation.value()));
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 */
-	public Class<Map> getType() {
-		return Map.class;
+	public Class<Convert> getType() {
+		return Convert.class;
 	}
 	
 }

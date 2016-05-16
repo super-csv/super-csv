@@ -20,33 +20,33 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.exception.SuperCsvCellProcessorException;
-import org.supercsv.io.declarative.annotation.CsvKeyValueMapper;
+import org.supercsv.io.declarative.annotation.Converter;
 import org.supercsv.util.CsvContext;
 
 /**
- * Tests the Map processor
+ * Tests the Convert processor
  * 
  * @since 2.5
  * @author Dominik Schlosser
  */
-public class MapperTest {
+public class ConvertTest {
 	private static final CsvContext CONTEXT = new CsvContext(1, 2, 3);
 	
 	@Test
 	public void callsProvidedMapper() {
-		CsvKeyValueMapper keyValueMapper = Mockito.mock(CsvKeyValueMapper.class);
-		Mapper processor = new Mapper(keyValueMapper);
+		Converter keyValueMapper = Mockito.mock(Converter.class);
+		Convert processor = new Convert(keyValueMapper);
 		
 		processor.execute("42", CONTEXT);
 		
-		Mockito.verify(keyValueMapper).map("42");
+		Mockito.verify(keyValueMapper).convert("42");
 	}
 	
 	@Test
 	public void returnsMapperResult() {
-		CsvKeyValueMapper keyValueMapper = Mockito.mock(CsvKeyValueMapper.class);
-		Mockito.when(keyValueMapper.map(Mockito.anyObject())).thenReturn("abc");
-		Mapper processor = new Mapper(keyValueMapper);
+		Converter keyValueMapper = Mockito.mock(Converter.class);
+		Mockito.when(keyValueMapper.convert(Mockito.anyObject())).thenReturn("abc");
+		Convert processor = new Convert(keyValueMapper);
 		
 		Object result = processor.execute("42", CONTEXT);
 		
@@ -55,10 +55,10 @@ public class MapperTest {
 	
 	@Test
 	public void callsNextProcessorWithResult() {
-		CsvKeyValueMapper keyValueMapper = Mockito.mock(CsvKeyValueMapper.class);
+		Converter keyValueMapper = Mockito.mock(Converter.class);
 		CellProcessor next = Mockito.mock(CellProcessor.class);
-		Mockito.when(keyValueMapper.map(Mockito.anyObject())).thenReturn("abc");
-		Mapper processor = new Mapper(keyValueMapper, next);
+		Mockito.when(keyValueMapper.convert(Mockito.anyObject())).thenReturn("abc");
+		Convert processor = new Convert(keyValueMapper, next);
 		
 		processor.execute("42", CONTEXT);
 		
@@ -67,10 +67,10 @@ public class MapperTest {
 	
 	@Test
 	public void returnsNextProcessorResult() {
-		CsvKeyValueMapper keyValueMapper = Mockito.mock(CsvKeyValueMapper.class);
+		Converter keyValueMapper = Mockito.mock(Converter.class);
 		CellProcessor next = Mockito.mock(CellProcessor.class);
 		Mockito.when(next.execute(Mockito.anyObject(), Mockito.<CsvContext> any())).thenReturn("abc");
-		Mapper processor = new Mapper(keyValueMapper, next);
+		Convert processor = new Convert(keyValueMapper, next);
 		
 		Object result = processor.execute("42", CONTEXT);
 		
@@ -79,7 +79,7 @@ public class MapperTest {
 	
 	@Test(expected = SuperCsvCellProcessorException.class)
 	public void testWithNull() {
-		Mapper processor = new Mapper(Mockito.mock(CsvKeyValueMapper.class));
+		Convert processor = new Convert(Mockito.mock(Converter.class));
 		
 		processor.execute(null, new CsvContext(1, 2, 3));
 	}

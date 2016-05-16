@@ -26,9 +26,9 @@ import org.supercsv.io.declarative.provider.CsvKeyValueMapperCellProcessorProvid
 @CellProcessor(provider = CsvKeyValueMapperCellProcessorProvider.class)
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.FIELD })
-public @interface Map {
+public @interface Convert {
 	/**
 	 * The mapper-type
 	 */
-	Class<? extends CsvKeyValueMapper> value();
+	Class<? extends Converter> value();
 }
