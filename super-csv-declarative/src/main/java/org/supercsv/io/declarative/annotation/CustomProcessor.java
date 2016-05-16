@@ -21,7 +21,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.supercsv.io.declarative.CellProcessor;
-import org.supercsv.io.declarative.provider.ConvertCellProcessorProvider;
+import org.supercsv.io.declarative.provider.CustomCellProcessorProvider;
 
 /**
  * Annotation which allows you to instantiate your own {@link org.supercsv.cellprocessor.ift.CellProcessor} as part of
@@ -31,7 +31,7 @@ import org.supercsv.io.declarative.provider.ConvertCellProcessorProvider;
  * @since 2.5
  * @author Dominik Schlosser
  */
-@CellProcessor(provider = ConvertCellProcessorProvider.class)
+@CellProcessor(provider = CustomCellProcessorProvider.class)
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.FIELD })
 public @interface CustomProcessor {
