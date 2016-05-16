@@ -15,8 +15,12 @@
  */
 package org.supercsv.util;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.supercsv.exception.SuperCsvReflectionException;
@@ -189,6 +193,28 @@ public final class ReflectionUtils {
 		}
 		
 		return setter;
+	}
+	
+	/**
+	 * Returns all fields of the given class including those of superclasses.
+	 * 
+	 * @param clazz
+	 *            the class to get the fields of
+	 * @return all fields of the class and its hierarchy
+	 */
+	public static List<Field> getFields(Class<?> clazz) {
+		List<Field> fields = new ArrayList<Field>();
+		extractFields(clazz, fields);
+		
+		return fields;
+	}
+	
+	private static void extractFields(Class<?> clazz, List<Field> fields) {
+		if( clazz.getSuperclass() != Object.class ) {
+			extractFields(clazz.getSuperclass(), fields);
+		}
+		
+		fields.addAll(Arrays.asList(clazz.getDeclaredFields()));
 	}
 	
 	/**

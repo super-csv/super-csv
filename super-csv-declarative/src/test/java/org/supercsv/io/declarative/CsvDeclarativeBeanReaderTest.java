@@ -139,7 +139,7 @@ public class CsvDeclarativeBeanReaderTest {
 	
 	@SuppressWarnings("resource")
 	@Test(expected = NullPointerException.class)
-	public void testReaderConstructorWithNullPreferences() {
+	public void readerConstructorWithNullPreferences() {
 		new CsvBeanReader(new StringReader(""), null);
 	}
 	
@@ -151,7 +151,7 @@ public class CsvDeclarativeBeanReaderTest {
 	
 	@SuppressWarnings("resource")
 	@Test(expected = NullPointerException.class)
-	public void testTokenizerConstructorWithNullPreferences() {
+	public void tokenizerConstructorWithNullPreferences() {
 		new CsvBeanReader(new Tokenizer(new StringReader(""), PREFS), null);
 	}
 	

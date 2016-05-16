@@ -17,22 +17,17 @@ package org.supercsv.io.declarative;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.supercsv.cellprocessor.CellProcessorAdaptor;
 import org.supercsv.cellprocessor.ParseBigDecimal;
 import org.supercsv.cellprocessor.ParseBool;
 import org.supercsv.cellprocessor.ParseChar;
 import org.supercsv.cellprocessor.ParseDouble;
-import org.supercsv.cellprocessor.ParseEnum;
 import org.supercsv.cellprocessor.ParseInt;
 import org.supercsv.cellprocessor.ParseLong;
 import org.supercsv.cellprocessor.ift.CellProcessor;
@@ -40,9 +35,7 @@ import org.supercsv.exception.SuperCsvException;
 import org.supercsv.exception.SuperCsvReflectionException;
 import org.supercsv.io.AbstractCsvReader;
 import org.supercsv.io.ITokenizer;
-import org.supercsv.io.declarative.provider.CellProcessorProvider;
 import org.supercsv.prefs.CsvPreference;
-import org.supercsv.util.CsvContext;
 import org.supercsv.util.Form;
 import org.supercsv.util.ReflectionUtils;
 
@@ -56,11 +49,6 @@ import org.supercsv.util.ReflectionUtils;
  * @author Dominik Schlosser
  */
 public class CsvDeclarativeBeanReader extends AbstractCsvReader {
-	
-	private final List<Object> processedColumns = new ArrayList<Object>();
-	
-	private Map<Class<?>, List<CellProcessor>> CELL_PROCESSOR_CACHE = new HashMap<Class<?>, List<CellProcessor>>();
-	
 	private static final Map<Class<?>, CellProcessor> DEFAULT_PROCESSORS = new HashMap<Class<?>, CellProcessor>();
 	static {
 		DEFAULT_PROCESSORS.put(BigDecimal.class, new ParseBigDecimal());
@@ -75,6 +63,9 @@ public class CsvDeclarativeBeanReader extends AbstractCsvReader {
 		DEFAULT_PROCESSORS.put(Long.class, new ParseLong());
 		DEFAULT_PROCESSORS.put(long.class, new ParseLong());
 	}
+	
+	private final List<Object> processedColumns = new ArrayList<Object>();
+	private BeanCellProcessorExtractor cellProcessorExtractor = new BeanCellProcessorExtractor(DEFAULT_PROCESSORS);
 	
 	/**
 	 * Constructs a new <tt>CsvBeanReader</tt> with the supplied Reader and CSV preferences. Note that the
@@ -132,84 +123,10 @@ public class CsvDeclarativeBeanReader extends AbstractCsvReader {
 			throw new IllegalArgumentException("clazz should not be null");
 		}
 		
-		List<Field> fields = new ArrayList<Field>();
-		extractFields(clazz, fields);
+		List<Field> fields = ReflectionUtils.getFields(clazz);
 		
-		return readIntoBean(ReflectionUtils.instantiateBean(clazz), fields, getCellProcessors(clazz, fields));
-	}
-	
-	private void extractFields(Class<?> clazz, List<Field> fields) {
-		if( clazz.getSuperclass() != Object.class ) {
-			extractFields(clazz.getSuperclass(), fields);
-		}
-		
-		fields.addAll(Arrays.asList(clazz.getDeclaredFields()));
-	}
-	
-	private <T> List<CellProcessor> getCellProcessors(Class<T> clazz, List<Field> fields) {
-		if( CELL_PROCESSOR_CACHE.containsKey(clazz) ) {
-			return CELL_PROCESSOR_CACHE.get(clazz);
-		}
-		
-		List<CellProcessor> cellProcessors = new ArrayList<CellProcessor>();
-		for( Field field : fields ) {
-			List<CellProcessor> allAnnotatedProcessors = extractCellProcessors(field);
-			if( allAnnotatedProcessors.isEmpty() ) {
-				cellProcessors.add(mapFieldToDefaultProcessor(field));
-			} else {
-				CellProcessor chainedProcessor = new Transient();
-				
-				for( CellProcessor processor : allAnnotatedProcessors ) {
-					chainedProcessor = new ChainableCellProcessor(chainedProcessor, processor);
-				}
-				
-				cellProcessors.add(chainedProcessor);
-			}
-		}
-		
-		CELL_PROCESSOR_CACHE.put(clazz, cellProcessors);
-		
-		return cellProcessors;
-	}
-	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private List<CellProcessor> extractCellProcessors(Field field) {
-		List<CellProcessor> result = new ArrayList<CellProcessor>();
-		List<Annotation> annotations = Arrays.asList(field.getAnnotations());
-		Collections.reverse(annotations);
-		
-		for( Annotation annotation : annotations ) {
-			org.supercsv.io.declarative.CellProcessor cellProcessorMarker = annotation.annotationType().getAnnotation(
-				org.supercsv.io.declarative.CellProcessor.class);
-			if( cellProcessorMarker != null ) {
-				CellProcessorProvider provider = ReflectionUtils.instantiateBean(cellProcessorMarker.provider());
-				if( !provider.getType().isAssignableFrom(annotation.getClass()) ) {
-					throw new SuperCsvReflectionException(
-						Form.at(
-							"Provider declared in annotation of type '{}' cannot be used since accepted annotation-type is not compatible",
-							annotation.getClass().getName()));
-				}
-				CellProcessor processor = provider.create(annotation);
-				
-				result.add(processor);
-			}
-		}
-		
-		return result;
-	}
-	
-	@SuppressWarnings("unchecked")
-	private CellProcessor mapFieldToDefaultProcessor(Field field) {
-		if( field.getType().isEnum() ) {
-			return new ParseEnum((Class<? extends Enum<?>>) field.getType());
-		}
-		
-		CellProcessor cellProcessor = DEFAULT_PROCESSORS.get(field.getType());
-		if( cellProcessor == null ) {
-			return new Transient();
-		}
-		
-		return cellProcessor;
+		return readIntoBean(ReflectionUtils.instantiateBean(clazz), fields,
+			cellProcessorExtractor.getCellProcessors(clazz));
 	}
 	
 	private <T> T populateBean(final T resultBean, List<Field> fields) {
@@ -252,10 +169,4 @@ public class CsvDeclarativeBeanReader extends AbstractCsvReader {
 		return null; // EOF
 	}
 	
-	private static class Transient extends CellProcessorAdaptor {
-		public <T> T execute(Object value, CsvContext context) {
-			return next.execute(value, context);
-		}
-		
-	}
 }
