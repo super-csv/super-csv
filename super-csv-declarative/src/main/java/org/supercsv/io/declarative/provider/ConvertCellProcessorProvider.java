@@ -13,25 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.supercsv.io.declarative.annotation;
+package org.supercsv.io.declarative.provider;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
-import org.supercsv.io.declarative.CellProcessor;
-import org.supercsv.io.declarative.provider.ConvertCellProcessorProvider;
+import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.io.declarative.annotation.Convert;
+import org.supercsv.util.ReflectionUtils;
 
 /**
- * Annotation for the {@link org.supercsv.cellprocessor.Convert}-cell processor
+ * CellProcessorProvider for {@link Convert}
  * 
  * @since 2.5
  * @author Dominik Schlosser
  */
-@CellProcessor(provider = ConvertCellProcessorProvider.class)
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.FIELD })
-public @interface Convert {
-	Class<? extends Converter> value();
+public class ConvertCellProcessorProvider implements CellProcessorProvider<Convert> {
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public CellProcessor create(Convert annotation) {
+		return new org.supercsv.cellprocessor.Convert(ReflectionUtils.instantiateBean(annotation.value()));
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public Class<Convert> getType() {
+		return Convert.class;
+	}
+	
 }

@@ -24,7 +24,9 @@ import org.supercsv.io.declarative.CellProcessor;
 import org.supercsv.io.declarative.provider.ConvertCellProcessorProvider;
 
 /**
- * Annotation for the {@link org.supercsv.cellprocessor.Convert}-cell processor
+ * Annotation which allows you to instantiate your own {@link org.supercsv.cellprocessor.ift.CellProcessor} as part of
+ * the pipeline. Should be used if you rely on annotation-supplied processors but have a few edge-cases where you need
+ * more control over {@link org.supercsv.cellprocessor.ift.CellProcessor}-instantiation.
  * 
  * @since 2.5
  * @author Dominik Schlosser
@@ -32,6 +34,6 @@ import org.supercsv.io.declarative.provider.ConvertCellProcessorProvider;
 @CellProcessor(provider = ConvertCellProcessorProvider.class)
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.FIELD })
-public @interface Convert {
-	Class<? extends Converter> value();
+public @interface CustomProcessor {
+	Class<? extends CellProcessorFactory> value();
 }

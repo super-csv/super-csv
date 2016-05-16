@@ -13,33 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.supercsv.io.declarative.provider;
+package org.supercsv.io.declarative.annotation;
 
 import org.supercsv.cellprocessor.ift.CellProcessor;
-import org.supercsv.io.declarative.annotation.Converter;
-import org.supercsv.io.declarative.annotation.Convert;
-import org.supercsv.util.ReflectionUtils;
 
 /**
- * CellProcessorProvider for {@link Converter}
+ * A factory to create cell processors
  * 
  * @since 2.5
  * @author Dominik Schlosser
  */
-public class CsvKeyValueMapperCellProcessorProvider implements CellProcessorProvider<Convert> {
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public CellProcessor create(Convert annotation) {
-		return new org.supercsv.cellprocessor.Convert(ReflectionUtils.instantiateBean(annotation.value()));
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public Class<Convert> getType() {
-		return Convert.class;
-	}
-	
+public interface CellProcessorFactory {
+	CellProcessor create();
 }
