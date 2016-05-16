@@ -58,7 +58,8 @@ import org.supercsv.util.ReflectionUtils;
 public class CsvDeclarativeBeanReader extends AbstractCsvReader {
 	
 	private final List<Object> processedColumns = new ArrayList<Object>();
-	private List<CellProcessor> cellProcessors = null;
+	
+	private Map<Class<?>, List<CellProcessor>> CELL_PROCESSOR_CACHE = new HashMap<Class<?>, List<CellProcessor>>();
 	
 	private static final Map<Class<?>, CellProcessor> DEFAULT_PROCESSORS = new HashMap<Class<?>, CellProcessor>();
 	static {
@@ -146,11 +147,11 @@ public class CsvDeclarativeBeanReader extends AbstractCsvReader {
 	}
 	
 	private <T> List<CellProcessor> getCellProcessors(Class<T> clazz, List<Field> fields) {
-		if( cellProcessors != null ) {
-			return cellProcessors;
+		if( CELL_PROCESSOR_CACHE.containsKey(clazz) ) {
+			return CELL_PROCESSOR_CACHE.get(clazz);
 		}
 		
-		cellProcessors = new ArrayList<CellProcessor>();
+		List<CellProcessor> cellProcessors = new ArrayList<CellProcessor>();
 		for( Field field : fields ) {
 			List<CellProcessor> allAnnotatedProcessors = extractCellProcessors(field);
 			if( allAnnotatedProcessors.isEmpty() ) {
@@ -165,6 +166,8 @@ public class CsvDeclarativeBeanReader extends AbstractCsvReader {
 				cellProcessors.add(chainedProcessor);
 			}
 		}
+		
+		CELL_PROCESSOR_CACHE.put(clazz, cellProcessors);
 		
 		return cellProcessors;
 	}
