@@ -33,5 +33,18 @@ import org.supercsv.io.declarative.provider.FmtNumberCellProcessorProvider;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.FIELD })
 public @interface FmtNumber {
+	/**
+	 * In the format string, the following characters are defined as : <br>
+	 * 
+	 * <pre>
+	 * 0   - means Digit
+	 * #   - means Digit, zero shows as absent (works only as zero padding on the right hand side of the number)
+	 * .   - means Decimal separator or monetary decimal separator
+	 * -   - means Minus sign
+	 * ,   - means Grouping separator
+	 * </pre>
+	 * 
+	 * @return the format-string to use
+	 */
 	String decimalFormat();
 }

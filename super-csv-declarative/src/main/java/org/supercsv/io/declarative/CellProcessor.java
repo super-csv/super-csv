@@ -32,7 +32,7 @@ import org.supercsv.io.declarative.provider.CellProcessorProvider;
 @Target({ ElementType.ANNOTATION_TYPE })
 public @interface CellProcessor {
 	/**
-	 * @returns the provider responsible for CellProcessor-creation
+	 * @return the provider responsible for CellProcessor-creation
 	 */
 	Class<? extends CellProcessorProvider> provider();
 }

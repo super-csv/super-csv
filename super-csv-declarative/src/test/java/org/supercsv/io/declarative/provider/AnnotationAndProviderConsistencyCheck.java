@@ -26,7 +26,8 @@ import org.reflections.Reflections;
 import org.supercsv.io.declarative.CellProcessor;
 
 /**
- * Tests all {@link CellProcessor}-annotations and their providers for consistency
+ * Tests all {@link CellProcessor}-annotations and their providers for consistency since the type system cannot do this
+ * for us
  * 
  * @since 2.5
  * @author Dominik Schlosser

@@ -22,7 +22,7 @@ import org.supercsv.exception.SuperCsvReflectionException;
 import org.supercsv.util.Form;
 
 /**
- * Convenience-base class for simple CellProcessor<->annotation providers without parameters
+ * Convenience-base class for simple CellProcessor-annotation providers without parameters
  * 
  * @since 2.5
  * @author Dominik Schlosser

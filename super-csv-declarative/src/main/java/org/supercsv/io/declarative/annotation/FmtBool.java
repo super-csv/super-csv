@@ -34,12 +34,12 @@ import org.supercsv.io.declarative.provider.FmtBoolCellProcessorProvider;
 @Target({ ElementType.FIELD })
 public @interface FmtBool {
 	/**
-	 * The String to use if the value is true
+	 * @return the String to use if the value is true
 	 */
 	String trueValue();
 	
 	/**
-	 * The String to use if the value is false
+	 * @return the String to use if the value is false
 	 */
 	String falseValue();
 }

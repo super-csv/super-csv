@@ -33,8 +33,7 @@ public class ParseSqlTimeCellProcessorProvider implements CellProcessorProvider<
 	 */
 	public CellProcessor create(ParseSqlTime annotation) {
 		return new org.supercsv.cellprocessor.ParseSqlTime(annotation.format(), annotation.lenient(),
-			annotation.locale() == null || annotation.locale().isEmpty() ? null : Locale.forLanguageTag(annotation
-				.locale()));
+			annotation.locale() == null || annotation.locale() == "" ? null : new Locale(annotation.locale()));
 	}
 	
 	/**

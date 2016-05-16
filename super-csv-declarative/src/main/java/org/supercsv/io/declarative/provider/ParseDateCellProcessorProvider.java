@@ -33,8 +33,7 @@ public class ParseDateCellProcessorProvider implements CellProcessorProvider<Par
 	 */
 	public CellProcessor create(ParseDate annotation) {
 		return new org.supercsv.cellprocessor.ParseDate(annotation.format(), annotation.lenient(),
-			annotation.locale() == null || annotation.locale().isEmpty() ? null : Locale.forLanguageTag(annotation
-				.locale()));
+			annotation.locale() == null || annotation.locale() == "" ? null : new Locale(annotation.locale()));
 	}
 	
 	/**

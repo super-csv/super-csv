@@ -27,7 +27,7 @@ public interface Converter {
 	 * 
 	 * @param key
 	 *            a value from csv (possibly already transformed by other processors)
-	 * @returns a replacement for the passed value
+	 * @return a replacement for the passed value
 	 */
 	Object convert(Object key);
 }

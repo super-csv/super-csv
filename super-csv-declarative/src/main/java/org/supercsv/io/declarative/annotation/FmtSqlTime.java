@@ -33,5 +33,13 @@ import org.supercsv.io.declarative.provider.FmtSqlTimeCellProcessorProvider;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.FIELD })
 public @interface FmtSqlTime {
+	/**
+	 * Some example time formats you can use are:<br>
+	 * <code>"HH:mm:ss"</code> (formats a time as "05:20:00")<br>
+	 * <code>"HHmmss"</code> (formats a time as "052000")<br>
+	 * <code>"HH.mm.ss"</code> (formats a date as "05.20.00"<br>
+	 * 
+	 * @return the format-string to use
+	 */
 	String dateFormat();
 }

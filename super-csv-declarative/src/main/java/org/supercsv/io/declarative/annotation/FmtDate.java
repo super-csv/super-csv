@@ -35,7 +35,7 @@ import org.supercsv.io.declarative.provider.FmtDateCellProcessorProvider;
 @Target({ ElementType.FIELD })
 public @interface FmtDate {
 	/**
-	 * The date format String (see {@link SimpleDateFormat})
+	 * @return the date format String (see {@link SimpleDateFormat})
 	 */
 	String format() default "";
 }
