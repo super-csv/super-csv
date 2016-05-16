@@ -221,6 +221,12 @@ public class CsvDeclarativeBeanReader extends AbstractCsvReader {
 		throws IOException {
 		
 		if( readRow() ) {
+			if( fields.size() != length() ) {
+				throw new IllegalArgumentException(Form.at(
+					"the number of fields in the bean and the number of columns read "
+						+ "should be the same size (nameMapping length = {}, columns = {})", fields.size(), length()));
+			}
+			
 			executeProcessors(processedColumns, processors.toArray(new CellProcessor[processors.size()]));
 			
 			return populateBean(bean, fields);
