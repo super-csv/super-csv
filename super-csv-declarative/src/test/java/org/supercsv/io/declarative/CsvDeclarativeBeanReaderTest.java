@@ -78,7 +78,7 @@ public class CsvDeclarativeBeanReaderTest {
 	@Test
 	public void readSimpleBeanWithChainedAnnotations() throws IOException {
 		setupBeanReader(SIMPLE_BEAN_SIMPLE_ANNOTATIONS_CSV);
-		BeanWithChainedAnnotations john = new BeanWithChainedAnnotations("test", "Doe", 42, 100.5);
+		BeanWithChainedAnnotations john = new BeanWithChainedAnnotations(null, "Doe", 42, 100.5);
 		BeanWithChainedAnnotations max = new BeanWithChainedAnnotations("Max", "Mus", 22, 21.4);
 		
 		assertEquals(john, beanReader.read(BeanWithChainedAnnotations.class));

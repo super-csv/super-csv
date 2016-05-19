@@ -33,6 +33,6 @@ public abstract class Form {
 	public static String at(String template, Object... params) {
 		FormattingTuple formatted = MessageFormatter.arrayFormat(template, params);
 		
-		return formatted.toString();
+		return formatted.getMessage();
 	}
 }

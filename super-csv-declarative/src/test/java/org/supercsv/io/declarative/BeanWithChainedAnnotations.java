@@ -15,7 +15,7 @@
  */
 package org.supercsv.io.declarative;
 
-import org.supercsv.io.declarative.annotation.ConvertNullTo;
+import org.supercsv.io.declarative.annotation.Optional;
 import org.supercsv.io.declarative.annotation.Trim;
 import org.supercsv.io.declarative.annotation.Truncate;
 
@@ -26,7 +26,7 @@ import org.supercsv.io.declarative.annotation.Truncate;
  * @author Dominik Schlosser
  */
 public class BeanWithChainedAnnotations {
-	@ConvertNullTo("test ")
+	@Optional
 	@Trim
 	private String name;
 	

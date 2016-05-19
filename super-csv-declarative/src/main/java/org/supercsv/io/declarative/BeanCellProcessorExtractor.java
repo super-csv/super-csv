@@ -19,7 +19,6 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -80,13 +79,31 @@ class BeanCellProcessorExtractor {
 			if( allAnnotatedProcessors.isEmpty() ) {
 				cellProcessors.add(mapFieldToDefaultProcessor(field));
 			} else {
-				CellProcessor chainedProcessor = new Transient();
+				CellProcessor root = new Transient();
+				CellProcessor chainedProcessor = root;
 				
-				for( CellProcessor processor : allAnnotatedProcessors ) {
-					chainedProcessor = new ChainableCellProcessor(chainedProcessor, processor);
+				try {
+					for( CellProcessor processor : allAnnotatedProcessors ) {
+						Class<? extends CellProcessor> processorType = chainedProcessor.getClass();
+						Field next = getFieldRecursive(processorType, "next");
+						
+						if( next == null ) {
+							throw new SuperCsvReflectionException(Form.at("Field 'next' not found on type '{}'",
+								processor));
+						}
+						
+						next.setAccessible(true);
+						next.set(chainedProcessor, processor);
+						
+						chainedProcessor = processor;
+					}
+				}
+				catch(IllegalAccessException e) {
+					throw new SuperCsvReflectionException(Form.at("Field 'next' not accessible on type '{}'",
+						chainedProcessor), e);
 				}
 				
-				cellProcessors.add(chainedProcessor);
+				cellProcessors.add(root);
 			}
 		}
 		
@@ -95,11 +112,30 @@ class BeanCellProcessorExtractor {
 		return cellProcessors;
 	}
 	
+	private Field getFieldRecursive(Class<?> type, String name) {
+		if( type == null ) {
+			return null;
+		}
+		
+		Field field = null;
+		try {
+			field = type.getDeclaredField(name);
+		}
+		catch(NoSuchFieldException e) {
+			// ignore
+		}
+		
+		if( field != null ) {
+			return field;
+		}
+		
+		return getFieldRecursive(type.getSuperclass(), name);
+	}
+	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private List<CellProcessor> extractCellProcessors(Field field) {
 		List<CellProcessor> result = new ArrayList<CellProcessor>();
 		List<Annotation> annotations = Arrays.asList(field.getAnnotations());
-		Collections.reverse(annotations);
 		
 		for( Annotation annotation : annotations ) {
 			org.supercsv.io.declarative.CellProcessor cellProcessorMarker = annotation.annotationType().getAnnotation(

@@ -72,7 +72,7 @@ public class CsvDeclarativeBeanWriterTest {
 		beanWriter.write(john);
 		beanWriter.write(max);
 		
-		assertEquals("test,Doe,42,100.5\r\nMax,Mus,22,21.4\r\n", result.toString());
+		assertEquals(",Doe,42,100.5\r\nMax,Mus,22,21.4\r\n", result.toString());
 	}
 	
 	@Test
