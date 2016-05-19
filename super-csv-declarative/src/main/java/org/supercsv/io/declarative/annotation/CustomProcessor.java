@@ -35,5 +35,5 @@ import org.supercsv.io.declarative.provider.CustomCellProcessorProvider;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.FIELD })
 public @interface CustomProcessor {
-	Class<? extends CellProcessorFactory> value();
+	Class<? extends CellProcessorFactory> factory();
 }

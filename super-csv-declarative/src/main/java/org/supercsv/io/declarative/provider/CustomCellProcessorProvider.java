@@ -32,7 +32,7 @@ public class CustomCellProcessorProvider implements CellProcessorProvider<Custom
 	 * {@inheritDoc}
 	 */
 	public CellProcessor create(final CustomProcessor annotation) {
-		CellProcessorFactory factory = ReflectionUtils.instantiateBean(annotation.value());
+		CellProcessorFactory factory = ReflectionUtils.instantiateBean(annotation.factory());
 		return factory.create();
 	}
 	
