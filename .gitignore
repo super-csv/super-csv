@@ -3,3 +3,7 @@ target/
 #IntelliJ Idea
 *.iml
 .idea
+*.ipr
+*.iws
+
+.DS_Store
