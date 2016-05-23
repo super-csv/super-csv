@@ -15,6 +15,7 @@
  */
 package org.supercsv.io.reflection;
 
+import org.supercsv.SuperCsvTestUtils;
 import org.supercsv.mock.CustomerStringBean;
 
 /**
@@ -258,81 +259,47 @@ class CustomerStringProtectedBean {
 			return false;
 		}
 		CustomerStringProtectedBean other = (CustomerStringProtectedBean) obj;
-		if( birthDate == null ) {
-			if( other.birthDate != null ) {
-				return false;
-			}
-		} else if( !birthDate.equals(other.birthDate) ) {
+		if( !SuperCsvTestUtils.equals(birthDate, other.birthDate) ) {
 			return false;
 		}
-		if( birthTime == null ) {
-			if( other.birthTime != null ) {
-				return false;
-			}
-		} else if( !birthTime.toString().equals(other.birthTime.toString()) ) {
+		
+		if( !SuperCsvTestUtils.equals(birthTime, other.birthTime) ) {
 			return false;
 		}
-		if( customerNo == null ) {
-			if( other.customerNo != null ) {
-				return false;
-			}
-		} else if( !customerNo.equals(other.customerNo) ) {
+		
+		if( !SuperCsvTestUtils.equals(customerNo, other.customerNo) ) {
 			return false;
 		}
-		if( email == null ) {
-			if( other.email != null ) {
-				return false;
-			}
-		} else if( !email.equals(other.email) ) {
+		
+		if( !SuperCsvTestUtils.equals(email, other.email) ) {
 			return false;
 		}
-		if( favouriteQuote == null ) {
-			if( other.favouriteQuote != null ) {
-				return false;
-			}
-		} else if( !favouriteQuote.equals(other.favouriteQuote) ) {
+		
+		if( !SuperCsvTestUtils.equals(favouriteQuote, other.favouriteQuote) ) {
 			return false;
 		}
-		if( firstName == null ) {
-			if( other.firstName != null ) {
-				return false;
-			}
-		} else if( !firstName.equals(other.firstName) ) {
+		
+		if( !SuperCsvTestUtils.equals(firstName, other.firstName) ) {
 			return false;
 		}
-		if( lastName == null ) {
-			if( other.lastName != null ) {
-				return false;
-			}
-		} else if( !lastName.equals(other.lastName) ) {
+		
+		if( !SuperCsvTestUtils.equals(lastName, other.lastName) ) {
 			return false;
 		}
-		if( loyaltyPoints == null ) {
-			if( other.loyaltyPoints != null ) {
-				return false;
-			}
-		} else if( !loyaltyPoints.equals(other.loyaltyPoints) ) {
+		
+		if( !SuperCsvTestUtils.equals(loyaltyPoints, other.loyaltyPoints) ) {
 			return false;
 		}
-		if( mailingAddress == null ) {
-			if( other.mailingAddress != null ) {
-				return false;
-			}
-		} else if( !mailingAddress.equals(other.mailingAddress) ) {
+		
+		if( !SuperCsvTestUtils.equals(mailingAddress, other.mailingAddress) ) {
 			return false;
 		}
-		if( married == null ) {
-			if( other.married != null ) {
-				return false;
-			}
-		} else if( !married.equals(other.married) ) {
+		
+		if( !SuperCsvTestUtils.equals(married, other.married) ) {
 			return false;
 		}
-		if( numberOfKids == null ) {
-			if( other.numberOfKids != null ) {
-				return false;
-			}
-		} else if( !numberOfKids.equals(other.numberOfKids) ) {
+		
+		if( !SuperCsvTestUtils.equals(numberOfKids, other.numberOfKids) ) {
 			return false;
 		}
 		return true;
