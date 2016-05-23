@@ -21,6 +21,8 @@ CSV Readers
 
   There are four CSV reading implementations in Super CSV.
   
+  {{{./apidocs/org/supercsv/io/CsvBeanReader.html}CsvBeanReader}}, {{{./apidocs/org/supercsv/io/dozer/CsvDozerBeanReader.html}CsvDozerBeanReader}}, {{{./apidocs/org/supercsv/io/CsvListReader.html}CsvListReader}} and {{{./apidocs/org/supercsv/io/CsvMapReader.html}CsvMapReader}}
+  
 *-----------------------------------------------------------------------------------*-------------------------------------------------------------------*-----------------------------------------------------------------------------------*-------------------------------------------------------------------*-----------------------------------------------------------------*
                                                                                     ||{{{./apidocs/org/supercsv/io/CsvBeanReader.html}CsvBeanReader}}   ||{{{./apidocs/org/supercsv/io/dozer/CsvDozerBeanReader.html}CsvDozerBeanReader}}   ||{{{./apidocs/org/supercsv/io/CsvListReader.html}CsvListReader}}   ||{{{./apidocs/org/supercsv/io/CsvMapReader.html}CsvMapReader}}   
 *-----------------------------------------------------------------------------------*-------------------------------------------------------------------*-----------------------------------------------------------------------------------*-------------------------------------------------------------------*-----------------------------------------------------------------*
