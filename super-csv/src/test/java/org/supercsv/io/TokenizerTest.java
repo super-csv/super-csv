@@ -586,6 +586,85 @@ public class TokenizerTest {
 		assertEquals("   three   ", columns.get(2));
 		assertEquals(input, tokenizer.getUntokenizedRow());
 	}
+
+	/**
+	 * Tests the readColumns() method with a quote character escaped with another quote (RFC style)
+	 */
+	@Test
+	public void testQuotedQuoteCharWithDoubleQuoteEscape() throws Exception {
+		final String input = "one,\"two\",\"field with \"\" quote char\",four";
+		tokenizer = createTokenizer(input, NORMAL_PREFERENCE);
+		tokenizer.readColumns(columns);
+
+		assertTrue(columns.size() == 4);
+		assertEquals("one", columns.get(0));
+		assertEquals("two", columns.get(1));
+		assertEquals("field with \" quote char", columns.get(2));
+		assertEquals("four", columns.get(3));
+		assertEquals(input, tokenizer.getUntokenizedRow());
+	}
+
+	/**
+	 * Tests the readColumns() method with a quote character escaped with another quote (RFC style)
+	 */
+	@Test
+	public void testQuotedQuoteCharWithBackslashEscape() throws Exception {
+
+		final CsvPreference csvPref = new CsvPreference.Builder(NORMAL_PREFERENCE)
+				.setQuoteEscapeChar('\\')
+				.build();
+
+		final String input = "one,two,\"field with \\\" quote char\",four";
+		tokenizer = createTokenizer(input, csvPref);
+		tokenizer.readColumns(columns);
+
+		assertTrue(columns.size() == 4);
+		assertEquals("one", columns.get(0));
+		assertEquals("two", columns.get(1));
+		assertEquals("field with \" quote char", columns.get(2));
+		assertEquals("four", columns.get(3));
+		assertEquals(input, tokenizer.getUntokenizedRow());
+	}
+
+	/**
+	 * Tests the readColumns() method with an escape character following another escape char.
+	 */
+	@Test
+	public void testEscapedEscapeChar() throws Exception {
+
+		final CsvPreference csvPref = new CsvPreference.Builder(NORMAL_PREFERENCE)
+				.setQuoteEscapeChar('\\')
+				.build();
+
+		final String input = "\"field with \\\\ escape char\"";
+		tokenizer = createTokenizer(input, csvPref);
+		tokenizer.readColumns(columns);
+
+		assertTrue(columns.size() == 1);
+		assertEquals("field with \\ escape char", columns.get(0));
+		assertEquals(input, tokenizer.getUntokenizedRow());
+	}
+
+	/**
+	 * Tests the readColumns() method with an escape character preceding neither another escape
+	 * char nor a quote char.  In this situation, just pass the data through rather than
+	 * attempting to interpret the quote char.
+	 */
+	@Test
+	public void testEscapedNonEscapeChar() throws Exception {
+
+		final CsvPreference csvPref = new CsvPreference.Builder(NORMAL_PREFERENCE)
+				.setQuoteEscapeChar('\\')
+				.build();
+
+		final String input = "\"field with \\an escape char on neither escape nor quote\"";
+		tokenizer = createTokenizer(input, csvPref);
+		tokenizer.readColumns(columns);
+
+		assertTrue(columns.size() == 1);
+		assertEquals("field with \\an escape char on neither escape nor quote", columns.get(0));
+		assertEquals(input, tokenizer.getUntokenizedRow());
+	}
 	
 	/**
 	 * Tests the readColumns() method with a variety of unquoted spaces.

@@ -136,5 +136,5 @@ What is CSV?
 -----------------------------------------------------------------------------------
 
   Super CSV escapes double-quotes with a preceding double-quote. Please note that the sometimes-used convention of escaping double-quotes as <<<\">>> (instead of <<<"">>>)
-  is <<not supported>>.
- 
+  is supported ONLY for reading data (not writing) and is configurable through the quoteEscapeChar option of {{{./apidocs/org/supercsv/prefs/CsvPreference.html}CsvPreference}}
+

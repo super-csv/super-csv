@@ -56,6 +56,8 @@ public class Tokenizer extends AbstractTokenizer {
 	private final int maxLinesPerRow;
 	
 	private final EmptyColumnParsing emptyColumnParsing;
+
+	private final int quoteEscapeChar;
 	
 	/**
 	 * Enumeration of tokenizer states. QUOTE_MODE is activated between quotes.
@@ -83,6 +85,7 @@ public class Tokenizer extends AbstractTokenizer {
 		this.commentMatcher = preferences.getCommentMatcher();
 		this.maxLinesPerRow = preferences.getMaxLinesPerRow();
 		this.emptyColumnParsing = preferences.getEmptyColumnParsing();
+		this.quoteEscapeChar = preferences.getQuoteEscapeChar();
 	}
 	
 	/**
@@ -228,31 +231,58 @@ public class Tokenizer extends AbstractTokenizer {
 					potentialSpaces = 0;
 					currentColumn.append(c);
 				}
-				
+
 			} else {
-				
+
 				/*
 				 * QUOTE_MODE (within quotes).
 				 */
-				
+
 				if( c == quoteChar ) {
 					int nextCharIndex = charIndex + 1;
 					boolean availableCharacters = nextCharIndex < line.length();
 					boolean nextCharIsQuote = availableCharacters && line.charAt(nextCharIndex) == quoteChar;
-					if( nextCharIsQuote ) {
+					if (nextCharIsQuote) {
 						/*
 						 * An escaped quote (""). Add a single quote, then move the cursor so the next iteration of the
 						 * loop will read the character following the escaped quote.
 						 */
 						currentColumn.append(c);
 						charIndex++;
-						
+
 					} else {
 						/*
 						 * A single quote ("). Update to NORMAL (but don't save quote), then continue to next character.
 						 */
 						state = TokenizerState.NORMAL;
 						quoteScopeStartingLine = -1; // reset ready for next multi-line cell
+					}
+				} else if( c == quoteEscapeChar ) {
+					int nextCharIndex = charIndex + 1;
+					boolean availableCharacters = nextCharIndex < line.length();
+					boolean nextCharIsQuote = availableCharacters && line.charAt(nextCharIndex) == quoteChar;
+					boolean nextCharIsEscapeQuoteChar = availableCharacters && line.charAt(nextCharIndex) == quoteEscapeChar;
+
+					if( nextCharIsQuote ) {
+						/*
+						 * An escaped quote (e.g. "" or \"). Skip over the escape char, and add
+						 * the following quote char as part of the column;
+						 */
+						charIndex++;
+						currentColumn.append(line.charAt(nextCharIndex));
+					} else if ( nextCharIsEscapeQuoteChar ) {
+						/*
+						 * A double escape (normally \\). Save the escape char, then continue to
+						 * next character.
+						 */
+						currentColumn.append(c);
+						charIndex++;
+					} else {
+						/*
+						 * Escape char wasn't before either another escape char or a quote char,
+						 * so just treat it as part of the column
+						 */
+						currentColumn.append(c);
 					}
 				} else {
 					/*
