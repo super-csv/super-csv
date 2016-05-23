@@ -40,7 +40,7 @@
 				</configuration>
 			</plugin>
 
-			<!-- Skip compatability check (no Java 8 signatures yet) -->
+			<!-- Skip compatibility check (no Java 8 signatures yet) -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>animal-sniffer-maven-plugin</artifactId>
