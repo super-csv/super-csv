@@ -45,7 +45,7 @@ public class Tokenizer extends AbstractTokenizer {
 	
 	private final int quoteChar;
 	
-	private final int delimeterChar;
+	private final int delimiterChar;
 	
 	private final boolean surroundingSpacesNeedQuotes;
 	
@@ -77,7 +77,7 @@ public class Tokenizer extends AbstractTokenizer {
 	public Tokenizer(final Reader reader, final CsvPreference preferences) {
 		super(reader, preferences);
 		this.quoteChar = preferences.getQuoteChar();
-		this.delimeterChar = preferences.getDelimiterChar();
+		this.delimiterChar = preferences.getDelimiterChar();
 		this.surroundingSpacesNeedQuotes = preferences.isSurroundingSpacesNeedQuotes();
 		this.ignoreEmptyLines = preferences.isIgnoreEmptyLines();
 		this.commentMatcher = preferences.getCommentMatcher();
@@ -185,7 +185,7 @@ public class Tokenizer extends AbstractTokenizer {
 				 * NORMAL mode (not within quotes).
 				 */
 				
-				if( c == delimeterChar ) {
+				if( c == delimiterChar) {
 					/*
 					 * Delimiter. Save the column (trim trailing space if required) then continue to next character.
 					 */
