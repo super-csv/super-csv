@@ -254,9 +254,6 @@ public class SuperCsvTestUtils {
 		if( s1 == null || s2 == null ) {
 			return false;
 		}
-		if( s1.length() != s2.length() ) {
-			return false;
-		}
 		return s1.equals(s2);
 	}
 	
