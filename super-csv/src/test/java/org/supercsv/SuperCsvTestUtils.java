@@ -237,4 +237,24 @@ public class SuperCsvTestUtils {
 		assertEquals(expectedOutput, processor.execute(input, ANONYMOUS_CSVCONTEXT));
 	}
 	
+	/**
+	 * Compares two Strings null-safe. Basically this method provides the same function as StringUtils.equals() from
+	 * Apache Commons lang3, except that only Strings are compared (like it was in versions before 3.0).
+	 * 
+	 * @param s1
+	 *            the first String, may be {@code null}
+	 * @param s2
+	 *            the second String, may be {@code null}
+	 * @return {@code true} if the Strings are equal (case-sensitive), or both {@code null}
+	 */
+	public static boolean equals(final String s1, final String s2) {
+		if( s1 == s2 ) {
+			return true;
+		}
+		if( s1 == null || s2 == null ) {
+			return false;
+		}
+		return s1.equals(s2);
+	}
+	
 }
