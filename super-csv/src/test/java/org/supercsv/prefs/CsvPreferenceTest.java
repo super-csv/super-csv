@@ -24,6 +24,7 @@ import static org.supercsv.prefs.CsvPreference.EXCEL_PREFERENCE;
 import static org.supercsv.prefs.CsvPreference.STANDARD_PREFERENCE;
 import static org.supercsv.prefs.CsvPreference.TAB_PREFERENCE;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.supercsv.encoder.DefaultCsvEncoder;
 import org.supercsv.quote.AlwaysQuoteMode;
@@ -131,6 +132,18 @@ public class CsvPreferenceTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testCustomPreferenceWithInvalidQuoteAndDelimeterChars() {
 		new CsvPreference.Builder('|', '|', "\n").build();
+	}
+
+	@Test
+	public void testCustomPreferenceWithSameDelimiterAndQuoteEscapeChar() {
+		CsvPreference.Builder builder = new CsvPreference.Builder('"', ',', "\n").setQuoteEscapeChar(',');
+
+		try {
+			builder.build();
+			Assert.fail();
+		} catch (IllegalArgumentException e) {
+			assertTrue(e.getMessage().contains("should not be the same character"));
+		}
 	}
 	
 	/**
