@@ -1,9 +1,13 @@
 target/
 
-#IntelliJ Idea
+# IntelliJ Idea
 *.iml
 .idea
 *.ipr
 *.iws
 
+# Mac OS Cruft
 .DS_Store
+
+# Netbeans
+nb-configuration.xml
