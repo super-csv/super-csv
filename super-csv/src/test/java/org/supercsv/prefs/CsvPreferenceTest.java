@@ -71,6 +71,7 @@ public class CsvPreferenceTest {
 		assertNull(custom.getCommentMatcher());
 		assertTrue(custom.getEncoder() instanceof DefaultCsvEncoder);
 		assertTrue(custom.getQuoteMode() instanceof NormalQuoteMode);
+		assertEquals('"', custom.getQuoteEscapeChar());
 	}
 	
 	/**
@@ -78,14 +79,19 @@ public class CsvPreferenceTest {
 	 */
 	@Test
 	public void testCustomPreference() {
-		final CsvPreference custom = new CsvPreference.Builder('"', ',', "\n").surroundingSpacesNeedQuotes(true)
-			.useEncoder(new DefaultCsvEncoder()).useQuoteMode(new AlwaysQuoteMode()).build();
+		final CsvPreference custom = new CsvPreference.Builder('"', ',', "\n")
+				.surroundingSpacesNeedQuotes(true)
+				.useEncoder(new DefaultCsvEncoder())
+				.useQuoteMode(new AlwaysQuoteMode())
+				.setQuoteEscapeChar('\\')
+				.build();
 		assertEquals('"', custom.getQuoteChar());
 		assertEquals(',', custom.getDelimiterChar());
 		assertEquals("\n", custom.getEndOfLineSymbols());
 		assertTrue(custom.isSurroundingSpacesNeedQuotes());
 		assertTrue(custom.getEncoder() instanceof DefaultCsvEncoder);
 		assertTrue(custom.getQuoteMode() instanceof AlwaysQuoteMode);
+		assertEquals('\\', custom.getQuoteEscapeChar());
 	}
 	
 	/**
@@ -100,6 +106,7 @@ public class CsvPreferenceTest {
 		assertEquals(EXCEL_PREFERENCE.isSurroundingSpacesNeedQuotes(), custom.isSurroundingSpacesNeedQuotes());
 		assertEquals(EXCEL_PREFERENCE.getEncoder(), custom.getEncoder());
 		assertEquals(EXCEL_PREFERENCE.getQuoteMode(), custom.getQuoteMode());
+		assertEquals(EXCEL_PREFERENCE.getQuoteEscapeChar(), custom.getQuoteEscapeChar());
 	}
 	
 	/**
@@ -115,6 +122,7 @@ public class CsvPreferenceTest {
 		assertTrue(custom.isSurroundingSpacesNeedQuotes());
 		assertTrue(custom.getEncoder() instanceof DefaultCsvEncoder);
 		assertTrue(custom.getQuoteMode() instanceof AlwaysQuoteMode);
+		assertEquals(EXCEL_PREFERENCE.getQuoteEscapeChar(), custom.getQuoteEscapeChar());
 	}
 	
 	/**
