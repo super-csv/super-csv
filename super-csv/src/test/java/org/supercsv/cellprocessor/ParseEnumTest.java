@@ -20,11 +20,13 @@ import static org.junit.Assert.fail;
 import static org.supercsv.SuperCsvTestUtils.ANONYMOUS_CSVCONTEXT;
 
 import java.util.Arrays;
+import java.util.Locale;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.exception.SuperCsvCellProcessorException;
+import org.supercsv.i18n.SuperCsvMessages;
 import org.supercsv.mock.IdentityTransform;
 
 /**
@@ -52,6 +54,7 @@ public class ParseEnumTest {
 		processorChain = new ParseEnum(TestEnum.class, new IdentityTransform());
 		ignoreCaseProcessor = new ParseEnum(TestEnum.class, true);
 		ignoreCaseProcessorChain = new ParseEnum(TestEnum.class, true, new IdentityTransform());
+		SuperCsvMessages.setDefaultLocale(Locale.ENGLISH);
 	}
 	
 	/**

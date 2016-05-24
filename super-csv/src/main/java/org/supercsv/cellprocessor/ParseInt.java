@@ -18,6 +18,7 @@ package org.supercsv.cellprocessor;
 import org.supercsv.cellprocessor.ift.LongCellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.exception.SuperCsvCellProcessorException;
+import org.supercsv.i18n.SuperCsvMessages;
 import org.supercsv.util.CsvContext;
 
 /**
@@ -65,12 +66,12 @@ public class ParseInt extends CellProcessorAdaptor implements StringCellProcesso
 			}
 			catch(final NumberFormatException e) {
 				throw new SuperCsvCellProcessorException(
-					String.format("'%s' could not be parsed as an Integer", value), context, this, e);
+					SuperCsvMessages.getMessage("org.supercsv.exception.cellprocessor.InvalidIntegerValue.message", value), context, this, e);
 			}
 		} else {
 			final String actualClassName = value.getClass().getName();
-			throw new SuperCsvCellProcessorException(String.format(
-				"the input value should be of type Integer or String but is of type %s", actualClassName), context,
+			throw new SuperCsvCellProcessorException(SuperCsvMessages.getMessage(
+				"org.supercsv.exception.cellprocessor.InvalidIntegerValueType.message", actualClassName), context,
 				this);
 		}
 		

@@ -20,6 +20,7 @@ import org.supercsv.cellprocessor.CellProcessorAdaptor;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.exception.SuperCsvCellProcessorException;
+import org.supercsv.i18n.SuperCsvMessages;
 import org.supercsv.util.CsvContext;
 
 /**
@@ -128,7 +129,7 @@ public abstract class AbstractJodaParsingProcessor<T> extends
 				result = parse(string);
 			}
 		} catch (IllegalArgumentException e) {
-			throw new SuperCsvCellProcessorException("Failed to parse value",
+			throw new SuperCsvCellProcessorException(SuperCsvMessages.getMessage("org.supercsv.exception.cellprocessor.joda.InvalidValue.message"),
 					context, this, e);
 		}
 

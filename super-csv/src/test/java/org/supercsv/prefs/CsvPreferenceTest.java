@@ -24,6 +24,8 @@ import static org.supercsv.prefs.CsvPreference.EXCEL_PREFERENCE;
 import static org.supercsv.prefs.CsvPreference.STANDARD_PREFERENCE;
 import static org.supercsv.prefs.CsvPreference.TAB_PREFERENCE;
 
+import java.util.Locale;
+
 import org.junit.Test;
 import org.supercsv.encoder.DefaultCsvEncoder;
 import org.supercsv.quote.AlwaysQuoteMode;
@@ -71,6 +73,7 @@ public class CsvPreferenceTest {
 		assertNull(custom.getCommentMatcher());
 		assertTrue(custom.getEncoder() instanceof DefaultCsvEncoder);
 		assertTrue(custom.getQuoteMode() instanceof NormalQuoteMode);
+		assertTrue(custom.getDefaultLocale() instanceof Locale);
 	}
 	
 	/**
@@ -86,6 +89,7 @@ public class CsvPreferenceTest {
 		assertTrue(custom.isSurroundingSpacesNeedQuotes());
 		assertTrue(custom.getEncoder() instanceof DefaultCsvEncoder);
 		assertTrue(custom.getQuoteMode() instanceof AlwaysQuoteMode);
+		assertTrue(custom.getDefaultLocale() instanceof Locale);
 	}
 	
 	/**
@@ -100,6 +104,7 @@ public class CsvPreferenceTest {
 		assertEquals(EXCEL_PREFERENCE.isSurroundingSpacesNeedQuotes(), custom.isSurroundingSpacesNeedQuotes());
 		assertEquals(EXCEL_PREFERENCE.getEncoder(), custom.getEncoder());
 		assertEquals(EXCEL_PREFERENCE.getQuoteMode(), custom.getQuoteMode());
+		assertEquals(EXCEL_PREFERENCE.getDefaultLocale(), custom.getDefaultLocale());
 	}
 	
 	/**
@@ -115,6 +120,7 @@ public class CsvPreferenceTest {
 		assertTrue(custom.isSurroundingSpacesNeedQuotes());
 		assertTrue(custom.getEncoder() instanceof DefaultCsvEncoder);
 		assertTrue(custom.getQuoteMode() instanceof AlwaysQuoteMode);
+		assertTrue(custom.getDefaultLocale() instanceof Locale);
 	}
 	
 	/**
@@ -155,5 +161,13 @@ public class CsvPreferenceTest {
 	@Test(expected = NullPointerException.class)
 	public void testUseQuoteModeWithNull() {
 		new CsvPreference.Builder(EXCEL_PREFERENCE).useQuoteMode(null).build();
+	}
+	
+	/**
+	 * Tests construction with null default locale (should throw an exception).
+	 */
+	@Test(expected = NullPointerException.class)
+	public void testDefaultLocaleWithNull() {
+		new CsvPreference.Builder(EXCEL_PREFERENCE).setDefaultLocale(null).build();
 	}
 }

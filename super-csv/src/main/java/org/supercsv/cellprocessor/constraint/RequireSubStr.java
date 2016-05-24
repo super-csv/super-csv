@@ -24,6 +24,7 @@ import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.exception.SuperCsvCellProcessorException;
 import org.supercsv.exception.SuperCsvConstraintViolationException;
+import org.supercsv.i18n.SuperCsvMessages;
 import org.supercsv.util.CsvContext;
 
 /**
@@ -192,7 +193,7 @@ public class RequireSubStr extends CellProcessorAdaptor implements StringCellPro
 			}
 		}
 		
-		throw new SuperCsvConstraintViolationException(String.format("'%s' does not contain any of the required substrings", value),
+		throw new SuperCsvConstraintViolationException(SuperCsvMessages.getMessage("org.supercsv.exception.cellprocessor.constraint.requiresubstring.SubstringsNotContained.message", value),
 			context, this);
 	}
 }

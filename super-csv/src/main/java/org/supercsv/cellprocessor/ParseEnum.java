@@ -18,6 +18,7 @@ package org.supercsv.cellprocessor;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.exception.SuperCsvCellProcessorException;
+import org.supercsv.i18n.SuperCsvMessages;
 import org.supercsv.util.CsvContext;
 
 /**
@@ -143,7 +144,7 @@ public class ParseEnum extends CellProcessorAdaptor implements StringCellProcess
 			}
 		}
 		
-		throw new SuperCsvCellProcessorException(String.format("'%s' could not be parsed as a enum of type %s", value,
+		throw new SuperCsvCellProcessorException(SuperCsvMessages.getMessage("org.supercsv.exception.cellprocessor.InvalidEnumValue.message", value,
 			enumClass.getName()), context, this);
 		
 	}

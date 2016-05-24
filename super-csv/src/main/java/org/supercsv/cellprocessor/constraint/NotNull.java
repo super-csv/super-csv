@@ -24,6 +24,7 @@ import org.supercsv.cellprocessor.ift.LongCellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.exception.SuperCsvCellProcessorException;
 import org.supercsv.exception.SuperCsvConstraintViolationException;
+import org.supercsv.i18n.SuperCsvMessages;
 import org.supercsv.util.CsvContext;
 
 /**
@@ -68,7 +69,8 @@ public class NotNull extends CellProcessorAdaptor implements BoolCellProcessor, 
 	 */
 	public Object execute(final Object value, final CsvContext context) {
 		if (value == null){
-			throw new SuperCsvConstraintViolationException("null value encountered", context, this);
+			throw new SuperCsvConstraintViolationException(SuperCsvMessages.getMessage(
+				"org.supercsv.exception.cellprocessor.constraint.notnull.NullValue.message"), context, this);
 		}
 		return next.execute(value, context);
 	}

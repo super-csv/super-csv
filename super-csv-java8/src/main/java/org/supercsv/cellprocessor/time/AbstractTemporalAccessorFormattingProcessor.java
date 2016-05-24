@@ -23,6 +23,7 @@ import java.util.Objects;
 import org.supercsv.cellprocessor.CellProcessorAdaptor;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.exception.SuperCsvCellProcessorException;
+import org.supercsv.i18n.SuperCsvMessages;
 import org.supercsv.util.CsvContext;
 
 /**
@@ -118,7 +119,7 @@ public abstract class AbstractTemporalAccessorFormattingProcessor<T extends Temp
 		}
 		catch(DateTimeException | IllegalArgumentException e) {
 			throw new SuperCsvCellProcessorException(
-				String.format("Failed to format value as a %s", ourType.getSimpleName()), context, this, e);
+				SuperCsvMessages.getMessage("org.supercsv.exception.cellprocessor.jdk8.InvalidFormat.message", ourType.getSimpleName()), context, this, e);
 		}
 	}
 

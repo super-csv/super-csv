@@ -28,6 +28,7 @@ import org.supercsv.cellprocessor.ift.LongCellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.exception.SuperCsvCellProcessorException;
 import org.supercsv.exception.SuperCsvConstraintViolationException;
+import org.supercsv.i18n.SuperCsvMessages;
 import org.supercsv.util.CsvContext;
 
 /**
@@ -163,8 +164,8 @@ public class IsIncludedIn extends CellProcessorAdaptor implements BoolCellProces
 		validateInputNotNull(value, context);
 		
 		if( !possibleValues.contains(value) ) {
-			throw new SuperCsvConstraintViolationException(String.format(
-				"'%s' is not included in the allowed set of values", value), context, this);
+			throw new SuperCsvConstraintViolationException(SuperCsvMessages.getMessage(
+				"org.supercsv.exception.cellprocessor.constraint.isincludedin.NotIncludedInSet.message", value), context, this);
 		}
 		
 		return next.execute(value, context);

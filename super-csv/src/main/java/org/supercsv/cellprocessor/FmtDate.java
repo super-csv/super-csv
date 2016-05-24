@@ -21,6 +21,7 @@ import java.util.Date;
 import org.supercsv.cellprocessor.ift.DateCellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.exception.SuperCsvCellProcessorException;
+import org.supercsv.i18n.SuperCsvMessages;
 import org.supercsv.util.CsvContext;
 
 /**
@@ -105,7 +106,8 @@ public class FmtDate extends CellProcessorAdaptor implements DateCellProcessor {
 			formatter = new SimpleDateFormat(dateFormat);
 		}
 		catch(IllegalArgumentException e) {
-			throw new SuperCsvCellProcessorException(String.format("'%s' is not a valid date format", dateFormat),
+			throw new SuperCsvCellProcessorException(
+				SuperCsvMessages.getMessage("org.supercsv.exception.cellprocessor.InvalidDatePattern.message", dateFormat),
 				context, this, e);
 		}
 		

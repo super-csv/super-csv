@@ -22,6 +22,7 @@ import org.supercsv.cellprocessor.CellProcessorAdaptor;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.exception.SuperCsvCellProcessorException;
 import org.supercsv.exception.SuperCsvConstraintViolationException;
+import org.supercsv.i18n.SuperCsvMessages;
 import org.supercsv.util.CsvContext;
 
 /**
@@ -75,7 +76,7 @@ public class UniqueHashCode extends CellProcessorAdaptor {
 		int hash = value.hashCode();
 		if( !uniqueSet.add(hash) ) {
 			throw new SuperCsvConstraintViolationException(
-				String.format("duplicate value '%s' encountered with hashcode %d", value, hash), context, this);
+				SuperCsvMessages.getMessage("org.supercsv.exception.cellprocessor.constraint.uniquehashcode.DuplicatedValue.message", value, hash), context, this);
 		}
 		
 		return next.execute(value, context);

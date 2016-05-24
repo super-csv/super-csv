@@ -20,6 +20,7 @@ import org.supercsv.cellprocessor.ift.DoubleCellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.exception.SuperCsvCellProcessorException;
 import org.supercsv.exception.SuperCsvConstraintViolationException;
+import org.supercsv.i18n.SuperCsvMessages;
 import org.supercsv.util.CsvContext;
 
 /**
@@ -141,14 +142,14 @@ public class DMinMax extends CellProcessorAdaptor implements StringCellProcessor
 				result = Double.parseDouble(value.toString());
 			}
 			catch(final NumberFormatException e) {
-				throw new SuperCsvCellProcessorException(String.format("'%s' could not be parsed as a Double", value),
+				throw new SuperCsvCellProcessorException(SuperCsvMessages.getMessage("org.supercsv.exception.cellprocessor.InvalidDoubleValue.message", value),
 					context, this, e);
 			}
 		}
 		
 		if( result < min || result > max ) {
-			throw new SuperCsvConstraintViolationException(String.format(
-				"%f does not lie between the min (%f) and max (%f) values (inclusive)", result, min, max), context,
+			throw new SuperCsvConstraintViolationException(SuperCsvMessages.getMessage(
+				"org.supercsv.exception.cellprocessor.constraint.dminmax.InvalidDoubleRange.message", result, min, max), context,
 				this);
 		}
 		

@@ -18,6 +18,7 @@ package org.supercsv.cellprocessor;
 import org.supercsv.cellprocessor.ift.DoubleCellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.exception.SuperCsvCellProcessorException;
+import org.supercsv.i18n.SuperCsvMessages;
 import org.supercsv.util.CsvContext;
 
 /**
@@ -65,14 +66,14 @@ public class ParseChar extends CellProcessorAdaptor implements StringCellProcess
 			if( stringValue.length() == 1 ) {
 				result = Character.valueOf(stringValue.charAt(0));
 			} else {
-				throw new SuperCsvCellProcessorException(String.format(
-					"'%s' cannot be parsed as a char as it is a String longer than 1 character", stringValue), context,
+				throw new SuperCsvCellProcessorException(SuperCsvMessages.getMessage(
+						"org.supercsv.exception.cellprocessor.InvalidCharValueLength.message", stringValue), context,
 					this);
 			}
 		} else {
 			final String actualClassName = value.getClass().getName();
-			throw new SuperCsvCellProcessorException(String.format(
-				"the input value should be of type Character or String but is of type %s", actualClassName), context,
+			throw new SuperCsvCellProcessorException(SuperCsvMessages.getMessage(
+				"org.supercsv.exception.cellprocessor.InvalidCharValueType.message", actualClassName), context,
 				this);
 		}
 		
