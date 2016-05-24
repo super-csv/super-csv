@@ -683,6 +683,46 @@ public class TokenizerTest {
 	}
 
 	/**
+	 * Tests the readColumns() method with a lone escape char outside of quoted fields
+	 */
+	@Test
+	public void testLoneEscapeCharInUnquotedField() throws Exception {
+		final CsvPreference csvPref = new CsvPreference.Builder(NORMAL_PREFERENCE)
+				.setQuoteEscapeChar('\\')
+				.build();
+
+		final String input = "one\\,\\two,thr\\ee";
+		tokenizer = createTokenizer(input, csvPref);
+		tokenizer.readColumns(columns);
+
+		assertTrue(columns.size() == 3);
+		assertEquals("one\\", columns.get(0));
+		assertEquals("\\two", columns.get(1));
+		assertEquals("thr\\ee", columns.get(2));
+		assertEquals(input, tokenizer.getUntokenizedRow());
+	}
+
+	/**
+	 * Tests the readColumns() method with a doubled escape char outside of quoted fields
+	 */
+	@Test
+	public void testDoubledEscapeCharInUnquotedField() throws Exception {
+		final CsvPreference csvPref = new CsvPreference.Builder(NORMAL_PREFERENCE)
+				.setQuoteEscapeChar('\\')
+				.build();
+
+		final String input = "one\\\\,\\\\two,thr\\\\ee";
+		tokenizer = createTokenizer(input, csvPref);
+		tokenizer.readColumns(columns);
+
+		assertTrue(columns.size() == 3);
+		assertEquals("one\\\\", columns.get(0));
+		assertEquals("\\\\two", columns.get(1));
+		assertEquals("thr\\\\ee", columns.get(2));
+		assertEquals(input, tokenizer.getUntokenizedRow());
+	}
+
+	/**
 	 * Tests the readColumns() method with an escape character preceding neither another escape
 	 * char nor a quote char.  In this situation, just pass the data through rather than
 	 * attempting to interpret the quote char.
