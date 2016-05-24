@@ -467,10 +467,6 @@ public final class CsvPreference {
 		/**
 		 * Value indicating the character to use for escaping a quote char.
 		 *
-		 * NOTE: this field is only supported for reading data.  In writing data this value is
-		 * ignored and data is written in RFC-compliant form, meaning the quote character is also
-		 * the quote escape character.
-		 *
 		 * @since X
 		 * @param quoteEscapeChar
 		 *            value indicating the character to use for escaping a quote character
