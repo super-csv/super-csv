@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.supercsv.comment.CommentMatches;
@@ -664,6 +665,23 @@ public class TokenizerTest {
 		assertTrue(columns.size() == 1);
 		assertEquals("field with \\an escape char on neither escape nor quote", columns.get(0));
 		assertEquals(input, tokenizer.getUntokenizedRow());
+	}
+
+	/**
+	 * Test double-quote char when in backslash-escape mode should throw exception
+	 */
+	@Test(expected = SuperCsvException.class)
+	public void testDoubleQuoteBackslashEscapeChar() throws Exception {
+
+		final CsvPreference csvPref = new CsvPreference.Builder(NORMAL_PREFERENCE)
+				.setQuoteEscapeChar('\\')
+				.build();
+
+		final String input = "\"field with an escaped quote \\\" and a \"\" double quote\"";
+		tokenizer = createTokenizer(input, csvPref);
+		tokenizer.readColumns(columns);
+
+		Assert.fail();
 	}
 	
 	/**

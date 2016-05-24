@@ -43,7 +43,7 @@ public class Tokenizer extends AbstractTokenizer {
 	/* the raw, untokenized CSV row (may span multiple lines) */
 	private final StringBuilder currentRow = new StringBuilder();
 	
-	private final int quoteChar;
+	private final char quoteChar;
 	
 	private final int delimiterChar;
 	
@@ -57,7 +57,7 @@ public class Tokenizer extends AbstractTokenizer {
 	
 	private final EmptyColumnParsing emptyColumnParsing;
 
-	private final int quoteEscapeChar;
+	private final char quoteEscapeChar;
 	
 	/**
 	 * Enumeration of tokenizer states. QUOTE_MODE is activated between quotes.
@@ -238,51 +238,58 @@ public class Tokenizer extends AbstractTokenizer {
 				 * QUOTE_MODE (within quotes).
 				 */
 
-				if( c == quoteChar ) {
-					int nextCharIndex = charIndex + 1;
-					boolean availableCharacters = nextCharIndex < line.length();
-					boolean nextCharIsQuote = availableCharacters && line.charAt(nextCharIndex) == quoteChar;
-					if (nextCharIsQuote) {
-						/*
-						 * An escaped quote (""). Add a single quote, then move the cursor so the next iteration of the
-						 * loop will read the character following the escaped quote.
-						 */
-						currentColumn.append(c);
-						charIndex++;
-
-					} else {
-						/*
-						 * A single quote ("). Update to NORMAL (but don't save quote), then continue to next character.
-						 */
-						state = TokenizerState.NORMAL;
-						quoteScopeStartingLine = -1; // reset ready for next multi-line cell
-					}
-				} else if( c == quoteEscapeChar ) {
+				if( c == quoteEscapeChar ) {
 					int nextCharIndex = charIndex + 1;
 					boolean availableCharacters = nextCharIndex < line.length();
 					boolean nextCharIsQuote = availableCharacters && line.charAt(nextCharIndex) == quoteChar;
 					boolean nextCharIsEscapeQuoteChar = availableCharacters && line.charAt(nextCharIndex) == quoteEscapeChar;
 
-					if( nextCharIsQuote ) {
+					if (nextCharIsQuote) {
 						/*
 						 * An escaped quote (e.g. "" or \"). Skip over the escape char, and add
 						 * the following quote char as part of the column;
 						 */
 						charIndex++;
 						currentColumn.append(line.charAt(nextCharIndex));
-					} else if ( nextCharIsEscapeQuoteChar ) {
+					} else if (nextCharIsEscapeQuoteChar) {
 						/*
 						 * A double escape (normally \\). Save the escape char, then continue to
 						 * next character.
 						 */
 						currentColumn.append(c);
 						charIndex++;
+					} else if (quoteEscapeChar == quoteChar) {
+						/*
+						 * If the escape char is also the quote char and we didn't escape a
+						 * subsequent character, then this is a lone quote and the end of the
+						 * field.
+						 */
+						state = TokenizerState.NORMAL;
+						quoteScopeStartingLine = -1; // reset ready for next multi-line cell
 					} else {
 						/*
 						 * Escape char wasn't before either another escape char or a quote char,
-						 * so just treat it as part of the column
+						 * so process it normally.
 						 */
 						currentColumn.append(c);
+					}
+				} else if( c == quoteChar ) {
+
+					/*
+					 * A single quote ("). Update to NORMAL (but don't save quote), then continue to next character.
+					 */
+					state = TokenizerState.NORMAL;
+					quoteScopeStartingLine = -1; // reset ready for next multi-line cell
+
+					int nextCharIndex = charIndex + 1;
+					boolean availableCharacters = nextCharIndex < line.length();
+					boolean nextCharIsQuote = availableCharacters && line.charAt(nextCharIndex) == quoteChar;
+
+					if( quoteEscapeChar != quoteChar && nextCharIsQuote) {
+						throw new SuperCsvException("Encountered repeat quote char (" +
+								quoteChar + ") when quoteEscapeChar was (" + quoteEscapeChar + ")" +
+								".  Cannot process data where quotes are escaped both with " +
+								quoteChar + " and with " + quoteEscapeChar);
 					}
 				} else {
 					/*
