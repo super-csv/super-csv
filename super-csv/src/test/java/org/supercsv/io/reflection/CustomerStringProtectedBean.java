@@ -13,19 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.supercsv.mock;
+package org.supercsv.io.reflection;
 
 import org.supercsv.SuperCsvTestUtils;
-
-import java.text.SimpleDateFormat;
+import org.supercsv.mock.CustomerStringBean;
 
 /**
- * Bean with String values only - for testing reading/writing without processors.
+ * non-public Bean with String values only - for testing reading/writing without processors.
  * 
  * @author James Bassett
  * @author Pietro Aragona
+ * @author Fabian Seifert
  */
-public class CustomerStringBean {
+class CustomerStringProtectedBean {
 	
 	private String customerNo;
 	private String firstName;
@@ -42,41 +42,32 @@ public class CustomerStringBean {
 	/**
 	 * Default Constructor.
 	 */
-	public CustomerStringBean() {
+	protected CustomerStringProtectedBean() {
 	}
 	
 	/**
-	 * Constructs a CustomerStringBean from a CustomerBean.
+	 * Constructs a CustomerStringProtectedBean from a CustomerStringBean.
 	 * 
-	 * @param customerBean
+	 * @param customerStringBean
 	 */
-	public CustomerStringBean(final CustomerBean customerBean) {
-		this.customerNo = customerBean.getCustomerNo();
-		this.firstName = customerBean.getFirstName();
-		this.lastName = customerBean.getLastName();
-		this.birthDate = new SimpleDateFormat("dd/MM/yyyy").format(customerBean.getBirthDate());
-		this.birthTime = new SimpleDateFormat("HH:mm:ss").format(customerBean.getBirthTime());
-		this.mailingAddress = customerBean.getMailingAddress();
-		if( customerBean.getMarried() != null ) {
-			this.married = customerBean.getMarried() ? "Y" : "N";
-		} else {
-			this.married = null;
-		}
-		if( customerBean.getNumberOfKids() != null ) {
-			this.numberOfKids = customerBean.getNumberOfKids().toString();
-		} else {
-			this.numberOfKids = null;
-		}
-		this.favouriteQuote = customerBean.getFavouriteQuote();
-		this.email = customerBean.getEmail();
-		this.loyaltyPoints = String.valueOf(customerBean.getLoyaltyPoints());
-		
+	protected CustomerStringProtectedBean(CustomerStringBean customerStringBean) {
+		this.customerNo = customerStringBean.getCustomerNo();
+		this.firstName = customerStringBean.getFirstName();
+		this.lastName = customerStringBean.getLastName();
+		this.birthDate = customerStringBean.getBirthDate();
+		this.birthTime = customerStringBean.getBirthTime();
+		this.mailingAddress = customerStringBean.getMailingAddress();
+		this.married = customerStringBean.getMarried();
+		this.numberOfKids = customerStringBean.getNumberOfKids();
+		this.favouriteQuote = customerStringBean.getFavouriteQuote();
+		this.email = customerStringBean.getEmail();
+		this.loyaltyPoints = customerStringBean.getLoyaltyPoints();
 	}
 	
 	/**
 	 * @return the customerNo
 	 */
-	public String getCustomerNo() {
+	protected String getCustomerNo() {
 		return customerNo;
 	}
 	
@@ -84,14 +75,14 @@ public class CustomerStringBean {
 	 * @param customerNo
 	 *            the customerNo to set
 	 */
-	public void setCustomerNo(String customerNo) {
+	protected void setCustomerNo(String customerNo) {
 		this.customerNo = customerNo;
 	}
 	
 	/**
 	 * @return the firstName
 	 */
-	public String getFirstName() {
+	protected String getFirstName() {
 		return firstName;
 	}
 	
@@ -99,14 +90,14 @@ public class CustomerStringBean {
 	 * @param firstName
 	 *            the firstName to set
 	 */
-	public void setFirstName(String firstName) {
+	protected void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
 	
 	/**
 	 * @return the lastName
 	 */
-	public String getLastName() {
+	protected String getLastName() {
 		return lastName;
 	}
 	
@@ -114,14 +105,14 @@ public class CustomerStringBean {
 	 * @param lastName
 	 *            the lastName to set
 	 */
-	public void setLastName(String lastName) {
+	protected void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
 	
 	/**
 	 * @return the birthDate
 	 */
-	public String getBirthDate() {
+	protected String getBirthDate() {
 		return birthDate;
 	}
 	
@@ -129,14 +120,14 @@ public class CustomerStringBean {
 	 * @param birthDate
 	 *            the birthDate to set
 	 */
-	public void setBirthTime(String birthTime) {
+	protected void setBirthTime(String birthTime) {
 		this.birthTime = birthTime;
 	}
 	
 	/**
 	 * @return the birthDate
 	 */
-	public String getBirthTime() {
+	protected String getBirthTime() {
 		return birthTime;
 	}
 	
@@ -144,14 +135,14 @@ public class CustomerStringBean {
 	 * @param birthDate
 	 *            the birthDate to set
 	 */
-	public void setBirthDate(String birthDate) {
+	protected void setBirthDate(String birthDate) {
 		this.birthDate = birthDate;
 	}
 	
 	/**
 	 * @return the mailingAddress
 	 */
-	public String getMailingAddress() {
+	protected String getMailingAddress() {
 		return mailingAddress;
 	}
 	
@@ -159,14 +150,14 @@ public class CustomerStringBean {
 	 * @param mailingAddress
 	 *            the mailingAddress to set
 	 */
-	public void setMailingAddress(String mailingAddress) {
+	protected void setMailingAddress(String mailingAddress) {
 		this.mailingAddress = mailingAddress;
 	}
 	
 	/**
 	 * @return the married
 	 */
-	public String getMarried() {
+	protected String getMarried() {
 		return married;
 	}
 	
@@ -174,14 +165,14 @@ public class CustomerStringBean {
 	 * @param married
 	 *            the married to set
 	 */
-	public void setMarried(String married) {
+	protected void setMarried(String married) {
 		this.married = married;
 	}
 	
 	/**
 	 * @return the numberOfKids
 	 */
-	public String getNumberOfKids() {
+	protected String getNumberOfKids() {
 		return numberOfKids;
 	}
 	
@@ -189,14 +180,14 @@ public class CustomerStringBean {
 	 * @param numberOfKids
 	 *            the numberOfKids to set
 	 */
-	public void setNumberOfKids(String numberOfKids) {
+	protected void setNumberOfKids(String numberOfKids) {
 		this.numberOfKids = numberOfKids;
 	}
 	
 	/**
 	 * @return the favouriteQuote
 	 */
-	public String getFavouriteQuote() {
+	protected String getFavouriteQuote() {
 		return favouriteQuote;
 	}
 	
@@ -204,14 +195,14 @@ public class CustomerStringBean {
 	 * @param favouriteQuote
 	 *            the favouriteQuote to set
 	 */
-	public void setFavouriteQuote(String favouriteQuote) {
+	protected void setFavouriteQuote(String favouriteQuote) {
 		this.favouriteQuote = favouriteQuote;
 	}
 	
 	/**
 	 * @return the email
 	 */
-	public String getEmail() {
+	protected String getEmail() {
 		return email;
 	}
 	
@@ -219,7 +210,7 @@ public class CustomerStringBean {
 	 * @param email
 	 *            the email to set
 	 */
-	public void setEmail(String email) {
+	protected void setEmail(String email) {
 		this.email = email;
 	}
 	
@@ -264,10 +255,10 @@ public class CustomerStringBean {
 		if( obj == null ) {
 			return false;
 		}
-		if( !(obj instanceof CustomerStringBean) ) {
+		if( !(obj instanceof CustomerStringProtectedBean) ) {
 			return false;
 		}
-		CustomerStringBean other = (CustomerStringBean) obj;
+		CustomerStringProtectedBean other = (CustomerStringProtectedBean) obj;
 		if( !SuperCsvTestUtils.equals(birthDate, other.birthDate) ) {
 			return false;
 		}
