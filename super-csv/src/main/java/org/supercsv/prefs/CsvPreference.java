@@ -467,7 +467,7 @@ public final class CsvPreference {
 		/**
 		 * Value indicating the character to use for escaping a quote char.
 		 *
-		 * @since X
+		 * @since 2.5.0
 		 * @param quoteEscapeChar
 		 *            value indicating the character to use for escaping a quote character
 		 * @return the updated Builder
