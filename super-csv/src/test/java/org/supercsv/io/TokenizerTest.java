@@ -647,6 +647,42 @@ public class TokenizerTest {
 	}
 
 	/**
+	 * Tests the readColumns() method with an even number of escape characters
+	 * char.
+	 */
+	@Test
+	public void testEvenSeriesOfEscapeChars() throws Exception {
+
+		final CsvPreference csvPref = new CsvPreference.Builder(NORMAL_PREFERENCE)
+				.setQuoteEscapeChar('\\')
+				.build();
+
+		final String input = "\"\\\\\\\\\\\\\"";
+		tokenizer = createTokenizer(input, csvPref);
+		tokenizer.readColumns(columns);
+
+		assertTrue(columns.size() == 1);
+		assertEquals("\\\\\\", columns.get(0));
+		assertEquals(input, tokenizer.getUntokenizedRow());
+	}
+
+	/**
+	 * Tests the readColumns() method with an odd number of escape characters
+	 * char.
+	 */
+	@Test(expected = SuperCsvException.class)
+	public void testOddSeriesOfEscapeChars() throws Exception {
+
+		final CsvPreference csvPref = new CsvPreference.Builder(NORMAL_PREFERENCE)
+				.setQuoteEscapeChar('\\')
+				.build();
+
+		final String input = "\"\\\\\\\\\\\"";
+		tokenizer = createTokenizer(input, csvPref);
+		tokenizer.readColumns(columns);
+	}
+
+	/**
 	 * Tests the readColumns() method with an escape character preceding neither another escape
 	 * char nor a quote char.  In this situation, just pass the data through rather than
 	 * attempting to interpret the quote char.
