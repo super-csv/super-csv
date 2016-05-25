@@ -30,8 +30,8 @@ public class RequireSubStrCellProcessorProvider implements CellProcessorProvider
 	/**
 	 * {@inheritDoc}
 	 */
-	public CellProcessor create(RequireSubStr annotation) {
-		return new org.supercsv.cellprocessor.constraint.RequireSubStr(annotation.requiredSubStrings());
+	public CellProcessor create(RequireSubStr annotation, CellProcessor next) {
+		return new org.supercsv.cellprocessor.constraint.RequireSubStr(annotation.requiredSubStrings(), next);
 	}
 	
 	/**

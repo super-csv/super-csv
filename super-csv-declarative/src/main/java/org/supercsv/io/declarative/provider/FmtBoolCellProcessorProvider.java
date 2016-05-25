@@ -16,6 +16,7 @@
 package org.supercsv.io.declarative.provider;
 
 import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.io.declarative.annotation.FmtBool;
 
 /**
@@ -29,8 +30,9 @@ public class FmtBoolCellProcessorProvider implements CellProcessorProvider<FmtBo
 	/**
 	 * {@inheritDoc}
 	 */
-	public CellProcessor create(FmtBool annotation) {
-		return new org.supercsv.cellprocessor.FmtBool(annotation.trueValue(), annotation.falseValue());
+	public CellProcessor create(FmtBool annotation, CellProcessor next) {
+		return new org.supercsv.cellprocessor.FmtBool(annotation.trueValue(), annotation.falseValue(),
+			(StringCellProcessor) next);
 	}
 	
 	/**

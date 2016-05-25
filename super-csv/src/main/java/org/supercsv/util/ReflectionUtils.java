@@ -60,6 +60,8 @@ public final class ReflectionUtils {
 		AUTOBOXING_CONVERTER.put(Float.class, float.class);
 	}
 	
+	private static final Map<Class<?>, List<Field>> FIELD_CACHE = new HashMap<Class<?>, List<Field>>();
+	
 	// no instantiation
 	private ReflectionUtils() {
 	}
@@ -203,9 +205,14 @@ public final class ReflectionUtils {
 	 * @return all fields of the class and its hierarchy
 	 */
 	public static List<Field> getFields(Class<?> clazz) {
+		if( FIELD_CACHE.containsKey(clazz) ) {
+			return FIELD_CACHE.get(clazz);
+		}
+		
 		List<Field> fields = new ArrayList<Field>();
 		extractFields(clazz, fields);
 		
+		FIELD_CACHE.put(clazz, fields);
 		return fields;
 	}
 	

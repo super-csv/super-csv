@@ -30,8 +30,8 @@ public class ConvertCellProcessorProvider implements CellProcessorProvider<Conve
 	/**
 	 * {@inheritDoc}
 	 */
-	public CellProcessor create(Convert annotation) {
-		return new org.supercsv.cellprocessor.Convert(ReflectionUtils.instantiateBean(annotation.value()));
+	public CellProcessor create(Convert annotation, CellProcessor next) {
+		return new org.supercsv.cellprocessor.Convert(ReflectionUtils.instantiateBean(annotation.value()), next);
 	}
 	
 	/**

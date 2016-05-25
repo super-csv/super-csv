@@ -13,16 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.supercsv.io.declarative.annotation;
-
-import org.supercsv.cellprocessor.ift.CellProcessor;
+package org.supercsv.io.declarative.provider;
 
 /**
- * A factory to create cell processors
+ * CellProcessorProvider for ConvertToNull
  * 
  * @since 2.5
  * @author Dominik Schlosser
  */
-public interface CellProcessorFactory {
-	CellProcessor create();
+import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.io.declarative.annotation.ConvertNullTo;
+
+public class ConvertNullToCellProcessorProvider implements CellProcessorProvider<ConvertNullTo> {
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public CellProcessor create(ConvertNullTo annotation, CellProcessor next) {
+		return new org.supercsv.cellprocessor.ConvertNullTo(annotation.value(), next);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public Class<ConvertNullTo> getType() {
+		return ConvertNullTo.class;
+	}
+	
 }

@@ -30,8 +30,8 @@ public class StrLenCellProcessorProvider implements CellProcessorProvider<StrLen
 	/**
 	 * {@inheritDoc}
 	 */
-	public CellProcessor create(StrLen annotation) {
-		return new org.supercsv.cellprocessor.constraint.Strlen(annotation.requiredLengths());
+	public CellProcessor create(StrLen annotation, CellProcessor next) {
+		return new org.supercsv.cellprocessor.constraint.Strlen(annotation.requiredLengths(), next);
 	}
 	
 	/**

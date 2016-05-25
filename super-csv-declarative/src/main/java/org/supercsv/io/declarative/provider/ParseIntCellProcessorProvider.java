@@ -16,6 +16,7 @@
 package org.supercsv.io.declarative.provider;
 
 import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.cellprocessor.ift.LongCellProcessor;
 import org.supercsv.io.declarative.annotation.ParseInt;
 
 /**
@@ -29,8 +30,8 @@ public class ParseIntCellProcessorProvider implements CellProcessorProvider<Pars
 	/**
 	 * {@inheritDoc}
 	 */
-	public CellProcessor create(ParseInt annotation) {
-		return new org.supercsv.cellprocessor.ParseInt();
+	public CellProcessor create(ParseInt annotation, CellProcessor next) {
+		return new org.supercsv.cellprocessor.ParseInt((LongCellProcessor) next);
 	}
 	
 	/**

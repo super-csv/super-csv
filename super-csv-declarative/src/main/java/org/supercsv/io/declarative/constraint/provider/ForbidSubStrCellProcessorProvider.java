@@ -30,8 +30,8 @@ public class ForbidSubStrCellProcessorProvider implements CellProcessorProvider<
 	/**
 	 * {@inheritDoc}
 	 */
-	public CellProcessor create(ForbidSubStr annotation) {
-		return new org.supercsv.cellprocessor.constraint.ForbidSubStr(annotation.forbiddenSubStrings());
+	public CellProcessor create(ForbidSubStr annotation, CellProcessor next) {
+		return new org.supercsv.cellprocessor.constraint.ForbidSubStr(annotation.forbiddenSubStrings(), next);
 	}
 	
 	/**

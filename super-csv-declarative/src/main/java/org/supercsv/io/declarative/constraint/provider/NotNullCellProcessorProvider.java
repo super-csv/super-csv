@@ -30,8 +30,8 @@ public class NotNullCellProcessorProvider implements CellProcessorProvider<NotNu
 	/**
 	 * {@inheritDoc}
 	 */
-	public CellProcessor create(NotNull annotation) {
-		return new org.supercsv.cellprocessor.constraint.NotNull();
+	public CellProcessor create(NotNull annotation, CellProcessor next) {
+		return new org.supercsv.cellprocessor.constraint.NotNull(next);
 	}
 	
 	/**

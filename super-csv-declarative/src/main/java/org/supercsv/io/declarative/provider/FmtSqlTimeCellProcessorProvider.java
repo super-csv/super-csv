@@ -16,6 +16,7 @@
 package org.supercsv.io.declarative.provider;
 
 import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.io.declarative.annotation.FmtSqlTime;
 
 /**
@@ -29,8 +30,8 @@ public class FmtSqlTimeCellProcessorProvider implements CellProcessorProvider<Fm
 	/**
 	 * {@inheritDoc}
 	 */
-	public CellProcessor create(FmtSqlTime annotation) {
-		return new org.supercsv.cellprocessor.FmtSqlTime(annotation.dateFormat());
+	public CellProcessor create(FmtSqlTime annotation, CellProcessor next) {
+		return new org.supercsv.cellprocessor.FmtSqlTime(annotation.dateFormat(), (StringCellProcessor) next);
 	}
 	
 	/**

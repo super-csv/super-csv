@@ -16,6 +16,7 @@
 package org.supercsv.io.declarative.provider;
 
 import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.io.declarative.annotation.FmtNumber;
 
 /**
@@ -29,8 +30,8 @@ public class FmtNumberCellProcessorProvider implements CellProcessorProvider<Fmt
 	/**
 	 * {@inheritDoc}
 	 */
-	public CellProcessor create(FmtNumber annotation) {
-		return new org.supercsv.cellprocessor.FmtNumber(annotation.decimalFormat());
+	public CellProcessor create(FmtNumber annotation, CellProcessor next) {
+		return new org.supercsv.cellprocessor.FmtNumber(annotation.decimalFormat(), (StringCellProcessor) next);
 	}
 	
 	/**

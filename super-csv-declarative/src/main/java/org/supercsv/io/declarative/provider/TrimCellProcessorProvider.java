@@ -16,6 +16,8 @@
 package org.supercsv.io.declarative.provider;
 
 import org.supercsv.cellprocessor.Trim;
+import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.cellprocessor.ift.StringCellProcessor;
 
 /**
  * CellProcessorProvider for Trim
@@ -23,11 +25,20 @@ import org.supercsv.cellprocessor.Trim;
  * @since 2.5
  * @author Dominik Schlosser
  */
-public class TrimCellProcessorProvider extends
-	AbstractCellProcessorProvider<Trim, org.supercsv.io.declarative.annotation.Trim> {
+public class TrimCellProcessorProvider implements CellProcessorProvider<org.supercsv.io.declarative.annotation.Trim> {
 	
-	public TrimCellProcessorProvider() {
-		super(Trim.class, org.supercsv.io.declarative.annotation.Trim.class);
+	/**
+	 * {@inheritDoc}
+	 */
+	public CellProcessor create(org.supercsv.io.declarative.annotation.Trim annotation, CellProcessor next) {
+		return new Trim((StringCellProcessor) next);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public Class<org.supercsv.io.declarative.annotation.Trim> getType() {
+		return org.supercsv.io.declarative.annotation.Trim.class;
 	}
 	
 }

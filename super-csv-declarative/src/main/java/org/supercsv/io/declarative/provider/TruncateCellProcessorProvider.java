@@ -16,6 +16,7 @@
 package org.supercsv.io.declarative.provider;
 
 import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.io.declarative.annotation.Truncate;
 
 /**
@@ -29,8 +30,9 @@ public class TruncateCellProcessorProvider implements CellProcessorProvider<Trun
 	/**
 	 * {@inheritDoc}
 	 */
-	public CellProcessor create(Truncate annotation) {
-		return new org.supercsv.cellprocessor.Truncate(annotation.maxSize(), annotation.suffix());
+	public CellProcessor create(Truncate annotation, CellProcessor next) {
+		return new org.supercsv.cellprocessor.Truncate(annotation.maxSize(), annotation.suffix(),
+			(StringCellProcessor) next);
 	}
 	
 	/**

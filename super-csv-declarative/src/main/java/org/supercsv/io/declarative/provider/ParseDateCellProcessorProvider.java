@@ -18,6 +18,7 @@ package org.supercsv.io.declarative.provider;
 import java.util.Locale;
 
 import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.cellprocessor.ift.DateCellProcessor;
 import org.supercsv.io.declarative.annotation.ParseDate;
 
 /**
@@ -31,9 +32,10 @@ public class ParseDateCellProcessorProvider implements CellProcessorProvider<Par
 	/**
 	 * {@inheritDoc}
 	 */
-	public CellProcessor create(ParseDate annotation) {
+	public CellProcessor create(ParseDate annotation, CellProcessor next) {
 		return new org.supercsv.cellprocessor.ParseDate(annotation.format(), annotation.lenient(),
-			annotation.locale() == null || annotation.locale() == "" ? null : new Locale(annotation.locale()));
+			annotation.locale() == null || annotation.locale() == "" ? null : new Locale(annotation.locale()),
+			(DateCellProcessor) next);
 	}
 	
 	/**

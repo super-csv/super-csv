@@ -15,6 +15,7 @@
  */
 package org.supercsv.io.declarative.provider;
 
+import org.supercsv.cellprocessor.ift.BoolCellProcessor;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.io.declarative.annotation.ParseBool;
 
@@ -29,9 +30,9 @@ public class ParseBoolCellProcessorProvider implements CellProcessorProvider<Par
 	/**
 	 * {@inheritDoc}
 	 */
-	public CellProcessor create(ParseBool annotation) {
+	public CellProcessor create(ParseBool annotation, CellProcessor next) {
 		return new org.supercsv.cellprocessor.ParseBool(annotation.trueValue(), annotation.falseValue(),
-			annotation.ignoreCase());
+			annotation.ignoreCase(), (BoolCellProcessor) next);
 	}
 	
 	/**

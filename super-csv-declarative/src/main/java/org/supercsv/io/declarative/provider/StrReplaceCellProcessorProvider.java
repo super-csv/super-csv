@@ -16,6 +16,7 @@
 package org.supercsv.io.declarative.provider;
 
 import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.io.declarative.annotation.StrReplace;
 
 /**
@@ -29,8 +30,9 @@ public class StrReplaceCellProcessorProvider implements CellProcessorProvider<St
 	/**
 	 * {@inheritDoc}
 	 */
-	public CellProcessor create(StrReplace annotation) {
-		return new org.supercsv.cellprocessor.StrReplace(annotation.pattern(), annotation.replacement());
+	public CellProcessor create(StrReplace annotation, CellProcessor next) {
+		return new org.supercsv.cellprocessor.StrReplace(annotation.pattern(), annotation.replacement(),
+			(StringCellProcessor) next);
 	}
 	
 	/**

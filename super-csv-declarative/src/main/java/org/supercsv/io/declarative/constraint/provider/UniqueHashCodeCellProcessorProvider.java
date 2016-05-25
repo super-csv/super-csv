@@ -30,8 +30,8 @@ public class UniqueHashCodeCellProcessorProvider implements CellProcessorProvide
 	/**
 	 * {@inheritDoc}
 	 */
-	public CellProcessor create(UniqueHashCode annotation) {
-		return new org.supercsv.cellprocessor.constraint.UniqueHashCode();
+	public CellProcessor create(UniqueHashCode annotation, CellProcessor next) {
+		return new org.supercsv.cellprocessor.constraint.UniqueHashCode(next);
 	}
 	
 	/**

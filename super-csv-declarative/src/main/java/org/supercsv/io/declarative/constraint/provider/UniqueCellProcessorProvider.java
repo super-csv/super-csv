@@ -30,8 +30,8 @@ public class UniqueCellProcessorProvider implements CellProcessorProvider<Unique
 	/**
 	 * {@inheritDoc}
 	 */
-	public CellProcessor create(Unique annotation) {
-		return new org.supercsv.cellprocessor.constraint.Unique();
+	public CellProcessor create(Unique annotation, CellProcessor next) {
+		return new org.supercsv.cellprocessor.constraint.Unique(next);
 	}
 	
 	/**

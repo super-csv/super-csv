@@ -30,8 +30,8 @@ public class StrNotNullOrEmptyCellProcessorProvider implements CellProcessorProv
 	/**
 	 * {@inheritDoc}
 	 */
-	public CellProcessor create(StrNotNullOrEmpty annotation) {
-		return new org.supercsv.cellprocessor.constraint.StrNotNullOrEmpty();
+	public CellProcessor create(StrNotNullOrEmpty annotation, CellProcessor next) {
+		return new org.supercsv.cellprocessor.constraint.StrNotNullOrEmpty(next);
 	}
 	
 	/**

@@ -18,6 +18,7 @@ package org.supercsv.io.declarative.provider;
 import java.util.Locale;
 
 import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.cellprocessor.ift.DateCellProcessor;
 import org.supercsv.io.declarative.annotation.ParseSqlTime;
 
 /**
@@ -31,9 +32,10 @@ public class ParseSqlTimeCellProcessorProvider implements CellProcessorProvider<
 	/**
 	 * {@inheritDoc}
 	 */
-	public CellProcessor create(ParseSqlTime annotation) {
+	public CellProcessor create(ParseSqlTime annotation, CellProcessor next) {
 		return new org.supercsv.cellprocessor.ParseSqlTime(annotation.format(), annotation.lenient(),
-			annotation.locale() == null || annotation.locale() == "" ? null : new Locale(annotation.locale()));
+			annotation.locale() == null || annotation.locale() == "" ? null : new Locale(annotation.locale()),
+			(DateCellProcessor) next);
 	}
 	
 	/**

@@ -30,8 +30,8 @@ public class StrMinMaxCellProcessorProvider implements CellProcessorProvider<Str
 	/**
 	 * {@inheritDoc}
 	 */
-	public CellProcessor create(StrMinMax annotation) {
-		return new org.supercsv.cellprocessor.constraint.StrMinMax(annotation.min(), annotation.max());
+	public CellProcessor create(StrMinMax annotation, CellProcessor next) {
+		return new org.supercsv.cellprocessor.constraint.StrMinMax(annotation.min(), annotation.max(), next);
 	}
 	
 	/**

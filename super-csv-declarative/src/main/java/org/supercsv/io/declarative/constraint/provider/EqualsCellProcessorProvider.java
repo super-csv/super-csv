@@ -30,8 +30,8 @@ public class EqualsCellProcessorProvider implements CellProcessorProvider<Equals
 	/**
 	 * {@inheritDoc}
 	 */
-	public CellProcessor create(Equals annotation) {
-		return new org.supercsv.cellprocessor.constraint.Equals();
+	public CellProcessor create(Equals annotation, CellProcessor next) {
+		return new org.supercsv.cellprocessor.constraint.Equals(next);
 	}
 	
 	/**

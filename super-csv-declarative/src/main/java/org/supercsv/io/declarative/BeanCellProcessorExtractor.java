@@ -19,13 +19,19 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.supercsv.cellprocessor.CellProcessorAdaptor;
 import org.supercsv.cellprocessor.ParseEnum;
+import org.supercsv.cellprocessor.ift.BoolCellProcessor;
 import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.cellprocessor.ift.DateCellProcessor;
+import org.supercsv.cellprocessor.ift.DoubleCellProcessor;
+import org.supercsv.cellprocessor.ift.LongCellProcessor;
+import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.exception.SuperCsvReflectionException;
 import org.supercsv.io.declarative.provider.CellProcessorProvider;
 import org.supercsv.util.CsvContext;
@@ -75,36 +81,7 @@ class BeanCellProcessorExtractor {
 		
 		List<CellProcessor> cellProcessors = new ArrayList<CellProcessor>();
 		for( Field field : ReflectionUtils.getFields(clazz) ) {
-			List<CellProcessor> allAnnotatedProcessors = extractCellProcessors(field);
-			if( allAnnotatedProcessors.isEmpty() ) {
-				cellProcessors.add(mapFieldToDefaultProcessor(field));
-			} else {
-				CellProcessor root = new Transient();
-				CellProcessor chainedProcessor = root;
-				
-				try {
-					for( CellProcessor processor : allAnnotatedProcessors ) {
-						Class<? extends CellProcessor> processorType = chainedProcessor.getClass();
-						Field next = getFieldRecursive(processorType, "next");
-						
-						if( next == null ) {
-							throw new SuperCsvReflectionException(Form.at("Field 'next' not found on type '{}'",
-								processor));
-						}
-						
-						next.setAccessible(true);
-						next.set(chainedProcessor, processor);
-						
-						chainedProcessor = processor;
-					}
-				}
-				catch(IllegalAccessException e) {
-					throw new SuperCsvReflectionException(Form.at("Field 'next' not accessible on type '{}'",
-						chainedProcessor), e);
-				}
-				
-				cellProcessors.add(root);
-			}
+			cellProcessors.add(createCellProcessorFor(field));
 		}
 		
 		CELL_PROCESSOR_CACHE.put(clazz, cellProcessors);
@@ -112,31 +89,14 @@ class BeanCellProcessorExtractor {
 		return cellProcessors;
 	}
 	
-	private Field getFieldRecursive(Class<?> type, String name) {
-		if( type == null ) {
-			return null;
-		}
-		
-		Field field = null;
-		try {
-			field = type.getDeclaredField(name);
-		}
-		catch(NoSuchFieldException e) {
-			// ignore
-		}
-		
-		if( field != null ) {
-			return field;
-		}
-		
-		return getFieldRecursive(type.getSuperclass(), name);
-	}
-	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private List<CellProcessor> extractCellProcessors(Field field) {
-		List<CellProcessor> result = new ArrayList<CellProcessor>();
+	private CellProcessor createCellProcessorFor(Field field) {
 		List<Annotation> annotations = Arrays.asList(field.getAnnotations());
 		
+		Collections.reverse(annotations);
+		
+		CellProcessor root = new Transient();
+		boolean foundCellProcessorAnnotation = false;
 		for( Annotation annotation : annotations ) {
 			org.supercsv.io.declarative.CellProcessor cellProcessorMarker = annotation.annotationType().getAnnotation(
 				org.supercsv.io.declarative.CellProcessor.class);
@@ -148,13 +108,17 @@ class BeanCellProcessorExtractor {
 							"Provider declared in annotation of type '{}' cannot be used since accepted annotation-type is not compatible",
 							annotation.getClass().getName()));
 				}
-				CellProcessor processor = provider.create(annotation);
 				
-				result.add(processor);
+				foundCellProcessorAnnotation = true;
+				root = provider.create(annotation, root);
 			}
 		}
 		
-		return result;
+		if( foundCellProcessorAnnotation ) {
+			return root;
+		}
+		
+		return mapFieldToDefaultProcessor(field);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -171,7 +135,8 @@ class BeanCellProcessorExtractor {
 		return cellProcessor;
 	}
 	
-	private static class Transient extends CellProcessorAdaptor {
+	private static class Transient extends CellProcessorAdaptor implements LongCellProcessor, DoubleCellProcessor,
+		StringCellProcessor, DateCellProcessor, BoolCellProcessor {
 		public <T> T execute(Object value, CsvContext context) {
 			return next.execute(value, context);
 		}

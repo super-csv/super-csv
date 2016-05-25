@@ -16,6 +16,7 @@
 package org.supercsv.io.declarative.provider;
 
 import org.supercsv.cellprocessor.Optional;
+import org.supercsv.cellprocessor.ift.CellProcessor;
 
 /**
  * CellProcessorProvider for Optional
@@ -23,11 +24,21 @@ import org.supercsv.cellprocessor.Optional;
  * @since 2.5
  * @author Dominik Schlosser
  */
-public class OptionalCellProcessorProvider extends
-	AbstractCellProcessorProvider<Optional, org.supercsv.io.declarative.annotation.Optional> {
+public class OptionalCellProcessorProvider implements
+	CellProcessorProvider<org.supercsv.io.declarative.annotation.Optional> {
 	
-	public OptionalCellProcessorProvider() {
-		super(Optional.class, org.supercsv.io.declarative.annotation.Optional.class);
+	/**
+	 * {@inheritDoc}
+	 */
+	public CellProcessor create(org.supercsv.io.declarative.annotation.Optional annotation, CellProcessor next) {
+		return new Optional(next);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public Class<org.supercsv.io.declarative.annotation.Optional> getType() {
+		return org.supercsv.io.declarative.annotation.Optional.class;
 	}
 	
 }

@@ -29,8 +29,8 @@ public class ParseBigDecimalCellProcessorProvider implements CellProcessorProvid
 	/**
 	 * {@inheritDoc}
 	 */
-	public CellProcessor create(ParseBigDecimal annotation) {
-		return new org.supercsv.cellprocessor.ParseBigDecimal();
+	public CellProcessor create(ParseBigDecimal annotation, CellProcessor next) {
+		return new org.supercsv.cellprocessor.ParseBigDecimal(next);
 	}
 	
 	/**

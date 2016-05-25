@@ -29,8 +29,8 @@ public class ParseEnumCellProcessorProvider implements CellProcessorProvider<Par
 	/**
 	 * {@inheritDoc}
 	 */
-	public CellProcessor create(ParseEnum annotation) {
-		return new org.supercsv.cellprocessor.ParseEnum(annotation.enumClass(), annotation.ignoreCase());
+	public CellProcessor create(ParseEnum annotation, CellProcessor next) {
+		return new org.supercsv.cellprocessor.ParseEnum(annotation.enumClass(), annotation.ignoreCase(), next);
 	}
 	
 	/**

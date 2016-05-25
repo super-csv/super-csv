@@ -30,8 +30,8 @@ public class RequireHashCodeCellProcessorProvider implements CellProcessorProvid
 	/**
 	 * {@inheritDoc}
 	 */
-	public CellProcessor create(RequireHashCode annotation) {
-		return new org.supercsv.cellprocessor.constraint.RequireHashCode(annotation.requiredHashCodes());
+	public CellProcessor create(RequireHashCode annotation, CellProcessor next) {
+		return new org.supercsv.cellprocessor.constraint.RequireHashCode(annotation.requiredHashCodes(), next);
 	}
 	
 	/**
