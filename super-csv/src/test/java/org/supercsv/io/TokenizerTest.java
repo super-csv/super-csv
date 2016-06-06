@@ -684,6 +684,28 @@ public class TokenizerTest {
 	}
 
 	/**
+	 * Tests the readColumns() method with a doubled escape char in an unquoted field, which
+	 * should show as two literal escape chars.
+	 *
+	 * Doubled escape chars only evaluate to a single escape char when they are in a quoted field.
+	 */
+	@Test
+	public void testDoubledEscapeCharInUnquotedFieldIsLiteral() throws Exception {
+		final CsvPreference csvPref = new CsvPreference.Builder(NORMAL_PREFERENCE)
+				.setQuoteEscapeChar('\\')
+				.build();
+
+		final String input = "\\\\";
+		tokenizer = createTokenizer(input, csvPref);
+		tokenizer.readColumns(columns);
+
+		assertTrue(columns.size() == 1);
+		assertEquals("\\\\", columns.get(0));
+		assertEquals(input, tokenizer.getUntokenizedRow());
+	}
+
+
+	/**
 	 * Tests the readColumns() method with a lone escape char outside of quoted fields
 	 */
 	@Test
