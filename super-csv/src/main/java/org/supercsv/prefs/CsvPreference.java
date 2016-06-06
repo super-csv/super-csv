@@ -329,7 +329,7 @@ public final class CsvPreference {
 		public Builder(final char quoteChar, final int delimiterChar, final String endOfLineSymbols) {
 			if( quoteChar == delimiterChar ) {
 				throw new IllegalArgumentException(String.format(
-					"quoteChar and delimiterChar should not be the same character: %c", quoteChar));
+					"quoteChar and delimiterChar must not be the same character: %c", quoteChar));
 			} else if( endOfLineSymbols == null ) {
 				throw new NullPointerException("endOfLineSymbols should not be null");
 			}
@@ -465,7 +465,9 @@ public final class CsvPreference {
 		}
 
 		/**
-		 * Value indicating the character to use for escaping a quote char.
+		 * Value indicating the character to use for escaping a quote char.  The default value is
+		 * the quote char (which is a double-quote <tt>"</tt> character by default).  This value
+		 * must not be the same as <tt>delimiterChar</tt>
 		 *
 		 * @since 2.5.0
 		 * @param quoteEscapeChar
@@ -498,7 +500,7 @@ public final class CsvPreference {
 
 			if( quoteEscapeChar == delimiterChar ) {
 				throw new IllegalArgumentException(String.format(
-						"quoteEscapeChar and delimiterChar should not be the same character: %c",
+						"quoteEscapeChar and delimiterChar must not be the same character: %c",
 						quoteEscapeChar));
 			}
 			
