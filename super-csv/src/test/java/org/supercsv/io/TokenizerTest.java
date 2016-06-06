@@ -606,7 +606,8 @@ public class TokenizerTest {
 	}
 
 	/**
-	 * Tests the readColumns() method with a quote character escaped with another quote (RFC style)
+	 * Tests the readColumns() method with a quote character escaped with a backslash (non-RFC
+	 * style)
 	 */
 	@Test
 	public void testQuotedQuoteCharWithBackslashEscape() throws Exception {
