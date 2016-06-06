@@ -250,7 +250,7 @@ public class Tokenizer extends AbstractTokenizer {
 						 * the following quote char as part of the column;
 						 */
 						charIndex++;
-						currentColumn.append(line.charAt(nextCharIndex));
+						currentColumn.append(quoteChar);
 					} else if( nextCharIsEscapeQuoteChar ) {
 						/*
 						 * A double escape (normally \\). Save the escape char, then continue to
