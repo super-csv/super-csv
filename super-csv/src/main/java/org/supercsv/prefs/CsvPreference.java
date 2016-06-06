@@ -496,7 +496,7 @@ public final class CsvPreference {
 				emptyColumnParsing = EmptyColumnParsing.ParseEmptyColumnsAsNull;
 			}
 
-			if (quoteEscapeChar == delimiterChar) {
+			if( quoteEscapeChar == delimiterChar ) {
 				throw new IllegalArgumentException(String.format(
 						"quoteEscapeChar and delimiterChar should not be the same character: %c",
 						quoteEscapeChar));

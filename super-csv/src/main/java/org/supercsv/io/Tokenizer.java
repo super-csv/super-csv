@@ -244,21 +244,21 @@ public class Tokenizer extends AbstractTokenizer {
 					boolean nextCharIsQuote = availableCharacters && line.charAt(nextCharIndex) == quoteChar;
 					boolean nextCharIsEscapeQuoteChar = availableCharacters && line.charAt(nextCharIndex) == quoteEscapeChar;
 
-					if (nextCharIsQuote) {
+					if( nextCharIsQuote ) {
 						/*
 						 * An escaped quote (e.g. "" or \"). Skip over the escape char, and add
 						 * the following quote char as part of the column;
 						 */
 						charIndex++;
 						currentColumn.append(line.charAt(nextCharIndex));
-					} else if (nextCharIsEscapeQuoteChar) {
+					} else if( nextCharIsEscapeQuoteChar ) {
 						/*
 						 * A double escape (normally \\). Save the escape char, then continue to
 						 * next character.
 						 */
 						currentColumn.append(c);
 						charIndex++;
-					} else if (quoteEscapeChar == quoteChar) {
+					} else if( quoteEscapeChar == quoteChar ) {
 						/*
 						 * If the escape char is also the quote char and we didn't escape a
 						 * subsequent character, then this is a lone quote and the end of the
@@ -285,7 +285,7 @@ public class Tokenizer extends AbstractTokenizer {
 					boolean availableCharacters = nextCharIndex < line.length();
 					boolean nextCharIsQuote = availableCharacters && line.charAt(nextCharIndex) == quoteChar;
 
-					if( quoteEscapeChar != quoteChar && nextCharIsQuote) {
+					if( quoteEscapeChar != quoteChar && nextCharIsQuote ) {
 						throw new SuperCsvException("Encountered repeat quote char (" +
 								quoteChar + ") when quoteEscapeChar was (" + quoteEscapeChar + ")" +
 								".  Cannot process data where quotes are escaped both with " +
