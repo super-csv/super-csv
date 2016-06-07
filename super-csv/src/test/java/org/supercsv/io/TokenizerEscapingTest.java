@@ -138,15 +138,15 @@ public class TokenizerEscapingTest {
 	public void testEvenSeriesOfEscapeChars() throws Exception {
 
 		final CsvPreference csvPref = new CsvPreference.Builder(CsvPreference.STANDARD_PREFERENCE)
-				.setQuoteEscapeChar('\\')
+				.setQuoteEscapeChar('#')
 				.build();
 
-		final String input = "\"\\\\\\\\\\\\\"";
+		final String input = "\"######\"";
 		tokenizer = createTokenizer(input, csvPref);
 		tokenizer.readColumns(columns);
 
 		assertTrue(columns.size() == 1);
-		assertEquals("\\\\\\", columns.get(0));
+		assertEquals("###", columns.get(0));
 		assertEquals(input, tokenizer.getUntokenizedRow());
 	}
 
@@ -158,10 +158,10 @@ public class TokenizerEscapingTest {
 	public void testOddSeriesOfEscapeChars() throws Exception {
 
 		final CsvPreference csvPref = new CsvPreference.Builder(CsvPreference.STANDARD_PREFERENCE)
-				.setQuoteEscapeChar('\\')
+				.setQuoteEscapeChar('#')
 				.build();
 
-		final String input = "\"\\\\\\\\\\\"";
+		final String input = "\"#####\"";
 		tokenizer = createTokenizer(input, csvPref);
 		tokenizer.readColumns(columns);
 	}
@@ -214,17 +214,17 @@ public class TokenizerEscapingTest {
 	@Test
 	public void testDoubledEscapeCharInUnquotedField() throws Exception {
 		final CsvPreference csvPref = new CsvPreference.Builder(CsvPreference.STANDARD_PREFERENCE)
-				.setQuoteEscapeChar('\\')
+				.setQuoteEscapeChar('#')
 				.build();
 
-		final String input = "one\\\\,\\\\two,thr\\\\ee";
+		final String input = "one##,##two,thr##ee";
 		tokenizer = createTokenizer(input, csvPref);
 		tokenizer.readColumns(columns);
 
 		assertTrue(columns.size() == 3);
-		assertEquals("one\\\\", columns.get(0));
-		assertEquals("\\\\two", columns.get(1));
-		assertEquals("thr\\\\ee", columns.get(2));
+		assertEquals("one##", columns.get(0));
+		assertEquals("##two", columns.get(1));
+		assertEquals("thr##ee", columns.get(2));
 		assertEquals(input, tokenizer.getUntokenizedRow());
 	}
 
@@ -255,11 +255,12 @@ public class TokenizerEscapingTest {
 	@Test(expected = SuperCsvException.class)
 	public void testDoubleQuoteBackslashEscapeChar() throws Exception {
 
-		final CsvPreference csvPref = new CsvPreference.Builder(CsvPreference.STANDARD_PREFERENCE)
-				.setQuoteEscapeChar('\\')
+		// quote char is ' and escape char is $
+		final CsvPreference csvPref = new CsvPreference.Builder('\'', ',', "\n")
+				.setQuoteEscapeChar('$')
 				.build();
 
-		final String input = "\"field with an escaped quote \\\" and a \"\" double quote\"";
+		final String input = "'field with an escaped quote #' and a '' double quote'";
 		tokenizer = createTokenizer(input, csvPref);
 		tokenizer.readColumns(columns);
 
