@@ -142,7 +142,7 @@ public class CsvPreferenceTest {
 			builder.build();
 			Assert.fail();
 		} catch (IllegalArgumentException e) {
-			assertTrue(e.getMessage().contains("should not be the same character"));
+			assertTrue(e.getMessage().contains("must not be the same character"));
 		}
 	}
 	
