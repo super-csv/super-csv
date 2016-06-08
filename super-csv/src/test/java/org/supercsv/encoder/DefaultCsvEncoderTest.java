@@ -32,10 +32,18 @@ import org.supercsv.util.CsvContext;
 public class DefaultCsvEncoderTest {
 	
 	private static final CsvPreference PREFS = CsvPreference.STANDARD_PREFERENCE;
-	private static final CsvPreference SURROUNDING_SPACES_REQUIRE_QUOTES_PREFS = new CsvPreference.Builder(
-		CsvPreference.STANDARD_PREFERENCE).surroundingSpacesNeedQuotes(true).build();
-	private static final CsvPreference ALWAYS_QUOTE_PREFS = new CsvPreference.Builder(CsvPreference.STANDARD_PREFERENCE)
-		.useQuoteMode(new AlwaysQuoteMode()).build();
+	private static final CsvPreference SURROUNDING_SPACES_REQUIRE_QUOTES_PREFS =
+			new CsvPreference.Builder(CsvPreference.STANDARD_PREFERENCE)
+					.surroundingSpacesNeedQuotes(true)
+					.build();
+	private static final CsvPreference ALWAYS_QUOTE_PREFS =
+			new CsvPreference.Builder(CsvPreference.STANDARD_PREFERENCE)
+					.useQuoteMode(new AlwaysQuoteMode())
+					.build();
+	private static final CsvPreference BACKSLASH_ESCAPE_QUOTE_PREFS =
+			new CsvPreference.Builder(CsvPreference.STANDARD_PREFERENCE)
+					.setQuoteEscapeChar('\\')
+					.build();
 	
 	private DefaultCsvEncoder csvEncoder;
 	
@@ -115,5 +123,16 @@ public class DefaultCsvEncoderTest {
 			csvEncoder.encode(quotesTwoLines, context, ALWAYS_QUOTE_PREFS));
 		assertEquals(++lineNumber, context.getLineNumber());
 	}
-	
+
+	/**
+	 * Tests the encode() method with backslash escape char
+	 */
+	@Test
+	public void testEncodeBackslashEscapeChar() {
+		final CsvContext context = new CsvContext(1, 1, 1);
+		final String quoted = "\"Watch out for quotes\", he said";
+
+		assertEquals("\"\\\"Watch out for quotes\\\", he said\"", csvEncoder.encode(quoted,
+				context, BACKSLASH_ESCAPE_QUOTE_PREFS));
+	}
 }

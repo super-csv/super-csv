@@ -16,49 +16,53 @@
                                     ---------------
                                     CSV Preferences
                                     ---------------
-                                    
+
 CSV Preferences
 
   Readers and Writers in Super CSV are configured using the {{{./apidocs/org/supercsv/prefs/CsvPreference.html}CsvPreference}} class.
   This class is immutable and is assembled using the {{{http://en.wikipedia.org/wiki/Builder_pattern}Builder pattern}}.
-  
+
   The preferences available are:
-  
+
     [quoteChar] The quote character (used when a cell contains special characters, such as the delimiter char, a quote char, or spans multiple lines).
-    
+
     []
-    
+
     [delimiterChar] The delimiter character (separates each cell in a row).
-    
+
     []
-    
+
     [endOfLineSymbols] The end of line symbols to use when <writing> (Windows, Mac and Linux style line breaks are all supported when reading, so this preference won't be used at all for reading).
-    
+
     []
-    
+
     [surroundingSpacesNeedQuotes] Whether spaces surrounding a cell need quotes in order to be preserved (see below). The default value is false (quotes aren't required).
-    
+
     []
-    
+
     [ignoreEmptyLines] Whether empty lines (i.e. containing only end of line symbols) are ignored. The default value is true (empty lines are ignored).
 
     []
-    
+
     [maxLinesPerRow] The maximum number of lines a row of CSV can span (useful for debugging large files with mismatched quotes, as it ensures fast failure and prevents OutOfMemoryErrors when trying to find the matching quote).
-    
+
     []
-    
+
     [skipComments] Skips comments (what makes up a comment is determined by the CommentMatcher you supply). See the section on skipping comments below for more information.
-    
+
     []
-    
+
     [encoder] Use your own encoder when writing CSV. See the section on custom encoders below.
-    
+
     []
-    
+
     [quoteMode] Allows you to enable surrounding quotes for writing (if a column wouldn't normally be quoted because it doesn't contain special characters).
     See the section on quote modes below.
-        
+
+    []
+
+    [quoteEscapeChar] The escape character to use for escaping the quote character.  Used to modify the character used to escape quote characters from the RFC-compliant value of another quote to a custom character.
+
     []
 
 * Predefined preferences

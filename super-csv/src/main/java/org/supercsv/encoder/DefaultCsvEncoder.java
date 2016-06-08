@@ -40,6 +40,7 @@ public class DefaultCsvEncoder implements CsvEncoder {
 		final StringBuilder currentColumn = new StringBuilder();
 		final int delimiter = preference.getDelimiterChar();
 		final char quote = (char) preference.getQuoteChar();
+		final char quoteEscapeChar = (char) preference.getQuoteEscapeChar();
 		final String eolSymbols = preference.getEndOfLineSymbols();
 		final int lastCharIndex = input.length() - 1;
 		
@@ -63,7 +64,7 @@ public class DefaultCsvEncoder implements CsvEncoder {
 				currentColumn.append(c);
 			} else if( c == quote ) {
 				quotesRequiredForSpecialChar = true;
-				currentColumn.append(quote);
+				currentColumn.append(quoteEscapeChar);
 				currentColumn.append(quote);
 			} else if( c == '\r' ) {
 				quotesRequiredForSpecialChar = true;

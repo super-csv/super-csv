@@ -142,6 +142,8 @@ public final class CsvPreference {
 	private int maxLinesPerRow = 0;
 	
 	private final EmptyColumnParsing emptyColumnParsing;
+
+	private final char quoteEscapeChar;
 	
 	/**
 	 * Constructs a new <tt>CsvPreference</tt> from a Builder.
@@ -157,6 +159,7 @@ public final class CsvPreference {
 		this.quoteMode = builder.quoteMode;
 		this.maxLinesPerRow = builder.maxLinesPerRow;
 		this.emptyColumnParsing = builder.emptyColumnParsing;
+		this.quoteEscapeChar = builder.quoteEscapeChar;
 	}
 	
 	/**
@@ -252,6 +255,15 @@ public final class CsvPreference {
 	}
 
 	/**
+	 * Returns the quote escape character
+	 *
+	 * @return the quote escape character
+	 */
+	public char getQuoteEscapeChar() {
+		return quoteEscapeChar;
+	}
+
+	/**
 	 * Builds immutable <tt>CsvPreference</tt> instances. The builder pattern allows for additional preferences to be
 	 * added in the future.
 	 */
@@ -262,7 +274,7 @@ public final class CsvPreference {
 		private final int delimiterChar;
 		
 		private final String endOfLineSymbols;
-		
+
 		private boolean surroundingSpacesNeedQuotes = false;
 		
 		private boolean ignoreEmptyLines = true;
@@ -276,6 +288,8 @@ public final class CsvPreference {
 		private int maxLinesPerRow = 0;
 		
 		private EmptyColumnParsing emptyColumnParsing;
+
+		private char quoteEscapeChar;
 		
 		/**
 		 * Constructs a Builder with all of the values from an existing <tt>CsvPreference</tt> instance. Useful if you
@@ -295,6 +309,7 @@ public final class CsvPreference {
 			this.commentMatcher = preference.commentMatcher;
 			this.maxLinesPerRow = preference.maxLinesPerRow;
 			this.emptyColumnParsing = preference.emptyColumnParsing;
+			this.quoteEscapeChar = preference.quoteEscapeChar;
 		}
 		
 		/**
@@ -314,13 +329,16 @@ public final class CsvPreference {
 		public Builder(final char quoteChar, final int delimiterChar, final String endOfLineSymbols) {
 			if( quoteChar == delimiterChar ) {
 				throw new IllegalArgumentException(String.format(
-					"quoteChar and delimiterChar should not be the same character: %c", quoteChar));
+					"quoteChar and delimiterChar must not be the same character: %c", quoteChar));
 			} else if( endOfLineSymbols == null ) {
 				throw new NullPointerException("endOfLineSymbols should not be null");
 			}
 			this.quoteChar = quoteChar;
 			this.delimiterChar = delimiterChar;
 			this.endOfLineSymbols = endOfLineSymbols;
+
+			// by default (RFC-spec) the quoteEscapeChar is the quoteChar
+			this.quoteEscapeChar = quoteChar;
 		}
 		
 		/**
@@ -430,19 +448,34 @@ public final class CsvPreference {
 		}
 		
 		/**
-		 * Uses an EmptyColumnParsing to determine whether empty String (i.e. "") should be read as empty string instead as null. 
+		 * Uses an EmptyColumnParsing to determine whether empty String (i.e. "") should be read as empty string instead as null.
 		 * The default is <tt>ParseEmptyColumnsAsNull</tt>.
-		 * 
+		 *
 		 * @since 2.4.1
 		 * @param emptyColumnParsing
 		 *            the emptyColumnParsing
 		 * @return the updated Builder
-		 */		
+		 */
 		public Builder setEmptyColumnParsing(final EmptyColumnParsing emptyColumnParsing) {
 			if( emptyColumnParsing == null ) {
 				throw new NullPointerException("emptyColumnParsing should not be null");
 			}
 			this.emptyColumnParsing = emptyColumnParsing;
+			return this;
+		}
+
+		/**
+		 * Value indicating the character to use for escaping a quote char.  The default value is
+		 * the quote char (which is a double-quote <tt>"</tt> character by default).  This value
+		 * must not be the same as <tt>delimiterChar</tt>
+		 *
+		 * @since 2.5.0
+		 * @param quoteEscapeChar
+		 *            value indicating the character to use for escaping a quote character
+		 * @return the updated Builder
+		 */
+		public Builder setQuoteEscapeChar(final char quoteEscapeChar) {
+			this.quoteEscapeChar = quoteEscapeChar;
 			return this;
 		}
 		
@@ -463,6 +496,12 @@ public final class CsvPreference {
 			
 			if( emptyColumnParsing == null ) {
 				emptyColumnParsing = EmptyColumnParsing.ParseEmptyColumnsAsNull;
+			}
+
+			if( quoteEscapeChar == delimiterChar ) {
+				throw new IllegalArgumentException(String.format(
+						"quoteEscapeChar and delimiterChar must not be the same character: %c",
+						quoteEscapeChar));
 			}
 			
 			return new CsvPreference(this);
