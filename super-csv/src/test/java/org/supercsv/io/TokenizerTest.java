@@ -175,52 +175,56 @@ public class TokenizerTest {
 	}
 	
 	/**
-	 * Tests the readColumns() method a quoted section has text surrounding it. This is not technically valid CSV, but
-	 * the tokenizer is lenient enough to allow it (it will just unescape the quoted section).
+	 * Tests the readColumns() method a quoted section has text surrounding it. This is not valid CSV and
+	 * the exception should be thrown.
 	 */
 	@Test
 	public void testQuotedFieldWithSurroundingText() throws Exception {
-		
 		final String input = "surrounding \"quoted\" text";
-		tokenizer = createTokenizer(input, NORMAL_PREFERENCE);
-		tokenizer.readColumns(columns);
-		assertTrue(columns.size() == 1);
-		assertEquals("surrounding quoted text", columns.get(0));
-		assertEquals(1, tokenizer.getLineNumber());
-		assertEquals(input, tokenizer.getUntokenizedRow());
+
+		try {
+			tokenizer = createTokenizer(input, NORMAL_PREFERENCE);
+			tokenizer.readColumns(columns);
+		}
+		catch(SuperCsvException e) {
+			assertEquals("encountered not escaped quote chracter on line 1", e.getMessage());
+		}
 		
 		// same result when surrounding spaces require quotes
-		tokenizer = createTokenizer(input, SPACES_NEED_QUOTES_PREFERENCE);
-		tokenizer.readColumns(columns);
-		assertTrue(columns.size() == 1);
-		assertEquals("surrounding quoted text", columns.get(0));
-		assertEquals(1, tokenizer.getLineNumber());
-		assertEquals(input, tokenizer.getUntokenizedRow());
+		try {
+			tokenizer = createTokenizer(input, SPACES_NEED_QUOTES_PREFERENCE);
+			tokenizer.readColumns(columns);
+		}
+		catch(SuperCsvException e) {
+			assertEquals("encountered not escaped quote chracter on line 1", e.getMessage());
+		}
 	}
 	
 	/**
-	 * Tests the readColumns() method when a quoted section with text after it. This is not technically valid CSV, but
-	 * the tokenizer is lenient enough to allow it (it will just unescape the quoted section).
+	 * Tests the readColumns() method when a quoted section with text after it. This is not valid CSV and
+	 * the exception shoud be thrown.
 	 */
 	@Test
 	public void testQuotedFieldWithTextAfter() throws Exception {
 		
 		// illegal char after quoted section
 		final String input = "\"quoted on 2 lines\nand afterward some\" text";
-		tokenizer = createTokenizer(input, NORMAL_PREFERENCE);
-		tokenizer.readColumns(columns);
-		assertEquals(1, columns.size());
-		assertEquals("quoted on 2 lines\nand afterward some text", columns.get(0));
-		assertEquals(2, tokenizer.getLineNumber());
-		assertEquals(input, tokenizer.getUntokenizedRow());
+		try {
+			tokenizer = createTokenizer(input, NORMAL_PREFERENCE);
+			tokenizer.readColumns(columns);
+		}
+		catch(SuperCsvException e) {
+			assertEquals("encountered not escaped quote chracter on line 2", e.getMessage());
+		}
 		
 		// should have exactly the same result when surrounding spaces need quotes
-		tokenizer = createTokenizer(input, SPACES_NEED_QUOTES_PREFERENCE);
-		tokenizer.readColumns(columns);
-		assertEquals(1, columns.size());
-		assertEquals("quoted on 2 lines\nand afterward some text", columns.get(0));
-		assertEquals(2, tokenizer.getLineNumber());
-		assertEquals(input, tokenizer.getUntokenizedRow());
+		try {
+			tokenizer = createTokenizer(input, SPACES_NEED_QUOTES_PREFERENCE);
+			tokenizer.readColumns(columns);
+		}
+		catch(SuperCsvException e) {
+			assertEquals("encountered not escaped quote chracter on line 2", e.getMessage());
+		}
 	}
 	
 	/**

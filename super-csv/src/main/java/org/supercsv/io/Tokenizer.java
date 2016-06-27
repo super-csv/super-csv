@@ -113,6 +113,7 @@ public class Tokenizer extends AbstractTokenizer {
 		int quoteScopeStartingLine = -1; // the line number where a potential multi-line cell starts
 		int potentialSpaces = 0; // keep track of spaces (so leading/trailing space can be removed if required)
 		int charIndex = 0;
+		boolean afterClosingQuote = false;
 		while( true ) {
 			boolean endOfLineReached = charIndex == line.length();
 			
@@ -190,6 +191,7 @@ public class Tokenizer extends AbstractTokenizer {
 					}
 					columns.add(currentColumn.length() > 0 ? currentColumn.toString() : null); // "" -> null
 					potentialSpaces = 0;
+					afterClosingQuote = false;
 					currentColumn.setLength(0);
 					
 				} else if( c == SPACE ) {
@@ -200,6 +202,14 @@ public class Tokenizer extends AbstractTokenizer {
 					
 				}
 				else if( c == quoteChar ) {
+					if (afterClosingQuote) {
+						throw new SuperCsvException(
+							String
+								.format(
+									"encountered not escaped quote chracter on line %d",
+									getLineNumber()));						
+					}
+					
 					/*
 					 * A single quote ("). Update to QUOTESCOPE (but don't save quote), then continue to next character.
 					 */
@@ -213,6 +223,14 @@ public class Tokenizer extends AbstractTokenizer {
 					potentialSpaces = 0;
 					
 				} else {
+					if (afterClosingQuote) {
+						throw new SuperCsvException(
+							String
+								.format(
+									"encountered not escaped quote chracter on line %d",
+									getLineNumber()));						
+					}
+					
 					/*
 					 * Just a normal character. Add any required spaces (but trim any leading spaces if surrounding
 					 * spaces need quotes), add the character, then continue to next character.
@@ -249,6 +267,7 @@ public class Tokenizer extends AbstractTokenizer {
 						 */
 						state = TokenizerState.NORMAL;
 						quoteScopeStartingLine = -1; // reset ready for next multi-line cell
+						afterClosingQuote = true;
 					}
 				} else {
 					/*
