@@ -339,7 +339,7 @@ public class ReadingFeaturesTest {
 				try {
 					Type genericReturnType = method.getGenericReturnType();
 					Assert.assertNotNull(genericReturnType);
-//					Assert.assertEquals("T", genericReturnType.getTypeName());
+					Assert.assertEquals("T", genericReturnType.getTypeName());
 					methodCounter++;
 				}
 				catch(Exception e) {
