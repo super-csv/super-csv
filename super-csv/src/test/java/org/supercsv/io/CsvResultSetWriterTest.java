@@ -1,12 +1,12 @@
 /*
  * Copyright 2007 Kasper B. Graversen
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -42,25 +42,25 @@ import org.supercsv.prefs.CsvPreference;
 
 /**
  * Tests the CsvResultSetWriter class
- * 
+ *
  * @author SingularityFX
  * @author Pietro Aragona
  */
 public class CsvResultSetWriterTest {
-	
+
 	private static final CsvPreference PREFS = CsvPreference.STANDARD_PREFERENCE;
 	public static Object[][] TEST_DATA_VARIOUS_TYPES;
 	public static Object[][] TEST_DATA_STRINGS;
-	
+
 	private Writer writer;
 	private CsvResultSetWriter csvResultSetWriter;
-	
+
 	@BeforeClass
 	public static void beforeClass() {
 		TEST_DATA_VARIOUS_TYPES = setUpTestDataCustomerBeans();
 		TEST_DATA_STRINGS = setUpTestDataCustomerStringBeans();
 	}
-	
+
 	private static Object[][] setUpTestDataCustomerBeans() {
 		final Object[][] testData = new Object[10][11];
 		for( int i = 0; i < 10; i++ ) {
@@ -79,7 +79,7 @@ public class CsvResultSetWriterTest {
 		}
 		return testData;
 	}
-	
+
 	private static Object[][] setUpTestDataCustomerStringBeans() {
 		final Object[][] testData = new Object[10][11];
 		for( int i = 0; i < 10; i++ ) {
@@ -98,17 +98,17 @@ public class CsvResultSetWriterTest {
 		}
 		return testData;
 	}
-	
+
 	@Before
 	public void setUp() {
 		writer = new StringWriter();
 		csvResultSetWriter = new CsvResultSetWriter(writer, PREFS);
 	}
-	
+
 	/**
 	 * Tests writing ResultSet to a CSV file (no CellProcessors)
-	 * 
-	 * @throws SQLException
+	 *
+	 * @throws java.sql.SQLException
 	 */
 	@Test
 	public void testWrite() throws IOException, SQLException {
@@ -117,12 +117,12 @@ public class CsvResultSetWriterTest {
 		csvResultSetWriter.flush();
 		assertEquals(CSV_FILE, writer.toString());
 	}
-	
+
 	/**
 	 * Test writing ResultSet to a CSV file with CellProcessors
-	 * 
-	 * @throws IOException
-	 * @throws SQLException
+	 *
+	 * @throws java.io.IOException
+	 * @throws java.sql.SQLException
 	 */
 	@Test
 	public void testWriteWithProcessors() throws SQLException, IOException {
@@ -131,9 +131,9 @@ public class CsvResultSetWriterTest {
 		csvResultSetWriter.flush();
 		assertEquals(CSV_FILE, writer.toString());
 	}
-	
+
 	// Tests for NullPointerException follow
-	
+
 	/**
 	 * Tests the constructor with a null writer
 	 */
@@ -142,7 +142,7 @@ public class CsvResultSetWriterTest {
 	public void testConstructorWithNullWriter() {
 		new CsvResultSetWriter(null, PREFS);
 	}
-	
+
 	/**
 	 * Tests the constructor with a null CsvPreference
 	 */
@@ -151,47 +151,47 @@ public class CsvResultSetWriterTest {
 	public void testConstructorWithNullCsvPreference() {
 		new CsvResultSetWriter(writer, null);
 	}
-	
+
 	/**
 	 * Tests the write() method with null ResultSet
-	 * 
-	 * @throws SQLException
-	 * @throws IOException
+	 *
+	 * @throws java.sql.SQLException
+	 * @throws java.io.IOException
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testWriteNullResultSet() throws SQLException, IOException {
 		csvResultSetWriter.write(null);
 	}
-	
+
 	/**
 	 * Test the write() method (with processors) with null ResultSet
-	 * 
-	 * @throws IOException
-	 * @throws SQLException
+	 *
+	 * @throws java.io.IOException
+	 * @throws java.sql.SQLException
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testWriteWithProcessorsNullResultSet() throws SQLException, IOException {
 		csvResultSetWriter.write(null, WRITE_PROCESSORS);
 	}
-	
+
 	/**
 	 * Tests the write() method (with processors) with a null cell processor array
-	 * 
-	 * @throws IOException
-	 * @throws SQLException
+	 *
+	 * @throws java.io.IOException
+	 * @throws java.sql.SQLException
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testWriteNullProcessors() throws SQLException, IOException {
-		
+
 		final ResultSet resultSet = new ResultSetMock(TEST_DATA_VARIOUS_TYPES, HEADER);
 		csvResultSetWriter.write(resultSet, null);
 	}
-	
+
 	/**
 	 * Test that row/line numbers reported during exception are determined correctly
-	 * 
-	 * @throws IOException
-	 * @throws SQLException
+	 *
+	 * @throws java.io.IOException
+	 * @throws java.sql.SQLException
 	 */
 	@Test(expected = SuperCsvCellProcessorException.class)
 	public void testRowLineNumberCorrectness() throws SQLException, IOException {
