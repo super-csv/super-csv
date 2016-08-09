@@ -52,8 +52,8 @@ public class StandardCsvReadingBenchmarkTest extends AbstractCsvReadingBenchmark
 	private static final CsvPreference TRIPLE_PIPE_DELIMITER_PREFS =new CsvPreference.Builder('"', "|||", "\r\n").build();
 
 	// CSV file with 50,001 lines (including header)
-	private static final String CSV_FILE = "/home/jerem/IntelliJProjects/super-csv-fork/super-csv-benchmark/Britain's transport infrastructure.csv";
-	private static final String TRIPLE_PIPE_DELIMITER_CSV_FILE = "/home/jerem/IntelliJProjects/super-csv-fork/super-csv-benchmark/Britain's transport infrastructure multiple symbols delimiter.csv";
+	private static final String CSV_FILE = "Britain's transport infrastructure.csv";
+	private static final String TRIPLE_PIPE_DELIMITER_CSV_FILE = "Britain's transport infrastructure multiple symbols delimiter.csv";
 
 	public static final CellProcessor[] PROCESSORS = { new NotNull(), // atcoCode
 			new NotNull(new ParseDouble()), // easting
