@@ -46,6 +46,7 @@ import org.supercsv.prefs.CsvPreference.Builder;
  * for "read" operations.
  *
  * @author Michał Ziober
+ * @author Jérémie Hambÿe
  */
 public class MultipleSymbolsDelimiterReadingFeaturesTest {
 
