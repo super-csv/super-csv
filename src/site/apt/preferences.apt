@@ -44,6 +44,10 @@ CSV Preferences
 
     []
 
+    [emptyColumnParsing] Controls how to handle empty columns, whether they should be treated as null, or as an empty String: "".  Valid values are ParseEmptyColumnsAsNull and ParseEmptyColumnsAsEmptyString.  The default value is ParseEmptyColumnsAsNull.
+
+    []
+
     [maxLinesPerRow] The maximum number of lines a row of CSV can span (useful for debugging large files with mismatched quotes, as it ensures fast failure and prevents OutOfMemoryErrors when trying to find the matching quote).
 
     []
@@ -140,8 +144,19 @@ private static final CsvPreference STANDARD_SURROUNDING_SPACES_NEED_QUOTES =
   empty lines. If you with to disable this behaviour and allow empty lines to be read you can use the <<<ignoreEmptyLines>>> preference:
 
 +----------------------------------------------------------------------------------------------------+
-private static final CsvPreference ALLOW_EMPTY_LINES = 
+private static final CsvPreference ALLOW_EMPTY_LINES =
     new CsvPreference.Builder(CsvPreference.STANDARD_PREFERENCE).ignoreEmptyLines(false).build();
++----------------------------------------------------------------------------------------------------+
+
+* Handling empty columns
+
+  By default, an empty column is treated as null when reading CSV. Sometimes however you need an empty column to be treated as an empty String
+  instead: "".  If you wish to change this behavior and treat empty columns as empty String instead of null, you can use the <<<emptyColumnParsing>>> preference:
+
++----------------------------------------------------------------------------------------------------+
+private static final CsvPreference ALLOW_EMPTY_COLUMNS =
+    new CsvPreference.Builder(CsvPreference.STANDARD_PREFERENCE)
+        .setEmptyColumnParsing(EmptyColumnParsing.ParseEmptyColumnsAsEmptyString).build();
 +----------------------------------------------------------------------------------------------------+
 
 * Limiting the maximum number of lines per row when reading CSV
@@ -151,7 +166,7 @@ private static final CsvPreference ALLOW_EMPTY_LINES =
   preference Super CSV will fail fast, giving you a chance to locate the row in error and fix it:
 
 +----------------------------------------------------------------------------------------------------+
-private static final CsvPreference DISABLE_MULTILINE_ROWS = 
+private static final CsvPreference DISABLE_MULTILINE_ROWS =
     new CsvPreference.Builder(CsvPreference.STANDARD_PREFERENCE).maxLinesPerRow(10).build();
 +----------------------------------------------------------------------------------------------------+
 
