@@ -22,6 +22,7 @@ import java.util.Objects;
 
 import org.supercsv.cellprocessor.CellProcessorAdaptor;
 import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.exception.SuperCsvCellProcessorException;
 import org.supercsv.util.CsvContext;
 
@@ -31,7 +32,7 @@ import org.supercsv.util.CsvContext;
  * @author Ludovico Fischer
  * @since 2.4.0
  */
-public class ParseZoneId extends CellProcessorAdaptor {
+public class ParseZoneId extends CellProcessorAdaptor implements StringCellProcessor {
 
 	private final Map<String, String> aliasMap;
 
