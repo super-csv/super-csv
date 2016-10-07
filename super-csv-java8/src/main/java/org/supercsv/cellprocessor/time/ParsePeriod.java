@@ -20,6 +20,7 @@ import java.time.format.DateTimeParseException;
 
 import org.supercsv.cellprocessor.CellProcessorAdaptor;
 import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.exception.SuperCsvCellProcessorException;
 import org.supercsv.util.CsvContext;
 
@@ -32,7 +33,7 @@ import org.supercsv.util.CsvContext;
  * @author Ludovico Fischer
  * @since 2.4.0
  */
-public class ParsePeriod extends CellProcessorAdaptor {
+public class ParsePeriod extends CellProcessorAdaptor implements StringCellProcessor {
 
 	/**
 	 * Constructs a new <tt>ParsePeriod</tt> processor, which parses a String as

@@ -18,6 +18,7 @@ package org.supercsv.cellprocessor.joda;
 import org.joda.time.DateTimeZone;
 import org.supercsv.cellprocessor.CellProcessorAdaptor;
 import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.exception.SuperCsvCellProcessorException;
 import org.supercsv.util.CsvContext;
 
@@ -28,7 +29,7 @@ import org.supercsv.util.CsvContext;
  * @since 2.3.0
  * @author James Bassett
  */
-public class ParseDateTimeZone extends CellProcessorAdaptor {
+public class ParseDateTimeZone extends CellProcessorAdaptor implements StringCellProcessor {
 
 	/**
 	 * Constructs a new <tt>ParseDateTimeZone</tt> processor, which parses a
