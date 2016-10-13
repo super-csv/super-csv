@@ -23,3 +23,5 @@ Its flexible 'Cell Processor' API automates data type conversions (parsing and f
 Super CSV is actively maintained, and the developers are ready and willing to help out if you get stuck :)
 
 Please check out the documentation for examples and help getting started.
+
+**Also do have a look at my personal blog on programming and code quality at http://firstclassthoughts.co.uk/**
