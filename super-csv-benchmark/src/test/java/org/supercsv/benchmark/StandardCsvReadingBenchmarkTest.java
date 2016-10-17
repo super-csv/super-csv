@@ -1,12 +1,12 @@
 /*
  * Copyright 2007 Kasper B. Graversen
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -40,7 +40,7 @@ import com.carrotsearch.junitbenchmarks.annotation.BenchmarkMethodChart;
  * -public-data-repository#data). The existing header was replaced with a
  * CsvBeanReader-compatible header for convenience. The file contains no
  * embedded newlines.
- * 
+ *
  * @author James Bassett
  */
 @BenchmarkMethodChart(filePrefix = "StandardCsvReadingBenchmark")
@@ -49,9 +49,11 @@ public class StandardCsvReadingBenchmarkTest extends AbstractCsvReadingBenchmark
 
 	private static final CsvPreference PREFS = new CsvPreference.Builder(
 			CsvPreference.STANDARD_PREFERENCE).build();
+	private static final CsvPreference TRIPLE_PIPE_DELIMITER_PREFS =new CsvPreference.Builder('"', "|||", "\r\n").build();
 
 	// CSV file with 50,001 lines (including header)
 	private static final String CSV_FILE = "Britain's transport infrastructure.csv";
+	private static final String TRIPLE_PIPE_DELIMITER_CSV_FILE = "Britain's transport infrastructure multiple symbols delimiter.csv";
 
 	public static final CellProcessor[] PROCESSORS = { new NotNull(), // atcoCode
 			new NotNull(new ParseDouble()), // easting

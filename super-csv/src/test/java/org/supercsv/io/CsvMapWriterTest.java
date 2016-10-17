@@ -1,12 +1,12 @@
 /*
  * Copyright 2007 Kasper B. Graversen
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -39,18 +39,18 @@ import org.supercsv.util.Util;
 
 /**
  * Tests the CsvMapWriter class.
- * 
+ *
  * @author James Bassett
  * @author Pietro Aragona
  */
 public class CsvMapWriterTest {
-	
+
 	private static final CsvPreference PREFS = CsvPreference.STANDARD_PREFERENCE;
-	
+
 	private Writer writer;
-	
+
 	private CsvMapWriter mapWriter;
-	
+
 	/**
 	 * Sets up the writer for the tests.
 	 */
@@ -59,7 +59,7 @@ public class CsvMapWriterTest {
 		writer = new StringWriter();
 		mapWriter = new CsvMapWriter(writer, PREFS);
 	}
-	
+
 	/**
 	 * Closes the map writer after the test.
 	 */
@@ -67,7 +67,7 @@ public class CsvMapWriterTest {
 	public void tearDown() throws IOException {
 		mapWriter.close();
 	}
-	
+
 	/**
 	 * Tests the constructor with a null writer.
 	 */
@@ -76,7 +76,7 @@ public class CsvMapWriterTest {
 	public void testConstructorWillNullWriter() {
 		new CsvMapWriter(null, PREFS);
 	}
-	
+
 	/**
 	 * Tests the constructor with a null CsvPreference.
 	 */
@@ -85,11 +85,11 @@ public class CsvMapWriterTest {
 	public void testConstructorWillNullPreference() {
 		new CsvMapWriter(writer, null);
 	}
-	
+
 	/**
 	 * Tests the write() method.
-	 * 
-	 * @throws IOException
+	 *
+	 * @throws java.io.IOException
 	 */
 	@Test
 	public void testWrite() throws IOException {
@@ -108,7 +108,7 @@ public class CsvMapWriterTest {
 		mapWriter.flush();
 		assertEquals(CSV_FILE, writer.toString());
 	}
-	
+
 	/**
 	 * Tests the write() method with processors.
 	 */
@@ -129,7 +129,7 @@ public class CsvMapWriterTest {
 		mapWriter.flush();
 		assertEquals(CSV_FILE, writer.toString());
 	}
-	
+
 	/**
 	 * Tests the write() method with a null map.
 	 */
@@ -137,7 +137,7 @@ public class CsvMapWriterTest {
 	public void testWriteWithNullMap() throws IOException {
 		mapWriter.write(null, HEADER);
 	}
-	
+
 	/**
 	 * Tests the write() method with a null name mapping array.
 	 */
@@ -145,7 +145,7 @@ public class CsvMapWriterTest {
 	public void testWriteWithNullNameMapping() throws IOException {
 		mapWriter.write(new HashMap<String, Object>(), (String[]) null);
 	}
-	
+
 	/**
 	 * Tests the write() method (with processors) with a null map.
 	 */
@@ -153,23 +153,23 @@ public class CsvMapWriterTest {
 	public void testWriteProcessorsWithNullMap() throws IOException {
 		mapWriter.write(null, HEADER, WRITE_PROCESSORS);
 	}
-	
+
 	/**
 	 * Tests the write() method (with processors) with a null name mapping array.
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testWriteProcessorsWithNullNameMapping() throws IOException {
 		mapWriter.write(new HashMap<String, Object>(), null, WRITE_PROCESSORS);
-		
+
 	}
-	
+
 	/**
 	 * Tests the write() method (with processors) with a null cell processor array.
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testWriteProcessorsWithNullProcessors() throws IOException {
 		mapWriter.write(new HashMap<String, Object>(), HEADER, null);
-		
+
 	}
-	
+
 }
