@@ -10,20 +10,26 @@ import org.supercsv.io.AbstractTokenizer;
 import org.supercsv.prefs.CsvPreference;
 
 /**
- * As per RFC standard every quote in value must be escaped by another quote. i.e,<code> Hello "World" -> Hello ""World"" </code>
- * If file does not comply RFC, this tokenizer does work around by assuming " as a part of a value if character next to it is not comma.
+ * As per RFC 4180 every quote in value must be escaped by another quote.
+ *  i.e,<code> Hello "World" -> Hello ""World"" </code>
+ * If file does not comply RFC, this tokenizer makes some assumption and accepts
+ * the invalid CSV file.<br><br>
+ * It assumes the quoteChar(") as a part of a value if character next to it is not delimiter.
  * 
  * <p>
- * Example :
- * 	NonEscaped Quotes ->
- * 		"123466","Hello "World","ABC"  will be parsed as [123466, Hello "World, ABC]
- * 		"123466",""Hello" World","ABC" -> [123466, "Hello" World, ABC]
- * 
- * Escaped Quotes ->
- * 		"123466","Hello "Wor""ld","ABC" -> [123466, Hello Wor"ld, ABC]
- * 		"123466","Hello "World""","ABC" -> [123466, Hello "World", ABC]
+ * Examples :<br>
+ * 	NonEscaped Quotes <br>
+ * <code>
+ * 		"123466","Hello "World","ABC"  will be parsed as [123466, Hello "World, ABC]<br>
+ * 		"123466",""Hello" World","ABC" -> [123466, "Hello" World, ABC]<br>
+ * </code>
+ * <br>
+ * Escaped Quotes <br>
+ * <code>
+ * 		"123466","Hello "Wor""ld","ABC" -> [123466, Hello Wor"ld, ABC]<br>
+ * 		"123466","Hello "World""","ABC" -> [123466, Hello "World", ABC]<br>
+ * </code>
  * </p>
- * This tokenizer expects AlwaysQuoteMode enabled
  * @author Nilesh.Akhade
  *
  */
@@ -50,6 +56,8 @@ public class AllowNonEscapedQuotesTokenizer extends AbstractTokenizer {
 
 	private final int maxLinesPerRow;
 
+	private final EmptyColumnParsing emptyColumnParsing;
+	
 	//private QuoteMode quoteMode;
 	
 	/**
@@ -66,6 +74,7 @@ public class AllowNonEscapedQuotesTokenizer extends AbstractTokenizer {
 		this.surroundingSpacesNeedQuotes = preferences.isSurroundingSpacesNeedQuotes();
 		this.ignoreEmptyLines = preferences.isIgnoreEmptyLines();
 		this.commentMatcher = preferences.getCommentMatcher();
+		this.emptyColumnParsing = preferences.getEmptyColumnParsing();
 		this.maxLinesPerRow = preferences.getMaxLinesPerRow();
 //		this.quoteMode = preferences.getQuoteMode();
 	}
@@ -115,7 +124,7 @@ public class AllowNonEscapedQuotesTokenizer extends AbstractTokenizer {
 					if( !surroundingSpacesNeedQuotes ) {
 						appendSpaces(currentColumn, potentialSpaces);
 					}
-					columns.add(currentColumn.length() > 0 ? currentColumn.toString() : null); // "" -> null
+					addColumn(columns, line, charIndex);
 					return true;
 				}
 				else
@@ -177,7 +186,7 @@ public class AllowNonEscapedQuotesTokenizer extends AbstractTokenizer {
 					if( !surroundingSpacesNeedQuotes ) {
 						appendSpaces(currentColumn, potentialSpaces);
 					}
-					columns.add(currentColumn.length() > 0 ? currentColumn.toString() : null); // "" -> null
+					addColumn(columns, line, charIndex);
 					potentialSpaces = 0;
 					currentColumn.setLength(0);
 					
@@ -273,6 +282,27 @@ public class AllowNonEscapedQuotesTokenizer extends AbstractTokenizer {
 		}
 	}
 	
+	/**
+	 * Adds the currentColumn to columns list managing the case with currentColumn.length() == 0
+	 * It was introduced to manage the emptyColumnParsing.
+	 * 
+	 * @param columns
+	 * @param line
+	 * @param charIndex
+	 */
+	private void addColumn(final List<String> columns, String line, int charIndex) {
+		
+		if(currentColumn.length() > 0){
+			columns.add(currentColumn.toString());
+		}
+		else{
+			int previousCharIndex = charIndex - 1;
+			boolean availableCharacters = previousCharIndex >= 0 ;
+			boolean previousCharIsQuote = availableCharacters && line.charAt(previousCharIndex) == quoteChar;
+			String noValue = ( (previousCharIsQuote) && emptyColumnParsing.equals(EmptyColumnParsing.ParseEmptyColumnsAsEmptyString)) ? "" : null;
+			columns.add(noValue);
+		}
+	}
 	/**
 	 * Appends the required number of spaces to the StringBuilder.
 	 * 

@@ -10,21 +10,24 @@ import org.supercsv.io.AbstractTokenizer;
 import org.supercsv.prefs.CsvPreference;
 
 /**
- * As per RFC standard every quote in value must be escaped by another quote. i.e,<code> Hello "World" -> Hello ""World"" </code>
- * If file does not comply RFC, this tokenizer rejects that record.
+ * As per RFC 4180 every quote in value must be escaped by another quote. i.e,<code> Hello "World" -> Hello ""World"" </code>
+ * If file does not comply RFC, this tokenizer rejects that record. In other words, this is strict RFC tokenizer.
  * 
  * <p>
- * Example :
- * 	NonEscaped Quotes (Rejected) ->
- * 		"123466","Hello "World","ABC"
- * 		"123466",""Hello" World","ABC"
- * 		"123466","Hello",World","ABC" This is rejected. Tool finds that second column ends after Hello.
- * 
- * Escaped Quotes (Accepted) ->
- * 		"123466","Hello "Wor""ld","ABC" -> [123466, Hello Wor"ld, ABC]
- * 		"123466","Hello "World""","ABC" -> [123466, Hello "World", ABC]
+ * Example : <br>
+ * 	NonEscaped Quotes (Rejected)  <br>
+ * <code>
+ * 		"123466","Hello "World","ABC" <br>
+ * 		"123466",""Hello" World","ABC" <br>
+ * 		"123466","Hello",World","ABC" <br>
+ * </code>
+ * Escaped Quotes (Accepted)  <br>
+ * <code>
+ * 		"123466","Hello Wor""ld","ABC" -> [123466, Hello Wor"ld, ABC] <br>
+ * 		"123466","Hello ""World""","ABC" -> [123466, Hello "World", ABC] <br>
+ * </code>
  * </p>
- * This tokenizer expects AlwaysQuoteMode() enabled
+ * 
  * @author Nilesh.Akhade
  *
  */
@@ -159,10 +162,10 @@ public class RejectNonEscapedQuotesTokenizer extends AbstractTokenizer {
 					
 					currentRow.append(line); // update untokenized CSV row
 					
-				    if (line.length() == 0){
-				    	// consecutive newlines
-                        continue;
-				    }
+					if (line.length() == 0){
+						// consecutive newlines
+						continue;
+					}
 				}
 			}
 			
@@ -192,8 +195,7 @@ public class RejectNonEscapedQuotesTokenizer extends AbstractTokenizer {
 					 */
 					potentialSpaces++;
 					
-				}
-				else if( c == quoteChar ) {
+				} else if( c == quoteChar ) {
 					/*
 					 * A single quote ("). Update to QUOTESCOPE (but don't save quote), then continue to next character.
 					 */
@@ -227,7 +229,7 @@ public class RejectNonEscapedQuotesTokenizer extends AbstractTokenizer {
 				
 				if( c == quoteChar ) {
 					/*
-					 * (?) Thinking the edge case
+					 * Case when c is last char in line
 					 * "Hello World","Java"
 					 *                    ^
 					 *                 charIndex = 19
