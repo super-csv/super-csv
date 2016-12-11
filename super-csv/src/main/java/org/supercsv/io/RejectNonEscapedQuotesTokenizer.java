@@ -51,6 +51,8 @@ public class RejectNonEscapedQuotesTokenizer extends AbstractTokenizer {
 
 	private final int maxLinesPerRow;
 
+	private final EmptyColumnParsing emptyColumnParsing;
+	
 	//private QuoteMode quoteMode;
 	
 	/**
@@ -67,6 +69,7 @@ public class RejectNonEscapedQuotesTokenizer extends AbstractTokenizer {
 		this.surroundingSpacesNeedQuotes = preferences.isSurroundingSpacesNeedQuotes();
 		this.ignoreEmptyLines = preferences.isIgnoreEmptyLines();
 		this.commentMatcher = preferences.getCommentMatcher();
+		this.emptyColumnParsing = preferences.getEmptyColumnParsing();
 		this.maxLinesPerRow = preferences.getMaxLinesPerRow();
 //		this.quoteMode = preferences.getQuoteMode();
 	}
@@ -116,7 +119,8 @@ public class RejectNonEscapedQuotesTokenizer extends AbstractTokenizer {
 					if( !surroundingSpacesNeedQuotes ) {
 						appendSpaces(currentColumn, potentialSpaces);
 					}
-					columns.add(currentColumn.length() > 0 ? currentColumn.toString() : null); // "" -> null
+					//columns.add(currentColumn.length() > 0 ? currentColumn.toString() : null); // "" -> null
+					addColumn(columns, line, charIndex);
 					return true;
 				}
 				else
@@ -145,8 +149,7 @@ public class RejectNonEscapedQuotesTokenizer extends AbstractTokenizer {
 											  " beginning on line %d and ending on line %d",
 											  quoteScopeStartingLine, getLineNumber());
 						throw new SuperCsvException(msg);
-					}
-					else if( (line = readLine()) == null ) {
+					} else if( (line = readLine()) == null ) {
 						throw new SuperCsvException(
 							String
 								.format(
@@ -178,7 +181,8 @@ public class RejectNonEscapedQuotesTokenizer extends AbstractTokenizer {
 					if( !surroundingSpacesNeedQuotes ) {
 						appendSpaces(currentColumn, potentialSpaces);
 					}
-					columns.add(currentColumn.length() > 0 ? currentColumn.toString() : null); // "" -> null
+					//columns.add(currentColumn.length() > 0 ? currentColumn.toString() : null); // "" -> null
+					addColumn(columns, line, charIndex);
 					potentialSpaces = 0;
 					currentColumn.setLength(0);
 					
@@ -278,6 +282,27 @@ public class RejectNonEscapedQuotesTokenizer extends AbstractTokenizer {
 			}
 			
 			charIndex++; // read next char of the line
+		}
+	}
+	/**
+	 * Adds the currentColumn to columns list managing the case with currentColumn.length() == 0
+	 * It was introduced to manage the emptyColumnParsing.
+	 * 
+	 * @param columns
+	 * @param line
+	 * @param charIndex
+	 */
+	private void addColumn(final List<String> columns, String line, int charIndex) {
+		
+		if(currentColumn.length() > 0){
+			columns.add(currentColumn.toString());
+		}
+		else{
+			int previousCharIndex = charIndex - 1;
+			boolean availableCharacters = previousCharIndex >= 0 ;
+			boolean previousCharIsQuote = availableCharacters && line.charAt(previousCharIndex) == quoteChar;
+			String noValue = ( (previousCharIsQuote) && emptyColumnParsing.equals(EmptyColumnParsing.ParseEmptyColumnsAsEmptyString)) ? "" : null;
+			columns.add(noValue);
 		}
 	}
 	

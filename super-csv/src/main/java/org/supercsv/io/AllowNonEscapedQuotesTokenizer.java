@@ -155,10 +155,10 @@ public class AllowNonEscapedQuotesTokenizer extends AbstractTokenizer {
 					
 					currentRow.append(line); // update untokenized CSV row
 					
-				    if (line.length() == 0){
-				    	// consecutive newlines
-                        continue;
-				    }
+					if (line.length() == 0){
+						// consecutive newlines
+						continue;
+					}
 				}
 			}
 			
@@ -222,7 +222,7 @@ public class AllowNonEscapedQuotesTokenizer extends AbstractTokenizer {
 				
 				if( c == quoteChar ) {
 					/*
-					 * (?) Thinking the edge case
+					 * Case when c is last char in line
 					 * "Hello World","Java"
 					 *                    ^
 					 *                 charIndex = 19
