@@ -31,6 +31,7 @@ import org.supercsv.prefs.CsvPreference;
  * @author Kasper B. Graversen
  * @author James Bassett
  * @author Pietro Aragona
+ * @author Yoshiyuki Takemori
  */
 public class Tokenizer extends AbstractTokenizer {
 	
