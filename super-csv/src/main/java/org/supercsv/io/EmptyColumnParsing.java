@@ -17,8 +17,11 @@ package org.supercsv.io;
 
 /**
  * @author Pietro Aragona
+ * @author Yoshiyuki Takemori
  * @since 2.4.1
  */
 public enum EmptyColumnParsing {
-	ParseEmptyColumnsAsNull, ParseEmptyColumnsAsEmptyString
+	ParseEmptyColumnsAsNull,
+	ParseEmptyColumnsAsEmptyString,
+	ParseEmptyColumnsAndNullAsEmptyString
 }

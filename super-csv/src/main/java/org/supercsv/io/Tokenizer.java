@@ -316,6 +316,9 @@ public class Tokenizer extends AbstractTokenizer {
 		if(currentColumn.length() > 0){
 			columns.add(currentColumn.toString());
 		}
+		else if( emptyColumnParsing.equals(EmptyColumnParsing.ParseEmptyColumnsAndNullAsEmptyString) ) {
+			columns.add("");
+		}
 		else{
 			int previousCharIndex = charIndex - 1;
 			boolean availableCharacters = previousCharIndex >= 0 ;

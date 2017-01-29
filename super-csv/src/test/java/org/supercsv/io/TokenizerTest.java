@@ -45,6 +45,8 @@ public class TokenizerTest {
 		.ignoreEmptyLines(false).build();
 	private static final CsvPreference PARSE_EMPTY_COLUMNS_AS_EMPTY_STRING_PREFERENCE = new CsvPreference.Builder(EXCEL_PREFERENCE)
 		.setEmptyColumnParsing(EmptyColumnParsing.ParseEmptyColumnsAsEmptyString).build();
+	private static final CsvPreference PARSE_EMPTY_COLUMNS_AS_EMPTY_STRING_ALL_PREFERENCE = new CsvPreference.Builder(EXCEL_PREFERENCE)
+		.setEmptyColumnParsing(EmptyColumnParsing.ParseEmptyColumnsAndNullAsEmptyString).build();
 		
 	private Tokenizer tokenizer;
 	private List<String> columns;
@@ -787,4 +789,37 @@ public class TokenizerTest {
 		assertEquals("", columns.get(1));
 	}	
 	
+	/**
+	 * Tests that the readColumns() method reads an null column as empty string when preferences is ParseEmptyColumnsAsEmptyStringAll.
+	 */
+	@Test
+	public void testReadNullWithParseEmptyColumnsAndNullAsEmptyString() throws Exception {
+		
+		final String input = ",";
+		tokenizer = createTokenizer(input, PARSE_EMPTY_COLUMNS_AS_EMPTY_STRING_ALL_PREFERENCE);
+		assertTrue(PARSE_EMPTY_COLUMNS_AS_EMPTY_STRING_ALL_PREFERENCE.getEmptyColumnParsing().equals(EmptyColumnParsing.ParseEmptyColumnsAndNullAsEmptyString));
+		
+		tokenizer.readColumns(columns);
+		assertTrue(columns.size() == 2);
+		assertEquals(",", tokenizer.getUntokenizedRow());
+		assertEquals("", columns.get(0));
+		assertEquals("", columns.get(1));
+	}	
+
+	/**
+	 * Tests that the readColumns() method reads an empty string column as empty string when preferences is ParseEmptyColumnsAsEmptyStringAll.
+	 */
+	@Test
+	public void testReadEmptyStringWithParseEmptyColumnsAndNullAsEmptyString() throws Exception {
+		
+		final String input = "\"\",\"\"";
+		tokenizer = createTokenizer(input, PARSE_EMPTY_COLUMNS_AS_EMPTY_STRING_ALL_PREFERENCE);
+		assertTrue(PARSE_EMPTY_COLUMNS_AS_EMPTY_STRING_ALL_PREFERENCE.getEmptyColumnParsing().equals(EmptyColumnParsing.ParseEmptyColumnsAndNullAsEmptyString));
+		
+		tokenizer.readColumns(columns);
+		assertTrue(columns.size() == 2);
+		assertEquals("\"\",\"\"", tokenizer.getUntokenizedRow());
+		assertEquals("", columns.get(0));
+		assertEquals("", columns.get(1));
+	}	
 }
