@@ -45,7 +45,7 @@ public class TokenizerTest {
 		.ignoreEmptyLines(false).build();
 	private static final CsvPreference PARSE_EMPTY_COLUMNS_AS_EMPTY_STRING_PREFERENCE = new CsvPreference.Builder(EXCEL_PREFERENCE)
 		.setEmptyColumnParsing(EmptyColumnParsing.ParseEmptyColumnsAsEmptyString).build();
-	private static final CsvPreference PARSE_EMPTY_COLUMNS_AS_EMPTY_STRING_ALL_PREFERENCE = new CsvPreference.Builder(EXCEL_PREFERENCE)
+	private static final CsvPreference PARSE_EMPTY_COLUMNS_AND_NULL_AS_EMPTY_STRING_PREFERENCE = new CsvPreference.Builder(EXCEL_PREFERENCE)
 		.setEmptyColumnParsing(EmptyColumnParsing.ParseEmptyColumnsAndNullAsEmptyString).build();
 		
 	private Tokenizer tokenizer;
@@ -790,14 +790,14 @@ public class TokenizerTest {
 	}	
 	
 	/**
-	 * Tests that the readColumns() method reads an null column as empty string when preferences is ParseEmptyColumnsAsEmptyStringAll.
+	 * Tests that the readColumns() method reads an null column as empty string when preferences is ParseEmptyColumnsAndNullAsEmptyString.
 	 */
 	@Test
 	public void testReadNullWithParseEmptyColumnsAndNullAsEmptyString() throws Exception {
 		
 		final String input = ",";
-		tokenizer = createTokenizer(input, PARSE_EMPTY_COLUMNS_AS_EMPTY_STRING_ALL_PREFERENCE);
-		assertTrue(PARSE_EMPTY_COLUMNS_AS_EMPTY_STRING_ALL_PREFERENCE.getEmptyColumnParsing().equals(EmptyColumnParsing.ParseEmptyColumnsAndNullAsEmptyString));
+		tokenizer = createTokenizer(input, PARSE_EMPTY_COLUMNS_AND_NULL_AS_EMPTY_STRING_PREFERENCE);
+		assertTrue(PARSE_EMPTY_COLUMNS_AND_NULL_AS_EMPTY_STRING_PREFERENCE.getEmptyColumnParsing().equals(EmptyColumnParsing.ParseEmptyColumnsAndNullAsEmptyString));
 		
 		tokenizer.readColumns(columns);
 		assertTrue(columns.size() == 2);
@@ -807,14 +807,14 @@ public class TokenizerTest {
 	}	
 
 	/**
-	 * Tests that the readColumns() method reads an empty string column as empty string when preferences is ParseEmptyColumnsAsEmptyStringAll.
+	 * Tests that the readColumns() method reads an empty string column as empty string when preferences is ParseEmptyColumnsAndNullAsEmptyString.
 	 */
 	@Test
 	public void testReadEmptyStringWithParseEmptyColumnsAndNullAsEmptyString() throws Exception {
 		
 		final String input = "\"\",\"\"";
-		tokenizer = createTokenizer(input, PARSE_EMPTY_COLUMNS_AS_EMPTY_STRING_ALL_PREFERENCE);
-		assertTrue(PARSE_EMPTY_COLUMNS_AS_EMPTY_STRING_ALL_PREFERENCE.getEmptyColumnParsing().equals(EmptyColumnParsing.ParseEmptyColumnsAndNullAsEmptyString));
+		tokenizer = createTokenizer(input, PARSE_EMPTY_COLUMNS_AND_NULL_AS_EMPTY_STRING_PREFERENCE);
+		assertTrue(PARSE_EMPTY_COLUMNS_AND_NULL_AS_EMPTY_STRING_PREFERENCE.getEmptyColumnParsing().equals(EmptyColumnParsing.ParseEmptyColumnsAndNullAsEmptyString));
 		
 		tokenizer.readColumns(columns);
 		assertTrue(columns.size() == 2);
