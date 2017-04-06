@@ -93,18 +93,18 @@ public final class Util {
 			
 			if( processors[i] == null ) {
 				destination.add(source.get(i)); // no processing required
-			} else if (processors[i] instanceof Merge) {
+			} else if (processors[i] instanceof Merge) { // Merges cells with adjacent Merge processors together
 				mergeBuilder = new StringBuilder();
-				for (;processors[i] instanceof Merge; i++) {
+				for (; i < processors.length && processors[i] instanceof Merge; i++) {
 					mergeBuilder.append(processors[i].execute(source.get(i), context));
 				}
-				i--;
+				if (i != processors.length) i--;
 				destination.add(mergeBuilder.toString());
 			} else {
-				if ((value = processors[i].execute(source.get(i), context)) instanceof Object[])
-					destination.addAll(Arrays.asList((Object[]) value));
+				if ((value = processors[i].execute(source.get(i), context)) instanceof Object[]) // execute the processor chain
+					destination.addAll(Arrays.asList((Object[]) value)); // If array, add values individually
 				else
-					destination.add(value); // execute the processor chain
+					destination.add(value); // If not array, just add value
 			}
 		}
 	}
