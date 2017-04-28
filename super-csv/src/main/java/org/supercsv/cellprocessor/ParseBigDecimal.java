@@ -120,7 +120,9 @@ public class ParseBigDecimal extends CellProcessorAdaptor implements StringCellP
 		validateInputNotNull(value, context);
 		
 		final BigDecimal result;
-		if( value instanceof String ) {
+		if (value instanceof BigDecimal) {
+			result = (BigDecimal) value;
+		} else if( value instanceof String ) {
 			final String s = (String) value;
 			try {
 				if( symbols == null ) {

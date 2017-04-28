@@ -15,6 +15,7 @@
  */
 package org.supercsv.cellprocessor;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.supercsv.SuperCsvTestUtils.ANONYMOUS_CSVCONTEXT;
 import static org.supercsv.SuperCsvTestUtils.assertExecution;
@@ -60,7 +61,17 @@ public class ParseBigDecimalTest {
 		processorChain2 = new ParseBigDecimal(ENGLISH_SYMBOLS, new IdentityTransform());
 		processorChain3 = new ParseBigDecimal(GERMAN_SYMBOLS, new IdentityTransform());
 	}
-	
+
+	@Test
+	public void testValidBigDecimals() {
+		final BigDecimal testValue = new BigDecimal("999.00");
+
+		for( final CellProcessor p : Arrays.asList(processor, processor2, processor3,
+							   processorChain, processorChain2, processorChain3) ) {
+			assertEquals(testValue, p.execute(testValue, ANONYMOUS_CSVCONTEXT));
+		}
+	}
+
 	/**
 	 * Test unchained/chained execution with a valid positive input.
 	 */
