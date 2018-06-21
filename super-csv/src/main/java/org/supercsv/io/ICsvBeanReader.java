@@ -161,12 +161,28 @@ public interface ICsvBeanReader extends ICsvReader {
 
 
 	/**
-	 * the same as
+	 * Reads a row of a CSV file and populates an instance of the specified class, using the supplied name mapping to
+	 * map column values to the appropriate fields. Before population the data can be further processed by cell
+	 * processors (as with the nameMapping array, a entry at processors Map corresponds with a CSV column). A
+	 * <tt>null</tt> entry is automatically added as processors if no value was found at processorsMap - that means
+	 * no further processing is required (the unprocessed String value will be set on the bean's field).
 	 *
-	 * <T> T read(final Class<T> clazz, final String[] nameMapping, final Map<String, CellProcessor> processorsMap)
-	 * 			throws IOException;
-	 *
-	 * only the clazz element is already created and only filled.
+	 * @param bean
+	 *            the bean to populate
+	 * @param nameMapping
+	 *            an array of Strings linking the CSV columns to their corresponding field in the bean (the array length
+	 *            should match the number of columns). A <tt>null</tt> entry in the array indicates that the column
+	 *            should be ignored (the field in the bean will be null - or its default value).
+	 * @param processorsMap
+	 *            an Map of CellProcessors used to further process data before it is populated on the bean (each
+	 *            element in the processors array corresponds with a CSV column. The key needs to match exactly the
+	 *            column name (the same value is used at "nameMapping") - to add this CellProcessor to this column.
+	 * @param <T>
+	 *            the bean type
+	 * @return
+	 *						a populated bean or null if EOF
+	 * @throws IOException
+	 * 						if an I/O error occurred
 	 */
 	<T> T read(final T bean, final String[] nameMapping, final Map<String, CellProcessor> processorsMap)
 			throws IOException;
