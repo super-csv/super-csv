@@ -36,6 +36,8 @@ import org.supercsv.util.Util;
  * @since 2.4.0
  */
 public class CsvResultSetWriter extends AbstractCsvWriter implements ICsvResultSetWriter {
+
+	private final boolean writeHeader;
 	
 	/**
 	 * Constructs a new {@code CsvResultSetWriter} with the supplied {@code Writer} and CSV preferences. Note that the
@@ -50,6 +52,25 @@ public class CsvResultSetWriter extends AbstractCsvWriter implements ICsvResultS
 	 */
 	public CsvResultSetWriter(final Writer writer, final CsvPreference preference) {
 		super(writer, preference);
+		this.writeHeader = true;
+	}
+
+	/**
+	 * Constructs a new {@code CsvResultSetWriter} with the supplied {@code Writer} and CSV preferences. Note that the
+	 * {@code writer} will be wrapped in a {@code BufferedWriter} before accessed.
+	 *
+	 * @param writer
+	 *            the writer
+	 * @param preference
+	 *            the CSV preferences
+	 * @param writeHeader
+	 *            if the ResultSet headers should be written automatically when calling write
+	 * @throws NullPointerException
+	 *             if writer or preference are null
+	 */
+	public CsvResultSetWriter(final Writer writer, final CsvPreference preference, boolean writeHeader) {
+		super(writer, preference);
+		this.writeHeader = writeHeader;
 	}
 	
 	/**
@@ -59,8 +80,9 @@ public class CsvResultSetWriter extends AbstractCsvWriter implements ICsvResultS
 		if( resultSet == null ) {
 			throw new NullPointerException("ResultSet cannot be null");
 		}
-		
-		writeHeaders(resultSet); // increments row and line number
+		if ( writeHeader ) {
+			writeHeaders(resultSet); // increments row and line number
+		}
 		writeContents(resultSet); // increments row and line number before writing of each row
 	}
 	
@@ -74,8 +96,9 @@ public class CsvResultSetWriter extends AbstractCsvWriter implements ICsvResultS
 		if( writeProcessors == null ) {
 			throw new NullPointerException("CellProcessor[] cannot be null");
 		}
-		
-		writeHeaders(resultSet); // increments row and line number
+		if ( writeHeader ) {
+			writeHeaders(resultSet); // increments row and line number
+		}
 		writeContents(resultSet, writeProcessors); // increments row and line number before writing of each row
 	}
 	
