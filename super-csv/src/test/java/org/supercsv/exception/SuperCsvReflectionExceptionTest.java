@@ -27,6 +27,7 @@ import org.junit.Test;
  */
 public class SuperCsvReflectionExceptionTest {
 	
+	private static final String CLASSNAME = "org.supercsv.exception.SuperCsvReflectionException";
 	private static final String MSG = "Reflection failed";
 	private static final Throwable THROWABLE = new RuntimeException("Mirror is broken");
 	
@@ -51,6 +52,7 @@ public class SuperCsvReflectionExceptionTest {
 		SuperCsvReflectionException e = new SuperCsvReflectionException(MSG, THROWABLE);
 		assertEquals(MSG, e.getMessage());
 		assertEquals(THROWABLE, e.getCause());
+		assertEquals(String.format("%s: %s%ncontext=%s", CLASSNAME, MSG, null), e.toString());
 		
 		// test with null msg
 		e = new SuperCsvReflectionException(null, null);
