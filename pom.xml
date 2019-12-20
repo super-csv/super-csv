@@ -256,7 +256,7 @@
 				</configuration>
 			</plugin>
 
-			<!-- Ensures Java 1.5 compatability -->
+			<!-- Ensures Java 1.5 compatibility -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>animal-sniffer-maven-plugin</artifactId>
@@ -269,7 +269,7 @@
 				</configuration>
 				<executions>
 					<execution>
-						<id>check-java15-compatability</id>
+						<id>check-java15-compatibility</id>
 						<phase>test</phase>
 						<goals>
 							<goal>check</goal>
