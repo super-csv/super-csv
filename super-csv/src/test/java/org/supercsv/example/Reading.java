@@ -23,6 +23,7 @@ import org.supercsv.cellprocessor.Optional;
 import org.supercsv.cellprocessor.ParseBool;
 import org.supercsv.cellprocessor.ParseDate;
 import org.supercsv.cellprocessor.ParseInt;
+import org.supercsv.cellprocessor.ParseSqlTime;
 import org.supercsv.cellprocessor.constraint.LMinMax;
 import org.supercsv.cellprocessor.constraint.NotNull;
 import org.supercsv.cellprocessor.constraint.StrRegEx;
@@ -42,9 +43,11 @@ import org.supercsv.prefs.CsvPreference;
  */
 public class Reading {
 	
-	private static final String CSV_FILENAME = "src/test/resources/customers.csv";
+	private static final String ROOT_PATH = Reading.class.getResource("/").getPath() + "/";
 	
-	private static final String VARIABLE_CSV_FILENAME = "src/test/resources/customerswithvariablecolumns.csv";
+	private static final String CSV_FILENAME = ROOT_PATH + "customers.csv";
+	
+	private static final String VARIABLE_CSV_FILENAME = ROOT_PATH +  "customerswithvariablecolumns.csv";
 	
 	public static void main(String[] args) throws Exception {
 		readWithCsvBeanReader();
@@ -70,6 +73,7 @@ public class Reading {
 			new NotNull(), // firstName
 			new NotNull(), // lastName
 			new ParseDate("dd/MM/yyyy"), // birthDate
+			new ParseSqlTime("HH:mm:ss"),
 			new NotNull(), // mailingAddress
 			new Optional(new ParseBool()), // married
 			new Optional(new ParseInt()), // numberOfKids
@@ -220,11 +224,11 @@ public class Reading {
 			
 			// only map the first 3 columns - setting header elements to null means those columns are ignored
 			final String[] header = new String[] { "customerNo", "firstName", "lastName", null, null, null, null, null,
-				null, null };
+				null, null, null };
 			
 			// no processing required for ignored columns
 			final CellProcessor[] processors = new CellProcessor[] { new UniqueHashCode(), new NotNull(),
-				new NotNull(), null, null, null, null, null, null, null };
+				new NotNull(), null, null, null, null, null, null, null, null };
 			
 			CustomerBean customer;
 			while( (customer = beanReader.read(CustomerBean.class, header, processors)) != null ) {
@@ -253,11 +257,11 @@ public class Reading {
 			
 			// only map the first 3 columns - setting header elements to null means those columns are ignored
 			final String[] header = new String[] { "customerNo", "firstName", "lastName", null, null, null, null, null,
-				null, null };
+				null, null, null };
 			
 			// apply some constraints to ignored columns (just because we can)
 			final CellProcessor[] processors = new CellProcessor[] { new UniqueHashCode(), new NotNull(),
-				new NotNull(), new NotNull(), new NotNull(), new Optional(), new Optional(), new NotNull(),
+				new NotNull(), new NotNull(), new NotNull(), new NotNull(), new Optional(), new Optional(), new NotNull(),
 				new NotNull(), new LMinMax(0L, LMinMax.MAX_LONG) };
 			
 			Map<String, Object> customerMap;
