@@ -109,6 +109,9 @@ public class Tokenizer extends AbstractTokenizer {
 			if( line == null ) {
 				return false; // EOF
 			}
+			if( line.startsWith("\uFEFF") ){
+				line = line.replace("\uFEFF", ""); // remove BOM information
+			}
 		}
 		while( ignoreEmptyLines && line.length() == 0 || (commentMatcher != null && commentMatcher.isComment(line)) );
 		
