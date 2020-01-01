@@ -29,6 +29,7 @@ import org.supercsv.util.CsvContext;
  */
 public class SuperCsvExceptionTest {
 	
+	private static final String CLASSNAME = "org.supercsv.exception.SuperCsvException";
 	private static final String MSG = "Something terrible happened!";
 	private static final Throwable THROWABLE = new RuntimeException("I'm the cause of the problem");
 	
@@ -53,6 +54,7 @@ public class SuperCsvExceptionTest {
 		SuperCsvException e = new SuperCsvException(MSG, ANONYMOUS_CSVCONTEXT);
 		assertEquals(MSG, e.getMessage());
 		assertEquals(ANONYMOUS_CSVCONTEXT, e.getCsvContext());
+		assertEquals(String.format("%s: %s%ncontext=%s", CLASSNAME, MSG, ANONYMOUS_CSVCONTEXT), e.toString());
 		
 		// test with null msg and context
 		e = new SuperCsvException(null, (CsvContext) null);
@@ -69,6 +71,7 @@ public class SuperCsvExceptionTest {
 		assertEquals(MSG, e.getMessage());
 		assertEquals(ANONYMOUS_CSVCONTEXT, e.getCsvContext());
 		assertEquals(THROWABLE, e.getCause());
+		assertEquals(String.format("%s: %s%ncontext=%s", CLASSNAME, MSG, ANONYMOUS_CSVCONTEXT), e.toString());
 		
 		// test with null msg, context and throwable
 		e = new SuperCsvException(null, (CsvContext) null, (Throwable) null);
