@@ -31,10 +31,10 @@ import org.supercsv.quote.QuoteMode;
  * <caption>Predefined configurations</caption>
  * <tbody>
  * <tr>
- * <th align="left">Constant</th>
- * <th align="left">Quote character</th>
- * <th align="left">Delimiter character</th>
- * <th align="left">End of line symbols</th>
+ * <th style="text-align:left">Constant</th>
+ * <th style="text-align:left">Quote character</th>
+ * <th style="text-align:left">Delimiter character</th>
+ * <th style="text-align:left">End of line symbols</th>
  * </tr>
  * <tr>
  * <td><code>STANDARD_PREFERENCE</code></td>
