@@ -16,7 +16,7 @@
 package org.supercsv.cellprocessor.ift;
 
 /**
- * Interface to indicate the a <tt>CellProcessor</tt> is capable of processing Date values.
+ * Interface to indicate the a <code>CellProcessor</code> is capable of processing Date values.
  */
 public interface DateCellProcessor extends CellProcessor {
 }

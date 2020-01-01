@@ -49,7 +49,7 @@ public abstract class AbstractCsvWriter implements ICsvWriter {
 	private int columnNumber = 0;
 	
 	/**
-	 * Constructs a new <tt>AbstractCsvWriter</tt> with the supplied writer and preferences.
+	 * Constructs a new <code>AbstractCsvWriter</code> with the supplied writer and preferences.
 	 * 
 	 * @param writer
 	 *            the stream to write to
@@ -63,7 +63,7 @@ public abstract class AbstractCsvWriter implements ICsvWriter {
 	}
 	
 	/**
-	 * Constructs a new <tt>AbstractCsvWriter</tt> with the supplied writer, preferences and option
+	 * Constructs a new <code>AbstractCsvWriter</code> with the supplied writer, preferences and option
 	 * to wrap the writer.
 	 * 
 	 * @param writer

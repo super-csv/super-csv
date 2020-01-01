@@ -37,7 +37,7 @@ public final class Util {
 	
 	/**
 	 * Processes each element in the source List (using the corresponding processor chain in the processors array) and
-	 * adds it to the destination List. A <tt>null</tt> CellProcessor in the array indicates that no processing is
+	 * adds it to the destination List. A <code>null</code> CellProcessor in the array indicates that no processing is
 	 * required and the element should be added as-is.
 	 * 
 	 * @param destination
@@ -46,7 +46,7 @@ public final class Util {
 	 *            the List of source elements to be processed
 	 * @param processors
 	 *            the array of CellProcessors used to process each element. The number of elements in this array must
-	 *            match the size of the source List. A <tt>null</tt> CellProcessor in this array indicates that no
+	 *            match the size of the source List. A <code>null</code> CellProcessor in this array indicates that no
 	 *            processing is required and the element should be added as-is.
 	 * @param lineNo
 	 *            the current line number

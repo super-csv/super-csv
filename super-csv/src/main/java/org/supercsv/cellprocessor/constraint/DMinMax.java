@@ -67,7 +67,7 @@ public class DMinMax extends CellProcessorAdaptor implements StringCellProcessor
 	private final double max;
 	
 	/**
-	 * Constructs a new <tt>DMinMax</tt> processor, which converts the input to a Double and ensures the value is
+	 * Constructs a new <code>DMinMax</code> processor, which converts the input to a Double and ensures the value is
 	 * between the supplied min and max values.
 	 * 
 	 * @param min
@@ -85,7 +85,7 @@ public class DMinMax extends CellProcessorAdaptor implements StringCellProcessor
 	}
 	
 	/**
-	 * Constructs a new <tt>DMinMax</tt> processor, which converts the input to a Double, ensures the value is between
+	 * Constructs a new <code>DMinMax</code> processor, which converts the input to a Double, ensures the value is between
 	 * the supplied min and max values, then calls the next processor in the chain.
 	 * 
 	 * @param min

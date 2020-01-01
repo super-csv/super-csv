@@ -33,7 +33,7 @@ public class ParseEnum extends CellProcessorAdaptor implements StringCellProcess
 	private final boolean ignoreCase;
 	
 	/**
-	 * Constructs a new <tt>ParseEnum</tt> processor, which converts a String to a Enum.
+	 * Constructs a new <code>ParseEnum</code> processor, which converts a String to a Enum.
 	 * 
 	 * @param enumClass
 	 *            the enum class to convert to
@@ -50,7 +50,7 @@ public class ParseEnum extends CellProcessorAdaptor implements StringCellProcess
 	}
 	
 	/**
-	 * Constructs a new <tt>ParseEnum</tt> processor, which converts a String to a Enum, ignoring the case of the input
+	 * Constructs a new <code>ParseEnum</code> processor, which converts a String to a Enum, ignoring the case of the input
 	 * (or not) depending on the supplied flag.
 	 * 
 	 * @param enumClass
@@ -70,7 +70,7 @@ public class ParseEnum extends CellProcessorAdaptor implements StringCellProcess
 	}
 	
 	/**
-	 * Constructs a new <tt>ParseEnum</tt> processor, which converts a String to a Enum then calls the next processor in
+	 * Constructs a new <code>ParseEnum</code> processor, which converts a String to a Enum then calls the next processor in
 	 * the chain.
 	 * 
 	 * @param enumClass
@@ -90,7 +90,7 @@ public class ParseEnum extends CellProcessorAdaptor implements StringCellProcess
 	}
 	
 	/**
-	 * Constructs a new <tt>ParseEnum</tt> processor, which converts a String to a Enum, ignoring the case of the input
+	 * Constructs a new <code>ParseEnum</code> processor, which converts a String to a Enum, ignoring the case of the input
 	 * (or not) depending on the supplied flag, then calls the next processor in the chain.
 	 * 
 	 * @param enumClass

@@ -56,7 +56,7 @@ public abstract class ParseDateTimeAbstract extends CellProcessorAdaptor impleme
 	protected SimpleDateFormat formatter;
 	
 	/**
-	 * Constructs a new <tt>ParseDateTimeAbstract</tt> processor which converts a String to a Date/Time using the
+	 * Constructs a new <code>ParseDateTimeAbstract</code> processor which converts a String to a Date/Time using the
 	 * supplied date format. This constructor uses non-lenient Date interpretation.
 	 * 
 	 * @param dateFormat
@@ -69,7 +69,7 @@ public abstract class ParseDateTimeAbstract extends CellProcessorAdaptor impleme
 	}
 	
 	/**
-	 * Constructs a new <tt>ParseDateTimeAbstract</tt> processor which converts a String to a Date/Time using the
+	 * Constructs a new <code>ParseDateTimeAbstract</code> processor which converts a String to a Date/Time using the
 	 * supplied date format.
 	 * 
 	 * @param dateFormat
@@ -88,7 +88,7 @@ public abstract class ParseDateTimeAbstract extends CellProcessorAdaptor impleme
 	}
 	
 	/**
-	 * Constructs a new <tt>ParseDateTimeAbstract</tt> processor which converts a String to a Date/Time using the
+	 * Constructs a new <code>ParseDateTimeAbstract</code> processor which converts a String to a Date/Time using the
 	 * supplied date format and Locale.
 	 * 
 	 * @param dateFormat
@@ -109,7 +109,7 @@ public abstract class ParseDateTimeAbstract extends CellProcessorAdaptor impleme
 	}
 	
 	/**
-	 * Constructs a new <tt>ParseDateTimeAbstract</tt> processor which converts a String to a Date/Time using the
+	 * Constructs a new <code>ParseDateTimeAbstract</code> processor which converts a String to a Date/Time using the
 	 * supplied date format, then calls the next processor in the chain. This constructor uses non-lenient Date
 	 * interpretation.
 	 * 
@@ -125,7 +125,7 @@ public abstract class ParseDateTimeAbstract extends CellProcessorAdaptor impleme
 	}
 	
 	/**
-	 * Constructs a new <tt>ParseDateTimeAbstract</tt> processor which converts a String to a Date/Time using the
+	 * Constructs a new <code>ParseDateTimeAbstract</code> processor which converts a String to a Date/Time using the
 	 * supplied date format, then calls the next processor in the chain.
 	 * 
 	 * @param dateFormat
@@ -146,7 +146,7 @@ public abstract class ParseDateTimeAbstract extends CellProcessorAdaptor impleme
 	}
 	
 	/**
-	 * Constructs a new <tt>ParseDateTimeAbstract</tt> processor which converts a String to a Date/Time using the
+	 * Constructs a new <code>ParseDateTimeAbstract</code> processor which converts a String to a Date/Time using the
 	 * supplied date format and Locale, then calls the next processor in the chain.
 	 * 
 	 * @param dateFormat

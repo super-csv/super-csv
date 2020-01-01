@@ -27,17 +27,17 @@ import org.supercsv.util.CsvContext;
 /**
  * Converts a String to a Boolean.
  * <p>
- * The default values for true are: <tt>"true", "1", "y", "t"</tt>
+ * The default values for true are: <code>"true", "1", "y", "t"</code>
  * <p>
- * The default values for false are: <tt>"false", "0", "n", "f"</tt>
+ * The default values for false are: <code>"false", "0", "n", "f"</code>
  * <p>
- * By default (unless the <tt>ignoreCase</tt> parameter is supplied on the constructor) this processor will ignore the
- * case of the value, i.e. "true", "TRUE", and "True" will all be converted to <tt>true</tt> (likewise for
- * <tt>false</tt>).
+ * By default (unless the <code>ignoreCase</code> parameter is supplied on the constructor) this processor will ignore the
+ * case of the value, i.e. "true", "TRUE", and "True" will all be converted to <code>true</code> (likewise for
+ * <code>false</code>).
  * <p>
  * Prior to version 2.2.1, this processor always ignored case, so it was necessary to ensure that all supplied
  * true/false values were lowercase, as the input was converted to lowercase before comparison against the true/false
- * values (to handle all variations of case in the input). This is no longer required (just use the <tt>ignoreCase</tt>
+ * values (to handle all variations of case in the input). This is no longer required (just use the <code>ignoreCase</code>
  * parameter).
  * 
  * @author Kasper B. Graversen
@@ -56,7 +56,7 @@ public class ParseBool extends CellProcessorAdaptor implements StringCellProcess
 	private final boolean ignoreCase;
 	
 	/**
-	 * Constructs a new <tt>ParseBool</tt> processor, which converts a String to a Boolean using the default values
+	 * Constructs a new <code>ParseBool</code> processor, which converts a String to a Boolean using the default values
 	 * (ignoring case).
 	 */
 	public ParseBool() {
@@ -64,7 +64,7 @@ public class ParseBool extends CellProcessorAdaptor implements StringCellProcess
 	}
 	
 	/**
-	 * Constructs a new <tt>ParseBool</tt> processor, which converts a String to a Boolean using the default values
+	 * Constructs a new <code>ParseBool</code> processor, which converts a String to a Boolean using the default values
 	 * (ignoring case if desired).
 	 * 
 	 * @since 2.2.1
@@ -76,7 +76,7 @@ public class ParseBool extends CellProcessorAdaptor implements StringCellProcess
 	}
 	
 	/**
-	 * Constructs a new <tt>ParseBool</tt> processor, which converts a String to a Boolean using the default values
+	 * Constructs a new <code>ParseBool</code> processor, which converts a String to a Boolean using the default values
 	 * (ignoring case), then calls the next processor in the chain.
 	 * 
 	 * @param next
@@ -89,7 +89,7 @@ public class ParseBool extends CellProcessorAdaptor implements StringCellProcess
 	}
 	
 	/**
-	 * Constructs a new <tt>ParseBool</tt> processor, which converts a String to a Boolean using the default values
+	 * Constructs a new <code>ParseBool</code> processor, which converts a String to a Boolean using the default values
 	 * (ignoring case if desired), then calls the next processor in the chain.
 	 * 
 	 * @since 2.2.1
@@ -105,7 +105,7 @@ public class ParseBool extends CellProcessorAdaptor implements StringCellProcess
 	}
 	
 	/**
-	 * Constructs a new <tt>ParseBool</tt> processor, which converts a String to a Boolean using the supplied true/false
+	 * Constructs a new <code>ParseBool</code> processor, which converts a String to a Boolean using the supplied true/false
 	 * values (ignoring case).
 	 * 
 	 * @param trueValue
@@ -120,7 +120,7 @@ public class ParseBool extends CellProcessorAdaptor implements StringCellProcess
 	}
 	
 	/**
-	 * Constructs a new <tt>ParseBool</tt> processor, which converts a String to a Boolean using the supplied true/false
+	 * Constructs a new <code>ParseBool</code> processor, which converts a String to a Boolean using the supplied true/false
 	 * values (ignoring case if desired).
 	 * 
 	 * @since 2.2.1
@@ -142,7 +142,7 @@ public class ParseBool extends CellProcessorAdaptor implements StringCellProcess
 	}
 	
 	/**
-	 * Constructs a new <tt>ParseBool</tt> processor, which converts a String to a Boolean using the supplied true/false
+	 * Constructs a new <code>ParseBool</code> processor, which converts a String to a Boolean using the supplied true/false
 	 * values (ignoring case).
 	 * 
 	 * @param trueValues
@@ -159,7 +159,7 @@ public class ParseBool extends CellProcessorAdaptor implements StringCellProcess
 	}
 	
 	/**
-	 * Constructs a new <tt>ParseBool</tt> processor, which converts a String to a Boolean using the supplied true/false
+	 * Constructs a new <code>ParseBool</code> processor, which converts a String to a Boolean using the supplied true/false
 	 * values (ignoring case if desired).
 	 * 
 	 * @since 2.2.1
@@ -183,7 +183,7 @@ public class ParseBool extends CellProcessorAdaptor implements StringCellProcess
 	}
 	
 	/**
-	 * Constructs a new <tt>ParseBool</tt> processor, which converts a String to a Boolean using the supplied true/false
+	 * Constructs a new <code>ParseBool</code> processor, which converts a String to a Boolean using the supplied true/false
 	 * values (ignoring case), then calls the next processor in the chain.
 	 * 
 	 * @param trueValue
@@ -200,7 +200,7 @@ public class ParseBool extends CellProcessorAdaptor implements StringCellProcess
 	}
 	
 	/**
-	 * Constructs a new <tt>ParseBool</tt> processor, which converts a String to a Boolean using the supplied true/false
+	 * Constructs a new <code>ParseBool</code> processor, which converts a String to a Boolean using the supplied true/false
 	 * values (ignoring case if desired), then calls the next processor in the chain.
 	 * 
 	 * @since 2.2.1
@@ -225,7 +225,7 @@ public class ParseBool extends CellProcessorAdaptor implements StringCellProcess
 	}
 	
 	/**
-	 * Constructs a new <tt>ParseBool</tt> processor, which converts a String to a Boolean using the supplied true/false
+	 * Constructs a new <code>ParseBool</code> processor, which converts a String to a Boolean using the supplied true/false
 	 * values (ignoring case), then calls the next processor in the chain.
 	 * 
 	 * @param trueValues
@@ -244,7 +244,7 @@ public class ParseBool extends CellProcessorAdaptor implements StringCellProcess
 	}
 	
 	/**
-	 * Constructs a new <tt>ParseBool</tt> processor, which converts a String to a Boolean using the supplied true/false
+	 * Constructs a new <code>ParseBool</code> processor, which converts a String to a Boolean using the supplied true/false
 	 * values (ignoring case if desired), then calls the next processor in the chain.
 	 * 
 	 * @since 2.2.1

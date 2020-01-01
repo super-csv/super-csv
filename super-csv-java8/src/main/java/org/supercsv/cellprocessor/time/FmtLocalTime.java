@@ -37,7 +37,7 @@ import org.supercsv.cellprocessor.ift.CellProcessor;
  */
 public class FmtLocalTime extends AbstractTemporalAccessorFormattingProcessor<LocalTime> {
 	/**
-	 * Constructs a new <tt>FmtLocalTime</tt> processor, which formats a
+	 * Constructs a new <code>FmtLocalTime</code> processor, which formats a
 	 * LocalTime as a String.
 	 */
 	public FmtLocalTime() {
@@ -45,7 +45,7 @@ public class FmtLocalTime extends AbstractTemporalAccessorFormattingProcessor<Lo
 	}
 
 	/**
-	 * Constructs a new <tt>FmtLocalTime</tt> processor, which formats a
+	 * Constructs a new <code>FmtLocalTime</code> processor, which formats a
 	 * LocalTime as a String, then calls the next processor in the chain.
 	 *
 	 * @param next next processor in the chain
@@ -56,7 +56,7 @@ public class FmtLocalTime extends AbstractTemporalAccessorFormattingProcessor<Lo
 	}
 
 	/**
-	 * Constructs a new <tt>FmtLocalTime</tt> processor, which formats a
+	 * Constructs a new <code>FmtLocalTime</code> processor, which formats a
 	 * LocalTime as a String using the supplied formatter.
 	 *
 	 * @param formatter the formatter to use
@@ -67,7 +67,7 @@ public class FmtLocalTime extends AbstractTemporalAccessorFormattingProcessor<Lo
 	}
 
 	/**
-	 * Constructs a new <tt>FmtLocalTime</tt> processor, which formats a
+	 * Constructs a new <code>FmtLocalTime</code> processor, which formats a
 	 * LocalTime as a String using the supplied formatter, then calls the next
 	 * processor in the chain.
 	 *

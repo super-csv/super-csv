@@ -29,7 +29,7 @@ import org.supercsv.mock.IdentityTransform;
 /**
  * Tests the FmtNumber processor. As FmtNumber uses the default locale, this test must be written in a locale
  * independent way (so the test will pass). The test can be run in a different local by specifying the
- * <tt>user.language</tt> and <tt>user.country</tt> JVM properties (i.e. <tt>-Duser.language=de -Duser.country=DE</tt>).
+ * <code>user.language</code> and <code>user.country</code> JVM properties (i.e. <code>-Duser.language=de -Duser.country=DE</code>).
  * 
  * @author Kasper B. Graversen
  * @author James Bassett

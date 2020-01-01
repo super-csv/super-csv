@@ -50,7 +50,7 @@ public class FmtPeriod extends CellProcessorAdaptor {
 	private final PeriodFormatter formatter;
 
 	/**
-	 * Constructs a new <tt>FmtPeriod</tt> processor, which formats a Joda
+	 * Constructs a new <code>FmtPeriod</code> processor, which formats a Joda
 	 * Period as a String.
 	 */
 	public FmtPeriod() {
@@ -58,7 +58,7 @@ public class FmtPeriod extends CellProcessorAdaptor {
 	}
 
 	/**
-	 * Constructs a new <tt>FmtPeriod</tt> processor, which formats a Joda
+	 * Constructs a new <code>FmtPeriod</code> processor, which formats a Joda
 	 * Period as a String, then calls the next processor in the chain.
 	 * 
 	 * @param next
@@ -72,7 +72,7 @@ public class FmtPeriod extends CellProcessorAdaptor {
 	}
 
 	/**
-	 * Constructs a new <tt>FmtPeriod</tt> processor, which formats a Joda
+	 * Constructs a new <code>FmtPeriod</code> processor, which formats a Joda
 	 * Period as a String using the supplied formatter.
 	 * 
 	 * @param formatter
@@ -86,7 +86,7 @@ public class FmtPeriod extends CellProcessorAdaptor {
 	}
 
 	/**
-	 * Constructs a new <tt>FmtPeriod</tt> processor, which formats a Joda
+	 * Constructs a new <code>FmtPeriod</code> processor, which formats a Joda
 	 * Period as a String using the supplied formatter, then calls the next
 	 * processor in the chain.
 	 * 

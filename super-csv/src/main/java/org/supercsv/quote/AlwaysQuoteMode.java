@@ -27,7 +27,7 @@ import org.supercsv.util.CsvContext;
 public class AlwaysQuoteMode implements QuoteMode {
 	
 	/**
-	 * Constructs a new <tt>AlwaysQuoteMode</tt>.
+	 * Constructs a new <code>AlwaysQuoteMode</code>.
 	 */
 	public AlwaysQuoteMode() {
 	}

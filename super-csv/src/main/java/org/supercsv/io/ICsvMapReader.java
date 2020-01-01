@@ -36,7 +36,7 @@ public interface ICsvMapReader extends ICsvReader {
 	 * 
 	 * @param nameMapping
 	 *            an array of Strings linking the CSV columns to their corresponding entry in the Map (the array length
-	 *            should match the number of columns). A <tt>null</tt> entry in the array indicates that the column
+	 *            should match the number of columns). A <code>null</code> entry in the array indicates that the column
 	 *            should be ignored (e.g. not added to the Map).
 	 * @return a Map of column names to column values (Strings, as no processing is performed), or null if EOF
 	 * @throws IOException
@@ -55,12 +55,12 @@ public interface ICsvMapReader extends ICsvReader {
 	 * 
 	 * @param nameMapping
 	 *            an array of Strings linking the CSV columns to their corresponding entry in the Map (the array length
-	 *            should match the number of columns). A <tt>null</tt> entry in the array indicates that the column
+	 *            should match the number of columns). A <code>null</code> entry in the array indicates that the column
 	 *            should be ignored (e.g. not added to the Map).
 	 * @param processors
 	 *            an array of CellProcessors used to further process data before it is added to the Map (each element in
 	 *            the processors array corresponds with a CSV column - the number of processors should match the number
-	 *            of columns). A <tt>null</tt> entry indicates no further processing is required (the unprocessed String
+	 *            of columns). A <code>null</code> entry indicates no further processing is required (the unprocessed String
 	 *            value will added to the Map).
 	 * @return a Map of column names to column values, or null if EOF
 	 * @throws IOException

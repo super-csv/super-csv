@@ -39,7 +39,7 @@ public class ForbidSubStr extends CellProcessorAdaptor implements StringCellProc
 	private final List<String> forbiddenSubStrings = new ArrayList<String>();
 	
 	/**
-	 * Constructs a new <tt>ForbidSubStr</tt> processor which ensures the input doesn't contain any of the supplied
+	 * Constructs a new <code>ForbidSubStr</code> processor which ensures the input doesn't contain any of the supplied
 	 * substrings.
 	 * 
 	 * @param forbiddenSubStrings
@@ -56,7 +56,7 @@ public class ForbidSubStr extends CellProcessorAdaptor implements StringCellProc
 	}
 	
 	/**
-	 * Constructs a new <tt>ForbidSubStr</tt> processor which ensures the input doesn't contain any of the supplied
+	 * Constructs a new <code>ForbidSubStr</code> processor which ensures the input doesn't contain any of the supplied
 	 * substrings.
 	 * 
 	 * @param forbiddenSubStrings
@@ -73,7 +73,7 @@ public class ForbidSubStr extends CellProcessorAdaptor implements StringCellProc
 	}
 	
 	/**
-	 * Constructs a new <tt>ForbidSubStr</tt> processor which ensures the input doesn't contain any of the supplied
+	 * Constructs a new <code>ForbidSubStr</code> processor which ensures the input doesn't contain any of the supplied
 	 * substrings, then calls the next processor in the chain.
 	 * 
 	 * @param forbiddenSubStrings
@@ -92,7 +92,7 @@ public class ForbidSubStr extends CellProcessorAdaptor implements StringCellProc
 	}
 	
 	/**
-	 * Constructs a new <tt>ForbidSubStr</tt> processor which ensures the input doesn't contain the supplied substring,
+	 * Constructs a new <code>ForbidSubStr</code> processor which ensures the input doesn't contain the supplied substring,
 	 * then calls the next processor in the chain.
 	 * 
 	 * @param forbiddenSubString
@@ -107,7 +107,7 @@ public class ForbidSubStr extends CellProcessorAdaptor implements StringCellProc
 	}
 	
 	/**
-	 * Constructs a new <tt>ForbidSubStr</tt> processor which ensures the input doesn't contain any of the supplied
+	 * Constructs a new <code>ForbidSubStr</code> processor which ensures the input doesn't contain any of the supplied
 	 * substrings, then calls the next processor in the chain.
 	 * 
 	 * @param forbiddenSubStrings

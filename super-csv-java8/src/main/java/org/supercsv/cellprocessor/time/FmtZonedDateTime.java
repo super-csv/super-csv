@@ -37,7 +37,7 @@ import org.supercsv.cellprocessor.ift.CellProcessor;
 public class FmtZonedDateTime extends AbstractTemporalAccessorFormattingProcessor<ZonedDateTime> {
 
 	/**
-	 * Constructs a new <tt>FmtZonedDateTime</tt> processor, which formats a
+	 * Constructs a new <code>FmtZonedDateTime</code> processor, which formats a
 	 * ZonedDateTime as a String.
 	 */
 	public FmtZonedDateTime() {
@@ -45,7 +45,7 @@ public class FmtZonedDateTime extends AbstractTemporalAccessorFormattingProcesso
 	}
 
 	/**
-	 * Constructs a new <tt>FmtZonedDateTime</tt> processor, which formats a
+	 * Constructs a new <code>FmtZonedDateTime</code> processor, which formats a
 	 * ZonedDateTime as a String, then calls the next processor in the chain.
 	 *
 	 * @param next next processor in the chain
@@ -56,7 +56,7 @@ public class FmtZonedDateTime extends AbstractTemporalAccessorFormattingProcesso
 	}
 
 	/**
-	 * Constructs a new <tt>FmtZonedDateTime</tt> processor, which formats a
+	 * Constructs a new <code>FmtZonedDateTime</code> processor, which formats a
 	 * ZonedDateTime as a String using the supplied formatter.
 	 *
 	 * @param formatter the formatter to use
@@ -67,7 +67,7 @@ public class FmtZonedDateTime extends AbstractTemporalAccessorFormattingProcesso
 	}
 
 	/**
-	 * Constructs a new <tt>FmtZonedDateTime</tt> processor, which formats a
+	 * Constructs a new <code>FmtZonedDateTime</code> processor, which formats a
 	 * ZonedDateTime as a String using the supplied formatter, then calls the next
 	 * processor in the chain.
 	 *

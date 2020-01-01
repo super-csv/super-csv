@@ -36,7 +36,7 @@ import org.supercsv.util.CsvContext;
 public class ParsePeriod extends CellProcessorAdaptor implements StringCellProcessor {
 
 	/**
-	 * Constructs a new <tt>ParsePeriod</tt> processor, which parses a String as
+	 * Constructs a new <code>ParsePeriod</code> processor, which parses a String as
 	 * a Period.
 	 */
 	public ParsePeriod() {
@@ -44,7 +44,7 @@ public class ParsePeriod extends CellProcessorAdaptor implements StringCellProce
 	}
 
 	/**
-	 * Constructs a new <tt>ParsePeriod</tt> processor, which parses a String as
+	 * Constructs a new <code>ParsePeriod</code> processor, which parses a String as
 	 * a Period, then calls the next processor in the chain.
 	 *
 	 * @param next the next processor in the chain

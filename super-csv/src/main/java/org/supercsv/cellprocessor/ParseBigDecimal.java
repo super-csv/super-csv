@@ -24,13 +24,13 @@ import org.supercsv.exception.SuperCsvCellProcessorException;
 import org.supercsv.util.CsvContext;
 
 /**
- * Convert a String to a BigDecimal. It uses the String constructor of BigDecimal (<tt>new BigDecimal("0.1")</tt>) as it
+ * Convert a String to a BigDecimal. It uses the String constructor of BigDecimal (<code>new BigDecimal("0.1")</code>) as it
  * yields predictable results (see {@link BigDecimal}).
  * <p>
  * If the data uses a character other than "." as a decimal separator (Germany uses "," for example), then use the
- * constructor that accepts a <tt>DecimalFormatSymbols</tt> object, as it will convert the character to a "." before
+ * constructor that accepts a <code>DecimalFormatSymbols</code> object, as it will convert the character to a "." before
  * creating the BigDecimal. Likewise if the data contains a grouping separator (Germany uses "." for example) then
- * supplying a <tt>DecimalFormatSymbols</tt> object will allow grouping separators to be removed before parsing.
+ * supplying a <code>DecimalFormatSymbols</code> object will allow grouping separators to be removed before parsing.
  * 
  * @since 1.30
  * @author Kasper B. Graversen
@@ -43,15 +43,15 @@ public class ParseBigDecimal extends CellProcessorAdaptor implements StringCellP
 	private final DecimalFormatSymbols symbols;
 	
 	/**
-	 * Constructs a new <tt>ParseBigDecimal</tt> processor, which converts a String to a BigDecimal.
+	 * Constructs a new <code>ParseBigDecimal</code> processor, which converts a String to a BigDecimal.
 	 */
 	public ParseBigDecimal() {
 		this.symbols = null;
 	}
 	
 	/**
-	 * Constructs a new <tt>ParseBigDecimal</tt> processor, which converts a String to a BigDecimal using the supplied
-	 * <tt>DecimalFormatSymbols</tt> object to convert any decimal separator to a "." before creating the BigDecimal.
+	 * Constructs a new <code>ParseBigDecimal</code> processor, which converts a String to a BigDecimal using the supplied
+	 * <code>DecimalFormatSymbols</code> object to convert any decimal separator to a "." before creating the BigDecimal.
 	 * 
 	 * @param symbols
 	 *            the decimal format symbols, containing the decimal separator
@@ -65,7 +65,7 @@ public class ParseBigDecimal extends CellProcessorAdaptor implements StringCellP
 	}
 	
 	/**
-	 * Constructs a new <tt>ParseBigDecimal</tt> processor, which converts a String to a BigDecimal then calls the next
+	 * Constructs a new <code>ParseBigDecimal</code> processor, which converts a String to a BigDecimal then calls the next
 	 * processor in the chain.
 	 * 
 	 * @param next
@@ -79,8 +79,8 @@ public class ParseBigDecimal extends CellProcessorAdaptor implements StringCellP
 	}
 	
 	/**
-	 * Constructs a new <tt>ParseBigDecimal</tt> processor, which converts a String to a BigDecimal using the supplied
-	 * <tt>DecimalFormatSymbols</tt> object to convert any decimal separator to a "." before creating the BigDecimal,
+	 * Constructs a new <code>ParseBigDecimal</code> processor, which converts a String to a BigDecimal using the supplied
+	 * <code>DecimalFormatSymbols</code> object to convert any decimal separator to a "." before creating the BigDecimal,
 	 * then calls the next processor in the chain.
 	 * 
 	 * @param symbols

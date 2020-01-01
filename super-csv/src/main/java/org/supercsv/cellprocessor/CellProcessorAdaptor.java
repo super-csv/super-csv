@@ -26,7 +26,7 @@ import org.supercsv.util.CsvContext;
 
 /**
  * Abstract super class containing shared behaviour of all cell processors. Processors are linked together in a linked
- * list. The end element of this list should always be an instance of <tt>NullObjectPattern</tt>.
+ * list. The end element of this list should always be an instance of <code>NullObjectPattern</code>.
  * 
  * @author Kasper B. Graversen
  * @author James Bassett
@@ -45,10 +45,10 @@ public abstract class CellProcessorAdaptor implements CellProcessor {
 	}
 	
 	/**
-	 * Constructor used by CellProcessors that require <tt>CellProcessor</tt> chaining (further processing is required).
+	 * Constructor used by CellProcessors that require <code>CellProcessor</code> chaining (further processing is required).
 	 * 
 	 * @param next
-	 *            the next <tt>CellProcessor</tt> in the chain
+	 *            the next <code>CellProcessor</code> in the chain
 	 * @throws NullPointerException
 	 *             if next is null
 	 */
@@ -61,8 +61,8 @@ public abstract class CellProcessorAdaptor implements CellProcessor {
 	}
 	
 	/**
-	 * Checks that the input value is not <tt>null</tt>, throwing a <tt>NullInputException</tt> if it is. This method
-	 * should be called by all processors that need to ensure the input is not <tt>null</tt>.
+	 * Checks that the input value is not <code>null</code>, throwing a <code>NullInputException</code> if it is. This method
+	 * should be called by all processors that need to ensure the input is not <code>null</code>.
 	 * 
 	 * @param value
 	 *            the input value
@@ -89,9 +89,9 @@ public abstract class CellProcessorAdaptor implements CellProcessor {
 	}
 	
 	/**
-	 * This is an implementation-specific processor and should only be used by the <tt>CellProcessorAdaptor</tt> class.
+	 * This is an implementation-specific processor and should only be used by the <code>CellProcessorAdaptor</code> class.
 	 * It is the implementation of the null object pattern (it does nothing - just returns the value!) and should always
-	 * be the last <tt>CellProcessor</tt> in the chain. It is implemented as a reusable singleton to avoid unnecessary
+	 * be the last <code>CellProcessor</code> in the chain. It is implemented as a reusable singleton to avoid unnecessary
 	 * object creation.
 	 * 
 	 * @author Kasper B. Graversen

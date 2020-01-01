@@ -41,7 +41,7 @@ public class IsElementOf extends CellProcessorAdaptor implements BoolCellProcess
 	private final Collection<Object> collection;
 	
 	/**
-	 * Constructs a new <tt>IsElementOf</tt>, which ensures that the input value is an element of a Collection.
+	 * Constructs a new <code>IsElementOf</code>, which ensures that the input value is an element of a Collection.
 	 * 
 	 * @param collection
 	 *            the collection to check
@@ -55,7 +55,7 @@ public class IsElementOf extends CellProcessorAdaptor implements BoolCellProcess
 	}
 	
 	/**
-	 * Constructs a new <tt>IsElementOf</tt>, which ensures that the input value is an element of a Collection, then
+	 * Constructs a new <code>IsElementOf</code>, which ensures that the input value is an element of a Collection, then
 	 * calls the next processor in the chain.
 	 * 
 	 * @param collection

@@ -31,7 +31,7 @@ public class SuperCsvException extends RuntimeException {
 	private CsvContext csvContext;
 	
 	/**
-	 * Constructs a new <tt>SuperCsvException</tt>.
+	 * Constructs a new <code>SuperCsvException</code>.
 	 * 
 	 * @param msg
 	 *            the exception message
@@ -41,7 +41,7 @@ public class SuperCsvException extends RuntimeException {
 	}
 	
 	/**
-	 * Constructs a new <tt>SuperCsvException</tt>.
+	 * Constructs a new <code>SuperCsvException</code>.
 	 * 
 	 * @param msg
 	 *            the exception message
@@ -56,7 +56,7 @@ public class SuperCsvException extends RuntimeException {
 	}
 	
 	/**
-	 * Constructs a new <tt>SuperCsvException</tt>.
+	 * Constructs a new <code>SuperCsvException</code>.
 	 * 
 	 * @param msg
 	 *            the exception message
@@ -75,7 +75,7 @@ public class SuperCsvException extends RuntimeException {
 	/**
 	 * Gets the current CSV context.
 	 * 
-	 * @return the current CSV context, or <tt>null</tt> if none is available
+	 * @return the current CSV context, or <code>null</code> if none is available
 	 */
 	public CsvContext getCsvContext() {
 		return csvContext;

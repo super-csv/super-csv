@@ -26,7 +26,7 @@ public class CommentMatches implements CommentMatcher {
 	private final Pattern pattern;
 	
 	/**
-	 * Constructs a new <tt>CommentMatches</tt> comment matcher. Ensure that the regex is efficient (ideally matching start/end
+	 * Constructs a new <code>CommentMatches</code> comment matcher. Ensure that the regex is efficient (ideally matching start/end
 	 * characters) as a complex regex can significantly slow down reading.
 	 * 
 	 * @param regex

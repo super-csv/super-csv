@@ -18,7 +18,7 @@ package org.supercsv.cellprocessor.ift;
 import org.supercsv.util.CsvContext;
 
 /**
- * Defines the interface of all <tt>CellProcessor</tt>s.
+ * Defines the interface of all <code>CellProcessor</code>s.
  */
 public interface CellProcessor {
 	

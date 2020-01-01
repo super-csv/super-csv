@@ -47,14 +47,14 @@ public interface ICsvListReader extends ICsvReader {
 	
 	/**
 	 * Reads a row of a CSV file and returns a List of Objects containing each column. The data can be further processed
-	 * by cell processors (each element in the processors array corresponds with a CSV column). A <tt>null</tt> entry in
+	 * by cell processors (each element in the processors array corresponds with a CSV column). A <code>null</code> entry in
 	 * the processors array indicates no further processing is required (the unprocessed String value will be added to
 	 * the List). Prior to version 2.0.0 this method returned a List of Strings.
 	 * 
 	 * @param processors
 	 *            an array of CellProcessors used to further process data before it is added to the List (each element
 	 *            in the processors array corresponds with a CSV column - the number of processors should match the
-	 *            number of columns). A <tt>null</tt> entry indicates no further processing is required (the unprocessed
+	 *            number of columns). A <code>null</code> entry indicates no further processing is required (the unprocessed
 	 *            String value will be added to the List).
 	 * @return the List of columns, or null if EOF
 	 * @throws IOException
@@ -77,7 +77,7 @@ public interface ICsvListReader extends ICsvReader {
 	 * @param processors
 	 *            an array of CellProcessors used to further process the last row of CSV data that was read (each
 	 *            element in the processors array corresponds with a CSV column - the number of processors should match
-	 *            the number of columns). A <tt>null</tt> entry indicates no further processing is required (the
+	 *            the number of columns). A <code>null</code> entry indicates no further processing is required (the
 	 *            unprocessed String value will be added to the List).
 	 * @return the List of processed columns
 	 * @throws NullPointerException

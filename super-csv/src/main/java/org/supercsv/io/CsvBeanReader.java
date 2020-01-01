@@ -50,8 +50,8 @@ public class CsvBeanReader extends AbstractCsvReader implements ICsvBeanReader {
 	private final MethodCache cache = new MethodCache();
 	
 	/**
-	 * Constructs a new <tt>CsvBeanReader</tt> with the supplied Reader and CSV preferences. Note that the
-	 * <tt>reader</tt> will be wrapped in a <tt>BufferedReader</tt> before accessed.
+	 * Constructs a new <code>CsvBeanReader</code> with the supplied Reader and CSV preferences. Note that the
+	 * <code>reader</code> will be wrapped in a <code>BufferedReader</code> before accessed.
 	 * 
 	 * @param reader
 	 *            the reader
@@ -65,7 +65,7 @@ public class CsvBeanReader extends AbstractCsvReader implements ICsvBeanReader {
 	}
 	
 	/**
-	 * Constructs a new <tt>CsvBeanReader</tt> with the supplied (custom) Tokenizer and CSV preferences. The tokenizer
+	 * Constructs a new <code>CsvBeanReader</code> with the supplied (custom) Tokenizer and CSV preferences. The tokenizer
 	 * should be set up with the Reader (CSV input) and CsvPreference beforehand.
 	 * 
 	 * @param tokenizer

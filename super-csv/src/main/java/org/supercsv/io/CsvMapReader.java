@@ -36,8 +36,8 @@ import org.supercsv.util.Util;
 public class CsvMapReader extends AbstractCsvReader implements ICsvMapReader {
 	
 	/**
-	 * Constructs a new <tt>CsvMapReader</tt> with the supplied Reader and CSV preferences. Note that the
-	 * <tt>reader</tt> will be wrapped in a <tt>BufferedReader</tt> before accessed.
+	 * Constructs a new <code>CsvMapReader</code> with the supplied Reader and CSV preferences. Note that the
+	 * <code>reader</code> will be wrapped in a <code>BufferedReader</code> before accessed.
 	 * 
 	 * @param reader
 	 *            the reader
@@ -51,7 +51,7 @@ public class CsvMapReader extends AbstractCsvReader implements ICsvMapReader {
 	}
 	
 	/**
-	 * Constructs a new <tt>CsvMapReader</tt> with the supplied (custom) Tokenizer and CSV preferences. The tokenizer
+	 * Constructs a new <code>CsvMapReader</code> with the supplied (custom) Tokenizer and CSV preferences. The tokenizer
 	 * should be set up with the Reader (CSV input) and CsvPreference beforehand.
 	 * 
 	 * @param tokenizer

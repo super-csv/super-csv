@@ -37,7 +37,7 @@ import org.supercsv.cellprocessor.ift.CellProcessor;
  */
 public class FmtLocalDate extends AbstractTemporalAccessorFormattingProcessor<LocalDate> {
 	/**
-	 * Constructs a new <tt>FmtLocalDate</tt> processor, which formats a
+	 * Constructs a new <code>FmtLocalDate</code> processor, which formats a
 	 * LocalDate as a String, with the same output as {@link LocalDate#toString()}
 	 */
 	public FmtLocalDate() {
@@ -45,7 +45,7 @@ public class FmtLocalDate extends AbstractTemporalAccessorFormattingProcessor<Lo
 	}
 
 	/**
-	 * Constructs a new <tt>FmtLocalDate</tt> processor, which formats a
+	 * Constructs a new <code>FmtLocalDate</code> processor, which formats a
 	 * LocalDate as a String, then calls the next processor in the chain.
 	 *
 	 * @param next next processor in the chain
@@ -57,7 +57,7 @@ public class FmtLocalDate extends AbstractTemporalAccessorFormattingProcessor<Lo
 	}
 
 	/**
-	 * Constructs a new <tt>FmtLocalDate</tt> processor, which formats a
+	 * Constructs a new <code>FmtLocalDate</code> processor, which formats a
 	 * LocalDate as a String using the supplied formatter.
 	 *
 	 * @param formatter the formatter to use
@@ -68,7 +68,7 @@ public class FmtLocalDate extends AbstractTemporalAccessorFormattingProcessor<Lo
 	}
 
 	/**
-	 * Constructs a new <tt>FmtLocalDate</tt> processor, which formats a
+	 * Constructs a new <code>FmtLocalDate</code> processor, which formats a
 	 * LocalDate as a String using the supplied formatter, then calls the next
 	 * processor in the chain.
 	 *

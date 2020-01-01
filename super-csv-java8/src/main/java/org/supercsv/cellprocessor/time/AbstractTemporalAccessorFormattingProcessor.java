@@ -37,7 +37,7 @@ public abstract class AbstractTemporalAccessorFormattingProcessor<T extends Temp
 	private final DateTimeFormatter formatter;
 
 	/**
-	 * Constructs a new <tt>AbstractTemporalAccessorFormattingProcessor</tt> processor,
+	 * Constructs a new <code>AbstractTemporalAccessorFormattingProcessor</code> processor,
 	 * which formats the type as a String.
 	 */
 	public AbstractTemporalAccessorFormattingProcessor() {
@@ -46,7 +46,7 @@ public abstract class AbstractTemporalAccessorFormattingProcessor<T extends Temp
 	}
 
 	/**
-	 * Constructs a new <tt>AbstractTemporalAccessorFormattingProcessor</tt> processor,
+	 * Constructs a new <code>AbstractTemporalAccessorFormattingProcessor</code> processor,
 	 * which formats the type as a String, then calls the next processor in
 	 * the chain.
 	 *
@@ -60,7 +60,7 @@ public abstract class AbstractTemporalAccessorFormattingProcessor<T extends Temp
 	}
 
 	/**
-	 * Constructs a new <tt>AbstractTemporalAccessorFormattingProcessor</tt> processor,
+	 * Constructs a new <code>AbstractTemporalAccessorFormattingProcessor</code> processor,
 	 * which formats the type as a String using the supplied formatter.
 	 *
 	 * @param formatter the formatter to use
@@ -72,7 +72,7 @@ public abstract class AbstractTemporalAccessorFormattingProcessor<T extends Temp
 	}
 
 	/**
-	 * Constructs a new <tt>AbstractTemporalAccessorFormattingProcessor</tt> processor,
+	 * Constructs a new <code>AbstractTemporalAccessorFormattingProcessor</code> processor,
 	 * which formats the type as a String using the supplied formatter,
 	 * then calls the next processor in the chain.
 	 *

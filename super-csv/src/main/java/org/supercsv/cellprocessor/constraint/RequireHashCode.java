@@ -48,7 +48,7 @@ public class RequireHashCode extends CellProcessorAdaptor implements BoolCellPro
 	private final Set<Integer> requiredHashCodes = new HashSet<Integer>();
 	
 	/**
-	 * Constructs a new <tt>RequireHashCode</tt> processor, which converts the input to a String, and ensures that the
+	 * Constructs a new <code>RequireHashCode</code> processor, which converts the input to a String, and ensures that the
 	 * input's hash function matches any of a given set of hashcodes.
 	 * 
 	 * @param requiredHashcodes
@@ -67,7 +67,7 @@ public class RequireHashCode extends CellProcessorAdaptor implements BoolCellPro
 	}
 	
 	/**
-	 * Constructs a new <tt>RequireHashCode</tt> processor, which converts the input to a String, ensures that the
+	 * Constructs a new <code>RequireHashCode</code> processor, which converts the input to a String, ensures that the
 	 * input's hash function matches the supplied hashcode, then calls the next processor in the chain.
 	 * 
 	 * @param requiredHashcode
@@ -82,7 +82,7 @@ public class RequireHashCode extends CellProcessorAdaptor implements BoolCellPro
 	}
 	
 	/**
-	 * Constructs a new <tt>RequireHashCode</tt> processor, which converts the input to a String, ensures that the
+	 * Constructs a new <code>RequireHashCode</code> processor, which converts the input to a String, ensures that the
 	 * input's hash function matches any of a given set of hashcodes, then calls the next processor in the chain.
 	 * 
 	 * @param requiredHashcodes

@@ -35,14 +35,14 @@ import org.supercsv.util.CsvContext;
 public class FmtDuration extends CellProcessorAdaptor {
 
 	/**
-	 * Constructs a new <tt>FmtDuration</tt> processor, which formats a Joda
+	 * Constructs a new <code>FmtDuration</code> processor, which formats a Joda
 	 * Duration as a String.
 	 */
 	public FmtDuration() {
 	}
 
 	/**
-	 * Constructs a new <tt>FmtDuration</tt> processor, which formats a Joda
+	 * Constructs a new <code>FmtDuration</code> processor, which formats a Joda
 	 * Duration as a String, then calls the next processor in the chain.
 	 * 
 	 * @param next
