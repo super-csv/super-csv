@@ -27,7 +27,7 @@ import org.supercsv.quote.QuoteMode;
  * <p>
  * <strong>Please note:</strong> the end of line symbols are <em>only</em> used for writing.
  * </p>
- * <table border="0" cellpadding="1" >
+ * <table style="border-spacing: 2px; padding: 1px">
  * <caption>Predefined configurations</caption>
  * <tbody>
  * <tr>
