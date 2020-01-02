@@ -28,7 +28,7 @@ import java.util.List;
  * @author Kasper B. Graversen
  * @author James Bassett
  */
-public final class CsvContext implements Serializable {
+public class CsvContext implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
