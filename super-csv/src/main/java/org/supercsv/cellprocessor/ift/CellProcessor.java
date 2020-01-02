@@ -24,7 +24,7 @@ public interface CellProcessor {
 	
 	/**
 	 * This method is invoked by the framework when the processor needs to process data or check constraints.
-	 * 
+	 * @param <T> the return type
 	 * @param value
 	 *            the value to be processed
 	 * @param context
