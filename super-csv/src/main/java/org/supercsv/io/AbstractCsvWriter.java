@@ -126,6 +126,11 @@ public abstract class AbstractCsvWriter implements ICsvWriter {
 	public int getRowNumber() {
 		return rowNumber;
 	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public CsvPreference getPreference() { return preference; }
 	
 	/**
 	 * Writes a List of columns as a line to the CsvWriter.
@@ -225,8 +230,9 @@ public abstract class AbstractCsvWriter implements ICsvWriter {
 		
 		// update the current row/line numbers
 		incrementRowAndLineNo();
-		
-		writeRow(header);
+		if( preference.getWriteHeader() ) {
+			writeRow(header);
+		}
 	}
 	
 }

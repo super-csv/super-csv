@@ -18,6 +18,7 @@ package org.supercsv.io;
 import java.io.Closeable;
 import java.io.Flushable;
 import java.io.IOException;
+import org.supercsv.prefs.CsvPreference;
 
 /**
  * The interface for CSV writers.
@@ -44,6 +45,14 @@ public interface ICsvWriter extends Closeable, Flushable {
 	 * @since 2.0.0
 	 */
 	int getRowNumber();
+
+	/**
+	 * Gets the CSV preferences object that the writer is set to use.
+	 *
+	 * @return the CSV preferences for the writer
+	 * @since 2.5.0
+	 */
+	CsvPreference getPreference();
 	
 	/**
 	 * Writes a single-line comment to the CSV file (the comment must already include any special comment characters

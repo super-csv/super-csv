@@ -18,6 +18,7 @@ package org.supercsv.io;
 
 import static org.junit.Assert.*;
 import static org.supercsv.SuperCsvTestUtils.CSV_FILE;
+import static org.supercsv.SuperCsvTestUtils.CSV_FILE_WITHOUT_HEADERS;
 import static org.supercsv.SuperCsvTestUtils.HEADER;
 import static org.supercsv.SuperCsvTestUtils.CUSTOMERS;
 import static org.supercsv.SuperCsvTestUtils.STRING_CUSTOMERS;
@@ -116,6 +117,21 @@ public class CsvResultSetWriterTest {
 		csvResultSetWriter.write(resultSetMock);
 		csvResultSetWriter.flush();
 		assertEquals(CSV_FILE, writer.toString());
+	}
+
+	/**
+	 * Tests writing ResultSet to a CSV file with the writeHeaders flag set to false (no CellProcessors)
+	 *
+	 * @throws SQLException
+	 */
+	@Test
+	public void testWriteWithoutHeaders() throws IOException, SQLException {
+		final CsvPreference withoutHeadersPreference = new CsvPreference.Builder(CsvPreference.STANDARD_PREFERENCE).setWriteHeader(false).build();
+		csvResultSetWriter = new CsvResultSetWriter(writer, withoutHeadersPreference);
+		final ResultSet resultSetMock = new ResultSetMock(TEST_DATA_STRINGS, HEADER);
+		csvResultSetWriter.write(resultSetMock);
+		csvResultSetWriter.flush();
+		assertEquals(CSV_FILE_WITHOUT_HEADERS, writer.toString());
 	}
 	
 	/**

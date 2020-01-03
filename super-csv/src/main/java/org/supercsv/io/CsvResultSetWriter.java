@@ -59,8 +59,9 @@ public class CsvResultSetWriter extends AbstractCsvWriter implements ICsvResultS
 		if( resultSet == null ) {
 			throw new NullPointerException("ResultSet cannot be null");
 		}
-		
-		writeHeaders(resultSet); // increments row and line number
+		if ( getPreference().getWriteHeader() ) {
+			writeHeaders(resultSet); // increments row and line number
+		}
 		writeContents(resultSet); // increments row and line number before writing of each row
 	}
 	
@@ -74,8 +75,9 @@ public class CsvResultSetWriter extends AbstractCsvWriter implements ICsvResultS
 		if( writeProcessors == null ) {
 			throw new NullPointerException("CellProcessor[] cannot be null");
 		}
-		
-		writeHeaders(resultSet); // increments row and line number
+		if ( getPreference().getWriteHeader() ) {
+			writeHeaders(resultSet); // increments row and line number
+		}
 		writeContents(resultSet, writeProcessors); // increments row and line number before writing of each row
 	}
 	

@@ -145,6 +145,8 @@ public final class CsvPreference {
 	private final EmptyColumnParsing emptyColumnParsing;
 
 	private final char quoteEscapeChar;
+
+	private final boolean writeHeader;
 	
 	/**
 	 * Constructs a new <tt>CsvPreference</tt> from a Builder.
@@ -161,6 +163,7 @@ public final class CsvPreference {
 		this.maxLinesPerRow = builder.maxLinesPerRow;
 		this.emptyColumnParsing = builder.emptyColumnParsing;
 		this.quoteEscapeChar = builder.quoteEscapeChar;
+		this.writeHeader = builder.writeHeader;
 	}
 	
 	/**
@@ -265,6 +268,16 @@ public final class CsvPreference {
 	}
 
 	/**
+	 * Returns if the header should be written to the CSV file. The CsvResultSetWriter class uses this
+	 * variable to determine if it should automatically write the header to the output CSV file.
+	 *
+	 * @return true if the header should be written to the CSV file.
+	 */
+	public boolean getWriteHeader() {
+		return writeHeader;
+	}
+
+	/**
 	 * Builds immutable <tt>CsvPreference</tt> instances. The builder pattern allows for additional preferences to be
 	 * added in the future.
 	 */
@@ -291,6 +304,8 @@ public final class CsvPreference {
 		private EmptyColumnParsing emptyColumnParsing;
 
 		private char quoteEscapeChar;
+
+		private boolean writeHeader = true;
 		
 		/**
 		 * Constructs a Builder with all of the values from an existing <tt>CsvPreference</tt> instance. Useful if you
@@ -477,6 +492,19 @@ public final class CsvPreference {
 		 */
 		public Builder setQuoteEscapeChar(final char quoteEscapeChar) {
 			this.quoteEscapeChar = quoteEscapeChar;
+			return this;
+		}
+
+		/**
+		 * Value indicating if headers should be written to the CSV file by a class implementing ICsvWriter.
+		 * The default value is true.
+		 *
+		 * @since 2.5.0
+		 * @param writeHeader value indicating if the header should be written
+		 * @return the updated Builder
+		 */
+		public Builder setWriteHeader(final boolean writeHeader) {
+			this.writeHeader = writeHeader;
 			return this;
 		}
 		
