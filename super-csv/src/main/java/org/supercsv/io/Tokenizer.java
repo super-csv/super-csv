@@ -303,14 +303,14 @@ public class Tokenizer extends AbstractTokenizer {
 			charIndex++; // read next char of the line
 		}
 	}
-/**
- * Adds the currentColumn to columns list managing the case with currentColumn.length() == 0
- * It was introduced to manage the emptyColumnParsing.
- * 
- * @param columns
- * @param line
- * @param charIndex
- */
+	/**
+	 * Adds the currentColumn to columns list managing the case with currentColumn.length() == 0
+	 * It was introduced to manage the emptyColumnParsing.
+	 * 
+	 * @param columns
+	 * @param line
+	 * @param charIndex
+	 */
 	private void addColumn(final List<String> columns, String line, int charIndex) {
 		
 		if(currentColumn.length() > 0){
