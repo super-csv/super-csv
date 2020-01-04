@@ -97,6 +97,10 @@ import org.supercsv.quote.QuoteMode;
  * <li>ignoring empty lines (enabled by default)</li>
  * <li>setting the maximum number of lines a row of CSV can span (useful for debugging files with mismatched quotes)</li>
  * </ul>
+ * <p>
+ * <strong>Tip:</strong>Create a CsvPreference instance for each writer instead of using predefined static preferences
+ * in CsvPreference When writing in multi thread.
+ * </p>
  * 
  * @author Kasper B. Graversen
  * @author James Bassett
