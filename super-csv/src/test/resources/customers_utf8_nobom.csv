@@ -1,0 +1,4 @@
+customerNo,firstName,lastName,birthDate,birthTime,mailingAddress,married,numberOfKids,favouriteQuote,email,loyaltyPoints
+1,John,Dunbar,13/06/1945,10:20:00,"1600 Amphitheatre Parkway
+Mountain View, CA 94043
+United States",,,"""May the Force be with you."" - Star Wars",jdunbar@gmail.com,0
