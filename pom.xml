@@ -42,6 +42,7 @@
 		<slf4j.version>1.7.5</slf4j.version>
 
 		<!-- properties ensure reporting plugin versions are same as managed versions -->
+		<coveralls.plugin.version>4.3.0</coveralls.plugin.version>
 		<jacoco.plugin.version>0.7.9</jacoco.plugin.version>
 		<findbugs-plugin.version>3.0.0</findbugs-plugin.version>
 		<javadoc.plugin.version>2.10.1</javadoc.plugin.version>
@@ -148,7 +149,11 @@
 					<artifactId>maven-surefire-report-plugin</artifactId>
 					<version>${surefire.plugin.version}</version>
 				</plugin>
-
+				<plugin>
+					<groupId>org.eluder.coveralls</groupId>
+					<artifactId>coveralls-maven-plugin</artifactId>
+					<version>${coveralls.plugin.version}</version>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 
@@ -215,6 +220,13 @@
 						</goals>
 					</execution>
 				</executions>
+			</plugin>
+
+			<!-- Integrate jacoco with github travis through coveralls -->
+			<plugin>
+				<groupId>org.eluder.coveralls</groupId>
+				<artifactId>coveralls-maven-plugin</artifactId>
+				<version>${coveralls.plugin.version}</version>
 			</plugin>
 
 			<!-- Runs the Junit tests -->
