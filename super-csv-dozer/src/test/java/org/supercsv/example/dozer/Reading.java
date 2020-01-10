@@ -33,8 +33,9 @@ import org.supercsv.util.CsvContext;
  * Dozer reading examples.
  */
 public class Reading {
+	private static final String ROOT_PATH = Reading.class.getResource("/").getPath() + "/";
 	
-	private static final String CSV_FILENAME = "src/test/resources/surveyresponses.csv";
+	private static final String CSV_FILENAME = ROOT_PATH + "surveyresponses.csv";
 	
 	private static final String[] FIELD_MAPPING = new String[] { 
 		"age",                   // simple field mapping (like CsvBeanReader)
