@@ -1,12 +1,12 @@
 /*
  * Copyright 2007 Kasper B. Graversen
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,21 +19,13 @@ import java.io.FileReader;
 import java.util.List;
 import java.util.Map;
 
-import org.supercsv.cellprocessor.Optional;
-import org.supercsv.cellprocessor.ParseBool;
-import org.supercsv.cellprocessor.ParseDate;
-import org.supercsv.cellprocessor.ParseInt;
+import org.supercsv.cellprocessor.*;
 import org.supercsv.cellprocessor.constraint.LMinMax;
 import org.supercsv.cellprocessor.constraint.NotNull;
 import org.supercsv.cellprocessor.constraint.StrRegEx;
 import org.supercsv.cellprocessor.constraint.UniqueHashCode;
 import org.supercsv.cellprocessor.ift.CellProcessor;
-import org.supercsv.io.CsvBeanReader;
-import org.supercsv.io.CsvListReader;
-import org.supercsv.io.CsvMapReader;
-import org.supercsv.io.ICsvBeanReader;
-import org.supercsv.io.ICsvListReader;
-import org.supercsv.io.ICsvMapReader;
+import org.supercsv.io.*;
 import org.supercsv.mock.CustomerBean;
 import org.supercsv.prefs.CsvPreference;
 
@@ -41,18 +33,20 @@ import org.supercsv.prefs.CsvPreference;
  * Examples of reading CSV files.
  */
 public class Reading {
+	private static final String ROOT_PATH = Reading.class.getResource("/").getPath() + "/";
+
+	private static final String CSV_FILENAME = ROOT_PATH + "customers.csv";
 	
-	private static final String CSV_FILENAME = "src/test/resources/customers.csv";
-	
-	private static final String VARIABLE_CSV_FILENAME = "src/test/resources/customerswithvariablecolumns.csv";
+	private static final String VARIABLE_CSV_FILENAME = ROOT_PATH + "customerswithvariablecolumns.csv";
 	
 	public static void main(String[] args) throws Exception {
-		readWithCsvBeanReader();
-		readWithCsvListReader();
-		readVariableColumnsWithCsvListReader();
-		readWithCsvMapReader();
-		partialReadWithCsvBeanReader();
-		partialReadWithCsvMapReader();
+//		readWithCsvBeanReader();
+		readWithCsvPojoReader();
+//		readWithCsvListReader();
+//		readVariableColumnsWithCsvListReader();
+//		readWithCsvMapReader();
+//		partialReadWithCsvBeanReader();
+//		partialReadWithCsvMapReader();
 	}
 	
 	/**
@@ -70,6 +64,7 @@ public class Reading {
 			new NotNull(), // firstName
 			new NotNull(), // lastName
 			new ParseDate("dd/MM/yyyy"), // birthDate
+			new ParseSqlTime("HH:mm:ss"), // birthTime
 			new NotNull(), // mailingAddress
 			new Optional(new ParseBool()), // married
 			new Optional(new ParseInt()), // numberOfKids
@@ -107,7 +102,31 @@ public class Reading {
 			}
 		}
 	}
-	
+
+	private static void readWithCsvPojoReader() throws Exception {
+
+		ICsvPojoReader pojoReader = null;
+		try {
+			pojoReader = new CsvPojoReader(new FileReader(CSV_FILENAME), CsvPreference.STANDARD_PREFERENCE);
+
+			// the header elements are used to map the values to the bean (names must match)
+			final String[] header = pojoReader.getHeader(true);
+			final CellProcessor[] processors = getProcessors();
+
+			CustomerBean customer;
+			while( (customer = pojoReader.read(CustomerBean.class, header, processors)) != null ) {
+				System.out.println(String.format("lineNo=%s, rowNo=%s, customer=%s", pojoReader.getLineNumber(),
+						pojoReader.getRowNumber(), customer));
+			}
+
+		}
+		finally {
+			if( pojoReader != null ) {
+				pojoReader.close();
+			}
+		}
+	}
+
 	/**
 	 * An example of reading using CsvListReader.
 	 */
