@@ -3,7 +3,11 @@ package org.supercsv;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
-import org.supercsv.cellprocessor.*;
+import org.supercsv.cellprocessor.ParseDate;
+import org.supercsv.cellprocessor.ParseSqlTime;
+import org.supercsv.cellprocessor.ParseBool;
+import org.supercsv.cellprocessor.ParseInt;
+import org.supercsv.cellprocessor.Optional;
 import org.supercsv.cellprocessor.constraint.LMinMax;
 import org.supercsv.cellprocessor.constraint.NotNull;
 import org.supercsv.cellprocessor.constraint.StrRegEx;
@@ -14,7 +18,11 @@ import org.supercsv.io.ICsvBeanReader;
 import org.supercsv.mock.CustomerBean;
 import org.supercsv.prefs.CsvPreference;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.FileInputStream;
 
 /**
  * Test the super-csv read API processing with BOM file

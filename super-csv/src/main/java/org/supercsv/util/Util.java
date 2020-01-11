@@ -244,7 +244,7 @@ public final class Util {
 	 * @return the String without bom information
 	 */
 	public static String subtractBom(String line) {
-		if( line!=null && line.startsWith("\uFEFF") ){
+		if( line != null && line.startsWith("\uFEFF") ){
 			line = line.substring(1);
 		}
 		return line;
