@@ -113,7 +113,7 @@ public class Writing {
 				"answers[2].questionNo",
 				"answers[2].answer" };
 		
-		// ignore questionNo/answer 1 columns keep uo with partialFieldMapping
+		// ignore questionNo/answer 1 columns keep up with partialFieldMapping
 		final CellProcessor[] partialProcessors = new CellProcessor[] { 
 			new Token(0, "age not supplied"), // age
 			new FmtBool("Y", "N"),                 // consent
