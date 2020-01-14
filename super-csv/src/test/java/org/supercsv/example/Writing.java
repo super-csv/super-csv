@@ -58,6 +58,9 @@ public class Writing {
 		partialWriteWithCsvBeanWriter();
 		partialWriteWithCsvListWriter();
 		partialWriteWithCsvMapWriter();
+		appendingWriteWithCsvBeanWriter();
+		appendingWriteWithCsvListWriter();
+		appendingWriteWithCsvMapWriter();
 	}
 	
 	/**
@@ -375,6 +378,162 @@ public class Writing {
 		}
 		finally {
 			if( mapWriter != null ) {
+				mapWriter.close();
+			}
+		}
+	}
+	
+	/**
+	 * An example of appending writing use CsvBeanWriter
+	 */
+	private static void appendingWriteWithCsvBeanWriter() throws Exception {
+		// create the customer beans
+		final CustomerBean john = new CustomerBean("1", "John", "Dunbar",
+				new GregorianCalendar(1945, Calendar.JUNE, 13).getTime(),SuperCsvTestUtils.time(10, 20, 0),
+				"1600 Amphitheatre Parkway\nMountain View, CA 94043\nUnited States", null, null,
+				"\"May the Force be with you.\" - Star Wars", "jdunbar@gmail.com", 0L);
+		final CustomerBean bob = new CustomerBean("2", "Bob", "Down",
+				new GregorianCalendar(1919, Calendar.FEBRUARY, 25).getTime(),SuperCsvTestUtils.time(10, 20, 0),
+				"1601 Willow Rd.\nMenlo Park, CA 94025\nUnited States", true, 0,
+				"\"Frankly, my dear, I don't give a damn.\" - Gone With The Wind", "bobdown@hotmail.com", 123456L);
+		// the header elements are used to map the bean values to each column (names must match)
+		final String[] header = new String[] { "customerNo", "firstName", "lastName", "birthDate",
+				"mailingAddress", "married", "numberOfKids", "favouriteQuote", "email", "loyaltyPoints" };
+		final CellProcessor[] processors = getProcessors();
+		ICsvBeanWriter beanWriter = null;
+		try{
+			beanWriter = new CsvBeanWriter(new FileWriter("target/appendingWriteWithCsvBeanWriter.csv"),
+					CsvPreference.STANDARD_PREFERENCE);
+			beanWriter.writeHeader(header);
+			beanWriter.write(john, header, processors);
+		}
+		finally {
+			if( beanWriter != null ) {
+				beanWriter.close();
+			}
+		}
+
+		// appending write
+		try {
+			beanWriter = new CsvBeanWriter(
+					new FileWriter("target/appendingWriteWithCsvBeanWriter.csv", true),
+					CsvPreference.STANDARD_PREFERENCE);
+			beanWriter.write(bob, header, processors);
+		}
+		finally {
+			if( beanWriter != null ) {
+				beanWriter.close();
+			}
+		}
+	}
+	
+	/**
+	 * An example of appending writing use CsvListWriter
+	 */
+	private static void appendingWriteWithCsvListWriter() throws Exception {
+		// create the customer Lists (CsvListWriter also accepts arrays!)
+		final List<Object> john = Arrays.asList(new Object[] { "1", "John", "Dunbar",
+				new GregorianCalendar(1945, Calendar.JUNE, 13).getTime(),
+				"1600 Amphitheatre Parkway\nMountain View, CA 94043\nUnited States", null, null,
+				"\"May the Force be with you.\" - Star Wars", "jdunbar@gmail.com", 0L });
+		final List<Object> bob = Arrays.asList(new Object[] { "2", "Bob", "Down",
+				new GregorianCalendar(1919, Calendar.FEBRUARY, 25).getTime(),
+				"1601 Willow Rd.\nMenlo Park, CA 94025\nUnited States", true, 0,
+				"\"Frankly, my dear, I don't give a damn.\" - Gone With The Wind", "bobdown@hotmail.com", 123456L });
+		final String[] header = new String[] { "customerNo", "firstName", "lastName", "birthDate",
+				"mailingAddress", "married", "numberOfKids", "favouriteQuote", "email", "loyaltyPoints" };
+		final CellProcessor[] processors = getProcessors();
+		ICsvListWriter listWriter = null;
+		try {
+			listWriter = new CsvListWriter(new FileWriter("target/appendingWriteWithCsvListWriter.csv"),
+					CsvPreference.STANDARD_PREFERENCE);
+
+			// write the header
+			listWriter.writeHeader(header);
+
+			// write the customer lists
+			listWriter.write(john, processors);
+		}
+		finally {
+			if ( listWriter != null ) {
+				listWriter.close();
+			}
+		}
+
+		// appending write
+		try {
+			listWriter = new CsvListWriter(
+					new FileWriter("target/appendingWriteWithCsvListWriter.csv", true),
+					CsvPreference.STANDARD_PREFERENCE);
+			listWriter.write(bob, processors);
+		}
+		finally {
+			if( listWriter != null ){
+				listWriter.close();
+			}
+		}
+	}
+	
+	/**
+	 * An example of appending writing use CsvMapWriter
+	 */
+	private static void appendingWriteWithCsvMapWriter() throws Exception {
+
+		final String[] header = new String[] { "customerNo", "firstName", "lastName", "birthDate", "mailingAddress",
+				"married", "numberOfKids", "favouriteQuote", "email", "loyaltyPoints" };
+
+		// create the customer Maps (using the header elements for the column keys)
+		final Map<String, Object> john = new HashMap<String, Object>();
+		john.put(header[0], "1");
+		john.put(header[1], "John");
+		john.put(header[2], "Dunbar");
+		john.put(header[3], new GregorianCalendar(1945, Calendar.JUNE, 13).getTime());
+		john.put(header[4], "1600 Amphitheatre Parkway\nMountain View, CA 94043\nUnited States");
+		john.put(header[5], null);
+		john.put(header[6], null);
+		john.put(header[7], "\"May the Force be with you.\" - Star Wars");
+		john.put(header[8], "jdunbar@gmail.com");
+		john.put(header[9], 0L);
+
+		final Map<String, Object> bob = new HashMap<String, Object>();
+		bob.put(header[0], "2");
+		bob.put(header[1], "Bob");
+		bob.put(header[2], "Down");
+		bob.put(header[3], new GregorianCalendar(1919, Calendar.FEBRUARY, 25).getTime());
+		bob.put(header[4], "1601 Willow Rd.\nMenlo Park, CA 94025\nUnited States");
+		bob.put(header[5], true);
+		bob.put(header[6], 0);
+		bob.put(header[7], "\"Frankly, my dear, I don't give a damn.\" - Gone With The Wind");
+		bob.put(header[8], "bobdown@hotmail.com");
+		bob.put(header[9], 123456L);
+
+		final CellProcessor[] processors = getProcessors();
+		ICsvMapWriter mapWriter = null;
+		try {
+			mapWriter = new CsvMapWriter(new FileWriter("target/appendingWriteWithCsvMapWriter.csv"),
+					CsvPreference.STANDARD_PREFERENCE);
+
+			// write the header
+			mapWriter.writeHeader(header);
+
+			// write the customer maps
+			mapWriter.write(john, header, processors);
+		}
+		finally {
+			if( mapWriter != null ) {
+				mapWriter.close();
+			}
+		}
+
+		// appending write
+		try {
+			mapWriter = new CsvMapWriter(
+					new FileWriter("target/appendingWriteWithCsvMapWriter.csv", true),
+					CsvPreference.STANDARD_PREFERENCE);
+			mapWriter.write(bob, header, processors);
+		}
+		finally {
+			if( mapWriter != null ){
 				mapWriter.close();
 			}
 		}
