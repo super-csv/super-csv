@@ -58,7 +58,7 @@ public class CsvBeanReader extends AbstractCsvReader implements ICsvBeanReader {
 	 * @param preferences
 	 *            the CSV preferences
 	 * @throws NullPointerException
-	 *             if reader or preferences are null
+	 *             if reader or preferences is null
 	 */
 	public CsvBeanReader(final Reader reader, final CsvPreference preferences) {
 		super(reader, preferences);
@@ -73,7 +73,7 @@ public class CsvBeanReader extends AbstractCsvReader implements ICsvBeanReader {
 	 * @param preferences
 	 *            the CSV preferences
 	 * @throws NullPointerException
-	 *             if tokenizer or preferences are null
+	 *             if tokenizer or preferences is null
 	 */
 	public CsvBeanReader(final ITokenizer tokenizer, final CsvPreference preferences) {
 		super(tokenizer, preferences);
@@ -248,7 +248,7 @@ public class CsvBeanReader extends AbstractCsvReader implements ICsvBeanReader {
 	 * @throws IOException
 	 *             if an I/O error occurred
 	 * @throws NullPointerException
-	 *             if bean or nameMapping are null
+	 *             if bean or nameMapping is null
 	 * @throws SuperCsvConstraintViolationException
 	 *             if a CellProcessor constraint failed
 	 * @throws SuperCsvException

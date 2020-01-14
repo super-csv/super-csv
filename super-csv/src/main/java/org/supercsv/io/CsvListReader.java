@@ -40,7 +40,7 @@ public class CsvListReader extends AbstractCsvReader implements ICsvListReader {
 	 * @param preferences
 	 *            the CSV preferences
 	 * @throws NullPointerException
-	 *             if reader or preferences are null
+	 *             if reader or preferences is null
 	 */
 	public CsvListReader(final Reader reader, final CsvPreference preferences) {
 		super(reader, preferences);
@@ -55,7 +55,7 @@ public class CsvListReader extends AbstractCsvReader implements ICsvListReader {
 	 * @param preferences
 	 *            the CSV preferences
 	 * @throws NullPointerException
-	 *             if tokenizer or preferences are null
+	 *             if tokenizer or preferences is null
 	 */
 	public CsvListReader(final ITokenizer tokenizer, final CsvPreference preferences) {
 		super(tokenizer, preferences);
