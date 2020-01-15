@@ -40,7 +40,7 @@ public class SuperCsvBOMTest {
 	public static final String UTF16LE_FILE = ROOT_PATH + "customers_utf16le.csv";
 	
 	/**
-	 * Test the super-csv read API processing UTF8 without BOM file.
+	 * Test the super-csv read API processing UTF8 with BOM file.
 	 */
 	@Test
 	public void testUTF8() throws IOException {
@@ -51,7 +51,7 @@ public class SuperCsvBOMTest {
 	}
 	
 	/**
-	 * Test the super-csv read API processing UTF8 with BOM file.
+	 * Test the super-csv read API processing UTF8 without BOM file.
 	 */
 	@Test
 	public void testUTF8WithoutBom() throws IOException {
@@ -73,7 +73,7 @@ public class SuperCsvBOMTest {
 	}
 	
 	/**
-	 * Test the super-csv read API processing UTF16 file.
+	 * Test the super-csv read API processing UTF16LE file.
 	 */
 	@Test
 	public void testUTF16LE() throws IOException {
@@ -81,6 +81,22 @@ public class SuperCsvBOMTest {
 				new InputStreamReader(new FileInputStream(UTF16LE_FILE), "UTF-16le")
 		);
 		ReadTestCSVFile(reader);
+	}
+	
+	/**
+	 * Test the super-csv read API processing UTF16 files.
+	 */
+	@Test
+	public void testUTF16() throws IOException {
+		BufferedReader reader = new BufferedReader(
+				new InputStreamReader(new FileInputStream(UTF16LE_FILE), "UTF-16")
+		);
+		ReadTestCSVFile(reader);
+
+		BufferedReader reader1 = new BufferedReader(
+				new InputStreamReader(new FileInputStream(UTF16BE_FILE), "UTF-16")
+		);
+		ReadTestCSVFile(reader1);
 	}
 	
 	public void ReadTestCSVFile(Reader reader) throws IOException {
