@@ -49,6 +49,7 @@ public class Writing {
 	public static void main(String[] args) throws Exception {
 		writeWithDozerCsvBeanWriter();
 		partialWriteWithCsvDozerBeanWriter();
+		appendingWriteWithCsvDozerBeanWriter();
 	}
 	
 	/**
@@ -64,7 +65,7 @@ public class Writing {
 			new NotNull(),          // questionNo 2
 			new Optional(),         // answer 2
 			new NotNull(),          // questionNo 3
-			new Optional() };       // answer 4
+			new Optional() };       // answer 3
 		
 		// create the survey responses to write
 		SurveyResponse response1 = new SurveyResponse(18, true, Arrays.asList(new Answer(1, "Twelve"), new Answer(2,
@@ -104,17 +105,23 @@ public class Writing {
 	 * An example of partial reading using CsvDozerBeanWriter.
 	 */
 	private static void partialWriteWithCsvDozerBeanWriter() throws Exception {
+		// ignore questionNo/answer 1 columns
+		final String[] partialFieldMapping = new String[] {
+				"age",
+				"consentGiven",
+				"answers[1].questionNo",
+				"answers[1].answer",
+				"answers[2].questionNo",
+				"answers[2].answer" };
 		
-		// null ages and answers are converted to something more meaningful
+		// ignore questionNo/answer 1 columns keep up with partialFieldMapping
 		final CellProcessor[] partialProcessors = new CellProcessor[] { 
 			new Token(0, "age not supplied"), // age
 			new FmtBool("Y", "N"),                 // consent
-			new NotNull(),                         // questionNo 1
-			new ConvertNullTo("not answered"),     // answer 1
 			new NotNull(),                         // questionNo 2
 			new ConvertNullTo("not answered"),     // answer 2
 			new NotNull(),                         // questionNo 3
-			new ConvertNullTo("not answered")};    // answer 4
+			new ConvertNullTo("not answered")};    // answer 3
 		
 		// create the survey responses to write
 		SurveyResponse response1 = new SurveyResponse(18, true, Arrays.asList(new Answer(1, "Twelve"), new Answer(2,
@@ -131,10 +138,10 @@ public class Writing {
 				CsvPreference.STANDARD_PREFERENCE);
 			
 			// configure the mapping from the fields to the CSV columns
-			beanWriter.configureBeanMapping(SurveyResponse.class, FIELD_MAPPING);
+			beanWriter.configureBeanMapping(SurveyResponse.class, partialFieldMapping);
 			
 			// write the header
-			beanWriter.writeHeader("age", "consentGiven", "questionNo1", "answer1", "questionNo2", "answer2",
+			beanWriter.writeHeader("age", "consentGiven", "questionNo2", "answer2",
 				"questionNo3", "answer3");
 			
 			// write the beans
@@ -145,6 +152,66 @@ public class Writing {
 		}
 		finally {
 			if( beanWriter != null ) {
+				beanWriter.close();
+			}
+		}
+	}
+	
+	/**
+	 * An example of appending writing using CsvDozerBeanWriter
+	 */
+	public static void appendingWriteWithCsvDozerBeanWriter() throws Exception {
+		
+		final CellProcessor[] processors = new CellProcessor[] {
+				new Token(0, null),     // age
+				new FmtBool("Y", "N"),  // consent
+				new NotNull(),          // questionNo 1
+				new Optional(),         // answer 1
+				new NotNull(),          // questionNo 2
+				new Optional(),         // answer 2
+				new NotNull(),          // questionNo 3
+				new Optional() };       // answer 3
+		
+		// create the survey responses to write
+		SurveyResponse response1 = new SurveyResponse(18, true, Arrays.asList(new Answer(1, "Twelve"), new Answer(2,
+				"Albert Einstein"), new Answer(3, "Big Bang Theory")));
+		SurveyResponse response2 = new SurveyResponse(0, true, Arrays.asList(new Answer(1, "Thirteen"), new Answer(2,
+				"Nikola Tesla"), new Answer(3, "Stargate")));
+		SurveyResponse response3 = new SurveyResponse(42, false, Arrays.asList(new Answer(1, null), new Answer(2,
+				"Carl Sagan"), new Answer(3, "Star Wars")));
+
+		ICsvDozerBeanWriter beanWriter = null;
+		try {
+			beanWriter = new CsvDozerBeanWriter(new FileWriter("target/appendingWriteWithCsvDozerBeanWriter.csv"),
+					CsvPreference.STANDARD_PREFERENCE);
+
+			// configure the mapping from the fields to the CSV columns
+			beanWriter.configureBeanMapping(SurveyResponse.class, FIELD_MAPPING);
+
+			// write the header
+			beanWriter.writeHeader("age", "consentGiven", "questionNo1", "answer1", "questionNo2", "answer2",
+					"questionNo3", "answer3");
+
+			// write the beans
+			beanWriter.write(response1, processors);
+		}
+		finally {
+			if( beanWriter != null ) {
+				beanWriter.close();
+			}
+		}
+		
+		// appending write
+		try {
+			beanWriter = new CsvDozerBeanWriter(
+					new FileWriter("target/appendingWriteWithCsvDozerBeanWriter.csv", true),
+					CsvPreference.STANDARD_PREFERENCE);
+			beanWriter.configureBeanMapping(SurveyResponse.class, FIELD_MAPPING);
+			beanWriter.write(response2, processors);
+			beanWriter.write(response3, processors);
+		}
+		finally {
+			if( beanWriter != null ){
 				beanWriter.close();
 			}
 		}
