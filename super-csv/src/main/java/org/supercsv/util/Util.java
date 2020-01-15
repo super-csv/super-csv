@@ -107,7 +107,7 @@ public final class Util {
 	 * @param <T>
 	 *            the type of the values in the map
 	 * @throws NullPointerException
-	 *             if destinationMap, nameMapping or sourceList are null
+	 *             if destinationMap, nameMapping or sourceList is null
 	 * @throws SuperCsvException
 	 *             if nameMapping and sourceList are not the same size
 	 */
