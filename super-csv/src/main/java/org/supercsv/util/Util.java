@@ -53,7 +53,7 @@ public final class Util {
 	 * @param rowNo
 	 *            the current row number
 	 * @throws NullPointerException
-	 *             if destination, source or processors is null
+	 *             if destination, source or processors are null
 	 * @throws SuperCsvConstraintViolationException
 	 *             if a CellProcessor constraint failed
 	 * @throws SuperCsvException
@@ -107,7 +107,7 @@ public final class Util {
 	 * @param <T>
 	 *            the type of the values in the map
 	 * @throws NullPointerException
-	 *             if destinationMap, nameMapping or sourceList are null
+	 *             if destinationMap, nameMapping or sourceList is null
 	 * @throws SuperCsvException
 	 *             if nameMapping and sourceList are not the same size
 	 */

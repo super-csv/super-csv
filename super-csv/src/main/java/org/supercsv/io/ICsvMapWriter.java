@@ -43,7 +43,7 @@ public interface ICsvMapWriter extends ICsvWriter {
 	 * @throws IOException
 	 *             if an I/O error occurred
 	 * @throws NullPointerException
-	 *             if values or nameMapping are null
+	 *             if values or nameMapping is null
 	 * @throws SuperCsvException
 	 *             if there was a general exception while writing
 	 * @since 1.0
@@ -68,7 +68,7 @@ public interface ICsvMapWriter extends ICsvWriter {
 	 * @throws IOException
 	 *             if an I/O error occurred
 	 * @throws NullPointerException
-	 *             if values or nameMapping are null
+	 *             if values or nameMapping is null
 	 * @throws SuperCsvConstraintViolationException
 	 *             if a CellProcessor constraint failed
 	 * @throws SuperCsvException

@@ -56,7 +56,7 @@ public abstract class AbstractCsvWriter implements ICsvWriter {
 	 * @param preference
 	 *            the CSV preferences
 	 * @throws NullPointerException
-	 *             if writer or preference are null
+	 *             if writer or preference is null
 	 */
 	public AbstractCsvWriter(final Writer writer, final CsvPreference preference) {
 		this(writer, preference, true);
@@ -73,7 +73,7 @@ public abstract class AbstractCsvWriter implements ICsvWriter {
 	 * @param bufferizeWriter
 	 *            indicates if the writer should be wrapped internally with a BufferedWriter
 	 * @throws NullPointerException
-	 *             if writer or preference are null
+	 *             if writer or preference is null
 	 */
 	public AbstractCsvWriter(final Writer writer, final CsvPreference preference, boolean bufferizeWriter) {
 		if( writer == null ) {

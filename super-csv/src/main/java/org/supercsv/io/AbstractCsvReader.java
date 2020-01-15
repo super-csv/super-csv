@@ -193,7 +193,7 @@ public abstract class AbstractCsvReader implements ICsvReader {
 	 *            the cell processors
 	 * @return the updated List
 	 * @throws NullPointerException
-	 *             if processedColumns or processors is null
+	 *             if processedColumns or processors are null
 	 * @throws SuperCsvConstraintViolationException
 	 *             if a CellProcessor constraint failed
 	 * @throws SuperCsvException
