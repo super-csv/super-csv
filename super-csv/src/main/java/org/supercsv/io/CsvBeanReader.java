@@ -58,7 +58,7 @@ public class CsvBeanReader extends AbstractCsvReader implements ICsvBeanReader {
 	 * @param preferences
 	 *            the CSV preferences
 	 * @throws NullPointerException
-	 *             if reader or preferences is null
+	 *             if reader or preferences are null
 	 */
 	public CsvBeanReader(final Reader reader, final CsvPreference preferences) {
 		super(reader, preferences);
@@ -73,7 +73,7 @@ public class CsvBeanReader extends AbstractCsvReader implements ICsvBeanReader {
 	 * @param preferences
 	 *            the CSV preferences
 	 * @throws NullPointerException
-	 *             if tokenizer or preferences is null
+	 *             if tokenizer or preferences are null
 	 */
 	public CsvBeanReader(final ITokenizer tokenizer, final CsvPreference preferences) {
 		super(tokenizer, preferences);

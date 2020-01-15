@@ -68,7 +68,7 @@ public interface ICsvResultSetWriter extends ICsvWriter {
 	 * @throws IOException
 	 *             if an I/O error occurred
 	 * @throws NullPointerException
-	 *             if resultSet or cellProcessors is null
+	 *             if resultSet or cellProcessors are null
 	 * @throws SuperCsvConstraintViolationException
 	 *             if a CellProcessor constraint failed
 	 * @throws SuperCsvException

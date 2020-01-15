@@ -52,7 +52,7 @@ public abstract class AbstractCsvReader implements ICsvReader {
 	 * @param preferences
 	 *            the CSV preferences
 	 * @throws NullPointerException
-	 *             if reader or preferences is null
+	 *             if reader or preferences are null
 	 */
 	public AbstractCsvReader(final Reader reader, final CsvPreference preferences) {
 		if( reader == null ) {
@@ -75,7 +75,7 @@ public abstract class AbstractCsvReader implements ICsvReader {
 	 * @param preferences
 	 *            the CSV preferences
 	 * @throws NullPointerException
-	 *             if tokenizer or preferences is null
+	 *             if tokenizer or preferences are null
 	 */
 	public AbstractCsvReader(final ITokenizer tokenizer, final CsvPreference preferences) {
 		if( tokenizer == null ) {
@@ -193,7 +193,7 @@ public abstract class AbstractCsvReader implements ICsvReader {
 	 *            the cell processors
 	 * @return the updated List
 	 * @throws NullPointerException
-	 *             if processedColumns or processors is null
+	 *             if processedColumns or processors are null
 	 * @throws SuperCsvConstraintViolationException
 	 *             if a CellProcessor constraint failed
 	 * @throws SuperCsvException

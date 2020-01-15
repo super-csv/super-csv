@@ -69,7 +69,7 @@ public interface ICsvBeanWriter extends ICsvWriter {
 	 * @throws IOException
 	 *             if an I/O error occurred
 	 * @throws NullPointerException
-	 *             if source, nameMapping or processors is null
+	 *             if source, nameMapping or processors are null
 	 * @throws SuperCsvConstraintViolationException
 	 *             if a CellProcessor constraint failed
 	 * @throws SuperCsvException

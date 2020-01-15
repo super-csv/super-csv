@@ -66,7 +66,7 @@ public interface ICsvMapReader extends ICsvReader {
 	 * @throws IOException
 	 *             if an I/O error occurred
 	 * @throws NullPointerException
-	 *             if nameMapping or processors is null
+	 *             if nameMapping or processors are null
 	 * @throws SuperCsvConstraintViolationException
 	 *             if a CellProcessor constraint failed
 	 * @throws SuperCsvException

@@ -53,7 +53,7 @@ public final class Util {
 	 * @param rowNo
 	 *            the current row number
 	 * @throws NullPointerException
-	 *             if destination, source or processors is null
+	 *             if destination, source or processors are null
 	 * @throws SuperCsvConstraintViolationException
 	 *             if a CellProcessor constraint failed
 	 * @throws SuperCsvException

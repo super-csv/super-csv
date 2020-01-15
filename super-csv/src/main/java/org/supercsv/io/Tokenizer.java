@@ -74,7 +74,7 @@ public class Tokenizer extends AbstractTokenizer {
 	 * @param preferences
 	 *            the CSV preferences
 	 * @throws NullPointerException
-	 *             if reader or preferences is null
+	 *             if reader or preferences are null
 	 */
 	public Tokenizer(final Reader reader, final CsvPreference preferences) {
 		super(reader, preferences);
