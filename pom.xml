@@ -29,7 +29,6 @@
 		<module>super-csv</module>
 		<module>super-csv-dozer</module>
 		<module>super-csv-joda</module>
-		<module>super-csv-java8</module>
 		<module>super-csv-distribution</module>
 		<module>super-csv-benchmark</module>
 	</modules>
