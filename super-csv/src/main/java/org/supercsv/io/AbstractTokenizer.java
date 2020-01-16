@@ -21,6 +21,7 @@ import java.io.Reader;
 import java.util.List;
 
 import org.supercsv.prefs.CsvPreference;
+import org.supercsv.util.Util;
 
 /**
  * Defines the standard behaviour of a Tokenizer. Extend this class if you want the line-reading functionality of the
@@ -79,6 +80,9 @@ public abstract class AbstractTokenizer implements ITokenizer {
 	 *             If an I/O error occurs
 	 */
 	protected String readLine() throws IOException {
+		if( getLineNumber() == 0 ) {
+			return Util.subtractBom(lnr.readLine());
+		}
 		return lnr.readLine();
 	}
 	

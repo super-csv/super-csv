@@ -262,3 +262,99 @@ lineNo=13, rowNo=5, customerMap={loyaltyPoints=36, lastName=Jobs, numberOfKids=3
 Santa Clara, CA 95050
 United States, favouriteQuote="You've got to ask yourself one question: "Do I feel lucky?" Well, do ya, punk?" - Dirty Harry}
 ---------------------------------------------------------------------------------------------------------------
+
+* Reading UTF8 Files
+
+  {{{./apidocs/org/supercsv/io/CsvBeanReader.html}CsvBeanReader}} is the easiest reader to work with.
+  The example reads each row from the example CSV file which is encoded by UTF8 into a {{{./xref-test/org/supercsv/mock/CustomerBean.html}CustomerBean}} (which extends
+  from {{{./xref-test/org/supercsv/mock/PersonBean.html}PersonBean}}).
+
++-------------------------------------------------------------------------------------------------------------+
+/**
+ * An example of reading UTF8 file with CsvBeanReader.
+ */
+public static void readUTF8FileWithCsvBeanReader() throws Exception {
+    ICsvBeanReader beanReader = null;
+    try {
+        beanReader = new CsvBeanReader(new BufferedReader(
+                new InputStreamReader(new FileInputStream(UTF8_FILENAME), "UTF-8")
+        ), CsvPreference.STANDARD_PREFERENCE);
+        final String[] header = beanReader.getHeader(true);
+        final CellProcessor[] processors = getProcessors();
+        CustomerBean customer;
+        while( (customer = beanReader.read(CustomerBean.class, header, processors)) != null ) {
+            System.out.println(String.format("lineNo=%s, rowNo=%s, customer=%s", beanReader.getLineNumber(),
+                    beanReader.getRowNumber(), customer));
+        }
+    }
+    finally {
+        if( beanReader != null ){
+            beanReader.close();
+        }
+    }
+}
++-------------------------------------------------------------------------------------------------------------+
+
+  Output:
+
+---------------------------------------------------------------------------------------------------------------
+lineNo=4, rowNo=2, customer=CustomerBean [customerNo=1, firstName=John, lastName=Dunbar, birthDate=Wed Jun 13 00:00:00 CDT 1945, birthTime=10:20:00, mailingAddress=1600 Amphitheatre Parkway
+Mountain View, CA 94043
+United States, married=null, numberOfKids=null, favouriteQuote="May the Force be with you." - Star Wars, email=jdunbar@gmail.com, loyaltyPoints=0]
+lineNo=7, rowNo=3, customer=CustomerBean [customerNo=2, firstName=Bob, lastName=Down, birthDate=Tue Feb 25 00:00:00 CST 1919, birthTime=10:20:00, mailingAddress=1601 Willow Rd.
+Menlo Park, CA 94025
+United States, married=true, numberOfKids=0, favouriteQuote="Frankly, my dear, I don't give a damn." - Gone With The Wind, email=bobdown@hotmail.com, loyaltyPoints=123456]
+lineNo=10, rowNo=4, customer=CustomerBean [customerNo=3, firstName=Alice, lastName=Wunderland, birthDate=Thu Aug 08 00:00:00 CST 1985, birthTime=12:20:00, mailingAddress=One Microsoft Way
+Redmond, WA 98052-6399
+United States, married=true, numberOfKids=0, favouriteQuote="Play it, Sam. Play "As Time Goes By."" - Casablanca, email=throughthelookingglass@yahoo.com, loyaltyPoints=2255887799]
+lineNo=13, rowNo=5, customer=CustomerBean [customerNo=4, firstName=Bill, lastName=Jobs, birthDate=Tue Jul 10 00:00:00 CST 1973, birthTime=10:28:00, mailingAddress=2701 San Tomas Expressway
+Santa Clara, CA 95050
+United States, married=true, numberOfKids=3, favouriteQuote="You've got to ask yourself one question: "Do I feel lucky?" Well, do ya, punk?" - Dirty Harry, email=billy34@hotmail.com, loyaltyPoints=36]
+---------------------------------------------------------------------------------------------------------------
+
+* Reading UTF16 Files
+
+  The example reads each row from the example CSV file which is encoded by UTF8 into a List<Object>
+
++-------------------------------------------------------------------------------------------------------------+
+/**
+ * An example of reading UTF16 file with CsvListReader.
+ */
+public static void readUTF16FileWithCsvListReader() throws Exception {
+    ICsvListReader listReader = null;
+    try {
+        listReader = new CsvListReader(new BufferedReader(
+                new InputStreamReader(new FileInputStream(UTF16_FILENAME), "UTF-16")
+        ), CsvPreference.STANDARD_PREFERENCE);
+        listReader.getHeader(true);
+        final CellProcessor[] processors = getProcessors();
+        List<Object> customerList;
+        while( (customerList = listReader.read(processors)) != null ) {
+            System.out.println(String.format("lineNo=%s, rowNo=%s, customerList=%s", listReader.getLineNumber(),
+                    listReader.getRowNumber(), customerList));
+        }
+    }
+    finally {
+        if( listReader != null ) {
+            listReader.close();
+        }
+    }
+}
++-------------------------------------------------------------------------------------------------------------+
+
+  Output:
+
+---------------------------------------------------------------------------------------------------------------
+lineNo=4, rowNo=2, customerList=[1, John, Dunbar, Wed Jun 13 00:00:00 CDT 1945, 10:20:00, 1600 Amphitheatre Parkway
+Mountain View, CA 94043
+United States, null, null, "May the Force be with you." - Star Wars, jdunbar@gmail.com, 0]
+lineNo=7, rowNo=3, customerList=[2, Bob, Down, Tue Feb 25 00:00:00 CST 1919, 10:20:00, 1601 Willow Rd.
+Menlo Park, CA 94025
+United States, true, 0, "Frankly, my dear, I don't give a damn." - Gone With The Wind, bobdown@hotmail.com, 123456]
+lineNo=10, rowNo=4, customerList=[3, Alice, Wunderland, Thu Aug 08 00:00:00 CST 1985, 12:20:00, One Microsoft Way
+Redmond, WA 98052-6399
+United States, true, 0, "Play it, Sam. Play "As Time Goes By."" - Casablanca, throughthelookingglass@yahoo.com, 2255887799]
+lineNo=13, rowNo=5, customerList=[4, Bill, Jobs, Tue Jul 10 00:00:00 CST 1973, 10:28:00, 2701 San Tomas Expressway
+Santa Clara, CA 95050
+United States, true, 3, "You've got to ask yourself one question: "Do I feel lucky?" Well, do ya, punk?" - Dirty Harry, billy34@hotmail.com, 36]
+---------------------------------------------------------------------------------------------------------------

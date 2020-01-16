@@ -16,6 +16,9 @@
 package org.supercsv.example;
 
 import java.io.FileReader;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.FileInputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -49,6 +52,10 @@ public class Reading {
 	
 	private static final String VARIABLE_CSV_FILENAME = ROOT_PATH +  "customerswithvariablecolumns.csv";
 	
+	private static final String UTF8_FILENAME = ROOT_PATH + "customers_utf8.csv";
+	
+	private static final String UTF16_FILENAME = ROOT_PATH + "customers_utf16le.csv";
+	
 	public static void main(String[] args) throws Exception {
 		readWithCsvBeanReader();
 		readWithCsvListReader();
@@ -56,6 +63,8 @@ public class Reading {
 		readWithCsvMapReader();
 		partialReadWithCsvBeanReader();
 		partialReadWithCsvMapReader();
+		readUTF8FileWithCsvBeanReader();
+		readUTF16FileWithCsvListReader();
 	}
 	
 	/**
@@ -274,6 +283,54 @@ public class Reading {
 		finally {
 			if( mapReader != null ) {
 				mapReader.close();
+			}
+		}
+	}
+	
+	/**
+	 * An example of reading UTF8 file with CsvBeanReader.
+	 */
+	public static void readUTF8FileWithCsvBeanReader() throws Exception {
+		ICsvBeanReader beanReader = null;
+		try {
+			beanReader = new CsvBeanReader(new BufferedReader(
+					new InputStreamReader(new FileInputStream(UTF8_FILENAME), "UTF-8")
+			), CsvPreference.STANDARD_PREFERENCE);
+			final String[] header = beanReader.getHeader(true);
+			final CellProcessor[] processors = getProcessors();
+			CustomerBean customer;
+			while( (customer = beanReader.read(CustomerBean.class, header, processors)) != null ) {
+				System.out.println(String.format("lineNo=%s, rowNo=%s, customer=%s", beanReader.getLineNumber(),
+						beanReader.getRowNumber(), customer));
+			}
+		}
+		finally {
+			if( beanReader != null ){
+				beanReader.close();
+			}
+		}
+	}
+	
+	/**
+	 * An example of reading UTF16 file with CsvListReader.
+	 */
+	public static void readUTF16FileWithCsvListReader() throws Exception {
+		ICsvListReader listReader = null;
+		try {
+			listReader = new CsvListReader(new BufferedReader(
+					new InputStreamReader(new FileInputStream(UTF16_FILENAME), "UTF-16")
+			), CsvPreference.STANDARD_PREFERENCE);
+			listReader.getHeader(true);
+			final CellProcessor[] processors = getProcessors();
+			List<Object> customerList;
+			while( (customerList = listReader.read(processors)) != null ) {
+				System.out.println(String.format("lineNo=%s, rowNo=%s, customerList=%s", listReader.getLineNumber(),
+						listReader.getRowNumber(), customerList));
+			}
+		}
+		finally {
+			if( listReader != null ) {
+				listReader.close();
 			}
 		}
 	}

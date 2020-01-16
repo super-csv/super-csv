@@ -237,4 +237,16 @@ public final class Util {
 		return stringArray;
 	}
 	
+	/**
+	 * subtract bom information of {@code String} line.
+	 * @param line
+	 *         the first line row of file
+	 * @return the String without bom information
+	 */
+	public static String subtractBom(String line) {
+		if( line != null && line.startsWith("\uFEFF") ){
+			line = line.substring(1);
+		}
+		return line;
+	}
 }
