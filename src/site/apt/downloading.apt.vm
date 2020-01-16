@@ -21,7 +21,7 @@ Downloading Super CSV
 
 * Prerequisites
 
-      [Java 1.5+] Super CSV is compiled for Java 1.5
+      [Java 1.8+] Super CSV is compiled for Java 1.8
 
 * Maven users
 
