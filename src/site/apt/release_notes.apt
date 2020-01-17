@@ -36,6 +36,8 @@ Release notes
     * {{{https://github.com/super-csv/super-csv/issues/93}93}} - New <<<ICsvTypedBeanWriter>>>, not rely on field names to map field to the column
 
     * {{{https://github.com/super-csv/super-csv/pull/103}103}} - Add support for escaped character
+	
+	* {{{https://github.com/super-csv/super-csv/issues/142}142}} - Add support for reading utf8+utf16 with BOM
 
     * {{{https://github.com/super-csv/super-csv/issues/160}160}} - Using <<<JaCoCo>>> instead of <<<Cobertura>>> to support java8
 
