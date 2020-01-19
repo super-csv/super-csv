@@ -43,14 +43,6 @@
 			<useTransitiveDependencies>false</useTransitiveDependencies>
 			<unpack>true</unpack>
 		</dependencySet>
-		
-		<dependencySet>
-			<includes>
-				<include>net.sf.supercsv:super-csv-java8</include>
-			</includes>
-			<outputDirectory>super-csv-java8</outputDirectory>
-			<useTransitiveDependencies>false</useTransitiveDependencies>
-			<unpack>true</unpack>
-		</dependencySet>
+
 	</dependencySets>
 </assembly>
