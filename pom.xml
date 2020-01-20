@@ -371,19 +371,12 @@
 			<timezone>+1</timezone>
 		</developer>
 		<developer>
-			<name>James Bassett</name>
-			<id>jamesbassett</id>
-			<timezone>+10</timezone>
+			<name>hen Guoping Dota</name>
+			<id>dota17</id>
 			<roles>
-				<role>Developer (past)</role>
+				<role>Developer</role>
 			</roles>
-		</developer>
-		<developer>
-			<name>Dominique De Vito</name>
-			<id>ddv36a78</id>
-			<roles>
-				<role>Developer (past)</role>
-			</roles>
+			<timezone>?</timezone>
 		</developer>
 	</developers>
 
@@ -394,6 +387,12 @@
 		</contributor>
 		<contributor>
 			<name>Alf Richter (Haskell2000)</name>
+		</contributor>
+		<contributor>
+			<name>Dominique De Vito</name>
+		</contributor>
+		<contributor>
+			<name>James Bassett (jamesbassett)</name>
 		</contributor>
 		<contributor>
 			<name>Jan Hartung (egga)</name>
