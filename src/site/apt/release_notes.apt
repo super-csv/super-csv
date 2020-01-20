@@ -47,8 +47,6 @@ Release notes
 
     * {{{https://github.com/super-csv/super-csv/issues/136}136}} - Change the path of <<<customers.csv>>> to solve the problem of <<<org.supercsv.example.Reading>>> doesn't work on both eclipse and idea
 
-    * {{{https://github.com/super-csv/super-csv/pull/170}170}} - Add trusty dist to fix travis build
-
   <<General enhancements>>
 
     * {{{https://github.com/super-csv/super-csv/issues/144}144}} - Make class CsvContext non-final, so it can be extended
