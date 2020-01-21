@@ -148,7 +148,16 @@ public class SuperCsvTestUtils {
 		.append(BOB_CSV).append("\r\n").append(ALICE_CSV).append("\r\n").append(BILL_CSV).append("\r\n")
 		.append(MIRANDA_CSV).append("\r\n").append(STEVE_CSV).append("\r\n").append(ADA_CSV).append("\r\n")
 		.append(SERGEI_CSV).append("\r\n").append(LARRY_CSV).append("\r\n").append(GRACE_CSV).append("\r\n").toString();
-		
+
+	/**
+	 * The CSV file to use for testing.
+	 */
+	public static final String CSV_FILE_WITHOUT_HEADERS = new StringBuilder(JOHN_CSV).append("\r\n")
+			.append(BOB_CSV).append("\r\n").append(ALICE_CSV).append("\r\n").append(BILL_CSV).append("\r\n")
+			.append(MIRANDA_CSV).append("\r\n").append(STEVE_CSV).append("\r\n").append(ADA_CSV).append("\r\n")
+			.append(SERGEI_CSV).append("\r\n").append(LARRY_CSV).append("\r\n").append(GRACE_CSV).append("\r\n").toString();
+
+
 	/** List of populated customer beans to use for testing */
 	public static final List<CustomerBean> CUSTOMERS = Arrays.asList(JOHN, BOB, ALICE, BILL, MIRANDA, STEVE, ADA,
 		SERGEI, LARRY, GRACE);
