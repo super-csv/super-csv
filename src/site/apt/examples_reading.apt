@@ -105,6 +105,8 @@ customerNo,firstName,lastName,birthDate,mailingAddress,married,numberOfKids,favo
 ---------------------------------------------------------------------------------------------------------------
   
   match up exactly with the bean's field names, and the bean has the appropriate setters defined for each field.
+
+  Note that you can init CsvBeanReader with isFieldReflect is true then setter of the bean can be optional.
   
   If your header doesn't match (or there is no header), then you can simply define your own name mapping array.
   
@@ -156,7 +158,51 @@ lineNo=13, rowNo=5, customer=CustomerBean [customerNo=4, firstName=Bill, lastNam
 Santa Clara, CA 95050
 United States, married=true, numberOfKids=3, favouriteQuote="You've got to ask yourself one question: "Do I feel lucky?" Well, do ya, punk?" - Dirty Harry, email=billy34@hotmail.com, loyaltyPoints=36]
 ---------------------------------------------------------------------------------------------------------------
++-------------------------------------------------------------------------------------------------------------+
+/**
+ * An example of reading using CsvBeanReader with field reflection.
+ */
+private static void readWithCsvBeanReaderWithField() throws Exception {
 
+    ICsvBeanReader beanReader = null;
+    try {
+        beanReader = new CsvBeanReader(new FileReader(CSV_FILENAME), CsvPreference.STANDARD_PREFERENCE, true);
+
+        // the header elements are used to map the values to the bean (names must match)
+        final String[] header = beanReader.getHeader(true);
+        final CellProcessor[] processors = getProcessors();
+
+        CustomerPojo customer;
+        while( (customer = beanReader.read(CustomerPojo.class, header, processors)) != null ) {
+            System.out.println(String.format("lineNo=%s, rowNo=%s, customer=%s", beanReader.getLineNumber(),
+                    beanReader.getRowNumber(), customer));
+        }
+
+    }
+    finally {
+        if( beanReader != null ) {
+            beanReader.close();
+        }
+    }
+}
++-------------------------------------------------------------------------------------------------------------+
+
+  Output:
+
+---------------------------------------------------------------------------------------------------------------
+lineNo=4, rowNo=2, customer=CustomerPojo [customerNo=1, firstName=John, lastName=Dunbar, birthDate=Wed Jun 13 00:00:00 CDT 1945, birthTime=10:20:00, mailingAddress=1600 Amphitheatre Parkway
+Mountain View, CA 94043
+United States, married=null, numberOfKids=null, favouriteQuote="May the Force be with you." - Star Wars, email=jdunbar@gmail.com, loyaltyPoints=0]
+lineNo=7, rowNo=3, customer=CustomerPojo [customerNo=2, firstName=Bob, lastName=Down, birthDate=Tue Feb 25 00:00:00 CST 1919, birthTime=10:20:00, mailingAddress=1601 Willow Rd.
+Menlo Park, CA 94025
+United States, married=true, numberOfKids=0, favouriteQuote="Frankly, my dear, I don't give a damn." - Gone With The Wind, email=bobdown@hotmail.com, loyaltyPoints=123456]
+lineNo=10, rowNo=4, customer=CustomerPojo [customerNo=3, firstName=Alice, lastName=Wunderland, birthDate=Thu Aug 08 00:00:00 CST 1985, birthTime=12:20:00, mailingAddress=One Microsoft Way
+Redmond, WA 98052-6399
+United States, married=true, numberOfKids=0, favouriteQuote="Play it, Sam. Play "As Time Goes By."" - Casablanca, email=throughthelookingglass@yahoo.com, loyaltyPoints=2255887799]
+lineNo=13, rowNo=5, customer=CustomerPojo [customerNo=4, firstName=Bill, lastName=Jobs, birthDate=Tue Jul 10 00:00:00 CST 1973, birthTime=10:28:00, mailingAddress=2701 San Tomas Expressway
+Santa Clara, CA 95050
+United States, married=true, numberOfKids=3, favouriteQuote="You've got to ask yourself one question: "Do I feel lucky?" Well, do ya, punk?" - Dirty Harry, email=billy34@hotmail.com, loyaltyPoints=36]
+---------------------------------------------------------------------------------------------------------------
 * Reading with CsvListReader
 
   {{{./apidocs/org/supercsv/io/CsvListReader.html}CsvListReader}} is the most primitive reader and should only be used if it's not possible

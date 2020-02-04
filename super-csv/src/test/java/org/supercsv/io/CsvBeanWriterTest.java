@@ -48,24 +48,28 @@ public class CsvBeanWriterTest {
 	
 	private CsvBeanWriter beanWriter;
 	
+	private CsvBeanWriter beanWriterWithReflection;
+	
 	private CustomerBean customer;
 	
 	/**
-	 * Sets up the writer for the tests.
+	 * Sets up the writers for the tests.
 	 */
 	@Before
 	public void setUp() {
 		writer = new StringWriter();
 		beanWriter = new CsvBeanWriter(writer, PREFS);
+		beanWriterWithReflection = new CsvBeanWriter(writer, PREFS, true);
 		customer = new CustomerBean();
 	}
 	
 	/**
-	 * Closes the bean writer after the test.
+	 * Closes the bean writers after the test.
 	 */
 	@After
 	public void tearDown() throws IOException {
 		beanWriter.close();
+		beanWriterWithReflection.close();
 	}
 	
 	/**
@@ -84,6 +88,19 @@ public class CsvBeanWriterTest {
 	@Test(expected = NullPointerException.class)
 	public void testConstructorWillNullPreference() {
 		new CsvBeanWriter(writer, null);
+	}
+	
+	/**
+	 * Tests the write() method with field reflection.
+	 */
+	@Test
+	public void testWriteWithReflection() throws IOException {
+		beanWriterWithReflection.writeHeader(HEADER);
+		for( CustomerStringBean customer : STRING_CUSTOMERS ) {
+			beanWriterWithReflection.write(customer, HEADER);
+		}
+		beanWriterWithReflection.flush();
+		assertEquals(CSV_FILE, writer.toString());
 	}
 	
 	/**

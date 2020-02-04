@@ -42,6 +42,7 @@ import org.supercsv.io.ICsvListWriter;
 import org.supercsv.io.ICsvMapWriter;
 import org.supercsv.io.ICsvResultSetWriter;
 import org.supercsv.mock.CustomerBean;
+import org.supercsv.mock.CustomerPojo;
 import org.supercsv.mock.ResultSetMock;
 import org.supercsv.prefs.CsvPreference;
 
@@ -52,6 +53,7 @@ public class Writing {
 	
 	public static void main(String[] args) throws Exception {
 		writeWithCsvBeanWriter();
+		writeWithCsvBeanWriterWithField();
 		writeWithResultSetWriter();
 		writeWithCsvListWriter();
 		writeWithCsvMapWriter();
@@ -125,6 +127,48 @@ public class Writing {
 		finally {
 			if( beanWriter != null ) {
 				beanWriter.close();
+			}
+		}
+	}
+	
+	/**
+	 * An example of writing using CsvBeanWriter with field reflection.
+	 */
+	private static void writeWithCsvBeanWriterWithField() throws Exception {
+		
+		// create the customer beans
+		final CustomerPojo john = new CustomerPojo("1", "John", "Dunbar",
+				new GregorianCalendar(1945, Calendar.JUNE, 13).getTime(),SuperCsvTestUtils.time(10, 20, 0),
+				"1600 Amphitheatre Parkway\nMountain View, CA 94043\nUnited States", null, null,
+				"\"May the Force be with you.\" - Star Wars", "jdunbar@gmail.com", 0L);
+		final CustomerPojo bob = new CustomerPojo("2", "Bob", "Down",
+				new GregorianCalendar(1919, Calendar.FEBRUARY, 25).getTime(),SuperCsvTestUtils.time(10, 20, 0),
+				"1601 Willow Rd.\nMenlo Park, CA 94025\nUnited States", true, 0,
+				"\"Frankly, my dear, I don't give a damn.\" - Gone With The Wind", "bobdown@hotmail.com", 123456L);
+		final List<CustomerPojo> customers = Arrays.asList(john, bob);
+		
+		ICsvBeanWriter pojoWriter = null;
+		try {
+			pojoWriter = new CsvBeanWriter(new FileWriter("target/writeWithCsvBeanWriterWithField.csv"),
+					CsvPreference.STANDARD_PREFERENCE,true);
+			
+			// the header elements are used to map the bean values to each column (names must match)
+			final String[] header = new String[] { "customerNo", "firstName", "lastName", "birthDate",
+					"mailingAddress", "married", "numberOfKids", "favouriteQuote", "email", "loyaltyPoints" };
+			final CellProcessor[] processors = getProcessors();
+			
+			// write the header
+			pojoWriter.writeHeader(header);
+			
+			// write the beans
+			for( final CustomerPojo customer : customers ) {
+				pojoWriter.write(customer, header, processors);
+			}
+			
+		}
+		finally {
+			if( pojoWriter != null ) {
+				pojoWriter.close();
 			}
 		}
 	}

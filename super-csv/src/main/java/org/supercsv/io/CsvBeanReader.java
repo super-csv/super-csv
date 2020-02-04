@@ -18,6 +18,7 @@ package org.supercsv.io;
 import java.io.IOException;
 import java.io.Reader;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -29,17 +30,20 @@ import org.supercsv.exception.SuperCsvException;
 import org.supercsv.exception.SuperCsvReflectionException;
 import org.supercsv.prefs.CsvPreference;
 import org.supercsv.util.BeanInterfaceProxy;
+import org.supercsv.util.FieldCache;
 import org.supercsv.util.MethodCache;
 
 /**
  * CsvBeanReader reads a CSV file by instantiating a bean for every row and mapping each column to a field on the bean
  * (using the supplied name mapping). The bean to populate can be either a class or interface. If a class is used, it
- * must be a valid Javabean, i.e. it must have a default no-argument constructor and getter/setter methods. An interface
- * may also be used if it defines getters/setters - a proxy object will be created that implements the interface.
+ * must have a default no-argument constructor. An interface may also be used - a proxy object will be created that
+ * implements the interface. If the bean has setter/getter methods, it is recommended to use the default method. If
+ * there is no setter/getter method, you can read the CSV file through setting <code>isfieldreflect</code> true.
  * 
  * @author Kasper B. Graversen
  * @author James Bassett
  * @author Fabian Seifert
+ * @author Chen Guoping
  */
 public class CsvBeanReader extends AbstractCsvReader implements ICsvBeanReader {
 	
@@ -49,19 +53,25 @@ public class CsvBeanReader extends AbstractCsvReader implements ICsvBeanReader {
 	// cache of methods for mapping from columns to fields
 	private final MethodCache cache = new MethodCache();
 	
+	// cache of fields for mapping from columns ro fields
+	private final FieldCache fieldCache = new FieldCache();
+	
+	// whether to use the field reflect. The default is false, do not use the field mapping
+	private Boolean isFieldReflect = false;
+	
 	/**
 	 * Constructs a new <tt>CsvBeanReader</tt> with the supplied Reader and CSV preferences. Note that the
 	 * <tt>reader</tt> will be wrapped in a <tt>BufferedReader</tt> before accessed.
 	 * 
 	 * @param reader
 	 *            the reader
-	 * @param preferences
+	 * @param preference
 	 *            the CSV preferences
 	 * @throws NullPointerException
-	 *             if reader or preferences are null
+	 *             if reader or preference is null
 	 */
-	public CsvBeanReader(final Reader reader, final CsvPreference preferences) {
-		super(reader, preferences);
+	public CsvBeanReader(final Reader reader, final CsvPreference preference) {
+		super(reader, preference);
 	}
 	
 	/**
@@ -70,13 +80,49 @@ public class CsvBeanReader extends AbstractCsvReader implements ICsvBeanReader {
 	 * 
 	 * @param tokenizer
 	 *            the tokenizer
-	 * @param preferences
+	 * @param preference
 	 *            the CSV preferences
 	 * @throws NullPointerException
-	 *             if tokenizer or preferences are null
+	 *             if tokenizer or preference is null
 	 */
-	public CsvBeanReader(final ITokenizer tokenizer, final CsvPreference preferences) {
-		super(tokenizer, preferences);
+	public CsvBeanReader(final ITokenizer tokenizer, final CsvPreference preference) {
+		super(tokenizer, preference);
+	}
+	
+	/**
+	 * Constructs a new <tt>CsvBeanReader</tt> with the supplied Reader and CSV preferences. Note that the
+	 * <tt>reader</tt> will be wrapped in a <tt>BufferedReader</tt> before accessed.
+	 *
+	 * @param reader
+	 *            the reader
+	 * @param preference
+	 *            the CSV preferences
+	 * @param isFieldReflect
+	 *            boolean if <code>true</code>, then reflect by fields rather setter methods
+	 * @throws NullPointerException
+	 *            if reader or preference is null
+	 */
+	public CsvBeanReader(final Reader reader, final CsvPreference preference, final Boolean isFieldReflect) {
+		this(reader, preference);
+		this.isFieldReflect = isFieldReflect;
+	}
+	
+	/**
+	 * Constructs a new <tt>CsvBeanReader</tt> with the supplied (custom) Tokenizer and CSV preferences. The tokenizer
+	 * should be set up with the Reader (CSV input) and CsvPreference beforehand.
+	 *
+	 * @param tokenizer
+	 *            the tokenizer
+	 * @param preference
+	 *            the CSV preferences
+	 * @param isFieldReflect
+	 *            boolean if <code>true</code>, then reflect by fields rather setter methods
+	 * @throws NullPointerException
+	 *            if tokenizer or preferences is null
+	 */
+	public CsvBeanReader(final ITokenizer tokenizer, final CsvPreference preference, final Boolean isFieldReflect) {
+		this(tokenizer, preference);
+		this.isFieldReflect = isFieldReflect;
 	}
 	
 	/**
@@ -141,6 +187,28 @@ public class CsvBeanReader extends AbstractCsvReader implements ICsvBeanReader {
 	}
 	
 	/**
+	 * Set field value in the bean with the supplied value.
+	 *
+	 * @param bean
+	 *            the bean
+	 * @param field
+	 *            the field
+	 * @param fieldValue
+	 *            the field value to set
+	 * @throws SuperCsvReflectionException
+	 *             if there was an exception setting field value
+	 */
+	private static void setField(final Object bean, final Field field, final Object fieldValue) {
+		try {
+			field.setAccessible(true);
+			field.set(bean, fieldValue);
+		}
+		catch(final IllegalAccessException e) {
+			throw new SuperCsvReflectionException(String.format("error set filed %s", field.getName()), e);
+		}
+	}
+	
+	/**
 	 * Populates the bean by mapping the processed columns to the fields of the bean.
 	 * 
 	 * @param resultBean
@@ -163,9 +231,15 @@ public class CsvBeanReader extends AbstractCsvReader implements ICsvBeanReader {
 				continue;
 			}
 			
-			// invoke the setter on the bean
-			Method setMethod = cache.getSetMethod(resultBean, nameMapping[i], fieldValue.getClass());
-			invokeSetter(resultBean, setMethod, fieldValue);
+			if( !isFieldReflect ) {
+				// invoke the setter on the bean
+				Method setMethod = cache.getSetMethod(resultBean, nameMapping[i], fieldValue.getClass());
+				invokeSetter(resultBean, setMethod, fieldValue);
+			}else {
+				// set filed value in the bean
+				Field field = fieldCache.getField(resultBean, nameMapping[i]);
+				setField(resultBean, field, fieldValue);
+			}
 			
 		}
 		

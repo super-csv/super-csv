@@ -15,6 +15,7 @@
  */
 package org.supercsv.util;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
@@ -242,5 +243,86 @@ public final class ReflectionUtils {
 	 */
 	private static String getMethodNameForField(final String prefix, final String fieldName) {
 		return prefix + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
+	}
+	
+	/**
+	 * Find field in the object by field name
+	 *
+	 * @param object
+	 *            the object
+	 * @param fieldName
+	 *            the field name
+	 * @return the field
+	 * @throws NullPointerException
+	 *            if the object is null
+	 * @throws SuperCsvReflectionException
+	 *            if the field doesn't exist
+	 */
+	public static Field findField(final Object object, final String fieldName) {
+		if( object == null ) {
+			throw new NullPointerException("object should not be null");
+		}
+		
+		final Class<?> clazz = object.getClass();
+		Field[] fields = getFields(clazz);
+		Field field = null;
+		for( int i=0; i<fields.length; i++ ){
+			if( fields[i].getName().equals(fieldName) ){
+				field = fields[i];
+				break;
+			}
+		}
+		if( field == null ) {
+			throw new SuperCsvReflectionException(
+					String.format(
+							"unable to find field %s in class %s - check that the corresponding nameMapping element matches the field name in the bean",
+							fieldName, clazz.getName()));
+		}
+		return field;
+	}
+	
+	/**
+	 * Get all fields in class
+	 *
+	 * @param clazz
+	 *           the class
+	 * @return the all fields
+	 */
+	private static Field[] getFields(final Class clazz) {
+		Field[] fields = clazz.getDeclaredFields();
+		Class superClass = clazz.getSuperclass();
+		while( superClass != null ){
+			Field[] superFields = superClass.getDeclaredFields();
+			fields = concat(fields, superFields);
+			superClass = superClass.getSuperclass();
+		}
+		return fields;
+	}
+	
+	/**
+	 * Contact two arrays
+	 *
+	 * @param first
+	 *           the first array
+	 * @param second
+	 *           the second array
+	 * @param <T>
+	 *           the array type
+	 * @return the new array which contact two arrays
+	 */
+	public static <T> T[] concat(T[] first, T[] second) {
+		final int firstLength = first.length;
+		final int secondLength = second.length;
+		if( firstLength == 0 ) {
+			return second;
+		}
+		if( secondLength == 0 ) {
+			return first;
+		}
+		T[] result = (T[]) java.lang.reflect.Array.newInstance(
+				first.getClass().getComponentType(), firstLength + secondLength);
+		System.arraycopy(first, 0, result, 0, firstLength);
+		System.arraycopy(second, 0, result, firstLength, secondLength);
+		return result;
 	}
 }

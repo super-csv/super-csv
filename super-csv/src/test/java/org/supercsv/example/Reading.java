@@ -39,6 +39,7 @@ import org.supercsv.io.ICsvBeanReader;
 import org.supercsv.io.ICsvListReader;
 import org.supercsv.io.ICsvMapReader;
 import org.supercsv.mock.CustomerBean;
+import org.supercsv.mock.CustomerPojo;
 import org.supercsv.prefs.CsvPreference;
 
 /**
@@ -58,6 +59,7 @@ public class Reading {
 	
 	public static void main(String[] args) throws Exception {
 		readWithCsvBeanReader();
+		readWithCsvBeanReaderWithField();
 		readWithCsvListReader();
 		readVariableColumnsWithCsvListReader();
 		readWithCsvMapReader();
@@ -111,6 +113,33 @@ public class Reading {
 			while( (customer = beanReader.read(CustomerBean.class, header, processors)) != null ) {
 				System.out.println(String.format("lineNo=%s, rowNo=%s, customer=%s", beanReader.getLineNumber(),
 					beanReader.getRowNumber(), customer));
+			}
+			
+		}
+		finally {
+			if( beanReader != null ) {
+				beanReader.close();
+			}
+		}
+	}
+	
+	/**
+	 * An example of reading using CsvBeanReader with field reflection.
+	 */
+	private static void readWithCsvBeanReaderWithField() throws Exception {
+	
+		ICsvBeanReader beanReader = null;
+		try {
+			beanReader = new CsvBeanReader(new FileReader(CSV_FILENAME), CsvPreference.STANDARD_PREFERENCE, true);
+			
+			// the header elements are used to map the values to the bean (names must match)
+			final String[] header = beanReader.getHeader(true);
+			final CellProcessor[] processors = getProcessors();
+			
+			CustomerPojo customer;
+			while( (customer = beanReader.read(CustomerPojo.class, header, processors)) != null ) {
+				System.out.println(String.format("lineNo=%s, rowNo=%s, customer=%s", beanReader.getLineNumber(),
+						beanReader.getRowNumber(), customer));
 			}
 			
 		}

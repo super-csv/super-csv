@@ -81,7 +81,9 @@ customerNo,firstName,lastName,birthDate,mailingAddress,married,numberOfKids,favo
 ---------------------------------------------------------------------------------------------------------------
   
   and the bean has the appropriate getters defined for each field.
-  
+
+  Note that you can init CsvBeanWriter with isFieldReflect is true then getters of the bean can be optional.
+
   If your header doesn't match (the column names have spaces, for example), then you can simply define your own name mapping array that <does> match the field names.
   
   Note that the cell processors are compatible with their associated field types in the bean 
@@ -126,6 +128,61 @@ private static void writeWithCsvBeanWriter() throws Exception {
 	finally {
 		if( beanWriter != null ) {
 			beanWriter.close();
+		}
+	}
+}
++-------------------------------------------------------------------------------------------------------------+
+
+  Output:
+
+---------------------------------------------------------------------------------------------------------------
+customerNo,firstName,lastName,birthDate,mailingAddress,married,numberOfKids,favouriteQuote,email,loyaltyPoints
+1,John,Dunbar,13/06/1945,"1600 Amphitheatre Parkway
+Mountain View, CA 94043
+United States",,,"""May the Force be with you."" - Star Wars",jdunbar@gmail.com,0
+2,Bob,Down,25/02/1919,"1601 Willow Rd.
+Menlo Park, CA 94025
+United States",Y,0,"""Frankly, my dear, I don't give a damn."" - Gone With The Wind",bobdown@hotmail.com,123456
+---------------------------------------------------------------------------------------------------------------
++-------------------------------------------------------------------------------------------------------------+
+/**
+ * An example of writing using CsvBeanWriter with field reflection.
+ */
+private static void writeWithCsvBeanWriterWithField() throws Exception {
+
+	// create the customer beans
+	final CustomerPojo john = new CustomerPojo("1", "John", "Dunbar",
+			new GregorianCalendar(1945, Calendar.JUNE, 13).getTime(),SuperCsvTestUtils.time(10, 20, 0),
+			"1600 Amphitheatre Parkway\nMountain View, CA 94043\nUnited States", null, null,
+			"\"May the Force be with you.\" - Star Wars", "jdunbar@gmail.com", 0L);
+	final CustomerPojo bob = new CustomerPojo("2", "Bob", "Down",
+			new GregorianCalendar(1919, Calendar.FEBRUARY, 25).getTime(),SuperCsvTestUtils.time(10, 20, 0),
+			"1601 Willow Rd.\nMenlo Park, CA 94025\nUnited States", true, 0,
+			"\"Frankly, my dear, I don't give a damn.\" - Gone With The Wind", "bobdown@hotmail.com", 123456L);
+	final List<CustomerPojo> customers = Arrays.asList(john, bob);
+
+	ICsvBeanWriter pojoWriter = null;
+	try {
+		pojoWriter = new CsvBeanWriter(new FileWriter("target/writeWithCsvBeanWriterWithField.csv"),
+				CsvPreference.STANDARD_PREFERENCE,true);
+
+		// the header elements are used to map the bean values to each column (names must match)
+		final String[] header = new String[] { "customerNo", "firstName", "lastName", "birthDate",
+				"mailingAddress", "married", "numberOfKids", "favouriteQuote", "email", "loyaltyPoints" };
+		final CellProcessor[] processors = getProcessors();
+
+		// write the header
+		pojoWriter.writeHeader(header);
+
+		// write the beans
+		for( final CustomerPojo customer : customers ) {
+			pojoWriter.write(customer, header, processors);
+		}
+
+	}
+	finally {
+		if( pojoWriter != null ) {
+			pojoWriter.close();
 		}
 	}
 }
