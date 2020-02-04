@@ -33,7 +33,7 @@ public class FmtBool extends CellProcessorAdaptor implements BoolCellProcessor {
 	private final String falseValue;
 	
 	/**
-	 * Constructs a new <tt>FmtBool</tt> processor, which converts a Boolean into a formatted string.
+	 * Constructs a new <code>FmtBool</code> processor, which converts a Boolean into a formatted string.
 	 * 
 	 * @param trueValue
 	 *            the String to use if the value is true
@@ -47,7 +47,7 @@ public class FmtBool extends CellProcessorAdaptor implements BoolCellProcessor {
 	}
 	
 	/**
-	 * Constructs a new <tt>FmtBool</tt> processor, which converts a Boolean into a formatted string, then calls the
+	 * Constructs a new <code>FmtBool</code> processor, which converts a Boolean into a formatted string, then calls the
 	 * next processor in the chain.
 	 * 
 	 * @param trueValue

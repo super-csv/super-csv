@@ -32,14 +32,14 @@ import org.supercsv.util.CsvContext;
 public class ParseDateTimeZone extends CellProcessorAdaptor implements StringCellProcessor {
 
 	/**
-	 * Constructs a new <tt>ParseDateTimeZone</tt> processor, which parses a
+	 * Constructs a new <code>ParseDateTimeZone</code> processor, which parses a
 	 * String as a Joda DateTimeZone.
 	 */
 	public ParseDateTimeZone() {
 	}
 
 	/**
-	 * Constructs a new <tt>ParseDateTimeZone</tt> processor, which parses a
+	 * Constructs a new <code>ParseDateTimeZone</code> processor, which parses a
 	 * String as a Joda DateTimeZone, then calls the next processor in the
 	 * chain.
 	 * 

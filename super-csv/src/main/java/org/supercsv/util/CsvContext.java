@@ -45,7 +45,7 @@ public class CsvContext implements Serializable {
 	private List<Object> rowSource;
 	
 	/**
-	 * Constructs a new <tt>CsvContext</tt>.
+	 * Constructs a new <code>CsvContext</code>.
 	 * 
 	 * @param lineNumber
 	 *            the current line number
@@ -61,7 +61,7 @@ public class CsvContext implements Serializable {
 	}
 	
 	/**
-	 * Constructs a new <tt>CsvContext</tt> that is a copy of the provided <tt>CsvContext</tt>. 
+	 * Constructs a new <code>CsvContext</code> that is a copy of the provided <code>CsvContext</code>. 
 	 * 
 	 * @param c the context to be copied
 	 */

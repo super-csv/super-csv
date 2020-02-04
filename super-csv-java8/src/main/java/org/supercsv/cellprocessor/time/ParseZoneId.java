@@ -37,7 +37,7 @@ public class ParseZoneId extends CellProcessorAdaptor implements StringCellProce
 	private final Map<String, String> aliasMap;
 
 	/**
-	 * Constructs a new <tt>ParseZoneId</tt> processor, which parses a
+	 * Constructs a new <code>ParseZoneId</code> processor, which parses a
 	 * String recognized by {@link ZoneId#of(String)} as a ZoneId.
 	 */
 	public ParseZoneId() {
@@ -45,7 +45,7 @@ public class ParseZoneId extends CellProcessorAdaptor implements StringCellProce
 	}
 
 	/**
-	 * Constructs a new <tt>ParseZoneId</tt> processor, which parses a
+	 * Constructs a new <code>ParseZoneId</code> processor, which parses a
 	 * String as a ZoneId, then calls the next processor in the
 	 * chain.
 	 *
@@ -58,7 +58,7 @@ public class ParseZoneId extends CellProcessorAdaptor implements StringCellProce
 	}
 
 	/**
-	 * Constructs a new <tt>ParseZoneId</tt> processor, which parses a
+	 * Constructs a new <code>ParseZoneId</code> processor, which parses a
 	 * String as a ZoneId using the supplied Zone ID mappings.
 	 *
 	 * @param aliasMap a Map from custom zone IDs to canonical representations
@@ -70,7 +70,7 @@ public class ParseZoneId extends CellProcessorAdaptor implements StringCellProce
 	}
 
 	/**
-	 * Constructs a new <tt>ParseZoneId</tt> processor, which parses a
+	 * Constructs a new <code>ParseZoneId</code> processor, which parses a
 	 * String as a ZoneId using the supplied Zone ID mappings, then calls the next processor in the
 	 * chain.
 	 *

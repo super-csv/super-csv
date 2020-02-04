@@ -43,7 +43,7 @@ public abstract class AbstractJodaFormattingProcessor<T> extends
 	private final Locale locale;
 
 	/**
-	 * Constructs a new <tt>AbstractJodaFormattingProcessor</tt> processor,
+	 * Constructs a new <code>AbstractJodaFormattingProcessor</code> processor,
 	 * which formats the Joda type as a String.
 	 * 
 	 * @param jodaClass
@@ -61,7 +61,7 @@ public abstract class AbstractJodaFormattingProcessor<T> extends
 	}
 
 	/**
-	 * Constructs a new <tt>AbstractJodaFormattingProcessor</tt> processor,
+	 * Constructs a new <code>AbstractJodaFormattingProcessor</code> processor,
 	 * which formats the Joda type as a String, then calls the next processor in
 	 * the chain.
 	 * 
@@ -84,7 +84,7 @@ public abstract class AbstractJodaFormattingProcessor<T> extends
 	}
 
 	/**
-	 * Constructs a new <tt>AbstractJodaFormattingProcessor</tt> processor,
+	 * Constructs a new <code>AbstractJodaFormattingProcessor</code> processor,
 	 * which formats the Joda type as a String using the supplied formatter.
 	 * 
 	 * @param jodaClass
@@ -104,7 +104,7 @@ public abstract class AbstractJodaFormattingProcessor<T> extends
 	}
 
 	/**
-	 * Constructs a new <tt>AbstractJodaFormattingProcessor</tt> processor,
+	 * Constructs a new <code>AbstractJodaFormattingProcessor</code> processor,
 	 * which formats the Joda type as a String using the supplied formatter,
 	 * then calls the next processor in the chain.
 	 * 
@@ -128,7 +128,7 @@ public abstract class AbstractJodaFormattingProcessor<T> extends
 	}
 
 	/**
-	 * Constructs a new <tt>AbstractJodaFormattingProcessor</tt> processor,
+	 * Constructs a new <code>AbstractJodaFormattingProcessor</code> processor,
 	 * which formats the Joda type as a String using the supplied pattern and
 	 * the default locale.
 	 * 
@@ -145,7 +145,7 @@ public abstract class AbstractJodaFormattingProcessor<T> extends
 	}
 
 	/**
-	 * Constructs a new <tt>AbstractJodaFormattingProcessor</tt> processor,
+	 * Constructs a new <code>AbstractJodaFormattingProcessor</code> processor,
 	 * which formats the Joda type as a String using the supplied pattern and
 	 * the default locale, then calls the next processor in the chain.
 	 * 
@@ -164,7 +164,7 @@ public abstract class AbstractJodaFormattingProcessor<T> extends
 	}
 
 	/**
-	 * Constructs a new <tt>AbstractJodaFormattingProcessor</tt> processor,
+	 * Constructs a new <code>AbstractJodaFormattingProcessor</code> processor,
 	 * which formats the Joda type as a String using the supplied pattern and
 	 * the locale.
 	 * 
@@ -173,7 +173,7 @@ public abstract class AbstractJodaFormattingProcessor<T> extends
 	 * @param pattern
 	 *            the pattern to use
 	 * @param locale
-	 *            the locale to use (default used if <tt>null</tt>)
+	 *            the locale to use (default used if <code>null</code>)
 	 * @throws NullPointerException
 	 *             if jodaClass or pattern is null
 	 */
@@ -187,7 +187,7 @@ public abstract class AbstractJodaFormattingProcessor<T> extends
 	}
 
 	/**
-	 * Constructs a new <tt>AbstractJodaFormattingProcessor</tt> processor,
+	 * Constructs a new <code>AbstractJodaFormattingProcessor</code> processor,
 	 * which formats the Joda type as a String using the supplied pattern and
 	 * the locale, then calls the next processor in the chain.
 	 * 
@@ -196,7 +196,7 @@ public abstract class AbstractJodaFormattingProcessor<T> extends
 	 * @param pattern
 	 *            the pattern to use
 	 * @param locale
-	 *            the locale to use (default used if <tt>null</tt>)
+	 *            the locale to use (default used if <code>null</code>)
 	 * @param next
 	 *            the next processor in the chain
 	 * @throws NullPointerException

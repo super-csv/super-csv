@@ -67,7 +67,7 @@ public class Tokenizer extends AbstractTokenizer {
 	}
 	
 	/**
-	 * Constructs a new <tt>Tokenizer</tt>, which reads the CSV file, line by line.
+	 * Constructs a new <code>Tokenizer</code>, which reads the CSV file, line by line.
 	 * 
 	 * @param reader
 	 *            the reader

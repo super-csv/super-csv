@@ -36,7 +36,7 @@ public class StrMinMax extends CellProcessorAdaptor implements StringCellProcess
 	private final long max;
 	
 	/**
-	 * Constructs a new <tt>StrMinMax</tt> processor, which ensures that the input data has a string length between the
+	 * Constructs a new <code>StrMinMax</code> processor, which ensures that the input data has a string length between the
 	 * supplied min and max values (both inclusive).
 	 * 
 	 * @param min
@@ -54,7 +54,7 @@ public class StrMinMax extends CellProcessorAdaptor implements StringCellProcess
 	}
 	
 	/**
-	 * Constructs a new <tt>StrMinMax</tt> processor, which ensures that the input data has a string length between the
+	 * Constructs a new <code>StrMinMax</code> processor, which ensures that the input data has a string length between the
 	 * supplied min and max values (both inclusive), then calls the next processor in the chain.
 	 * 
 	 * @param min

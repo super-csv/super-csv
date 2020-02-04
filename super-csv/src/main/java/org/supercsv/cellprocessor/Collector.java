@@ -39,7 +39,7 @@ public class Collector extends CellProcessorAdaptor implements BoolCellProcessor
 	private final Collection<Object> collection;
 	
 	/**
-	 * Constructs a new <tt>Collector</tt>, which collects each value it encounters and adds it to the supplied
+	 * Constructs a new <code>Collector</code>, which collects each value it encounters and adds it to the supplied
 	 * Collection.
 	 * 
 	 * @param collection
@@ -54,7 +54,7 @@ public class Collector extends CellProcessorAdaptor implements BoolCellProcessor
 	}
 	
 	/**
-	 * Constructs a new <tt>Collector</tt>, which collects each value it encounters, adds it to the supplied Collection,
+	 * Constructs a new <code>Collector</code>, which collects each value it encounters, adds it to the supplied Collection,
 	 * then calls the next processor in the chain.
 	 * 
 	 * @param collection

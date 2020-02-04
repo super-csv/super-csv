@@ -18,9 +18,9 @@ package org.supercsv.exception;
 /**
  * Wraps the following reflection related checked exceptions:
  * <p>
- * <tt>
+ * <code>
  * ClassNotFoundException, IllegalAccessException, InstantiationException, InvocationTargetException,
- * NoSuchMethodException</tt>
+ * NoSuchMethodException</code>
  * <p>
  * 
  * @since 1.30
@@ -31,7 +31,7 @@ public class SuperCsvReflectionException extends SuperCsvException {
 	private static final long serialVersionUID = 1L;
 	
 	/**
-	 * Constructs a new <tt>SuperCsvReflectionException</tt>.
+	 * Constructs a new <code>SuperCsvReflectionException</code>.
 	 * 
 	 * @param msg
 	 *            the exception message
@@ -41,7 +41,7 @@ public class SuperCsvReflectionException extends SuperCsvException {
 	}
 	
 	/**
-	 * Constructs a new <tt>SuperCsvReflectionException</tt>.
+	 * Constructs a new <code>SuperCsvReflectionException</code>.
 	 * 
 	 * @param msg
 	 *            the exception message

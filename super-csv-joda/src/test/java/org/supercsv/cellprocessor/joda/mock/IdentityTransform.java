@@ -33,14 +33,14 @@ public class IdentityTransform extends CellProcessorAdaptor implements BoolCellP
 	DoubleCellProcessor, LongCellProcessor, StringCellProcessor {
 	
 	/**
-	 * Constructs a new <tt>IdentityTransform</tt> processor, which simply returns whatever is passed into it.
+	 * Constructs a new <code>IdentityTransform</code> processor, which simply returns whatever is passed into it.
 	 */
 	public IdentityTransform() {
 		super();
 	}
 	
 	/**
-	 * Constructs a new <tt>IdentityTransform</tt> processor which just calls the next processor in the chain.
+	 * Constructs a new <code>IdentityTransform</code> processor which just calls the next processor in the chain.
 	 * 
 	 * @param next
 	 *            the next processor in the chain

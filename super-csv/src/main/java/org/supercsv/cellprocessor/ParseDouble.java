@@ -28,14 +28,14 @@ import org.supercsv.util.CsvContext;
 public class ParseDouble extends CellProcessorAdaptor implements StringCellProcessor {
 	
 	/**
-	 * Constructs a new <tt>ParseDouble</tt> processor, which converts a String to a Double.
+	 * Constructs a new <code>ParseDouble</code> processor, which converts a String to a Double.
 	 */
 	public ParseDouble() {
 		super();
 	}
 	
 	/**
-	 * Constructs a new <tt>ParseDouble</tt> processor, which converts a String to a Double, then calls the next
+	 * Constructs a new <code>ParseDouble</code> processor, which converts a String to a Double, then calls the next
 	 * processor in the chain.
 	 * 
 	 * @param next

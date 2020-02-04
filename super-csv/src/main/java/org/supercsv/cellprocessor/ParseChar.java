@@ -29,14 +29,14 @@ import org.supercsv.util.CsvContext;
 public class ParseChar extends CellProcessorAdaptor implements StringCellProcessor {
 	
 	/**
-	 * Constructs a new <tt>ParseChar</tt> processor, which converts a String to a Character.
+	 * Constructs a new <code>ParseChar</code> processor, which converts a String to a Character.
 	 */
 	public ParseChar() {
 		super();
 	}
 	
 	/**
-	 * Constructs a new <tt>ParseChar</tt> processor, which converts a String to a Character, then calls the next
+	 * Constructs a new <code>ParseChar</code> processor, which converts a String to a Character, then calls the next
 	 * processor in the chain.
 	 * 
 	 * @param next

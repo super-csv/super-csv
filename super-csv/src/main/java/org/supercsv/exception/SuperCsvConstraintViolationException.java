@@ -32,7 +32,7 @@ public class SuperCsvConstraintViolationException extends SuperCsvCellProcessorE
 	private static final long serialVersionUID = 1L;
 	
 	/**
-	 * Constructs a new <tt>SuperCsvConstraintViolationException</tt>.
+	 * Constructs a new <code>SuperCsvConstraintViolationException</code>.
 	 * 
 	 * @param msg
 	 *            the exception message
@@ -47,7 +47,7 @@ public class SuperCsvConstraintViolationException extends SuperCsvCellProcessorE
 	}
 	
 	/**
-	 * Constructs a new <tt>SuperCsvConstraintViolationException</tt>.
+	 * Constructs a new <code>SuperCsvConstraintViolationException</code>.
 	 * 
 	 * @param msg
 	 *            the exception message

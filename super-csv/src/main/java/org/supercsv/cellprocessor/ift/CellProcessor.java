@@ -18,13 +18,13 @@ package org.supercsv.cellprocessor.ift;
 import org.supercsv.util.CsvContext;
 
 /**
- * Defines the interface of all <tt>CellProcessor</tt>s.
+ * Defines the interface of all <code>CellProcessor</code>s.
  */
 public interface CellProcessor {
 	
 	/**
 	 * This method is invoked by the framework when the processor needs to process data or check constraints.
-	 * 
+	 * @param <T> the return type
 	 * @param value
 	 *            the value to be processed
 	 * @param context

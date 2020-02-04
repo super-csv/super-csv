@@ -42,7 +42,7 @@ public class FmtDate extends CellProcessorAdaptor implements DateCellProcessor {
 	private final String dateFormat;
 	
 	/**
-	 * Constructs a new <tt>FmtDate</tt> processor, which converts a date into a formatted string using
+	 * Constructs a new <code>FmtDate</code> processor, which converts a date into a formatted string using
 	 * SimpleDateFormat.
 	 * 
 	 * @param dateFormat
@@ -57,7 +57,7 @@ public class FmtDate extends CellProcessorAdaptor implements DateCellProcessor {
 	}
 	
 	/**
-	 * Constructs a new <tt>FmtDate</tt> processor, which converts a date into a formatted string using
+	 * Constructs a new <code>FmtDate</code> processor, which converts a date into a formatted string using
 	 * SimpleDateFormat, then calls the next processor in the chain.
 	 * 
 	 * @param dateFormat

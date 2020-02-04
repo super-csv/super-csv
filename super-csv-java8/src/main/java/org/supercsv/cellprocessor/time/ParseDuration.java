@@ -37,14 +37,14 @@ import org.supercsv.util.CsvContext;
 public class ParseDuration extends CellProcessorAdaptor implements StringCellProcessor {
 
 	/**
-	 * Constructs a new <tt>ParseDuration</tt> processor, which parses a String
+	 * Constructs a new <code>ParseDuration</code> processor, which parses a String
 	 * as a Duration.
 	 */
 	public ParseDuration() {
 	}
 
 	/**
-	 * Constructs a new <tt>ParseDuration</tt> processor, which parses a String
+	 * Constructs a new <code>ParseDuration</code> processor, which parses a String
 	 * as a Duration, then calls the next processor in the chain.
 	 *
 	 * @param next the next processor in the chain

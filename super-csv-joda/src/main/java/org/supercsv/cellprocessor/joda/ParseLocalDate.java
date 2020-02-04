@@ -44,14 +44,14 @@ import org.supercsv.cellprocessor.ift.CellProcessor;
 public class ParseLocalDate extends AbstractJodaParsingProcessor<LocalDate> {
 
 	/**
-	 * Constructs a new <tt>ParseLocalDate</tt> processor, which parses a String
+	 * Constructs a new <code>ParseLocalDate</code> processor, which parses a String
 	 * as a Joda LocalDate.
 	 */
 	public ParseLocalDate() {
 	}
 
 	/**
-	 * Constructs a new <tt>ParseLocalDate</tt> processor, which parses a String
+	 * Constructs a new <code>ParseLocalDate</code> processor, which parses a String
 	 * as a Joda LocalDate, then calls the next processor in the chain.
 	 * 
 	 * @param next
@@ -64,7 +64,7 @@ public class ParseLocalDate extends AbstractJodaParsingProcessor<LocalDate> {
 	}
 
 	/**
-	 * Constructs a new <tt>ParseLocalDate</tt> processor, which parses a String
+	 * Constructs a new <code>ParseLocalDate</code> processor, which parses a String
 	 * as a Joda LocalDate using the supplied formatter.
 	 * 
 	 * @param formatter
@@ -77,7 +77,7 @@ public class ParseLocalDate extends AbstractJodaParsingProcessor<LocalDate> {
 	}
 
 	/**
-	 * Constructs a new <tt>ParseLocalDate</tt> processor, which parses a String
+	 * Constructs a new <code>ParseLocalDate</code> processor, which parses a String
 	 * as a Joda LocalDate using the supplied formatter, then calls the next
 	 * processor in the chain.
 	 * 

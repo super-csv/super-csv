@@ -38,13 +38,13 @@ public class ThreeDHashMap<K1, K2, K3, V> {
 	private final HashMap<K1, HashMap<K2, HashMap<K3, V>>> map = new HashMap<K1, HashMap<K2, HashMap<K3, V>>>();
 	
 	/**
-	 * Existence check of a value (or <tt>null</tt>) mapped to the keys.
+	 * Existence check of a value (or <code>null</code>) mapped to the keys.
 	 * 
 	 * @param firstKey
 	 *            first key
 	 * @param secondKey
 	 *            second key
-	 * @return true when an element (or <tt>null</tt>) has been stored with the keys
+	 * @return true when an element (or <code>null</code>) has been stored with the keys
 	 */
 	public boolean containsKey(final K1 firstKey, final K2 secondKey) {
 		// existence check on inner map
@@ -57,7 +57,7 @@ public class ThreeDHashMap<K1, K2, K3, V> {
 	}
 	
 	/**
-	 * Existence check of a value (or <tt>null</tt>) mapped to the keys.
+	 * Existence check of a value (or <code>null</code>) mapped to the keys.
 	 * 
 	 * @param firstKey
 	 *            first key
@@ -65,7 +65,7 @@ public class ThreeDHashMap<K1, K2, K3, V> {
 	 *            second key
 	 * @param thirdKey
 	 *            third key
-	 * @return true when an element (or <tt>null</tt>) has been stored with the keys
+	 * @return true when an element (or <code>null</code>) has been stored with the keys
 	 */
 	public boolean containsKey(final K1 firstKey, final K2 secondKey, final K3 thirdKey) {
 		// existence check on inner map
@@ -165,7 +165,7 @@ public class ThreeDHashMap<K1, K2, K3, V> {
 	 * @param thirdKey
 	 *            third key
 	 * @param value
-	 *            the value to be inserted. <tt>null</tt> may be inserted as well.
+	 *            the value to be inserted. <code>null</code> may be inserted as well.
 	 * @return null or the value the insert is replacing.
 	 */
 	public Object set(final K1 firstKey, final K2 secondKey, final K3 thirdKey, final V value) {
