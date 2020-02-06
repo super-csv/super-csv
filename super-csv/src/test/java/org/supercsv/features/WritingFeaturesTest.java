@@ -18,9 +18,7 @@ package org.supercsv.features;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.supercsv.cellprocessor.FmtDate;
-import org.supercsv.cellprocessor.FmtNumber;
-import org.supercsv.cellprocessor.Trim;
+import org.supercsv.cellprocessor.*;
 import org.supercsv.cellprocessor.constraint.NotNull;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.io.CsvBeanWriter;
@@ -34,10 +32,7 @@ import java.io.StringWriter;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static org.supercsv.prefs.CsvPreference.STANDARD_PREFERENCE;
 
@@ -257,17 +252,51 @@ public class WritingFeaturesTest {
 	public void testDeepConversion() {
 		Assert.assertNotNull("See org.supercsv.example.dozer.Writing class!");
 	}
-	
-	@Ignore
+
 	@Test
-	public void testSplitCellToMultipleProperties() {
-		throw new UnsupportedOperationException("Not implemented yet!");
+	public void testSplitCellToMultipleProperties() throws Exception {
+		List<Object> csv = new ArrayList<Object>();
+		csv.add("My Full Name");
+		CellProcessor[] processors = { new Split(" ") };
+
+		StringWriter writer = new StringWriter();
+		CsvListWriter listWriter = new CsvListWriter(writer, STANDARD_PREFERENCE);
+		listWriter.write(csv, processors);
+		listWriter.close();
+
+		Assert.assertEquals("My,Full,Name\r\n", writer.toString());
+
+		processors[0] = new Split(" ", 2);
+		writer = new StringWriter();
+		listWriter = new CsvListWriter(writer, STANDARD_PREFERENCE);
+		listWriter.write(csv, processors);
+		listWriter.close();
+
+		Assert.assertEquals("My,Full Name\r\n", writer.toString());
 	}
-	
-	@Ignore
+
 	@Test
-	public void testJoinMultipleCellsIntoOneProperty() {
-		throw new UnsupportedOperationException("Not implemented yet!");
+	public void testJoinMultipleCellsIntoOneProperty() throws Exception {
+		List<Object> csv = new ArrayList<Object>();
+		csv.add("My");
+		csv.add("Full");
+		csv.add("Name");
+		CellProcessor[] processors = { new Merge(" "), new Merge(" "), new Merge() };
+
+		StringWriter writer = new StringWriter();
+		CsvListWriter listWriter = new CsvListWriter(writer, STANDARD_PREFERENCE);
+		listWriter.write(csv, processors);
+		listWriter.close();
+
+		Assert.assertEquals("My Full Name\r\n", writer.toString());
+
+		processors = new CellProcessor[] { new Merge(" "), new Merge(), null };
+		writer = new StringWriter();
+		listWriter = new CsvListWriter(writer, STANDARD_PREFERENCE);
+		listWriter.write(csv, processors);
+		listWriter.close();
+
+		Assert.assertEquals("My Full,Name\r\n", writer.toString());
 	}
 	
 	@Test

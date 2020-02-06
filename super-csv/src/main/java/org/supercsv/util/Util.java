@@ -16,9 +16,11 @@
 package org.supercsv.util;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import org.supercsv.cellprocessor.Merge;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.exception.SuperCsvConstraintViolationException;
 import org.supercsv.exception.SuperCsvException;
@@ -82,15 +84,27 @@ public final class Util {
 		}
 		
 		destination.clear();
-		
+
+		Object value;
+		StringBuilder mergeBuilder;
 		for( int i = 0; i < source.size(); i++ ) {
 			
 			context.setColumnNumber(i + 1); // update context (columns start at 1)
 			
 			if( processors[i] == null ) {
 				destination.add(source.get(i)); // no processing required
+			} else if (processors[i] instanceof Merge) { // Merges cells with adjacent Merge processors together
+				mergeBuilder = new StringBuilder();
+				for (; i < processors.length && processors[i] instanceof Merge; i++) {
+					mergeBuilder.append(processors[i].execute(source.get(i), context));
+				}
+				if (i != processors.length) i--;
+				destination.add(mergeBuilder.toString());
 			} else {
-				destination.add(processors[i].execute(source.get(i), context)); // execute the processor chain
+				if ((value = processors[i].execute(source.get(i), context)) instanceof Object[]) // execute the processor chain
+					destination.addAll(Arrays.asList((Object[]) value)); // If array, add values individually
+				else
+					destination.add(value); // If not array, just add value
 			}
 		}
 	}

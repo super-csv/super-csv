@@ -18,10 +18,7 @@ package org.supercsv.features;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.supercsv.cellprocessor.ParseBigDecimal;
-import org.supercsv.cellprocessor.ParseDate;
-import org.supercsv.cellprocessor.ParseInt;
-import org.supercsv.cellprocessor.Trim;
+import org.supercsv.cellprocessor.*;
 import org.supercsv.cellprocessor.constraint.NotNull;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.comment.CommentMatches;
@@ -355,16 +352,42 @@ public class ReadingFeaturesTest {
 	public void testDeepConversion() {
 		Assert.assertNotNull("See org.supercsv.example.dozer.Reading class!");
 	}
-	
-	@Ignore
+
 	@Test
-	public void testSplitCellToMultipleProperties() {
-		throw new UnsupportedOperationException("Not implemented yet!");
+	public void testSplitCellToMultipleProperties() throws Exception {
+		String csv = "My Full Name";
+		CellProcessor[] processors = { new Split(" ") };
+
+		CsvListReader listReader = new CsvListReader(new StringReader(csv), STANDARD_PREFERENCE);
+		List<Object> person = listReader.read(processors);
+		listReader.close();
+
+		Assert.assertArrayEquals(new Object[]{"My", "Full", "Name"}, person.toArray());
+
+		processors[0] = new Split(" ", 2);
+		listReader = new CsvListReader(new StringReader(csv), STANDARD_PREFERENCE);
+		person = listReader.read(processors);
+		listReader.close();
+
+		Assert.assertArrayEquals(new Object[]{"My", "Full Name"}, person.toArray());
 	}
-	
-	@Ignore
+
 	@Test
-	public void testJoinMultipleCellsIntoOneProperty() {
-		throw new UnsupportedOperationException("Not implemented yet!");
+	public void testJoinMultipleCellsIntoOneProperty() throws Exception {
+		String csv = "My,Full,Name";
+		CellProcessor[] processors = { new Merge(" "), new Merge(" "), new Merge() };
+
+		CsvListReader listReader = new CsvListReader(new StringReader(csv), STANDARD_PREFERENCE);
+		List<Object> person = listReader.read(processors);
+		listReader.close();
+
+		Assert.assertArrayEquals(new Object[]{"My Full Name"}, person.toArray());
+
+		processors = new CellProcessor[]{ new Merge(" "), new Merge(), null };
+		listReader = new CsvListReader(new StringReader(csv), STANDARD_PREFERENCE);
+		person = listReader.read(processors);
+		listReader.close();
+
+		Assert.assertArrayEquals(new Object[]{"My Full", "Name"}, person.toArray());
 	}
 }
