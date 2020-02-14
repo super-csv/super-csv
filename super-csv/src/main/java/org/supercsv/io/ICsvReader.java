@@ -66,12 +66,12 @@ public interface ICsvReader extends Closeable {
 	int getLineNumber();
 	
 	/**
-	 * Returns the untokenized CSV row that was just read (which can potentially span multiple lines in the file).
+	 * Returns the undecoded CSV row that was just read (which can potentially span multiple lines in the file).
 	 * 
-	 * @return the untokenized CSV row that was just read
+	 * @return the undecoded CSV row that was just read
 	 * @since 2.0.0
 	 */
-	String getUntokenizedRow();
+	String getUndecodedRow();
 	
 	/**
 	 * Gets the current row number (i.e. the number of CSV records - including the header - that have been read). This

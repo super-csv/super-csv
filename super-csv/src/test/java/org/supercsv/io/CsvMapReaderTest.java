@@ -48,8 +48,6 @@ public class CsvMapReaderTest {
 	
 	private CsvMapReader mapReader;
 	
-	private CsvMapReader tokenizerMapReader;
-	
 	/**
 	 * Sets up the reader for the tests.
 	 */
@@ -57,9 +55,6 @@ public class CsvMapReaderTest {
 	public void setUp() {
 		reader = new StringReader(CSV_FILE);
 		mapReader = new CsvMapReader(reader, PREFS);
-		
-		final Tokenizer tokenizer = new Tokenizer(reader, PREFS);
-		tokenizerMapReader = new CsvMapReader(tokenizer, PREFS);
 	}
 	
 	/**
@@ -68,7 +63,6 @@ public class CsvMapReaderTest {
 	@After
 	public void tearDown() throws IOException {
 		mapReader.close();
-		tokenizerMapReader.close();
 	}
 	
 	/**
@@ -182,35 +176,6 @@ public class CsvMapReaderTest {
 	}
 	
 	/**
-	 * Tests the read() method using the tokenizer version of CsvMapReader (just to make sure it behaves exactly the
-	 * same as the reader version).
-	 */
-	@Test
-	public void testReadUsingTokenizerReader() throws IOException {
-		
-		final String[] header = tokenizerMapReader.getHeader(true);
-		assertArrayEquals(HEADER, header);
-		
-		int i = 0;
-		Map<String, String> customer;
-		while( (customer = tokenizerMapReader.read(HEADER)) != null ) {
-			assertEquals(STRING_CUSTOMERS.get(i).getCustomerNo(), customer.get("customerNo"));
-			assertEquals(STRING_CUSTOMERS.get(i).getFirstName(), customer.get("firstName"));
-			assertEquals(STRING_CUSTOMERS.get(i).getLastName(), customer.get("lastName"));
-			assertEquals(STRING_CUSTOMERS.get(i).getBirthDate(), customer.get("birthDate"));
-			assertEquals(STRING_CUSTOMERS.get(i).getMailingAddress(), customer.get("mailingAddress"));
-			assertEquals(STRING_CUSTOMERS.get(i).getMarried(), customer.get("married"));
-			assertEquals(STRING_CUSTOMERS.get(i).getNumberOfKids(), customer.get("numberOfKids"));
-			assertEquals(STRING_CUSTOMERS.get(i).getFavouriteQuote(), customer.get("favouriteQuote"));
-			assertEquals(STRING_CUSTOMERS.get(i).getEmail(), customer.get("email"));
-			assertEquals(STRING_CUSTOMERS.get(i).getLoyaltyPoints(), customer.get("loyaltyPoints"));
-			i++;
-		}
-		
-		assertEquals(STRING_CUSTOMERS.size() + 1, tokenizerMapReader.getRowNumber());
-	}
-	
-	/**
 	 * Tests the read() method, with a null name mapping array.
 	 */
 	@Test(expected = NullPointerException.class)
@@ -250,24 +215,6 @@ public class CsvMapReaderTest {
 	@Test(expected = NullPointerException.class)
 	public void testReaderConstructorWithNullPreferences() {
 		new CsvMapReader(reader, null);
-	}
-	
-	/**
-	 * Tests the Tokenizer constructor with a null Reader.
-	 */
-	@SuppressWarnings("resource")
-	@Test(expected = NullPointerException.class)
-	public void testTokenizerConstructorWithNullReader() {
-		new CsvMapReader((Tokenizer) null, PREFS);
-	}
-	
-	/**
-	 * Tests the Tokenizer constructor with a null preference.
-	 */
-	@SuppressWarnings("resource")
-	@Test(expected = NullPointerException.class)
-	public void testTokenizerConstructorWithNullPreferences() {
-		new CsvMapReader(new Tokenizer(reader, PREFS), null);
 	}
 	
 }

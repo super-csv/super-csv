@@ -16,11 +16,15 @@
 package org.supercsv.io;
 
 import java.io.IOException;
+import java.io.LineNumberReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.comment.CommentMatcher;
+import org.supercsv.decoder.CsvDecoder;
+import org.supercsv.decoder.DefaultCsvDecoder;
 import org.supercsv.exception.SuperCsvConstraintViolationException;
 import org.supercsv.exception.SuperCsvException;
 import org.supercsv.prefs.CsvPreference;
@@ -33,19 +37,30 @@ import org.supercsv.util.Util;
  * @author James Bassett
  */
 public abstract class AbstractCsvReader implements ICsvReader {
+
+	private final LineNumberReader reader;
 	
-	private final ITokenizer tokenizer;
+	private final CsvDecoder decoder;
 	
 	private final CsvPreference preferences;
 	
-	// the current tokenized columns
+	// the current decoded columns
 	private final List<String> columns = new ArrayList<String>();
+
+	// the raw, undecoded CSV row (may span multiple lines)
+	private final StringBuilder undecodedRow = new StringBuilder();
+
+	private final boolean ignoreEmptyLines;
+
+	private final CommentMatcher commentMatcher;
+
+	private final  int maxLinesPerRow;
 	
 	// the number of CSV records read
 	private int rowNumber = 0;
 	
 	/**
-	 * Constructs a new <tt>AbstractCsvReader</tt>, using the default {@link Tokenizer}.
+	 * Constructs a new <tt>AbstractCsvReader</tt>, using the default {@link DefaultCsvDecoder}.
 	 * 
 	 * @param reader
 	 *            the reader
@@ -60,39 +75,21 @@ public abstract class AbstractCsvReader implements ICsvReader {
 		} else if( preferences == null ) {
 			throw new NullPointerException("preferences should not be null");
 		}
-		
+
+		this.reader = new LineNumberReader(reader);
 		this.preferences = preferences;
-		this.tokenizer = new Tokenizer(reader, preferences);
+		this.decoder = preferences.getDecoder();
+		this.decoder.initDecoder(preferences);
+		this.ignoreEmptyLines = preferences.isIgnoreEmptyLines();
+		this.commentMatcher = preferences.getCommentMatcher();
+		this.maxLinesPerRow = preferences.getMaxLinesPerRow();
 	}
 	
 	/**
-	 * Constructs a new <tt>AbstractCsvReader</tt>, using a custom {@link Tokenizer} (which should have already been set
-	 * up with the Reader, CsvPreference, and CsvContext). This constructor should only be used if the default Tokenizer
-	 * doesn't provide the required functionality.
-	 * 
-	 * @param tokenizer
-	 *            the tokenizer
-	 * @param preferences
-	 *            the CSV preferences
-	 * @throws NullPointerException
-	 *             if tokenizer or preferences are null
-	 */
-	public AbstractCsvReader(final ITokenizer tokenizer, final CsvPreference preferences) {
-		if( tokenizer == null ) {
-			throw new NullPointerException("tokenizer should not be null");
-		} else if( preferences == null ) {
-			throw new NullPointerException("preferences should not be null");
-		}
-		
-		this.preferences = preferences;
-		this.tokenizer = tokenizer;
-	}
-	
-	/**
-	 * Closes the Tokenizer and its associated Reader.
+	 * Closes the Decoder and its associated Reader.
 	 */
 	public void close() throws IOException {
-		tokenizer.close();
+		reader.close();
 	}
 	
 	/**
@@ -107,10 +104,10 @@ public abstract class AbstractCsvReader implements ICsvReader {
 	 */
 	public String[] getHeader(final boolean firstLineCheck) throws IOException {
 		
-		if( firstLineCheck && tokenizer.getLineNumber() != 0 ) {
+		if( firstLineCheck && reader.getLineNumber() != 0 ) {
 			throw new SuperCsvException(String.format(
 				"CSV header must be fetched as the first read operation, but %d lines have already been read",
-				tokenizer.getLineNumber()));
+				reader.getLineNumber()));
 		}
 		
 		if( readRow() ) {
@@ -124,14 +121,14 @@ public abstract class AbstractCsvReader implements ICsvReader {
 	 * {@inheritDoc}
 	 */
 	public int getLineNumber() {
-		return tokenizer.getLineNumber();
+		return reader.getLineNumber();
 	}
 	
 	/**
 	 * {@inheritDoc}
 	 */
-	public String getUntokenizedRow() {
-		return tokenizer.getUntokenizedRow();
+	public String getUndecodedRow() {
+		return undecodedRow.toString();
 	}
 	
 	/**
@@ -149,9 +146,9 @@ public abstract class AbstractCsvReader implements ICsvReader {
 	}
 	
 	/**
-	 * Gets the tokenized columns.
+	 * Gets the decoded columns.
 	 * 
-	 * @return the tokenized columns
+	 * @return the decoded columns
 	 */
 	protected List<String> getColumns() {
 		return columns;
@@ -167,7 +164,7 @@ public abstract class AbstractCsvReader implements ICsvReader {
 	}
 	
 	/**
-	 * Calls the tokenizer to read a CSV row. The columns can then be retrieved using {@link #getColumns()}.
+	 * Calls the decoder to read a CSV row. The columns can then be retrieved using {@link #getColumns()}.
 	 * 
 	 * @return true if something was read, and false if EOF
 	 * @throws IOException
@@ -176,11 +173,44 @@ public abstract class AbstractCsvReader implements ICsvReader {
 	 *             on errors in parsing the input
 	 */
 	protected boolean readRow() throws IOException {
-		if( tokenizer.readColumns(columns) ) {
-			rowNumber++;
-			return true;
+		columns.clear();
+		undecodedRow.setLength(0);
+		String line;
+		int quoteScopeStartingLine = 1;
+		// read a line (ignoring empty lines/comments if necessary)
+		do {
+			line = getLineNumber() == 0 ? Util.subtractBom(reader.readLine()) : reader.readLine();
+			if(line == null){
+				return false;
+			}
 		}
-		return false;
+		while( ignoreEmptyLines && line.length() == 0 || (commentMatcher != null && commentMatcher.isComment(line)) );
+		undecodedRow.append(line);
+		columns.addAll(decoder.decode(line, false));
+		// the current row parsing is not completed, read the next row to continue parsing (the row may span multiple lines)
+		while( decoder.isPending() ) {
+			quoteScopeStartingLine++;
+			if( maxLinesPerRow > 0 && quoteScopeStartingLine > maxLinesPerRow ) {
+				String msg = maxLinesPerRow == 1 ?
+						String.format("unexpected end of line while reading quoted column on line %d",
+								getLineNumber()) :
+						String.format("max number of lines to read exceeded while reading quoted column" +
+										" beginning on line %d and ending on line %d",
+								quoteScopeStartingLine - ( maxLinesPerRow -1 ), getLineNumber());
+				throw new SuperCsvException(msg);
+			}
+			line = reader.readLine();
+			if( line == null ) {
+				throw new SuperCsvException(String.format(
+						"unexpected end of file while reading quoted column beginning on line %d and ending on line %d",
+						getLineNumber() - (quoteScopeStartingLine -1 ) + 1, getLineNumber()));
+			}
+			undecodedRow.append('\n');
+			undecodedRow.append(line);
+			columns.addAll(decoder.decode(line, true));
+		}
+		rowNumber++;
+		return true;
 	}
 	
 	/**

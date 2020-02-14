@@ -56,6 +56,10 @@ CSV Preferences
 
     []
 
+    [decoder] Use your own decoder when reading CSV. See the section on custom decoders below.
+
+    []
+
     [encoder] Use your own encoder when writing CSV. See the section on custom encoders below.
 
     []
@@ -96,6 +100,8 @@ CSV Preferences
  ignoreEmptyLines            | true
 *----------------------------+-------------------------------------------------------------------------------------*
  maxLinesPerRow              | 0 (disabled)
+*----------------------------+-------------------------------------------------------------------------------------*
+ decoder                     | {{{./apidocs/org/supercsv/decoder/DefaultCsvDecoder.html}DefaultCsvDecoder}}
 *----------------------------+-------------------------------------------------------------------------------------*
  encoder                     | {{{./apidocs/org/supercsv/encoder/DefaultCsvEncoder.html}DefaultCsvEncoder}}
 *----------------------------+-------------------------------------------------------------------------------------*
@@ -192,6 +198,15 @@ private static final CsvPreference DISABLE_MULTILINE_ROWS =
 private static final CsvPreference ALWAYS_QUOTE = 
     new CsvPreference.Builder(CsvPreference.STANDARD_PREFERENCE).useQuoteMode(new AlwaysQuoteMode().build();
 +------------------------------------------------------------------------------------------------------------------------------------------------+  
+* Custom CSV decoder
+
+  Super CSV provides a powerful {{{./apidocs/org/supercsv/decoder/CsvDecoder.html}CsvDecoder}}, but if you'd like complete control
+  over how your CSV is decoded, then you can supply your own to the <<<useDecoder()>>> method when building your preferences:
+
++------------------------------------------------------------------------------------------------------------------------------------------------+
+private static final CsvPreference CUSTOM_DECODER =
+    new CsvPreference.Builder(CsvPreference.STANDARD_PREFERENCE).useDecoder(new MyAwesomeDecoder().build();
++------------------------------------------------------------------------------------------------------------------------------------------------+
 
 * Custom CSV encoder
 

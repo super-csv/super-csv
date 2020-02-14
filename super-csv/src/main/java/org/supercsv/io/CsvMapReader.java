@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.decoder.CsvDecoder;
 import org.supercsv.prefs.CsvPreference;
 import org.supercsv.util.Util;
 
@@ -48,21 +49,6 @@ public class CsvMapReader extends AbstractCsvReader implements ICsvMapReader {
 	 */
 	public CsvMapReader(final Reader reader, final CsvPreference preferences) {
 		super(reader, preferences);
-	}
-	
-	/**
-	 * Constructs a new <tt>CsvMapReader</tt> with the supplied (custom) Tokenizer and CSV preferences. The tokenizer
-	 * should be set up with the Reader (CSV input) and CsvPreference beforehand.
-	 * 
-	 * @param tokenizer
-	 *            the tokenizer
-	 * @param preferences
-	 *            the CSV preferences
-	 * @throws NullPointerException
-	 *             if tokenizer or preferences are null
-	 */
-	public CsvMapReader(final ITokenizer tokenizer, final CsvPreference preferences) {
-		super(tokenizer, preferences);
 	}
 	
 	/**
