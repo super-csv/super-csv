@@ -29,7 +29,6 @@
 		<module>super-csv</module>
 		<module>super-csv-dozer</module>
 		<module>super-csv-joda</module>
-		<module>super-csv-java8</module>
 		<module>super-csv-distribution</module>
 		<module>super-csv-benchmark</module>
 	</modules>
@@ -163,8 +162,8 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
-					<source>1.5</source>
-					<target>1.5</target>
+					<source>1.8</source>
+					<target>1.8</target>
 				</configuration>
 			</plugin>
 
@@ -195,8 +194,8 @@
 					<downloadSources>true</downloadSources>
 					<testSourcesLast>true</testSourcesLast>
 					<classpathContainers>
-						<!-- Use J2SE 1.5 -->
-						<classpathContainer>org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5</classpathContainer>
+						<!-- Use J2SE 1.8 -->
+						<classpathContainer>org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8</classpathContainer>
 					</classpathContainers>
 				</configuration>
 			</plugin>
@@ -273,28 +272,6 @@
 					<goals>deploy</goals>
 					<tagNameFormat>v@{project.version}</tagNameFormat>
 				</configuration>
-			</plugin>
-
-			<!-- Ensures Java 1.5 compatibility -->
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>animal-sniffer-maven-plugin</artifactId>
-				<configuration>
-					<signature>
-						<groupId>org.codehaus.mojo.signature</groupId>
-						<artifactId>java15</artifactId>
-						<version>1.0</version>
-					</signature>
-				</configuration>
-				<executions>
-					<execution>
-						<id>check-java15-compatibility</id>
-						<phase>test</phase>
-						<goals>
-							<goal>check</goal>
-						</goals>
-					</execution>
-				</executions>
 			</plugin>
 
 		</plugins>
@@ -509,7 +486,7 @@
 				<artifactId>maven-pmd-plugin</artifactId>
 				<version>${pmd.plugin.version}</version>
 				<configuration>
-					<targetJdk>1.5</targetJdk>
+					<targetJdk>1.8</targetJdk>
 				</configuration>
 			</plugin>
 
