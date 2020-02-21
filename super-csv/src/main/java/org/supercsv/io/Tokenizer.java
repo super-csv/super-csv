@@ -31,6 +31,7 @@ import org.supercsv.prefs.CsvPreference;
  * @author Kasper B. Graversen
  * @author James Bassett
  * @author Pietro Aragona
+ * @author Yoshiyuki Takemori
  */
 public class Tokenizer extends AbstractTokenizer {
 	
@@ -315,6 +316,9 @@ public class Tokenizer extends AbstractTokenizer {
 		
 		if(currentColumn.length() > 0){
 			columns.add(currentColumn.toString());
+		}
+		else if( emptyColumnParsing.equals(EmptyColumnParsing.ParseEmptyColumnsAndNullAsEmptyString) ) {
+			columns.add("");
 		}
 		else{
 			int previousCharIndex = charIndex - 1;
