@@ -20,8 +20,7 @@ import java.io.Reader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.exception.SuperCsvConstraintViolationException;
@@ -202,7 +201,25 @@ public class CsvBeanReader extends AbstractCsvReader implements ICsvBeanReader {
 		
 		return readIntoBean(instantiateBean(clazz), nameMapping, processors);
 	}
-	
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public <T> T read(final Class<T> clazz, final String[] nameMapping, final Map<String, CellProcessor> processorsMap)
+			throws IOException {
+
+		if( clazz == null ) {
+			throw new NullPointerException("clazz should not be null");
+		} else if( nameMapping == null ) {
+			throw new NullPointerException("nameMapping should not be null");
+		} else if( processorsMap == null ) {
+			throw new NullPointerException("processorsMap should not be null");
+		}
+
+		return read(instantiateBean(clazz), nameMapping, processorsMap);
+
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -231,7 +248,41 @@ public class CsvBeanReader extends AbstractCsvReader implements ICsvBeanReader {
 		
 		return readIntoBean(bean, nameMapping, processors);
 	}
-	
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public <T> T read(final T bean, final String[] nameMapping, final Map<String, CellProcessor> processorsMap)
+			throws IOException {
+
+		if( bean == null ) {
+			throw new NullPointerException("clazz should not be null");
+		} else if( nameMapping == null ) {
+			throw new NullPointerException("nameMapping should not be null");
+		} else if( processorsMap == null ) {
+			throw new NullPointerException("processorsMap should not be null");
+		}
+
+		CellProcessor[] processors = new CellProcessor[nameMapping.length];
+		Set<String> usedKeys = new HashSet<String>();
+
+		for (int i = 0; i < nameMapping.length; ++i) {
+			processors[i] = processorsMap.get(nameMapping[i]);
+			if (processors[i] == null) // TODO use logging - DEBUG!
+				System.out.println("column '" + nameMapping[i] + "' has no mapping inside processorsMap => add NULL processor");
+			else
+				usedKeys.add(nameMapping[i]);
+		}
+
+		for (String curKey: processorsMap.keySet()) {
+			if (!usedKeys.contains(curKey)) // TODO use logging - DEBUG!
+				System.out.println("value from map is ignored, because no column with this name was found: " + curKey);
+		}
+
+		return readIntoBean(bean, nameMapping, processors);
+	}
+
+
 	/**
 	 * Reads a row of a CSV file and populates the bean, using the supplied name mapping to map column values to the
 	 * appropriate fields. If processors are supplied then they are used, otherwise the raw String values will be used.

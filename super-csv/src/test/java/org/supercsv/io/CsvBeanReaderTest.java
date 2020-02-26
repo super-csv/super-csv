@@ -48,10 +48,15 @@ import static org.supercsv.SuperCsvTestUtils.STRING_CUSTOMERS;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.supercsv.cellprocessor.*;
+import org.supercsv.cellprocessor.constraint.NotNull;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.exception.SuperCsvReflectionException;
 import org.supercsv.mock.Customer;
@@ -117,6 +122,42 @@ public class CsvBeanReaderTest {
 		assertEquals(LARRY, beanReader.read(CustomerBean.class, header, READ_PROCESSORS));
 		assertEquals(GRACE, beanReader.read(CustomerBean.class, header, READ_PROCESSORS));
 		assertNull(beanReader.read(CustomerBean.class, header, READ_PROCESSORS));
+	}
+
+
+	/**
+	 * Tests the read() method using processors stored inside map.
+	 */
+	@Test
+	public void testReadWithProcessorsMap() throws IOException {
+
+		final String[] header = beanReader.getHeader(true);
+		assertArrayEquals(HEADER, header);
+
+		Assert.assertEquals("for not it's necessary to generate test data", header.length, READ_PROCESSORS.length);
+
+		Map<String, CellProcessor> READ_PROCESSORS_MAP = new HashMap<String, CellProcessor>();
+
+		for (int i = 0; i < header.length; ++i) {
+			if (READ_PROCESSORS[i] != null) // this will cause some mappings are missing
+				READ_PROCESSORS_MAP.put(header[i], READ_PROCESSORS[i]);
+		}
+		Assert.assertEquals(5, READ_PROCESSORS_MAP.size());
+
+		// this processor is not used .... this will cause one additional/ unused mapping
+		READ_PROCESSORS_MAP.put("someUnknownProcessor", new NotNull(new ParseInt()));
+
+		assertEquals(JOHN, beanReader.read(CustomerBean.class, header, READ_PROCESSORS_MAP));
+		assertEquals(BOB, beanReader.read(CustomerBean.class, header, READ_PROCESSORS_MAP));
+		assertEquals(ALICE, beanReader.read(CustomerBean.class, header, READ_PROCESSORS_MAP));
+		assertEquals(BILL, beanReader.read(CustomerBean.class, header, READ_PROCESSORS_MAP));
+		assertEquals(MIRANDA, beanReader.read(CustomerBean.class, header, READ_PROCESSORS_MAP));
+		assertEquals(STEVE, beanReader.read(CustomerBean.class, header, READ_PROCESSORS_MAP));
+		assertEquals(ADA, beanReader.read(CustomerBean.class, header, READ_PROCESSORS_MAP));
+		assertEquals(SERGEI, beanReader.read(CustomerBean.class, header, READ_PROCESSORS_MAP));
+		assertEquals(LARRY, beanReader.read(CustomerBean.class, header, READ_PROCESSORS_MAP));
+		assertEquals(GRACE, beanReader.read(CustomerBean.class, header, READ_PROCESSORS_MAP));
+		assertNull(beanReader.read(CustomerBean.class, header, READ_PROCESSORS_MAP));
 	}
 	
 	/**
