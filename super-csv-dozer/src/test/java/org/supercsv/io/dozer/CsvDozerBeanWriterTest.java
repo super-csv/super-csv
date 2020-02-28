@@ -21,6 +21,8 @@ import static org.junit.Assert.fail;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.io.OutputStream;
+import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
 
 import org.dozer.DozerBeanMapper;
@@ -60,10 +62,13 @@ public class CsvDozerBeanWriterTest {
 		+ "19,Y,1,\"Um, how am I supposed to know?\",2,Me,3,\"Last question, can I go now?\"\n" + "4,N,,,,,,\n";
 	
 	private Writer writer;
+	private OutputStream outputStream;
 	
 	private CsvDozerBeanWriter beanWriter;
 	private CsvDozerBeanWriter beanWriterWithMapper;
 	private CsvDozerBeanWriter beanWriterWithConfiguredMapper;
+	private CsvDozerBeanWriter beanOutputStream;
+	private CsvDozerBeanWriter beanOutputStreamWithMapper;
 	private DozerBeanMapper beanMapper;
 	private DozerBeanMapper configuredBeanMapper;
 	
@@ -85,6 +90,10 @@ public class CsvDozerBeanWriterTest {
 		
 		configuredBeanMapper = new DozerBeanMapper(Arrays.asList("reference.xml"));
 		beanWriterWithConfiguredMapper = new CsvDozerBeanWriter(writer, PREFS, configuredBeanMapper);
+
+		outputStream = new ByteArrayOutputStream();
+		beanOutputStream = new CsvDozerBeanWriter(outputStream, PREFS);
+		beanOutputStreamWithMapper = new CsvDozerBeanWriter(outputStream, PREFS, beanMapper);
 	}
 	
 	/**
@@ -95,6 +104,8 @@ public class CsvDozerBeanWriterTest {
 		beanWriter.close();
 		beanWriterWithMapper.close();
 		beanWriterWithConfiguredMapper.close();
+		beanOutputStream.close();
+		beanOutputStreamWithMapper.close();
 	}
 	
 	/**
@@ -239,7 +250,42 @@ public class CsvDozerBeanWriterTest {
 			fail("should have thrown NullPointerException");
 		}
 		catch(NullPointerException e) {}
-		
+
+		// constructor three - null OutputStream
+		try {
+			new CsvDozerBeanWriter((OutputStream) null, PREFS);
+			fail("should have thrown NullPointerException");
+		}
+		catch(NullPointerException e) {}
+
+		// constructor three - null prefs
+		try {
+			new CsvDozerBeanWriter(outputStream, null);
+			fail("should have thrown NullPointerException");
+		}
+		catch(NullPointerException e) {}
+
+		// constructor four - null OutputStream
+		try {
+			new CsvDozerBeanWriter((OutputStream) null, PREFS, beanMapper);
+			fail("should have thrown NullPointerException");
+		}
+		catch(NullPointerException e) {}
+
+		// constructor four - null prefs
+		try {
+			new CsvDozerBeanWriter(outputStream, null, beanMapper);
+			fail("should have thrown NullPointerException");
+		}
+		catch(NullPointerException e) {}
+
+		// constructor four - null dozerBeanMapper
+		try {
+			new CsvDozerBeanWriter(outputStream, PREFS, null);
+			fail("should have thrown NullPointerException");
+		}
+		catch(NullPointerException e) {}
+
 	}
 	
 	/**

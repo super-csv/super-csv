@@ -48,6 +48,8 @@ import static org.supercsv.SuperCsvTestUtils.STRING_CUSTOMERS;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.io.InputStream;
+import java.io.ByteArrayInputStream;
 
 import org.junit.After;
 import org.junit.Before;
@@ -71,8 +73,12 @@ public class CsvBeanReaderTest {
 	private static final CsvPreference PREFS = CsvPreference.STANDARD_PREFERENCE;
 	
 	private Reader reader;
+
+	private InputStream inputStream;
 	
 	private CsvBeanReader beanReader;
+
+	private CsvBeanReader beanInputStream;
 	
 	private CsvBeanReader tokenizerBeanReader;
 	
@@ -83,6 +89,9 @@ public class CsvBeanReaderTest {
 	public void setUp() {
 		reader = new StringReader(CSV_FILE);
 		beanReader = new CsvBeanReader(reader, PREFS);
+
+		inputStream = new ByteArrayInputStream(CSV_FILE.getBytes());
+		beanInputStream = new CsvBeanReader(inputStream, PREFS);
 		
 		final Tokenizer tokenizer = new Tokenizer(reader, PREFS);
 		tokenizerBeanReader = new CsvBeanReader(tokenizer, PREFS);
@@ -94,6 +103,7 @@ public class CsvBeanReaderTest {
 	@After
 	public void tearDown() throws IOException {
 		beanReader.close();
+		beanInputStream.close();
 		tokenizerBeanReader.close();
 	}
 	
@@ -398,6 +408,24 @@ public class CsvBeanReaderTest {
 	@Test(expected = NullPointerException.class)
 	public void testReaderConstructorWithNullPreferences() {
 		new CsvBeanReader(reader, null);
+	}
+
+	/**
+	 * Tests the InputStream constructor with a null InputStream.
+	 */
+	@SuppressWarnings("resource")
+	@Test(expected = NullPointerException.class)
+	public void testInputStreamConstructorWithNullInputStream() {
+		new CsvBeanReader((InputStream) null, PREFS);
+	}
+
+	/**
+	 * Tests the Reader constructor with a null preference.
+	 */
+	@SuppressWarnings("resource")
+	@Test(expected = NullPointerException.class)
+	public void testInputStreamConstructorWithNullPreferences() {
+		new CsvBeanReader(inputStream, null);
 	}
 	
 	/**

@@ -26,6 +26,8 @@ import static org.supercsv.SuperCsvTestUtils.WRITE_PROCESSORS;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.io.OutputStream;
+import java.io.ByteArrayOutputStream;
 
 import org.junit.After;
 import org.junit.Before;
@@ -45,8 +47,12 @@ public class CsvBeanWriterTest {
 	private static final CsvPreference PREFS = CsvPreference.STANDARD_PREFERENCE;
 	
 	private Writer writer;
+
+	private OutputStream outputStream;
 	
 	private CsvBeanWriter beanWriter;
+
+	private CsvBeanWriter beanOutputStream;
 	
 	private CustomerBean customer;
 	
@@ -57,6 +63,8 @@ public class CsvBeanWriterTest {
 	public void setUp() {
 		writer = new StringWriter();
 		beanWriter = new CsvBeanWriter(writer, PREFS);
+		outputStream = new ByteArrayOutputStream();
+		beanOutputStream = new CsvBeanWriter(outputStream, PREFS);
 		customer = new CustomerBean();
 	}
 	
@@ -66,6 +74,7 @@ public class CsvBeanWriterTest {
 	@After
 	public void tearDown() throws IOException {
 		beanWriter.close();
+		beanOutputStream.close();
 	}
 	
 	/**
@@ -74,7 +83,7 @@ public class CsvBeanWriterTest {
 	@SuppressWarnings("resource")
 	@Test(expected = NullPointerException.class)
 	public void testConstructorWillNullWriter() {
-		new CsvBeanWriter(null, PREFS);
+		new CsvBeanWriter((Writer) null, PREFS);
 	}
 	
 	/**
@@ -85,7 +94,25 @@ public class CsvBeanWriterTest {
 	public void testConstructorWillNullPreference() {
 		new CsvBeanWriter(writer, null);
 	}
-	
+
+	/**
+	 * Tests the OutputStream constructor with a null OutputStream.
+	 */
+	@SuppressWarnings("resource")
+	@Test(expected = NullPointerException.class)
+	public void testOutputStreamConstructorWillNullOutputStream() {
+		new CsvBeanWriter((OutputStream) null, PREFS);
+	}
+
+	/**
+	 * Tests the OutputStream constructor with a null CsvPreference.
+	 */
+	@SuppressWarnings("resource")
+	@Test(expected = NullPointerException.class)
+	public void testOutputStreamConstructorWillNullPreference() {
+		new CsvBeanWriter(outputStream, null);
+	}
+
 	/**
 	 * Tests the write() method.
 	 */

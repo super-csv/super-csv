@@ -16,6 +16,8 @@
 package org.supercsv.io;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
@@ -63,6 +65,27 @@ public abstract class AbstractCsvReader implements ICsvReader {
 		
 		this.preferences = preferences;
 		this.tokenizer = new Tokenizer(reader, preferences);
+	}
+
+	/**
+	 * Constructs a new <tt>AbstractCsvReader</tt>, using the default {@link Tokenizer}.
+	 *
+	 * @param inputStream
+	 *            the inputStream
+	 * @param preferences
+	 *            the CSV preferences
+	 * @throws NullPointerException
+	 *             if inputStream or preferences are null
+	 */
+	public AbstractCsvReader(final InputStream inputStream, final CsvPreference preferences) {
+		if( inputStream == null ) {
+			throw new NullPointerException("inputStream should not be null");
+		} else if( preferences == null ) {
+			throw new NullPointerException("preferences should not be null");
+		}
+
+		this.preferences = preferences;
+		this.tokenizer = new Tokenizer(new InputStreamReader(inputStream), preferences);
 	}
 	
 	/**

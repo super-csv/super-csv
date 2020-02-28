@@ -15,6 +15,8 @@
  */
 package org.supercsv.io;
 
+import java.io.OutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.StringWriter;
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -59,6 +61,31 @@ public final class CsvTypedBeanWriterTest {
         }
     }
 
+    @Test
+    public void writesWithOutputStreamTypedBeanToCsv() throws Exception {
+        try (
+            final OutputStream outputStream = new ByteArrayOutputStream();
+            final ICsvTypedBeanWriter<CsvTypedBeanWriterTest.FakeBean> beanWriter =
+                new CsvTypedBeanWriter<>(outputStream, CsvPreference.STANDARD_PREFERENCE)
+        ) {
+            final Collection<Function<FakeBean, ?>> extractors =
+                Arrays.asList(
+                    FakeBean::bool,
+                    FakeBean::stringField,
+                    FakeBean::collection,
+                    FakeBean::decimal
+                );
+            final FakeBean bean = new FakeBean("Oh, String!", false,
+                BigDecimal.TEN, Arrays.asList("Foo", "Bar", "Bazz"));
+            beanWriter.writeHeader(CsvTypedBeanWriterTest.headers());
+            beanWriter.write(Collections.singleton(bean), extractors);
+            beanWriter.flush();
+            Assert.assertEquals(
+                CsvTypedBeanWriterTest.csv(CsvTypedBeanWriterTest.headers(), bean),
+                outputStream.toString()
+            );
+        }
+    }
 
     private static String csv(final String[] headers, final FakeBean bean) {
         final StringBuilder builder = new StringBuilder();

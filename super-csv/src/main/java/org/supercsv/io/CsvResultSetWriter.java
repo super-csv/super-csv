@@ -17,6 +17,7 @@
 package org.supercsv.io;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.Writer;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -51,7 +52,21 @@ public class CsvResultSetWriter extends AbstractCsvWriter implements ICsvResultS
 	public CsvResultSetWriter(final Writer writer, final CsvPreference preference) {
 		super(writer, preference);
 	}
-	
+
+	/**
+	 * Constructs a new {@code CsvResultSetWriter} with the supplied {@code OutputStream} and CSV preferences.
+	 *
+	 * @param outputStream
+	 *            the outputStream
+	 * @param preference
+	 *            the CSV preferences
+	 * @throws NullPointerException
+	 *             if writer or preference is null
+	 */
+	public CsvResultSetWriter(final OutputStream outputStream, final CsvPreference preference) {
+		super(outputStream, preference);
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */

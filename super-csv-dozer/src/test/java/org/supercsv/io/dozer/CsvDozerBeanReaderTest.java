@@ -21,6 +21,8 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.ByteArrayInputStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -59,12 +61,15 @@ public class CsvDozerBeanReaderTest {
 	private static final boolean NO_PROCESSORS = false;
 	
 	private Reader reader;
+	private InputStream inputStream;
 	
 	private CsvDozerBeanReader beanReader;
 	private CsvDozerBeanReader beanReaderWithMapper;
 	private CsvDozerBeanReader beanReaderWithConfiguredMapper;
 	private CsvDozerBeanReader tokenizerBeanReader;
 	private CsvDozerBeanReader tokenizerBeanReaderWithMapper;
+	private CsvDozerBeanReader beanInputStream;
+	private CsvDozerBeanReader beanInputStreamWithMapper;
 	private ITokenizer tokenizer;
 	private DozerBeanMapper beanMapper;
 	private DozerBeanMapper configuredBeanMapper;
@@ -104,6 +109,10 @@ public class CsvDozerBeanReaderTest {
 		beanReaderWithConfiguredMapper = new CsvDozerBeanReader(reader, PREFS, configuredBeanMapper);
 		
 		tokenizerBeanReaderWithMapper = new CsvDozerBeanReader(tokenizer, PREFS, beanMapper);
+
+		inputStream = new ByteArrayInputStream(CSV.getBytes());
+		beanInputStream = new CsvDozerBeanReader(inputStream, PREFS);
+		beanInputStreamWithMapper = new CsvDozerBeanReader(inputStream, PREFS, beanMapper);
 	}
 	
 	/**
@@ -116,6 +125,8 @@ public class CsvDozerBeanReaderTest {
 		beanReaderWithMapper.close();
 		beanReaderWithConfiguredMapper.close();
 		tokenizerBeanReaderWithMapper.close();
+		beanInputStream.close();
+		beanInputStreamWithMapper.close();
 	}
 	
 	/**
@@ -248,6 +259,70 @@ public class CsvDozerBeanReaderTest {
 	@Test
 	public void testReadForBeanReaderWithConfiguredMapperUsingProcessorsWithExistingBean() throws IOException {
 		testRead(beanReaderWithConfiguredMapper, USE_PROCESSORS, CONFIGURED, EXISTING_BEAN);
+	}
+
+	/**
+	 * Tests the read() method without any processors for a bean reader with InputStream.
+	 */
+	@Test
+	public void testReadForInputStreamBeanReader() throws IOException {
+		testRead(beanInputStream, NO_PROCESSORS, NOT_CONFIGURED, CREATE_NEW_BEAN);
+	}
+
+	/**
+	 * Tests the read() method without any processors for a bean reader with InputStream.
+	 */
+	@Test
+	public void testReadForInputStreamBeanReaderWithExistingBean() throws IOException {
+		testRead(beanInputStream, NO_PROCESSORS, NOT_CONFIGURED, EXISTING_BEAN);
+	}
+
+	/**
+	 * Tests the read() method using processors for a bean reader with InputStream.
+	 */
+	@Test
+	public void testReadForInputStreamBeanReaderUsingProcessors() throws IOException {
+		testRead(beanInputStream, USE_PROCESSORS, NOT_CONFIGURED, CREATE_NEW_BEAN);
+	}
+
+	/**
+	 * Tests the read() method using processors for a bean reader with InputStream.
+	 */
+	@Test
+	public void testReadForInputStreamBeanReaderUsingProcessorsWithExistingBean() throws IOException {
+		testRead(beanInputStream, USE_PROCESSORS, NOT_CONFIGURED, EXISTING_BEAN);
+	}
+
+	/**
+	 * Tests the read() method without any processors for a bean reader with InputStream and DozerBeanMapper.
+	 */
+	@Test
+	public void testReadForInputStreamBeanReaderWithMapper() throws IOException {
+		testRead(beanInputStreamWithMapper, NO_PROCESSORS, NOT_CONFIGURED, CREATE_NEW_BEAN);
+	}
+
+	/**
+	 * Tests the read() method without any processors for a bean reader with InputStream and DozerBeanMapper.
+	 */
+	@Test
+	public void testReadForInputStreamBeanReaderWithMapperWithExistingBean() throws IOException {
+		testRead(beanInputStreamWithMapper, NO_PROCESSORS, NOT_CONFIGURED, EXISTING_BEAN);
+	}
+
+	/**
+	 * Tests the read() method using processors for a bean reader with InputStream and DozerBeanMapper.
+	 */
+	@Test
+	public void testReadForInputStreamBeanReaderWithMapperUsingProcessors() throws IOException {
+		testRead(beanInputStreamWithMapper, USE_PROCESSORS, NOT_CONFIGURED, CREATE_NEW_BEAN);
+	}
+
+	/**
+	 * Tests the read() method using processors for a bean reader with InputStream and DozerBeanMapper.
+	 */
+	@Test
+	public void testReadForInputStreamBeanReaderWithMapperUsingProcessorsWithExistingBean() throws IOException {
+		testRead(beanInputStreamWithMapper, USE_PROCESSORS, NOT_CONFIGURED, EXISTING_BEAN);
 	}
 
 	@Test
@@ -671,57 +746,92 @@ public class CsvDozerBeanReaderTest {
 			fail("should have thrown NullPointerException");
 		}
 		catch(NullPointerException e) {}
+
+		// constructor two - null inputStream
+		try {
+			new CsvDozerBeanReader((InputStream) null, PREFS);
+			fail("should have thrown NullPointerException");
+		}
+		catch(NullPointerException e) {}
+
+		// constructor two - null prefs
+		try {
+			new CsvDozerBeanReader(inputStream, null);
+			fail("should have thrown NullPointerException");
+		}
+		catch(NullPointerException e) {}
 		
-		// constructor two - null tokenizer
+		// constructor three - null tokenizer
 		try {
 			new CsvDozerBeanReader((ITokenizer) null, PREFS);
 			fail("should have thrown NullPointerException");
 		}
 		catch(NullPointerException e) {}
 		
-		// constructor two - null prefs
+		// constructor three - null prefs
 		try {
 			new CsvDozerBeanReader(tokenizer, null);
 			fail("should have thrown NullPointerException");
 		}
 		catch(NullPointerException e) {}
 		
-		// constructor three - null reader
+		// constructor four - null reader
 		try {
 			new CsvDozerBeanReader((Reader) null, PREFS, beanMapper);
 			fail("should have thrown NullPointerException");
 		}
 		catch(NullPointerException e) {}
 		
-		// constructor three - null prefs
+		// constructor four - null prefs
 		try {
 			new CsvDozerBeanReader(reader, null, beanMapper);
 			fail("should have thrown NullPointerException");
 		}
 		catch(NullPointerException e) {}
 		
-		// constructor three - null dozerBeanMapper
+		// constructor four - null dozerBeanMapper
 		try {
 			new CsvDozerBeanReader(reader, PREFS, null);
 			fail("should have thrown NullPointerException");
 		}
 		catch(NullPointerException e) {}
-		
-		// constructor four - null tokenizer
+
+		// constructor five - null inputStream
+		try {
+			new CsvDozerBeanReader((InputStream) null, PREFS, beanMapper);
+			fail("should have thrown NullPointerException");
+		}
+		catch(NullPointerException e) {}
+
+		// constructor five - null prefs
+		try {
+			new CsvDozerBeanReader(inputStream, null, beanMapper);
+			fail("should have thrown NullPointerException");
+		}
+		catch(NullPointerException e) {}
+
+		// constructor five - null dozerBeanMapper
+		try {
+			new CsvDozerBeanReader(inputStream, PREFS, null);
+			fail("should have thrown NullPointerException");
+		}
+		catch(NullPointerException e) {}
+
+		// constructor six - null tokenizer
 		try {
 			new CsvDozerBeanReader((ITokenizer) null, PREFS, beanMapper);
 			fail("should have thrown NullPointerException");
 		}
 		catch(NullPointerException e) {}
 		
-		// constructor four - null prefs
+		// constructor six - null prefs
 		try {
 			new CsvDozerBeanReader(tokenizer, null, beanMapper);
 			fail("should have thrown NullPointerException");
 		}
 		catch(NullPointerException e) {}
 		
-		// constructor four - null dozerBeanMapper
+		// constructor six - null dozerBeanMapper
 		try {
 			new CsvDozerBeanReader(tokenizer, PREFS, null);
 			fail("should have thrown NullPointerException");

@@ -21,6 +21,7 @@ import static org.dozer.loader.api.TypeMappingOptions.oneWay;
 import static org.dozer.loader.api.TypeMappingOptions.wildcard;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Reader;
 
 import org.dozer.DozerBeanMapper;
@@ -62,6 +63,22 @@ public class CsvDozerBeanReader extends AbstractCsvReader implements ICsvDozerBe
 	}
 	
 	/**
+	 * Constructs a new <tt>CsvDozerBeanReader</tt> with the supplied InputStream and CSV preferences and creates it's own
+	 * DozerBeanMapper.
+	 *
+	 * @param inputStream
+	 *            the inputStream
+	 * @param preferences
+	 *            the CSV preferences
+	 * @throws NullPointerException
+	 *             if inputStream or preferences are null
+	 */
+	public CsvDozerBeanReader(final InputStream inputStream, final CsvPreference preferences) {
+		super(inputStream, preferences);
+		this.dozerBeanMapper = new DozerBeanMapper();
+	}
+
+	/**
 	 * Constructs a new <tt>CsvDozerBeanReader</tt> with the supplied (custom) Tokenizer and CSV preferences and creates
 	 * it's own DozerBeanMapper. The tokenizer should be set up with the Reader (CSV input) and CsvPreference
 	 * beforehand.
@@ -100,6 +117,27 @@ public class CsvDozerBeanReader extends AbstractCsvReader implements ICsvDozerBe
 		this.dozerBeanMapper = dozerBeanMapper;
 	}
 	
+	/**
+	 * Constructs a new <tt>CsvDozerBeanReader</tt> with the supplied InputStream, CSV preferences and DozerBeanMapper.
+	 *
+	 * @param inputStream
+	 *            the inputStream
+	 * @param preferences
+	 *            the CSV preferences
+	 * @param dozerBeanMapper
+	 *            the dozer bean mapper to use
+	 * @throws NullPointerException
+	 *             if inputStream, preferences or dozerBeanMapper are null
+	 */
+	public CsvDozerBeanReader(final InputStream inputStream, final CsvPreference preferences,
+		final DozerBeanMapper dozerBeanMapper) {
+		super(inputStream, preferences);
+		if( dozerBeanMapper == null ) {
+			throw new NullPointerException("dozerBeanMapper should not be null");
+		}
+		this.dozerBeanMapper = dozerBeanMapper;
+	}
+
 	/**
 	 * Constructs a new <tt>CsvDozerBeanReader</tt> with the supplied (custom) Tokenizer, CSV preferences and
 	 * DozerBeanMapper. The tokenizer should be set up with the Reader (CSV input) and CsvPreference beforehand.

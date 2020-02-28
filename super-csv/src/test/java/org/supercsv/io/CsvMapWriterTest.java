@@ -25,6 +25,8 @@ import static org.supercsv.SuperCsvTestUtils.WRITE_PROCESSORS;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.io.OutputStream;
+import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -48,8 +50,12 @@ public class CsvMapWriterTest {
 	private static final CsvPreference PREFS = CsvPreference.STANDARD_PREFERENCE;
 	
 	private Writer writer;
+
+	private OutputStream outputStream;
 	
 	private CsvMapWriter mapWriter;
+
+	private CsvMapWriter mapOutputStream;
 	
 	/**
 	 * Sets up the writer for the tests.
@@ -58,6 +64,8 @@ public class CsvMapWriterTest {
 	public void setUp() {
 		writer = new StringWriter();
 		mapWriter = new CsvMapWriter(writer, PREFS);
+		outputStream = new ByteArrayOutputStream();
+		mapOutputStream = new CsvMapWriter(outputStream, PREFS);
 	}
 	
 	/**
@@ -66,6 +74,7 @@ public class CsvMapWriterTest {
 	@After
 	public void tearDown() throws IOException {
 		mapWriter.close();
+		mapOutputStream.close();
 	}
 	
 	/**
@@ -74,7 +83,7 @@ public class CsvMapWriterTest {
 	@SuppressWarnings("resource")
 	@Test(expected = NullPointerException.class)
 	public void testConstructorWillNullWriter() {
-		new CsvMapWriter(null, PREFS);
+		new CsvMapWriter((Writer) null, PREFS);
 	}
 	
 	/**
@@ -84,6 +93,24 @@ public class CsvMapWriterTest {
 	@Test(expected = NullPointerException.class)
 	public void testConstructorWillNullPreference() {
 		new CsvMapWriter(writer, null);
+	}
+
+	/**
+	 * Tests the OutputStream constructor with a null OutputStream.
+	 */
+	@SuppressWarnings("resource")
+	@Test(expected = NullPointerException.class)
+	public void testOutputStreamConstructorWillNullOutputStream() {
+		new CsvMapWriter((OutputStream) null, PREFS);
+	}
+
+	/**
+	 * Tests the OutputStream constructor with a null CsvPreference.
+	 */
+	@SuppressWarnings("resource")
+	@Test(expected = NullPointerException.class)
+	public void testOutputStreamConstructorWillNullPreference() {
+		new CsvMapWriter(outputStream, null);
 	}
 	
 	/**
