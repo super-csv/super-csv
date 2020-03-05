@@ -95,13 +95,17 @@ CSV Preferences
 *----------------------------+-------------------------------------------------------------------------------------*
  ignoreEmptyLines            | true
 *----------------------------+-------------------------------------------------------------------------------------*
+ emptyColumnParsing          | ParseEmptyColumnsAsNull
+*----------------------------+-------------------------------------------------------------------------------------*
  maxLinesPerRow              | 0 (disabled)
+*----------------------------+-------------------------------------------------------------------------------------*
+ skipComments                | false (no CommentMatcher used)
 *----------------------------+-------------------------------------------------------------------------------------*
  encoder                     | {{{./apidocs/org/supercsv/encoder/DefaultCsvEncoder.html}DefaultCsvEncoder}}
 *----------------------------+-------------------------------------------------------------------------------------*
  quoteMode                   | {{{./apidocs/org/supercsv/quote/NormalQuoteMode.html}NormalQuoteMode}}
 *----------------------------+-------------------------------------------------------------------------------------*
- skipComments                | false (no CommentMatcher used)
+ quoteEscapeChar             | (same as qutoChar)
 *----------------------------+-------------------------------------------------------------------------------------*
 
 * Create your own preference
@@ -170,6 +174,41 @@ private static final CsvPreference DISABLE_MULTILINE_ROWS =
     new CsvPreference.Builder(CsvPreference.STANDARD_PREFERENCE).maxLinesPerRow(10).build();
 +----------------------------------------------------------------------------------------------------+
 
+* Skipping comments
+
+  Although comments aren't part of RFC4180, some CSV files use them so it's useful to be able to skip these lines (or even skip lines because they contain invalid data).
+  You can use one of the predefined comment matchers:
+
+  * {{{./apidocs/org/supercsv/comment/CommentStartsWith.html}CommentStartsWith}} - matches lines that start with a specified String
+
+  * {{{./apidocs/org/supercsv/comment/CommentMatches.html}CommentMatches}} - matches lines that match a specified regular expression
+
+  []
+
+  Or if you like you can write your own by implementing the {{{./apidocs/org/supercsv/comment/CommentMatcher.html}CommentMatcher}} interface.
+
+  Just pass your desired comment matcher to the <<<skipComments()>>> method when building your preferences:
+
++------------------------------------------------------------------------------------------------------------------------------------------------+
+private static final CsvPreference STANDARD_SKIP_COMMENTS =
+    new CsvPreference.Builder(CsvPreference.STANDARD_PREFERENCE).skipComments(new CommentStartsWith("#").build();
++------------------------------------------------------------------------------------------------------------------------------------------------+
+
+* Custom CSV encoder
+
+  Super CSV provides a powerful {{{./apidocs/org/supercsv/encoder/CsvEncoder.html}CsvEncoder}}, but if you'd like complete control
+  over how your CSV is encoded, then you can supply your own to the <<<useEncoder()>>> method when building your preferences:
+
++------------------------------------------------------------------------------------------------------------------------------------------------+
+private static final CsvPreference CUSTOM_ENCODER =
+    new CsvPreference.Builder(CsvPreference.STANDARD_PREFERENCE).useEncoder(new MyAwesomeEncoder().build();
++------------------------------------------------------------------------------------------------------------------------------------------------+
+
+  If you'd like to encode particular columns, but leave other columns unchanged then you can use Super CSV's
+  {{{./apidocs/org/supercsv/encoder/SelectiveCsvEncoder.html}SelectiveCsvEncoder}}. This might be useful if you're really concerned with
+  performance and you know that certain columns will never contain special characters. Just be aware that if a column does contain
+  special characters and you don't encode it, you could end up with invalid CSV.
+
 * Custom quote mode
 
   By default Super CSV only adds surrounding quotes when writing CSV when it contains a delimiter, quote or newline
@@ -193,37 +232,11 @@ private static final CsvPreference ALWAYS_QUOTE =
     new CsvPreference.Builder(CsvPreference.STANDARD_PREFERENCE).useQuoteMode(new AlwaysQuoteMode().build();
 +------------------------------------------------------------------------------------------------------------------------------------------------+  
 
-* Custom CSV encoder
+* Custom quote escape char
 
-  Super CSV provides a powerful {{{./apidocs/org/supercsv/encoder/CsvEncoder.html}CsvEncoder}}, but if you'd like complete control
-  over how your CSV is encoded, then you can supply your own to the <<<useEncoder()>>> method when building your preferences:
+  By default, quoteEscapeChar is as quoteChar. If you'd like to use another char to predict quote char,  you can use the <<<ignoreEmptyLines>>> preference:
 
 +------------------------------------------------------------------------------------------------------------------------------------------------+
-private static final CsvPreference CUSTOM_ENCODER = 
-    new CsvPreference.Builder(CsvPreference.STANDARD_PREFERENCE).useEncoder(new MyAwesomeEncoder().build();
-+------------------------------------------------------------------------------------------------------------------------------------------------+
-  
-  If you'd like to encode particular columns, but leave other columns unchanged then you can use Super CSV's
-  {{{./apidocs/org/supercsv/encoder/SelectiveCsvEncoder.html}SelectiveCsvEncoder}}. This might be useful if you're really concerned with
-  performance and you know that certain columns will never contain special characters. Just be aware that if a column does contain
-  special characters and you don't encode it, you could end up with invalid CSV.
-  
-* Skipping comments
-
-  Although comments aren't part of RFC4180, some CSV files use them so it's useful to be able to skip these lines (or even skip lines because they contain invalid data).
-  You can use one of the predefined comment matchers:
-  
-  * {{{./apidocs/org/supercsv/comment/CommentStartsWith.html}CommentStartsWith}} - matches lines that start with a specified String
-  
-  * {{{./apidocs/org/supercsv/comment/CommentMatches.html}CommentMatches}} - matches lines that match a specified regular expression
-  
-  []
-  
-  Or if you like you can write your own by implementing the {{{./apidocs/org/supercsv/comment/CommentMatcher.html}CommentMatcher}} interface.
-  
-  Just pass your desired comment matcher to the <<<skipComments()>>> method when building your preferences:
-  
-+------------------------------------------------------------------------------------------------------------------------------------------------+
-private static final CsvPreference STANDARD_SKIP_COMMENTS = 
-    new CsvPreference.Builder(CsvPreference.STANDARD_PREFERENCE).skipComments(new CommentStartsWith("#").build();
+private static final CsvPreference CUSTOM_QUOTE_ESCAPE_CHAR =
+    new CsvPreference.Builder(CsvPreference.STANDARD_PREFERENCE).setQuoteEscapeChar('\').build();
 +------------------------------------------------------------------------------------------------------------------------------------------------+
