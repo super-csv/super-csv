@@ -74,8 +74,6 @@ public class CsvBeanReaderTest {
 	
 	private CsvBeanReader beanReader;
 	
-	private CsvBeanReader tokenizerBeanReader;
-	
 	/**
 	 * Sets up the reader for the tests.
 	 */
@@ -83,9 +81,6 @@ public class CsvBeanReaderTest {
 	public void setUp() {
 		reader = new StringReader(CSV_FILE);
 		beanReader = new CsvBeanReader(reader, PREFS);
-		
-		final Tokenizer tokenizer = new Tokenizer(reader, PREFS);
-		tokenizerBeanReader = new CsvBeanReader(tokenizer, PREFS);
 	}
 	
 	/**
@@ -94,7 +89,6 @@ public class CsvBeanReaderTest {
 	@After
 	public void tearDown() throws IOException {
 		beanReader.close();
-		tokenizerBeanReader.close();
 	}
 	
 	/**
@@ -227,29 +221,6 @@ public class CsvBeanReaderTest {
 		assertEquals(LARRY, beanReader.read(new CustomerBean(), header, READ_PROCESSORS));
 		assertEquals(GRACE, beanReader.read(new CustomerBean(), header, READ_PROCESSORS));
 		assertNull(beanReader.read(new CustomerBean(), header, READ_PROCESSORS));
-	}
-	
-	/**
-	 * Tests the read() method with no processors, using the tokenizer version of CsvBeanReader (just to make sure it
-	 * behaves exactly the same as the reader version).
-	 */
-	@Test
-	public void testReadUsingTokenizerReader() throws IOException {
-		
-		final String[] header = tokenizerBeanReader.getHeader(true);
-		assertArrayEquals(HEADER, header);
-		
-		assertEquals(JOHN_STRING, tokenizerBeanReader.read(CustomerStringBean.class, header));
-		assertEquals(BOB_STRING, tokenizerBeanReader.read(CustomerStringBean.class, header));
-		assertEquals(ALICE_STRING, tokenizerBeanReader.read(CustomerStringBean.class, header));
-		assertEquals(BILL_STRING, tokenizerBeanReader.read(CustomerStringBean.class, header));
-		assertEquals(MIRANDA_STRING, tokenizerBeanReader.read(CustomerStringBean.class, header));
-		assertEquals(STEVE_STRING, tokenizerBeanReader.read(CustomerStringBean.class, header));
-		assertEquals(ADA_STRING, tokenizerBeanReader.read(CustomerStringBean.class, header));
-		assertEquals(SERGEI_STRING, tokenizerBeanReader.read(CustomerStringBean.class, header));
-		assertEquals(LARRY_STRING, tokenizerBeanReader.read(CustomerStringBean.class, header));
-		assertEquals(GRACE_STRING, tokenizerBeanReader.read(CustomerStringBean.class, header));
-		assertNull(tokenizerBeanReader.read(CustomerStringBean.class, header));
 	}
 	
 	/**
@@ -398,24 +369,6 @@ public class CsvBeanReaderTest {
 	@Test(expected = NullPointerException.class)
 	public void testReaderConstructorWithNullPreferences() {
 		new CsvBeanReader(reader, null);
-	}
-	
-	/**
-	 * Tests the Tokenizer constructor with a null Reader.
-	 */
-	@SuppressWarnings("resource")
-	@Test(expected = NullPointerException.class)
-	public void testTokenizerConstructorWithNullReader() {
-		new CsvBeanReader((Tokenizer) null, PREFS);
-	}
-	
-	/**
-	 * Tests the Tokenizer constructor with a null preference.
-	 */
-	@SuppressWarnings("resource")
-	@Test(expected = NullPointerException.class)
-	public void testTokenizerConstructorWithNullPreferences() {
-		new CsvBeanReader(new Tokenizer(reader, PREFS), null);
 	}
 	
 	/**

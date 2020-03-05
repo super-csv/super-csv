@@ -49,8 +49,6 @@ public class CsvListReaderTest {
 	
 	private CsvListReader listReader;
 	
-	private CsvListReader tokenizerListReader;
-	
 	/**
 	 * Sets up the reader for the tests.
 	 */
@@ -58,9 +56,6 @@ public class CsvListReaderTest {
 	public void setUp() {
 		reader = new StringReader(CSV_FILE);
 		listReader = new CsvListReader(reader, PREFS);
-		
-		final Tokenizer tokenizer = new Tokenizer(reader, PREFS);
-		tokenizerListReader = new CsvListReader(tokenizer, PREFS);
 	}
 	
 	/**
@@ -69,7 +64,6 @@ public class CsvListReaderTest {
 	@After
 	public void tearDown() throws IOException {
 		listReader.close();
-		tokenizerListReader.close();
 	}
 	
 	/**
@@ -178,42 +172,6 @@ public class CsvListReaderTest {
 	}
 	
 	/**
-	 * Tests the read() method using the tokenizer version of CsvListReader (just to make sure it behaves exactly the
-	 * same as the reader version).
-	 */
-	@Test
-	public void testReadUsingTokenizerReader() throws IOException {
-		
-		final String[] header = tokenizerListReader.getHeader(true);
-		assertArrayEquals(HEADER, header);
-		
-		// read all of the customers in
-		final List<List<String>> customers = new ArrayList<List<String>>();
-		List<String> customer;
-		while( (customer = tokenizerListReader.read()) != null ) {
-			customers.add(customer);
-		}
-		
-		// assert that the List for each customer is correct (ensures Lists haven't been modified)
-		for( int i = 0; i < customers.size(); i++ ) {
-			customer = customers.get(i);
-			assertEquals(STRING_CUSTOMERS.get(i).getCustomerNo(), customer.get(0));
-			assertEquals(STRING_CUSTOMERS.get(i).getFirstName(), customer.get(1));
-			assertEquals(STRING_CUSTOMERS.get(i).getLastName(), customer.get(2));
-			assertEquals(STRING_CUSTOMERS.get(i).getBirthDate(), customer.get(3));
-			assertEquals(STRING_CUSTOMERS.get(i).getBirthTime().toString(), customer.get(4).toString());
-			assertEquals(STRING_CUSTOMERS.get(i).getMailingAddress(), customer.get(5));
-			assertEquals(STRING_CUSTOMERS.get(i).getMarried(), customer.get(6));
-			assertEquals(STRING_CUSTOMERS.get(i).getNumberOfKids(), customer.get(7));
-			assertEquals(STRING_CUSTOMERS.get(i).getFavouriteQuote(), customer.get(8));
-			assertEquals(STRING_CUSTOMERS.get(i).getEmail(), customer.get(9));
-			assertEquals(STRING_CUSTOMERS.get(i).getLoyaltyPoints(), customer.get(10));
-		}
-		
-		assertEquals(STRING_CUSTOMERS.size() + 1, tokenizerListReader.getRowNumber());
-	}
-	
-	/**
 	 * Tests the read() method (with processors), with a null cell processor array.
 	 */
 	@Test(expected = NullPointerException.class)
@@ -245,24 +203,6 @@ public class CsvListReaderTest {
 	@Test(expected = NullPointerException.class)
 	public void testReaderConstructorWithNullPreferences() {
 		new CsvListReader(reader, null);
-	}
-	
-	/**
-	 * Tests the Tokenizer constructor with a null Reader.
-	 */
-	@SuppressWarnings("resource")
-	@Test(expected = NullPointerException.class)
-	public void testTokenizerConstructorWithNullReader() {
-		new CsvListReader((Tokenizer) null, PREFS);
-	}
-	
-	/**
-	 * Tests the Tokenizer constructor with a null preference.
-	 */
-	@SuppressWarnings("resource")
-	@Test(expected = NullPointerException.class)
-	public void testTokenizerConstructorWithNullPreferences() {
-		new CsvListReader(new Tokenizer(reader, PREFS), null);
 	}
 	
 }

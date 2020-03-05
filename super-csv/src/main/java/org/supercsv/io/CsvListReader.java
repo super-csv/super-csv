@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.decoder.CsvDecoder;
 import org.supercsv.prefs.CsvPreference;
 
 /**
@@ -44,21 +45,6 @@ public class CsvListReader extends AbstractCsvReader implements ICsvListReader {
 	 */
 	public CsvListReader(final Reader reader, final CsvPreference preferences) {
 		super(reader, preferences);
-	}
-	
-	/**
-	 * Constructs a new <tt>CsvListReader</tt> with the supplied (custom) Tokenizer and CSV preferences. The tokenizer
-	 * should be set up with the Reader (CSV input) and CsvPreference beforehand.
-	 * 
-	 * @param tokenizer
-	 *            the tokenizer
-	 * @param preferences
-	 *            the CSV preferences
-	 * @throws NullPointerException
-	 *             if tokenizer or preferences are null
-	 */
-	public CsvListReader(final ITokenizer tokenizer, final CsvPreference preferences) {
-		super(tokenizer, preferences);
 	}
 	
 	/**

@@ -16,9 +16,11 @@
 package org.supercsv.prefs;
 
 import org.supercsv.comment.CommentMatcher;
+import org.supercsv.decoder.CsvDecoder;
+import org.supercsv.decoder.DefaultCsvDecoder;
 import org.supercsv.encoder.CsvEncoder;
 import org.supercsv.encoder.DefaultCsvEncoder;
-import org.supercsv.io.EmptyColumnParsing;
+import org.supercsv.util.EmptyColumnParsing;
 import org.supercsv.quote.NormalQuoteMode;
 import org.supercsv.quote.QuoteMode;
 
@@ -140,6 +142,8 @@ public final class CsvPreference {
 	
 	private final CsvEncoder encoder;
 	
+	private final CsvDecoder decoder;
+	
 	private final QuoteMode quoteMode;
 	
 	private final CommentMatcher commentMatcher;
@@ -161,6 +165,7 @@ public final class CsvPreference {
 		this.ignoreEmptyLines = builder.ignoreEmptyLines;
 		this.commentMatcher = builder.commentMatcher;
 		this.encoder = builder.encoder;
+		this.decoder = builder.decoder;
 		this.quoteMode = builder.quoteMode;
 		this.maxLinesPerRow = builder.maxLinesPerRow;
 		this.emptyColumnParsing = builder.emptyColumnParsing;
@@ -219,6 +224,14 @@ public final class CsvPreference {
 	 */
 	public CsvEncoder getEncoder() {
 		return encoder;
+	}
+	
+	/**
+	 * Returns the CSV decoder.
+	 * @return the CSV decoder
+	 */
+	public CsvDecoder getDecoder() {
+		return decoder;
 	}
 	
 	/**
@@ -286,6 +299,8 @@ public final class CsvPreference {
 		
 		private CsvEncoder encoder;
 		
+		private CsvDecoder decoder;
+		
 		private QuoteMode quoteMode;
 		
 		private CommentMatcher commentMatcher;
@@ -310,6 +325,7 @@ public final class CsvPreference {
 			this.surroundingSpacesNeedQuotes = preference.surroundingSpacesNeedQuotes;
 			this.ignoreEmptyLines = preference.ignoreEmptyLines;
 			this.encoder = preference.encoder;
+			this.decoder = preference.decoder;
 			this.quoteMode = preference.quoteMode;
 			this.commentMatcher = preference.commentMatcher;
 			this.maxLinesPerRow = preference.maxLinesPerRow;
@@ -415,6 +431,24 @@ public final class CsvPreference {
 		}
 		
 		/**
+		 * Uses a custom CsvDecoder to parse CSV for reading.
+		 *
+		 * @since 2.5.0
+		 * @param decoder
+		 *            the custom decoder
+		 * @return the updated Builder
+		 * @throws NullPointerException
+		 *             if decoder is null
+		 */
+		public Builder useDecoder(final CsvDecoder decoder) {
+			if( decoder == null ) {
+				throw new NullPointerException("decoder should not be null");
+			}
+			this.decoder = decoder;
+			return this;
+		}
+		
+		/**
 		 * Uses a custom QuoteMode to determine if surrounding quotes should be applied when writing (only applicable if
 		 * a column doesn't contain any special characters and wouldn't otherwise be quoted). You can supply your own
 		 * quote mode or use one of the predefined ones: {@link org.supercsv.quote.AlwaysQuoteMode AlwaysQuoteMode} or
@@ -497,6 +531,10 @@ public final class CsvPreference {
 				encoder = new DefaultCsvEncoder();
 			}
 			
+			if( decoder == null ) {
+				decoder = new DefaultCsvDecoder();
+			}
+
 			if( quoteMode == null ) {
 				quoteMode = new NormalQuoteMode();
 			}
