@@ -786,4 +786,68 @@ public class TokenizerTest {
 		assertEquals("", columns.get(1));
 	}	
 	
+	@Test
+	public void testReadQuoteFieldWithStrictQuotePreference() throws Exception {
+		final CsvPreference strictQuotePreference = new CsvPreference.Builder(CsvPreference.STANDARD_PREFERENCE)
+			.strictQuote(true).build();
+		String input = "intent,steps\n" + "abc,\"{ Step 1\": Please \"open any application }\"\n"
+			+ "def,\"{ Step 2\"\": Please \"\"use the application }\"";
+		tokenizer = createTokenizer(input, strictQuotePreference);
+		tokenizer.readColumns(columns);
+		assertEquals(2, columns.size());
+		assertEquals("intent,steps", tokenizer.getUntokenizedRow());
+		assertEquals("intent", columns.get(0));
+		assertEquals("steps", columns.get(1));
+		try {
+			tokenizer.readColumns(columns);
+			fail("should have thrown a SuperCsvException");
+		}
+		catch( SuperCsvException e ) {
+			assertEquals("If quote char (\") are used to enclose fields, then a quote char (\") appearing "
+				+ "inside a field must be escaped by preceding it with another quoteEscapeChar (\")", e.getMessage());
+		}
+		tokenizer.readColumns(columns);
+		assertEquals(2, columns.size());
+		assertEquals("def,\"{ Step 2\"\": Please \"\"use the application }\"", tokenizer.getUntokenizedRow());
+		assertEquals("def", columns.get(0));
+		assertEquals("{ Step 2\": Please \"use the application }", columns.get(1));
+	}
+	
+	@Test
+	public void testReadQuoteFieldWithStrictQuoteAndEscapeQuoteCharPreference() throws Exception {
+		final CsvPreference strictQuotePreference = new CsvPreference.Builder(CsvPreference.STANDARD_PREFERENCE)
+			.strictQuote(true).setQuoteEscapeChar('#').build();
+		String input = "\"customer\", \"request-\"per\"-second\"\n"
+			+ "\"customer\",\"request-\"per\"-second\"\n"
+			+ "\"customer\",\"request-#\"per#\"-second\"\n"
+			+ "\"customer\",\"request-\"\"per\"\"-second\"";
+		tokenizer = createTokenizer(input, strictQuotePreference);
+		tokenizer.readColumns(columns);
+		assertEquals(2, columns.size());
+		assertEquals("\"customer\", \"request-\"per\"-second\"", tokenizer.getUntokenizedRow());
+		assertEquals("customer", columns.get(0));
+		assertEquals(" request-per-second", columns.get(1));
+		try {
+			tokenizer.readColumns(columns);
+			fail("should have thrown a SuperCsvException");
+		}
+		catch( SuperCsvException e ) {
+			assertEquals("If quote char (\") are used to enclose fields, then a quote char (\") appearing "
+				+ "inside a field must be escaped by preceding it with another quoteEscapeChar (#)", e.getMessage());
+		}
+		tokenizer.readColumns(columns);
+		assertEquals(2, columns.size());
+		assertEquals(2, columns.size());
+		assertEquals("\"customer\",\"request-#\"per#\"-second\"", tokenizer.getUntokenizedRow());
+		assertEquals("customer", columns.get(0));
+		assertEquals("request-\"per\"-second", columns.get(1));
+		try {
+			tokenizer.readColumns(columns);
+			fail("should have thrown a SuperCsvException");
+		}
+		catch( SuperCsvException e ) {
+			assertEquals("Encountered repeat quote char (\") when quoteEscapeChar was (#).  Cannot process "
+				+ "data where quotes are escaped both with \" and with #", e.getMessage());
+		}
+	}
 }

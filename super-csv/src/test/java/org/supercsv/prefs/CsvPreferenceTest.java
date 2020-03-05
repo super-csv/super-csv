@@ -73,6 +73,7 @@ public class CsvPreferenceTest {
 		assertTrue(custom.getEncoder() instanceof DefaultCsvEncoder);
 		assertTrue(custom.getQuoteMode() instanceof NormalQuoteMode);
 		assertEquals('"', custom.getQuoteEscapeChar());
+		assertFalse(custom.isStrictQuote());
 	}
 	
 	/**
@@ -85,6 +86,7 @@ public class CsvPreferenceTest {
 				.useEncoder(new DefaultCsvEncoder())
 				.useQuoteMode(new AlwaysQuoteMode())
 				.setQuoteEscapeChar('\\')
+				.strictQuote(true)
 				.build();
 		assertEquals('"', custom.getQuoteChar());
 		assertEquals(',', custom.getDelimiterChar());
@@ -93,6 +95,7 @@ public class CsvPreferenceTest {
 		assertTrue(custom.getEncoder() instanceof DefaultCsvEncoder);
 		assertTrue(custom.getQuoteMode() instanceof AlwaysQuoteMode);
 		assertEquals('\\', custom.getQuoteEscapeChar());
+		assertTrue(custom.isStrictQuote());
 	}
 	
 	/**
@@ -108,6 +111,7 @@ public class CsvPreferenceTest {
 		assertEquals(EXCEL_PREFERENCE.getEncoder(), custom.getEncoder());
 		assertEquals(EXCEL_PREFERENCE.getQuoteMode(), custom.getQuoteMode());
 		assertEquals(EXCEL_PREFERENCE.getQuoteEscapeChar(), custom.getQuoteEscapeChar());
+		assertEquals(EXCEL_PREFERENCE.isStrictQuote(), custom.isStrictQuote());
 	}
 	
 	/**
@@ -124,6 +128,7 @@ public class CsvPreferenceTest {
 		assertTrue(custom.getEncoder() instanceof DefaultCsvEncoder);
 		assertTrue(custom.getQuoteMode() instanceof AlwaysQuoteMode);
 		assertEquals(EXCEL_PREFERENCE.getQuoteEscapeChar(), custom.getQuoteEscapeChar());
+		assertEquals(EXCEL_PREFERENCE.isStrictQuote(), custom.isStrictQuote());
 	}
 	
 	/**

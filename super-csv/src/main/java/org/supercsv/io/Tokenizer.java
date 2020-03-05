@@ -58,6 +58,8 @@ public class Tokenizer extends AbstractTokenizer {
 	private final EmptyColumnParsing emptyColumnParsing;
 
 	private final char quoteEscapeChar;
+
+	private final boolean strictQuote;
 	
 	/**
 	 * Enumeration of tokenizer states. QUOTE_MODE is activated between quotes.
@@ -86,6 +88,7 @@ public class Tokenizer extends AbstractTokenizer {
 		this.maxLinesPerRow = preferences.getMaxLinesPerRow();
 		this.emptyColumnParsing = preferences.getEmptyColumnParsing();
 		this.quoteEscapeChar = preferences.getQuoteEscapeChar();
+		this.strictQuote = preferences.isStrictQuote();
 	}
 	
 	/**
@@ -120,6 +123,8 @@ public class Tokenizer extends AbstractTokenizer {
 		int quoteScopeStartingLine = -1; // the line number where a potential multi-line cell starts
 		int potentialSpaces = 0; // keep track of spaces (so leading/trailing space can be removed if required)
 		int charIndex = 0;
+		boolean validState = false;
+		boolean isInsideQuote = false;
 		while( true ) {
 			boolean endOfLineReached = charIndex == line.length();
 			
@@ -198,6 +203,8 @@ public class Tokenizer extends AbstractTokenizer {
 					addColumn(columns, line, charIndex);
 					potentialSpaces = 0;
 					currentColumn.setLength(0);
+					validState = false;
+					isInsideQuote = false;
 					
 				} else if( c == SPACE ) {
 					/*
@@ -218,6 +225,13 @@ public class Tokenizer extends AbstractTokenizer {
 						appendSpaces(currentColumn, potentialSpaces);
 					}
 					potentialSpaces = 0;
+
+					// Quote Char is the start of Field, verify the quote char inside the field have escape char
+					int previousCharIndex = charIndex - 1;
+					boolean isStartOfField = previousCharIndex < 0 ? true : line.charAt(previousCharIndex) == delimiterChar;
+					if( isStartOfField ) {
+						validState = true && strictQuote;
+					}
 					
 				} else {
 					/*
@@ -243,6 +257,7 @@ public class Tokenizer extends AbstractTokenizer {
 					boolean availableCharacters = nextCharIndex < line.length();
 					boolean nextCharIsQuote = availableCharacters && line.charAt(nextCharIndex) == quoteChar;
 					boolean nextCharIsEscapeQuoteChar = availableCharacters && line.charAt(nextCharIndex) == quoteEscapeChar;
+					boolean nextCharIsDelimiterChar = availableCharacters && line.charAt(nextCharIndex) == delimiterChar;
 
 					if( nextCharIsQuote ) {
 						/*
@@ -259,6 +274,17 @@ public class Tokenizer extends AbstractTokenizer {
 						currentColumn.append(c);
 						charIndex++;
 					} else if( quoteEscapeChar == quoteChar ) {
+						boolean isEndOfField = !availableCharacters || nextCharIsDelimiterChar;
+						/*
+						 * If there is a quote char inside the Field which doesn't have escape char,
+						 * an exception is thrown
+						 */
+						if( validState && isInsideQuote ) {
+							throw new SuperCsvException("If quote char (" + quoteChar + ") are used to enclose fields, "
+								+ "then a quote char (" + quoteChar + ") appearing inside a field must be escaped by "
+								+ "preceding it with another quoteEscapeChar (" + quoteEscapeChar + ")");
+						}
+						isInsideQuote = !isEndOfField; // Mark quote char inside the Field
 						/*
 						 * If the escape char is also the quote char and we didn't escape a
 						 * subsequent character, then this is a lone quote and the end of the
@@ -274,22 +300,30 @@ public class Tokenizer extends AbstractTokenizer {
 						currentColumn.append(c);
 					}
 				} else if( c == quoteChar ) {
-
-					/*
-					 * A single quote ("). Update to NORMAL (but don't save quote), then continue to next character.
-					 */
-					state = TokenizerState.NORMAL;
-					quoteScopeStartingLine = -1; // reset ready for next multi-line cell
-
 					int nextCharIndex = charIndex + 1;
 					boolean availableCharacters = nextCharIndex < line.length();
 					boolean nextCharIsQuote = availableCharacters && line.charAt(nextCharIndex) == quoteChar;
+					boolean nextCharIsDelimiterChar = availableCharacters && line.charAt(nextCharIndex) == delimiterChar;
 
 					if( quoteEscapeChar != quoteChar && nextCharIsQuote ) {
 						throw new SuperCsvException("Encountered repeat quote char (" +
 								quoteChar + ") when quoteEscapeChar was (" + quoteEscapeChar + ")" +
 								".  Cannot process data where quotes are escaped both with " +
 								quoteChar + " and with " + quoteEscapeChar);
+					} else {
+						boolean isEndOfField = !availableCharacters || nextCharIsDelimiterChar;
+
+						if( validState && isInsideQuote ) {
+							throw new SuperCsvException("If quote char (" + quoteChar + ") are used to enclose fields, "
+								+ "then a quote char (" + quoteChar + ") appearing inside a field must be escaped by "
+								+ "preceding it with another quoteEscapeChar (" + quoteEscapeChar + ")");
+						}
+						isInsideQuote = !isEndOfField; // Mark quote char inside the Field
+						/*
+						 * A single quote ("). Update to NORMAL (but don't save quote), then continue to next character.
+						 */
+						state = TokenizerState.NORMAL;
+						quoteScopeStartingLine = -1; // reset ready for next multi-line cell
 					}
 				} else {
 					/*
