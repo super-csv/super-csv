@@ -149,6 +149,8 @@ public final class CsvPreference {
 	private final EmptyColumnParsing emptyColumnParsing;
 
 	private final char quoteEscapeChar;
+
+	private final boolean strictQuote;
 	
 	/**
 	 * Constructs a new <tt>CsvPreference</tt> from a Builder.
@@ -165,6 +167,7 @@ public final class CsvPreference {
 		this.maxLinesPerRow = builder.maxLinesPerRow;
 		this.emptyColumnParsing = builder.emptyColumnParsing;
 		this.quoteEscapeChar = builder.quoteEscapeChar;
+		this.strictQuote = builder.strictQuote;
 	}
 	
 	/**
@@ -269,6 +272,15 @@ public final class CsvPreference {
 	}
 
 	/**
+	 * Returns the strictQuote flag.
+	 *
+	 * @return the strictQuote flag
+	 */
+	public boolean isStrictQuote() {
+		return strictQuote;
+	}
+
+	/**
 	 * Builds immutable <tt>CsvPreference</tt> instances. The builder pattern allows for additional preferences to be
 	 * added in the future.
 	 */
@@ -295,6 +307,8 @@ public final class CsvPreference {
 		private EmptyColumnParsing emptyColumnParsing;
 
 		private char quoteEscapeChar;
+
+		private boolean strictQuote = false;
 		
 		/**
 		 * Constructs a Builder with all of the values from an existing <tt>CsvPreference</tt> instance. Useful if you
@@ -315,6 +329,7 @@ public final class CsvPreference {
 			this.maxLinesPerRow = preference.maxLinesPerRow;
 			this.emptyColumnParsing = preference.emptyColumnParsing;
 			this.quoteEscapeChar = preference.quoteEscapeChar;
+			this.strictQuote = preference.strictQuote;
 		}
 		
 		/**
@@ -481,6 +496,20 @@ public final class CsvPreference {
 		 */
 		public Builder setQuoteEscapeChar(final char quoteEscapeChar) {
 			this.quoteEscapeChar = quoteEscapeChar;
+			return this;
+		}
+		
+		/** Flag indicating whether verify that the double-quotes conforms to that If double-quotes are used to enclose
+		 * fields, then a double-quote appearing inside a field must be escaped by preceding it with another escape char.
+		 * The default is <tt>false</tt>
+		 *
+		 * @since 2.5.0
+		 * @param strictQuote
+		 *          Flag indicating whether verify that the double-quotes
+		 * @return
+		 */
+		public Builder strictQuote(final boolean strictQuote) {
+			this.strictQuote = strictQuote;
 			return this;
 		}
 		

@@ -69,6 +69,10 @@ CSV Preferences
 
     []
 
+    [strictQuote] whether verify that the double-quotes conforms to that If double-quotes are used to enclose fields, then a double-quote appearing inside a field must be escaped by preceding it with another escape char. The default value is false (not verify).
+
+    []
+
 * Predefined preferences
 
   There are four 'ready to use' configurations for typical scenarios.
@@ -102,6 +106,8 @@ CSV Preferences
  quoteMode                   | {{{./apidocs/org/supercsv/quote/NormalQuoteMode.html}NormalQuoteMode}}
 *----------------------------+-------------------------------------------------------------------------------------*
  skipComments                | false (no CommentMatcher used)
+*----------------------------+-------------------------------------------------------------------------------------*
+ strictQuote                 | false
 *----------------------------+-------------------------------------------------------------------------------------*
 
 * Create your own preference
@@ -227,3 +233,14 @@ private static final CsvPreference CUSTOM_ENCODER =
 private static final CsvPreference STANDARD_SKIP_COMMENTS = 
     new CsvPreference.Builder(CsvPreference.STANDARD_PREFERENCE).skipComments(new CommentStartsWith("#").build();
 +------------------------------------------------------------------------------------------------------------------------------------------------+
+
+* verify strict quote
+
+  By default, it doesn't verify that the double-quotes conforms to that If double-quotes are used to enclose fields,
+  then a double-quote appearing inside a field must be escaped by preceding it with another escape char. If you'd like to
+  verify, you can enable this behaviour by calling <<<strictQuote(true)>>> on the Builder
+
++-------------------------------------------------------------------------------------------------------------------------------------------------+
+private static final CsvPreference ALLOW_EMPTY_LINES =
+    new CsvPreference.Builder(CsvPreference.STANDARD_PREFERENCE).strictQuote(true).build();
++-------------------------------------------------------------------------------------------------------------------------------------------------+
