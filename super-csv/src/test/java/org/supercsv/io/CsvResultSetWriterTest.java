@@ -27,6 +27,8 @@ import static org.supercsv.SuperCsvTestUtils.date;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.io.OutputStream;
+import java.io.ByteArrayOutputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.junit.Before;
@@ -53,7 +55,9 @@ public class CsvResultSetWriterTest {
 	public static Object[][] TEST_DATA_STRINGS;
 	
 	private Writer writer;
+	private OutputStream outputStream;
 	private CsvResultSetWriter csvResultSetWriter;
+	private CsvResultSetWriter csvResultSetOutputStream;
 	
 	@BeforeClass
 	public static void beforeClass() {
@@ -103,6 +107,8 @@ public class CsvResultSetWriterTest {
 	public void setUp() {
 		writer = new StringWriter();
 		csvResultSetWriter = new CsvResultSetWriter(writer, PREFS);
+		outputStream = new ByteArrayOutputStream();
+		csvResultSetOutputStream = new CsvResultSetWriter(outputStream, PREFS);
 	}
 	
 	/**
@@ -140,7 +146,7 @@ public class CsvResultSetWriterTest {
 	@SuppressWarnings("resource")
 	@Test(expected = NullPointerException.class)
 	public void testConstructorWithNullWriter() {
-		new CsvResultSetWriter(null, PREFS);
+		new CsvResultSetWriter((Writer) null, PREFS);
 	}
 	
 	/**
@@ -150,6 +156,24 @@ public class CsvResultSetWriterTest {
 	@Test(expected = NullPointerException.class)
 	public void testConstructorWithNullCsvPreference() {
 		new CsvResultSetWriter(writer, null);
+	}
+
+	/**
+	 * Tests the OutputStream constructor with a null OutputStream.
+	 */
+	@SuppressWarnings("resource")
+	@Test(expected = NullPointerException.class)
+	public void testOutputStreamConstructorWillNullOutputStream() {
+		new CsvResultSetWriter((OutputStream) null, PREFS);
+	}
+
+	/**
+	 * Tests the OutputStream constructor with a null CsvPreference.
+	 */
+	@SuppressWarnings("resource")
+	@Test(expected = NullPointerException.class)
+	public void testOutputStreamConstructorWillNullPreference() {
+		new CsvResultSetWriter(outputStream, null);
 	}
 	
 	/**

@@ -27,6 +27,8 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Arrays;
 import java.util.List;
+import java.io.OutputStream;
+import java.io.ByteArrayOutputStream;
 
 import org.junit.After;
 import org.junit.Before;
@@ -46,8 +48,12 @@ public class CsvListWriterTest {
 	private static final CsvPreference PREFS = CsvPreference.STANDARD_PREFERENCE;
 	
 	private Writer writer;
+
+	private OutputStream outputStream;
 	
 	private CsvListWriter listWriter;
+
+	private CsvListWriter listOutputStream;
 	
 	/**
 	 * Sets up the writer for the tests.
@@ -56,6 +62,8 @@ public class CsvListWriterTest {
 	public void setUp() {
 		writer = new StringWriter();
 		listWriter = new CsvListWriter(writer, PREFS);
+		outputStream = new ByteArrayOutputStream();
+		listOutputStream = new CsvListWriter(outputStream, PREFS);
 	}
 	
 	/**
@@ -64,6 +72,7 @@ public class CsvListWriterTest {
 	@After
 	public void tearDown() throws IOException {
 		listWriter.close();
+		listOutputStream.close();
 	}
 	
 	/**
@@ -180,7 +189,7 @@ public class CsvListWriterTest {
 	@SuppressWarnings("resource")
 	@Test(expected = NullPointerException.class)
 	public void testConstructorWillNullWriter() {
-		new CsvListWriter(null, PREFS);
+		new CsvListWriter((Writer) null, PREFS);
 	}
 	
 	/**
@@ -191,5 +200,22 @@ public class CsvListWriterTest {
 	public void testConstructorWillNullPreference() {
 		new CsvListWriter(writer, null);
 	}
-	
+
+	/**
+	 * Tests the OutputStream constructor with a null OutputStream.
+	 */
+	@SuppressWarnings("resource")
+	@Test(expected = NullPointerException.class)
+	public void testOutputStreamConstructorWillNullOutputStream() {
+		new CsvListWriter((OutputStream) null, PREFS);
+	}
+
+	/**
+	 * Tests the OutputStream constructor with a null CsvPreference.
+	 */
+	@SuppressWarnings("resource")
+	@Test(expected = NullPointerException.class)
+	public void testOutputStreamConstructorWillNullPreference() {
+		new CsvListWriter(outputStream, null);
+	}
 }

@@ -22,6 +22,8 @@ import static org.supercsv.SuperCsvTestUtils.HEADER_CSV;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.io.OutputStream;
+import java.io.ByteArrayOutputStream;
 
 import org.junit.After;
 import org.junit.Before;
@@ -41,8 +43,9 @@ public class AbstractCsvWriterTest {
 		CsvPreference.STANDARD_PREFERENCE).surroundingSpacesNeedQuotes(true).build();
 	
 	private Writer writer;
-	
+	private OutputStream outputStream;
 	private AbstractCsvWriter abstractWriter;
+	private AbstractCsvWriter abstractOutputStream;
 	private AbstractCsvWriter surroundingSpacesNeedQuotesAbstractWriter;
 	
 	/**
@@ -56,6 +59,11 @@ public class AbstractCsvWriterTest {
 			super(writer, preference);
 			this.preference = preference;
 		}
+
+		public MockCsvWriter(OutputStream outputStream, CsvPreference preference) {
+			super(outputStream, preference);
+			this.preference = preference;
+		}
 	}
 	
 	/**
@@ -65,6 +73,8 @@ public class AbstractCsvWriterTest {
 	public void setUp() {
 		writer = new StringWriter();
 		abstractWriter = new MockCsvWriter(writer, PREFS);
+		outputStream = new ByteArrayOutputStream();
+		abstractOutputStream = new MockCsvWriter(outputStream, PREFS);
 		surroundingSpacesNeedQuotesAbstractWriter = new MockCsvWriter(writer, SURROUNDING_SPACES_REQUIRE_QUOTES_PREFS);
 	}
 	
@@ -74,9 +84,10 @@ public class AbstractCsvWriterTest {
 	@After
 	public void tearDown() throws IOException {
 		abstractWriter.close();
+		abstractOutputStream.close();
 		surroundingSpacesNeedQuotesAbstractWriter.close();
 	}
-	
+
 	/**
 	 * Tests the writeHeader() method.
 	 */
@@ -124,6 +135,23 @@ public class AbstractCsvWriterTest {
 		final String eol = PREFS.getEndOfLineSymbols();
 		final String expected = comment + eol + header + eol + comment + eol + header + eol;
 		assertEquals(expected, writer.toString());
+	}
+
+	/**
+	 * Tests the OutputStream writeHeader() method.
+	 */
+	@Test
+	public void testOutputStreamWriteHeader() throws IOException {
+		assertEquals(0, abstractOutputStream.getLineNumber());
+		assertEquals(0, abstractOutputStream.getRowNumber());
+
+		abstractOutputStream.writeHeader(HEADER);
+
+		assertEquals(1, abstractOutputStream.getLineNumber());
+		assertEquals(1, abstractOutputStream.getRowNumber());
+
+		abstractOutputStream.flush();
+		assertEquals(HEADER_CSV + "\r\n", outputStream.toString());
 	}
 	
 	/**
@@ -234,7 +262,7 @@ public class AbstractCsvWriterTest {
 	@SuppressWarnings("resource")
 	@Test(expected = NullPointerException.class)
 	public void testConstructorWithNullWriter() {
-		new MockCsvWriter(null, PREFS);
+		new MockCsvWriter((Writer)  null, PREFS);
 	}
 	
 	/**
@@ -244,5 +272,23 @@ public class AbstractCsvWriterTest {
 	@Test(expected = NullPointerException.class)
 	public void testConstructorWithNullPreferences() {
 		new MockCsvWriter(writer, null);
+	}
+
+	/**
+	 * Tests the OutputStream constructor with a null OutputStream.
+	 */
+	@SuppressWarnings("resource")
+	@Test(expected = NullPointerException.class)
+	public void testOutputStreamConstructorWithNullOutputStream() {
+		new MockCsvWriter((OutputStream)  null, PREFS);
+	}
+
+	/**
+	 * Tests the OutputStream constructor with a null preference.
+	 */
+	@SuppressWarnings("resource")
+	@Test(expected = NullPointerException.class)
+	public void testOutputStreamConstructorWithNullPreferences() {
+		new MockCsvWriter(outputStream, null);
 	}
 }

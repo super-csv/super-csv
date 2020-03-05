@@ -16,6 +16,7 @@
 package org.supercsv.io;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,7 +50,21 @@ public class CsvMapReader extends AbstractCsvReader implements ICsvMapReader {
 	public CsvMapReader(final Reader reader, final CsvPreference preferences) {
 		super(reader, preferences);
 	}
-	
+
+	/**
+	 * Constructs a new <tt>CsvMapReader</tt> with the supplied InputStream and CSV preferences.
+	 *
+	 * @param inputStream
+	 *            the inputStream
+	 * @param preferences
+	 *            the CSV preferences
+	 * @throws NullPointerException
+	 *             if inputStream or preferences are null
+	 */
+	public CsvMapReader(final InputStream inputStream, final CsvPreference preferences) {
+		super(inputStream, preferences);
+	}
+
 	/**
 	 * Constructs a new <tt>CsvMapReader</tt> with the supplied (custom) Tokenizer and CSV preferences. The tokenizer
 	 * should be set up with the Reader (CSV input) and CsvPreference beforehand.

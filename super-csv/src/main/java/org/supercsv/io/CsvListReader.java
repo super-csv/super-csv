@@ -16,6 +16,7 @@
 package org.supercsv.io;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +46,21 @@ public class CsvListReader extends AbstractCsvReader implements ICsvListReader {
 	public CsvListReader(final Reader reader, final CsvPreference preferences) {
 		super(reader, preferences);
 	}
-	
+
+	/**
+	 * Constructs a new <tt>CsvListReader</tt> with the supplied InputStream and CSV preferences.
+	 *
+	 * @param inputStream
+	 *            the inputStream
+	 * @param preferences
+	 *            the CSV preferences
+	 * @throws NullPointerException
+	 *             if inputStream or preferences are null
+	 */
+	public CsvListReader(final InputStream inputStream, final CsvPreference preferences) {
+		super(inputStream, preferences);
+	}
+
 	/**
 	 * Constructs a new <tt>CsvListReader</tt> with the supplied (custom) Tokenizer and CSV preferences. The tokenizer
 	 * should be set up with the Reader (CSV input) and CsvPreference beforehand.

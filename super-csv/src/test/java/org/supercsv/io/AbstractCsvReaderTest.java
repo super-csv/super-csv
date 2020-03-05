@@ -24,6 +24,8 @@ import static org.junit.Assert.fail;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.io.InputStream;
+import java.io.ByteArrayInputStream;
 import java.util.Arrays;
 import java.util.List;
 
@@ -47,10 +49,14 @@ public class AbstractCsvReaderTest {
 		CsvPreference.STANDARD_PREFERENCE).surroundingSpacesNeedQuotes(true).build();
 	
 	private Reader reader;
+
+	private InputStream inputStream;
 	
 	private Reader surroundingSpacesNeedQuotesReader;
 	
 	private AbstractCsvReader abstractReader;
+
+	private AbstractCsvReader abstractInputStream;
 	
 	private AbstractCsvReader tokenizerAbstractReader;
 	
@@ -70,6 +76,10 @@ public class AbstractCsvReaderTest {
 		public MockCsvReader(Reader reader, CsvPreference preferences) {
 			super(reader, preferences);
 		}
+
+		public MockCsvReader(InputStream inputStream, CsvPreference preferences) {
+			super(inputStream, preferences);
+		}
 		
 	}
 	
@@ -78,12 +88,16 @@ public class AbstractCsvReaderTest {
 	 */
 	@Before
 	public void setUp() {
-		reader = new StringReader("firstName,lastName,age,address\n" + "John,Smith,23,\n"
-			+ "Harry,Potter,,\"Gryffindor\nHogwarts Castle\nUK\"");
+		String input = "firstName,lastName,age,address\n" + "John,Smith,23,\n"
+			+ "Harry,Potter,,\"Gryffindor\nHogwarts Castle\nUK\"";
+		reader = new StringReader(input);
 		abstractReader = new MockCsvReader(reader, PREFS);
 		
 		tokenizer = new Tokenizer(reader, PREFS);
 		tokenizerAbstractReader = new MockCsvReader(tokenizer, PREFS);
+
+		inputStream = new ByteArrayInputStream(input.getBytes());
+		abstractInputStream = new MockCsvReader(inputStream, PREFS);
 		
 		surroundingSpacesNeedQuotesReader = new StringReader("firstName, lastName, age, address\n"
 			+ " John , Smith, 23 , \n" + "Harry, Potter, , \"Gryffindor\nHogwarts Castle\nUK\" ");
@@ -97,6 +111,7 @@ public class AbstractCsvReaderTest {
 	@After
 	public void tearDown() throws IOException {
 		abstractReader.close();
+		abstractInputStream.close();
 		tokenizerAbstractReader.close();
 		surroundingSpacesNeedQuotesAbstractReader.close();
 	}
@@ -108,7 +123,15 @@ public class AbstractCsvReaderTest {
 	public void testReadingWithNormalReader() throws IOException {
 		assertReading(abstractReader);
 	}
-	
+
+	/**
+	 * Tests a normal reading scenario (with the inputStream), asserting all of the properties available each time.
+	 */
+	@Test
+	public void testReadingWithNormalInputStream() throws IOException {
+		assertReading(abstractInputStream);
+	}
+
 	/**
 	 * Tests a normal reading scenario (with the custom tokenizer reader), asserting all of the properties available
 	 * each time.
@@ -315,7 +338,25 @@ public class AbstractCsvReaderTest {
 	public void testReaderConstructorWithNullPreferences() {
 		new CsvListReader(reader, null);
 	}
-	
+
+	/**
+	 * Tests the InputStream constructor with a null InputStream.
+	 */
+	@SuppressWarnings("resource")
+	@Test(expected = NullPointerException.class)
+	public void testInputStreamConstructorWithNullInputStream() {
+		new CsvListReader((InputStream) null, PREFS);
+	}
+
+	/**
+	 * Tests the InputStream constructor with a null preference.
+	 */
+	@SuppressWarnings("resource")
+	@Test(expected = NullPointerException.class)
+	public void testInputStreamConstructorWithNullPreferences() {
+		new CsvListReader(inputStream, null);
+	}
+
 	/**
 	 * Tests the Tokenizer constructor with a null Reader.
 	 */

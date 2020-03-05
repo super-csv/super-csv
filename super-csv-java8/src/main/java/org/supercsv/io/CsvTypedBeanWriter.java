@@ -16,6 +16,7 @@
 package org.supercsv.io;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.Writer;
 import java.util.Collection;
 import java.util.function.Function;
@@ -41,6 +42,17 @@ public final class CsvTypedBeanWriter<T> implements ICsvTypedBeanWriter<T> {
      */
     public CsvTypedBeanWriter(final Writer writer, final CsvPreference preference) {
         this.writer = new CsvListWriter(writer, preference);
+    }
+
+    /**
+     * Constructs a new <tt>CsvTypedBeanWriter</tt> with the supplied OutputStream and CSV preferences.
+     *
+     * @param outputStream the outputStream
+     * @param preference the CSV preferences
+     * @throws NullPointerException if outputStream or preference is null
+     */
+    public CsvTypedBeanWriter(final OutputStream outputStream, final CsvPreference preference) {
+        this.writer = new CsvListWriter(outputStream, preference);
     }
 
     @Override

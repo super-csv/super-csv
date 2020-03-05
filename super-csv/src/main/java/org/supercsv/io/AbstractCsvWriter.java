@@ -15,9 +15,7 @@
  */
 package org.supercsv.io;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.Writer;
+import java.io.*;
 import java.util.List;
 
 import org.supercsv.encoder.CsvEncoder;
@@ -61,7 +59,21 @@ public abstract class AbstractCsvWriter implements ICsvWriter {
 	public AbstractCsvWriter(final Writer writer, final CsvPreference preference) {
 		this(writer, preference, true);
 	}
-	
+
+	/**
+	 * Constructs a new <tt>AbstractCsvWriter</tt> with the supplied outputStream and preferences.
+	 *
+	 * @param outputStream
+	 *            the stream to write to
+	 * @param preference
+	 *            the CSV preferences
+	 * @throws NullPointerException
+	 *             if outputStream or preference is null
+	 */
+	public AbstractCsvWriter(final OutputStream outputStream, final CsvPreference preference) {
+		this(new OutputStreamWriter(outputStream), preference);
+	}
+
 	/**
 	 * Constructs a new <tt>AbstractCsvWriter</tt> with the supplied writer, preferences and option
 	 * to wrap the writer.

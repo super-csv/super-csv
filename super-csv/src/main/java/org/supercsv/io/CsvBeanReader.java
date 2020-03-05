@@ -16,6 +16,7 @@
 package org.supercsv.io;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Reader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -63,7 +64,21 @@ public class CsvBeanReader extends AbstractCsvReader implements ICsvBeanReader {
 	public CsvBeanReader(final Reader reader, final CsvPreference preferences) {
 		super(reader, preferences);
 	}
-	
+
+	/**
+	 * Constructs a new <tt>CsvBeanReader</tt> with the supplied InputStream and CSV preferences.
+	 *
+	 * @param inputStream
+	 *            the inputStream
+	 * @param preferences
+	 *            the CSV preferences
+	 * @throws NullPointerException
+	 *             if inputStream or preferences are null
+	 */
+	public CsvBeanReader(final InputStream inputStream, final CsvPreference preferences) {
+		super(inputStream, preferences);
+	}
+
 	/**
 	 * Constructs a new <tt>CsvBeanReader</tt> with the supplied (custom) Tokenizer and CSV preferences. The tokenizer
 	 * should be set up with the Reader (CSV input) and CsvPreference beforehand.

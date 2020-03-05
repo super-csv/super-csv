@@ -16,6 +16,7 @@
 package org.supercsv.io;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.Writer;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -59,7 +60,21 @@ public class CsvBeanWriter extends AbstractCsvWriter implements ICsvBeanWriter {
 	public CsvBeanWriter(final Writer writer, final CsvPreference preference) {
 		super(writer, preference);
 	}
-	
+
+	/**
+	 * Constructs a new <tt>CsvBeanWriter</tt> with the supplied OutputStream and CSV preferences.
+	 *
+	 * @param outputStream
+	 *            the outputStream
+	 * @param preference
+	 *            the CSV preferences
+	 * @throws NullPointerException
+	 *             if outputStream or preference is null
+	 */
+	public CsvBeanWriter(final OutputStream outputStream, final CsvPreference preference) {
+		super(outputStream, preference);
+	}
+
 	/**
 	 * Extracts the bean values, using the supplied name mapping array.
 	 * 

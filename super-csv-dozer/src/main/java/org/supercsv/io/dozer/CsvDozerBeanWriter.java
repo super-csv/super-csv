@@ -19,6 +19,7 @@ import static org.dozer.loader.api.TypeMappingOptions.oneWay;
 import static org.dozer.loader.api.TypeMappingOptions.wildcard;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
@@ -66,6 +67,22 @@ public class CsvDozerBeanWriter extends AbstractCsvWriter implements ICsvDozerBe
 	}
 	
 	/**
+	 * Constructs a new <tt>CsvDozerBeanWriter</tt> with the supplied OutputStream and CSV preferences and and creates it's
+	 * own DozerBeanMapper.
+	 *
+	 * @param outputStream
+	 *            the outputStream
+	 * @param preference
+	 *            the CSV preferences
+	 * @throws NullPointerException
+	 *             if writer or preference are null
+	 */
+	public CsvDozerBeanWriter(final OutputStream outputStream, final CsvPreference preference) {
+		super(outputStream, preference);
+		this.dozerBeanMapper = new DozerBeanMapper();
+	}
+	
+	/**
 	 * Constructs a new <tt>CsvDozerBeanWriter</tt> with the supplied Writer, CSV preferences and DozerBeanMapper. Note
 	 * that the <tt>writer</tt> will be wrapped in a <tt>BufferedWriter</tt> before accessed.
 	 * 
@@ -80,6 +97,26 @@ public class CsvDozerBeanWriter extends AbstractCsvWriter implements ICsvDozerBe
 	 */
 	public CsvDozerBeanWriter(final Writer writer, final CsvPreference preference, final DozerBeanMapper dozerBeanMapper) {
 		super(writer, preference);
+		if( dozerBeanMapper == null ) {
+			throw new NullPointerException("dozerBeanMapper should not be null");
+		}
+		this.dozerBeanMapper = dozerBeanMapper;
+	}
+
+	/**
+	 * Constructs a new <tt>CsvDozerBeanWriter</tt> with the supplied OutputStream, CSV preferences and DozerBeanMapper.
+	 *
+	 * @param outputStream
+	 *            the outputStream
+	 * @param preference
+	 *            the CSV preferences
+	 * @param dozerBeanMapper
+	 *            the pre-configured DozerBeanMapper
+	 * @throws NullPointerException
+	 *             if outputStream, preference or dozerBeanMapper are null
+	 */
+	public CsvDozerBeanWriter(final OutputStream outputStream, final CsvPreference preference, final DozerBeanMapper dozerBeanMapper) {
+		super(outputStream, preference);
 		if( dozerBeanMapper == null ) {
 			throw new NullPointerException("dozerBeanMapper should not be null");
 		}

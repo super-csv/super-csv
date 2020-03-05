@@ -28,6 +28,8 @@ import static org.supercsv.SuperCsvTestUtils.STRING_CUSTOMERS;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.io.InputStream;
+import java.io.ByteArrayInputStream;
 import java.util.Map;
 
 import org.junit.After;
@@ -45,8 +47,12 @@ public class CsvMapReaderTest {
 	private static final CsvPreference PREFS = CsvPreference.STANDARD_PREFERENCE;
 	
 	private Reader reader;
+
+	private InputStream inputStream;
 	
 	private CsvMapReader mapReader;
+
+	private CsvMapReader mapInputStream;
 	
 	private CsvMapReader tokenizerMapReader;
 	
@@ -57,6 +63,9 @@ public class CsvMapReaderTest {
 	public void setUp() {
 		reader = new StringReader(CSV_FILE);
 		mapReader = new CsvMapReader(reader, PREFS);
+
+		inputStream = new ByteArrayInputStream(CSV_FILE.getBytes());
+		mapInputStream = new CsvMapReader(inputStream, PREFS);
 		
 		final Tokenizer tokenizer = new Tokenizer(reader, PREFS);
 		tokenizerMapReader = new CsvMapReader(tokenizer, PREFS);
@@ -68,6 +77,7 @@ public class CsvMapReaderTest {
 	@After
 	public void tearDown() throws IOException {
 		mapReader.close();
+		mapInputStream.close();
 		tokenizerMapReader.close();
 	}
 	
@@ -269,5 +279,22 @@ public class CsvMapReaderTest {
 	public void testTokenizerConstructorWithNullPreferences() {
 		new CsvMapReader(new Tokenizer(reader, PREFS), null);
 	}
-	
+
+	/**
+	 * Tests the InputStream constructor with a null InputStream.
+	 */
+	@SuppressWarnings("resource")
+	@Test(expected = NullPointerException.class)
+	public void testInputStreamConstructorWithNullInputStream() {
+		new CsvMapReader((InputStream) null, PREFS);
+	}
+
+	/**
+	 * Tests the InputStream constructor with a null preference.
+	 */
+	@SuppressWarnings("resource")
+	@Test(expected = NullPointerException.class)
+	public void testInputStreamConstructorWithNullPreferences() {
+		new CsvMapReader(inputStream, null);
+	}
 }

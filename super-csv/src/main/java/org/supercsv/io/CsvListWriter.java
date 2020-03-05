@@ -16,6 +16,7 @@
 package org.supercsv.io;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +50,21 @@ public class CsvListWriter extends AbstractCsvWriter implements ICsvListWriter {
 	public CsvListWriter(final Writer writer, final CsvPreference preference) {
 		super(writer, preference);
 	}
-	
+
+	/**
+	 * Constructs a new <tt>CsvListWriter</tt> with the supplied OutputStream and CSV preferences.
+	 *
+	 * @param outputStream
+	 *            the outputStream
+	 * @param preference
+	 *            the CSV preferences
+	 * @throws NullPointerException
+	 *             if outputStream or preference is null
+	 */
+	public CsvListWriter(final OutputStream outputStream, final CsvPreference preference) {
+		super(outputStream, preference);
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
