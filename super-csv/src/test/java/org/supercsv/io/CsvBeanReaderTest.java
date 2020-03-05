@@ -74,18 +74,24 @@ public class CsvBeanReaderTest {
 	
 	private CsvBeanReader beanReader;
 	
+	private CsvBeanReader beanReaderWithReflection;
+	
 	private CsvBeanReader tokenizerBeanReader;
 	
+	private CsvBeanReader tokenizerBeanReaderWithReflection;
+	
 	/**
-	 * Sets up the reader for the tests.
+	 * Sets up the readers for the tests.
 	 */
 	@Before
 	public void setUp() {
 		reader = new StringReader(CSV_FILE);
 		beanReader = new CsvBeanReader(reader, PREFS);
+		beanReaderWithReflection = new CsvBeanReader(reader, PREFS, true);
 		
 		final Tokenizer tokenizer = new Tokenizer(reader, PREFS);
 		tokenizerBeanReader = new CsvBeanReader(tokenizer, PREFS);
+		tokenizerBeanReaderWithReflection = new CsvBeanReader(tokenizer, PREFS, true);
 	}
 	
 	/**
@@ -94,7 +100,9 @@ public class CsvBeanReaderTest {
 	@After
 	public void tearDown() throws IOException {
 		beanReader.close();
+		beanReaderWithReflection.close();
 		tokenizerBeanReader.close();
+		tokenizerBeanReaderWithReflection.close();
 	}
 	
 	/**
@@ -164,6 +172,28 @@ public class CsvBeanReaderTest {
 	}
 	
 	/**
+	 * Tests the read() method with no processors and field reflection.
+	 */
+	@Test
+	public void testReadWithReflection() throws IOException {
+
+		final String[] header = beanReaderWithReflection.getHeader(true);
+		assertArrayEquals(HEADER, header);
+
+		assertEquals(JOHN_STRING, beanReaderWithReflection.read(CustomerStringBean.class, header));
+		assertEquals(BOB_STRING, beanReaderWithReflection.read(CustomerStringBean.class, header));
+		assertEquals(ALICE_STRING, beanReaderWithReflection.read(CustomerStringBean.class, header));
+		assertEquals(BILL_STRING, beanReaderWithReflection.read(CustomerStringBean.class, header));
+		assertEquals(MIRANDA_STRING, beanReaderWithReflection.read(CustomerStringBean.class, header));
+		assertEquals(STEVE_STRING, beanReaderWithReflection.read(CustomerStringBean.class, header));
+		assertEquals(ADA_STRING, beanReaderWithReflection.read(CustomerStringBean.class, header));
+		assertEquals(SERGEI_STRING, beanReaderWithReflection.read(CustomerStringBean.class, header));
+		assertEquals(LARRY_STRING, beanReaderWithReflection.read(CustomerStringBean.class, header));
+		assertEquals(GRACE_STRING, beanReaderWithReflection.read(CustomerStringBean.class, header));
+		assertNull(beanReaderWithReflection.read(CustomerStringBean.class, header));
+	}
+	
+	/**
 	 * Tests the read() method, but only mapping a few columns.
 	 */
 	@Test
@@ -227,6 +257,29 @@ public class CsvBeanReaderTest {
 		assertEquals(LARRY, beanReader.read(new CustomerBean(), header, READ_PROCESSORS));
 		assertEquals(GRACE, beanReader.read(new CustomerBean(), header, READ_PROCESSORS));
 		assertNull(beanReader.read(new CustomerBean(), header, READ_PROCESSORS));
+	}
+	
+	/**
+	 * Tests the read() method with no processors and field reflection, using the tokenizer version of CsvBeanReader (just to make sure it
+	 * behaves exactly the same as the reader version).
+	 */
+	@Test
+	public void testReadUsingTokenizerReaderWithReflection() throws IOException {
+		
+		final String[] header = tokenizerBeanReaderWithReflection.getHeader(true);
+		assertArrayEquals(HEADER, header);
+		
+		assertEquals(JOHN_STRING, tokenizerBeanReaderWithReflection.read(CustomerStringBean.class, header));
+		assertEquals(BOB_STRING, tokenizerBeanReaderWithReflection.read(CustomerStringBean.class, header));
+		assertEquals(ALICE_STRING, tokenizerBeanReaderWithReflection.read(CustomerStringBean.class, header));
+		assertEquals(BILL_STRING, tokenizerBeanReaderWithReflection.read(CustomerStringBean.class, header));
+		assertEquals(MIRANDA_STRING, tokenizerBeanReaderWithReflection.read(CustomerStringBean.class, header));
+		assertEquals(STEVE_STRING, tokenizerBeanReaderWithReflection.read(CustomerStringBean.class, header));
+		assertEquals(ADA_STRING, tokenizerBeanReaderWithReflection.read(CustomerStringBean.class, header));
+		assertEquals(SERGEI_STRING, tokenizerBeanReaderWithReflection.read(CustomerStringBean.class, header));
+		assertEquals(LARRY_STRING, tokenizerBeanReaderWithReflection.read(CustomerStringBean.class, header));
+		assertEquals(GRACE_STRING, tokenizerBeanReaderWithReflection.read(CustomerStringBean.class, header));
+		assertNull(tokenizerBeanReaderWithReflection.read(CustomerStringBean.class, header));
 	}
 	
 	/**

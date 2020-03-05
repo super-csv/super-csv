@@ -256,6 +256,28 @@ public class ReflectionUtilsTest {
 	}
 	
 	/**
+	 * Tests the concat() method.
+	 */
+	@Test
+	public void testConcat() {
+		String[] first = {};
+		String[] second = {"one"};
+		String[] ans = ReflectionUtils.concat(first, second);
+		assertEquals(second.length, ans.length);
+		for(int i = 0; i < second.length; i++) {
+			assertEquals(second[i], ans[i]);
+		}
+
+		first = new String[] {"two", "three"};
+		ans = ReflectionUtils.concat(first, second);
+		String[] reference = {"two", "three", "one"};
+		assertEquals(reference.length, ans.length);
+		for(int i = 0; i < reference.length; i++) {
+			assertEquals(reference[i], ans[i]);
+		}
+	}
+	
+	/**
 	 * Tests the findGetter() method with a null object (should throw an exception).
 	 */
 	@Test(expected = NullPointerException.class)
@@ -318,6 +340,22 @@ public class ReflectionUtilsTest {
 	@Test(expected = SuperCsvReflectionException.class)
 	public void testFindSetterWithInvalidFieldNameAndPrimitiveType() {
 		findSetter(bean, "invalid", int.class);
+	}
+	
+	/**
+	 * Tests the findField() method with a null object (should throw an exception).
+	 */
+	@Test(expected = NullPointerException.class)
+	public void testFindFieldWithNullObject() {
+		ReflectionUtils.findField(null, "name");
+	}
+
+	/**
+	 * Tests the findField() method with an invalid field name (should throw an exception).
+	 */
+	@Test(expected = SuperCsvReflectionException.class)
+	public void testFindFieldWithInvalidFieldName() {
+		ReflectionUtils.findField(bean, null);
 	}
 	
 	/**

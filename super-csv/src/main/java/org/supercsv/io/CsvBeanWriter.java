@@ -17,6 +17,7 @@ package org.supercsv.io;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,15 +25,18 @@ import java.util.List;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.exception.SuperCsvReflectionException;
 import org.supercsv.prefs.CsvPreference;
+import org.supercsv.util.FieldCache;
 import org.supercsv.util.MethodCache;
 import org.supercsv.util.Util;
 
 /**
  * CsvBeanWriter writes a CSV file by mapping each field on the bean to a column in the CSV file (using the supplied
- * name mapping).
+ * name mapping).And if the bean has setter/getter methods, it is recommended to use the default method. If
+ * there is no setter/getter method, you can write the CSV file through setting <code>isfieldreflect</code> true.
  * 
  * @author Kasper B. Graversen
  * @author James Bassett
+ * @author Chen Guoping
  */
 public class CsvBeanWriter extends AbstractCsvWriter implements ICsvBeanWriter {
 	
@@ -44,6 +48,12 @@ public class CsvBeanWriter extends AbstractCsvWriter implements ICsvBeanWriter {
 	
 	// cache of methods for mapping from fields to columns
 	private final MethodCache cache = new MethodCache();
+	
+	// cache of fields for mapping from columns ro fields	
+	private final FieldCache fieldCache = new FieldCache();
+	
+	// whether to use the field reflect. The default is false, do not use the field mapping	
+	private Boolean isFieldReflect = false;
 	
 	/**
 	 * Constructs a new <tt>CsvBeanWriter</tt> with the supplied Writer and CSV preferences. Note that the
@@ -59,7 +69,44 @@ public class CsvBeanWriter extends AbstractCsvWriter implements ICsvBeanWriter {
 	public CsvBeanWriter(final Writer writer, final CsvPreference preference) {
 		super(writer, preference);
 	}
+	/**
+	 * Constructs a new <tt>CsvBeanWriter</tt> with the supplied Writer and CSV preferences and isFieldReflect. Note that the
+	 * <tt>writer</tt> will be wrapped in a <tt>BufferedWriter</tt> before accessed.
+	 * 
+	 * @param writer
+	 *            the writer
+	 * @param preference
+	 *            the CSV preferences
+	 * @param isFieldReflect
+	 *            boolean if <code>true</code>, then reflect by fields rather setter methods
+	 * @throws NullPointerException
+	 *             if writer or preference is null
+	 */	
+	public CsvBeanWriter(final Writer writer, final CsvPreference preference,final Boolean isFieldReflect) {
+		super(writer, preference);
+		this.isFieldReflect = isFieldReflect;
+	}
 	
+	/**
+	 * Get field value in the bean.
+	 *
+	 * @param bean
+	 *            the bean
+	 * @param field
+	 *            the field
+	 * @throws SuperCsvReflectionException
+	 *            if there was an exception getting field value
+	 */	
+	private static Object getFieldValue(final Object bean, final Field field) {
+		try {
+			field.setAccessible(true);
+			return field.get(bean);
+		}
+		catch(final IllegalAccessException e) {
+			throw new SuperCsvReflectionException(String.format("error get filed %s", field.getName()), e);
+		}
+	}
+
 	/**
 	 * Extracts the bean values, using the supplied name mapping array.
 	 * 
@@ -68,7 +115,7 @@ public class CsvBeanWriter extends AbstractCsvWriter implements ICsvBeanWriter {
 	 * @param nameMapping
 	 *            the name mapping
 	 * @throws NullPointerException
-	 *             if source or nameMapping is null
+	 *             if source or nameMapping are null
 	 * @throws SuperCsvReflectionException
 	 *             if there was a reflection exception extracting the bean value
 	 */
@@ -91,13 +138,24 @@ public class CsvBeanWriter extends AbstractCsvWriter implements ICsvBeanWriter {
 				beanValues.add(null); // assume they always want a blank column
 				
 			} else {
-				Method getMethod = cache.getGetMethod(source, fieldName);
-				try {
-					beanValues.add(getMethod.invoke(source));
-				}
-				catch(final Exception e) {
-					throw new SuperCsvReflectionException(String.format("error extracting bean value for field %s",
-						fieldName), e);
+				if ( !isFieldReflect ){
+					Method getMethod = cache.getGetMethod(source, fieldName);
+					try {
+						beanValues.add(getMethod.invoke(source));
+					}
+					catch(final Exception e) {
+						throw new SuperCsvReflectionException(String.format("error extracting bean value for field %s",
+								fieldName), e);
+					}
+				}else {
+					Field field = fieldCache.getField(source, fieldName);
+					try {
+						beanValues.add(getFieldValue(source,field));
+					}
+					catch(final Exception e) {
+						throw new SuperCsvReflectionException(String.format("error extracting bean value for field %s",
+								fieldName), e);
+					}
 				}
 			}
 			
