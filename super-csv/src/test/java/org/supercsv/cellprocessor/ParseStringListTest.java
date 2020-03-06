@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.supercsv.cellprocessor.constraint.NotNull;
 import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.exception.SuperCsvCellProcessorException;
 
 /**
  * Tests the ParseStringList processor.
@@ -59,7 +60,6 @@ public class ParseStringListTest {
 
 		assertEquals(expectedList, processor.execute(formattedString, ANONYMOUS_CSVCONTEXT));
 		assertEquals(expectedList, processorChain.execute(formattedString, ANONYMOUS_CSVCONTEXT));
-		
 	}
 
 	/**
@@ -75,7 +75,6 @@ public class ParseStringListTest {
 
 		assertEquals(expectedList, processor.execute(formattedString, ANONYMOUS_CSVCONTEXT));
 		assertEquals(expectedList, processorChain.execute(formattedString, ANONYMOUS_CSVCONTEXT));
-		
 	}
 	
 	/**
@@ -91,7 +90,6 @@ public class ParseStringListTest {
 
 		assertEquals(expectedList, processor.execute(formattedString, ANONYMOUS_CSVCONTEXT));
 		assertEquals(expectedList, processorChain.execute(formattedString, ANONYMOUS_CSVCONTEXT));
-		
 	}
 	
 	/**
@@ -107,8 +105,16 @@ public class ParseStringListTest {
 
 		assertEquals(expectedList, processor.execute(formattedString, ANONYMOUS_CSVCONTEXT));
 		assertEquals(expectedList, processorChain.execute(formattedString, ANONYMOUS_CSVCONTEXT));
-		
 	}
 
+	/**
+	 * Tests bad formatted lists and validates that a SuperCsvCellProcessorException is thrown
+	 */
+	@Test(expected = SuperCsvCellProcessorException.class)
+	public void testSuperCsvCellProcessorException() {
+		String formattedString = "\"A,B";
+
+		processor.execute(formattedString, ANONYMOUS_CSVCONTEXT);
+	}
 
 }

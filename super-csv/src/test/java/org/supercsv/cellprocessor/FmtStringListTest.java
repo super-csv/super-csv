@@ -16,7 +16,7 @@ import org.supercsv.cellprocessor.ift.CellProcessor;
  * 
  * @author Jim Judd
  */
-class FmtStringListTest {
+public class FmtStringListTest {
 	
 	private CellProcessor processor;
 	private CellProcessor processorChain;
@@ -25,7 +25,7 @@ class FmtStringListTest {
 	 * Sets up the processors for the test using all constructor combinations.
 	 */
 	@Before
-	void setUp() throws Exception {
+	public void setUp() throws Exception {
 		processor = new FmtStringList();
 		processorChain = new FmtStringList(new NotNull());
 	}
@@ -34,7 +34,7 @@ class FmtStringListTest {
 	 * Tests unchained/chained execution with a string list of unquoted characters.
 	 */
 	@Test
-	void testFmtStringList() {
+	public void testFmtStringList() {
 		List<String> strList = new ArrayList<String>();
 		strList.add("AAA");
 		strList.add("BBB");
@@ -49,7 +49,7 @@ class FmtStringListTest {
 	 * Tests unchained/chained execution with a string list with an embedded comma.
 	 */	
 	@Test
-	void testFmtStringListWithQuote() {
+	public void testFmtStringListWithQuote() {
 		List<String> strList = new ArrayList<String>();
 		strList.add("AAA");
 		strList.add("B\"B\"B");
@@ -64,7 +64,7 @@ class FmtStringListTest {
 	 * Tests unchained/chained execution with a string list with more embedded commas.
 	 */	
 	@Test
-	void testFmtStringListWithComma() {
+	public void testFmtStringListWithComma() {
 		List<String> strList = new ArrayList<String>();
 		strList.add("AAA");
 		strList.add("B,B,B");
@@ -79,7 +79,7 @@ class FmtStringListTest {
 	 * Tests unchained/chained execution with a string list with an embedded comma and double quotes.
 	 */	
 	@Test
-	void testFmtStringListWithCRLF() {
+	public void testFmtStringListWithCRLF() {
 		List<String> strList = new ArrayList<String>();
 		strList.add("AAA");
 		strList.add("BB\r\nB");
@@ -94,7 +94,7 @@ class FmtStringListTest {
 	 * Tests unchained/chained execution with a string list with an embedded commas and double quotes.
 	 */	
 	@Test
-	void testFmtStringListWithSingle() {
+	public void testFmtStringListWithSingle() {
 		List<String> strList = new ArrayList<String>();
 		strList.add("AAA");
 
