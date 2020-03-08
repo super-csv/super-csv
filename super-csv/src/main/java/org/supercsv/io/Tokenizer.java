@@ -22,6 +22,7 @@ import java.util.List;
 import org.supercsv.comment.CommentMatcher;
 import org.supercsv.exception.SuperCsvException;
 import org.supercsv.prefs.CsvPreference;
+import org.supercsv.prefs.EmptyColumnsStrategy;
 
 /**
  * Reads the CSV file, line by line. If you want the line-reading functionality of this class, but want to define your
@@ -31,6 +32,7 @@ import org.supercsv.prefs.CsvPreference;
  * @author Kasper B. Graversen
  * @author James Bassett
  * @author Pietro Aragona
+ * @author Kai Hackemesser
  */
 public class Tokenizer extends AbstractTokenizer {
 	
@@ -58,7 +60,9 @@ public class Tokenizer extends AbstractTokenizer {
 	private final EmptyColumnParsing emptyColumnParsing;
 
 	private final char quoteEscapeChar;
-	
+
+	protected EmptyColumnsStrategy emptyFieldStrategy;
+
 	/**
 	 * Enumeration of tokenizer states. QUOTE_MODE is activated between quotes.
 	 */
@@ -86,6 +90,7 @@ public class Tokenizer extends AbstractTokenizer {
 		this.maxLinesPerRow = preferences.getMaxLinesPerRow();
 		this.emptyColumnParsing = preferences.getEmptyColumnParsing();
 		this.quoteEscapeChar = preferences.getQuoteEscapeChar();
+		this.emptyFieldStrategy = preferences.getEmptyColumnsStrategy();
 	}
 	
 	/**
@@ -110,7 +115,8 @@ public class Tokenizer extends AbstractTokenizer {
 				return false; // EOF
 			}
 		}
-		while( ignoreEmptyLines && line.length() == 0 || (commentMatcher != null && commentMatcher.isComment(line)) );
+		while( ignoreEmptyLines && line.length() == 0 || (commentMatcher != null && commentMatcher.isComment(line))
+				|| emptyFieldStrategy.toBeSkipped(line, (char) delimiterChar));
 		
 		// update the untokenized CSV row
 		currentRow.append(line);
