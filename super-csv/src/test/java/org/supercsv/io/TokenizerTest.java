@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.After;
@@ -146,7 +147,44 @@ public class TokenizerTest {
 		assertEquals(3, tokenizer.getLineNumber());
 		assertEquals("this is the third line", tokenizer.getUntokenizedRow());
 	}
-	
+
+	/**
+	 * Tests that the readColumns() method does not skip over lines with only commas by default
+	 */
+	@Test
+	public void testEmptyFieldsOnlyLinesDefaultBehaviour() throws Exception {
+		final String input = "a,b,c,d\r\n,,,,\r\ne,f,g,h\r\n";;
+		final List<String> expectedColumnsRow1 = Arrays.asList("a","b","c", "d");
+		final List<String> expectedColumnsRow2 = Arrays.asList(null, null, null, null, null);
+		final List<String> expectedColumnsRow3 = Arrays.asList("e","f","g", "h");
+		tokenizer = createTokenizer(input, EXCEL_PREFERENCE);
+		tokenizer.readColumns(columns);
+		assertEquals(expectedColumnsRow1, columns);
+		tokenizer.readColumns(columns);
+		assertEquals(expectedColumnsRow2, columns);
+		tokenizer.readColumns(columns);
+		assertEquals(expectedColumnsRow3, columns);
+	}
+
+	/**
+	 * Tests that the readColumns() method does skip over lines with only commas by default, when the preferences are
+	 * set accordingly
+	 */
+	@Test
+	public void testEmptyFieldsOnlyLinesBehaviourSkipping() throws Exception {
+		final String input = "a,b,c,d\r\n,,,,\r\ne,f,g,h\r\n";;
+		final List<String> expectedColumnsRow1 = Arrays.asList("a","b","c", "d");
+		final List<String> expectedColumnsRow3 = Arrays.asList("e","f","g", "h");
+		CsvPreference preference = new CsvPreference.Builder(EXCEL_PREFERENCE).ignoreEmptyColumnsLines(true).build();
+		tokenizer = createTokenizer(input, preference);
+		tokenizer.readColumns(columns);
+		assertEquals(expectedColumnsRow1, columns);
+		tokenizer.readColumns(columns);
+		assertEquals(expectedColumnsRow3, columns);
+		assertEquals(3, tokenizer.getLineNumber());
+	}
+
+
 	/**
 	 * Tests that the readColumns() method doesn't skip over empty lines if the ignoreEmptyLines
 	 * preference is disabled.

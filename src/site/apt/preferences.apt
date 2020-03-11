@@ -44,6 +44,10 @@ CSV Preferences
 
     []
 
+    [ignoreEmptyColumnsLines] Whether lines only containing column delimiters are ignored. The default value is false (null values would be returned for all columns).
+
+    []
+
     [emptyColumnParsing] Controls how to handle empty columns, whether they should be treated as null, or as an empty String: "".  Valid values are ParseEmptyColumnsAsNull and ParseEmptyColumnsAsEmptyString.  The default value is ParseEmptyColumnsAsNull.
 
     []
@@ -94,6 +98,8 @@ CSV Preferences
  surroundingSpacesNeedQuotes | false
 *----------------------------+-------------------------------------------------------------------------------------*
  ignoreEmptyLines            | true
+*----------------------------+-------------------------------------------------------------------------------------*
+ ignoreEmptyColumnsLines     | false
 *----------------------------+-------------------------------------------------------------------------------------*
  maxLinesPerRow              | 0 (disabled)
 *----------------------------+-------------------------------------------------------------------------------------*
@@ -146,6 +152,16 @@ private static final CsvPreference STANDARD_SURROUNDING_SPACES_NEED_QUOTES =
 +----------------------------------------------------------------------------------------------------+
 private static final CsvPreference ALLOW_EMPTY_LINES =
     new CsvPreference.Builder(CsvPreference.STANDARD_PREFERENCE).ignoreEmptyLines(false).build();
++----------------------------------------------------------------------------------------------------+
+
+* Ignoring rows containing only empty columns
+
+  By default, if a line contains only column delimiters, the line is treated as a record of empty columns. You can set the behavior to skip such
+  lines, similar to ignoring empty lines, by setting the <<<ignoreEmptyColumnsLines>>> preference:
+
++----------------------------------------------------------------------------------------------------+
+private static final CsvPreference SKIP_EMPTY_COLUMN_LINES =
+    new CsvPreference.Builder(CsvPreference.STANDARD_PREFERENCE).ignoreEmptyColumnsLines(true).build();
 +----------------------------------------------------------------------------------------------------+
 
 * Handling empty columns
