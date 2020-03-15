@@ -228,5 +228,13 @@ public abstract class AbstractCsvWriter implements ICsvWriter {
 		
 		writeRow(header);
 	}
-	
+
+	/**
+	 * Returns CsvPreference
+	 *
+	 * @return CsvPreference
+	 */
+	protected CsvPreference getPreference() {
+		return preference;
+	}
 }

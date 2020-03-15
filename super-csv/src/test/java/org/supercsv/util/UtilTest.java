@@ -31,6 +31,7 @@ import org.supercsv.cellprocessor.ParseInt;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.exception.SuperCsvException;
 import org.supercsv.mock.IdentityTransform;
+import org.supercsv.prefs.DelayCellProcessorExceptions;
 
 /**
  * Test the Util class.
@@ -49,6 +50,8 @@ public class UtilTest {
 	private static final int LINE_NO = 23;
 	
 	private static final int ROW_NO = 12;
+
+	private static final DelayCellProcessorExceptions delayCellProcessorExceptions = new DelayCellProcessorExceptions();
 	
 	private static final Map<String, Object> MAP = new HashMap<String, Object>();
 	static {
@@ -143,7 +146,7 @@ public class UtilTest {
 	@Test
 	public void testExecuteCellProcessors() {
 		List<Object> destinationList = new ArrayList<Object>();
-		Util.executeCellProcessors(destinationList, LIST, PROCESSORS, LINE_NO, ROW_NO);
+		Util.executeCellProcessors(destinationList, LIST, PROCESSORS, LINE_NO, ROW_NO, delayCellProcessorExceptions);
 		assertTrue(destinationList.size() == 3);
 		assertEquals("Ezio", destinationList.get(0));
 		assertEquals(Integer.valueOf(25), destinationList.get(1));
@@ -155,7 +158,7 @@ public class UtilTest {
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testExecuteCellProcessorsWithNullDestination() {
-		Util.executeCellProcessors(null, LIST, PROCESSORS, LINE_NO, ROW_NO);
+		Util.executeCellProcessors(null, LIST, PROCESSORS, LINE_NO, ROW_NO, delayCellProcessorExceptions);
 	}
 	
 	/**
@@ -163,7 +166,7 @@ public class UtilTest {
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testExecuteCellProcessorsWithNullSource() {
-		Util.executeCellProcessors(new ArrayList<Object>(), null, PROCESSORS, LINE_NO, ROW_NO);
+		Util.executeCellProcessors(new ArrayList<Object>(), null, PROCESSORS, LINE_NO, ROW_NO, delayCellProcessorExceptions);
 	}
 	
 	/**
@@ -171,7 +174,7 @@ public class UtilTest {
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testExecuteCellProcessorsWithNullProcessors() {
-		Util.executeCellProcessors(new ArrayList<Object>(), LIST, null, LINE_NO, ROW_NO);
+		Util.executeCellProcessors(new ArrayList<Object>(), LIST, null, LINE_NO, ROW_NO, delayCellProcessorExceptions);
 	}
 	
 	/**
@@ -181,7 +184,7 @@ public class UtilTest {
 	@Test(expected = SuperCsvException.class)
 	public void testExecuteCellProcessorsWithSizeMismatch() {
 		final List<Object> invalidSizeList = new ArrayList<Object>();
-		Util.executeCellProcessors(new ArrayList<Object>(), invalidSizeList, PROCESSORS, LINE_NO, ROW_NO);
+		Util.executeCellProcessors(new ArrayList<Object>(), invalidSizeList, PROCESSORS, LINE_NO, ROW_NO, delayCellProcessorExceptions);
 	}
 	
 	/**

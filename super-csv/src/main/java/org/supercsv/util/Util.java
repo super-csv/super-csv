@@ -20,8 +20,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.exception.SuperCsvCellProcessorException;
 import org.supercsv.exception.SuperCsvConstraintViolationException;
+import org.supercsv.exception.SuperCsvDelayException;
 import org.supercsv.exception.SuperCsvException;
+import org.supercsv.prefs.CallBackOnException;
+import org.supercsv.prefs.DelayCellProcessorExceptions;
 
 /**
  * Useful utility methods.
@@ -60,8 +64,9 @@ public final class Util {
 	 *             if source.size() != processors.length, or CellProcessor execution failed
 	 */
 	public static void executeCellProcessors(final List<Object> destination, final List<?> source,
-		final CellProcessor[] processors, final int lineNo, final int rowNo) {
-		
+		final CellProcessor[] processors, final int lineNo, final int rowNo,
+		DelayCellProcessorExceptions delayCellProcessorExceptions) {
+
 		if( destination == null ) {
 			throw new NullPointerException("destination should not be null");
 		} else if( source == null ) {
@@ -82,7 +87,11 @@ public final class Util {
 		}
 		
 		destination.clear();
-		
+
+		boolean delayExceptions = delayCellProcessorExceptions.isDelayExceptions();
+		CallBackOnException callBack = delayCellProcessorExceptions.getCallBack();
+		boolean exceptionsFlag = false;
+		String exceptionsString = "Suppressed Exceptions for row" + rowNo + ":\n";
 		for( int i = 0; i < source.size(); i++ ) {
 			
 			context.setColumnNumber(i + 1); // update context (columns start at 1)
@@ -90,8 +99,28 @@ public final class Util {
 			if( processors[i] == null ) {
 				destination.add(source.get(i)); // no processing required
 			} else {
-				destination.add(processors[i].execute(source.get(i), context)); // execute the processor chain
+				if( delayExceptions ){
+					try {
+						destination.add(processors[i].execute(source.get(i), context)); // execute the processor chain
+					}
+					catch( SuperCsvConstraintViolationException e ) {
+						destination.add(callBack.process(source.get(i)));
+						exceptionsFlag = true;
+						exceptionsString = exceptionsString + e.toString() + "\n";
+					}
+					catch( SuperCsvCellProcessorException e ) {
+						destination.add(callBack.process(source.get(i)));
+						exceptionsFlag = true;
+						exceptionsString = exceptionsString + e.toString() + "\n";
+					}
+				} else {
+					destination.add(processors[i].execute(source.get(i), context)); // execute the processor chain
+				}
 			}
+		}
+
+		if( exceptionsFlag ) {
+			throw new SuperCsvDelayException(exceptionsString);
 		}
 	}
 	

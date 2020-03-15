@@ -149,6 +149,8 @@ public final class CsvPreference {
 	private final EmptyColumnParsing emptyColumnParsing;
 
 	private final char quoteEscapeChar;
+
+	private final DelayCellProcessorExceptions delayCellProcessorExceptions;
 	
 	/**
 	 * Constructs a new <tt>CsvPreference</tt> from a Builder.
@@ -165,6 +167,7 @@ public final class CsvPreference {
 		this.maxLinesPerRow = builder.maxLinesPerRow;
 		this.emptyColumnParsing = builder.emptyColumnParsing;
 		this.quoteEscapeChar = builder.quoteEscapeChar;
+		this.delayCellProcessorExceptions = builder.delayCellProcessorExceptions;
 	}
 	
 	/**
@@ -269,6 +272,15 @@ public final class CsvPreference {
 	}
 
 	/**
+	 * Returns the DelayCellProcessorExceptions
+	 *
+	 * @return the DelayCellProcessorExceptions
+	 */
+	public DelayCellProcessorExceptions getDelayCellProcessorExceptions() {
+		return delayCellProcessorExceptions;
+	}
+
+	/**
 	 * Builds immutable <tt>CsvPreference</tt> instances. The builder pattern allows for additional preferences to be
 	 * added in the future.
 	 */
@@ -295,7 +307,8 @@ public final class CsvPreference {
 		private EmptyColumnParsing emptyColumnParsing;
 
 		private char quoteEscapeChar;
-		
+
+		private DelayCellProcessorExceptions delayCellProcessorExceptions;
 		/**
 		 * Constructs a Builder with all of the values from an existing <tt>CsvPreference</tt> instance. Useful if you
 		 * want to base your preferences off one of the existing CsvPreference constants.
@@ -315,6 +328,7 @@ public final class CsvPreference {
 			this.maxLinesPerRow = preference.maxLinesPerRow;
 			this.emptyColumnParsing = preference.emptyColumnParsing;
 			this.quoteEscapeChar = preference.quoteEscapeChar;
+			this.delayCellProcessorExceptions = preference.getDelayCellProcessorExceptions();
 		}
 		
 		/**
@@ -483,6 +497,21 @@ public final class CsvPreference {
 			this.quoteEscapeChar = quoteEscapeChar;
 			return this;
 		}
+
+		/**
+		 * Use DelayCellProcessorExceptions to delay CellProcessor Exceptions
+		 *
+		 * @param delayCellProcessorExceptions
+		 *           the delayCellProcessorExceptions
+		 * @return the updated Builder
+		 */
+		public Builder delayCellProcessorError(DelayCellProcessorExceptions delayCellProcessorExceptions) {
+			if( delayCellProcessorExceptions == null) {
+				throw new NullPointerException("delayCellProcessorError should not be null");
+			}
+			this.delayCellProcessorExceptions = delayCellProcessorExceptions;
+			return this;
+		}
 		
 		/**
 		 * Builds the CsvPreference instance.
@@ -503,6 +532,10 @@ public final class CsvPreference {
 			
 			if( emptyColumnParsing == null ) {
 				emptyColumnParsing = EmptyColumnParsing.ParseEmptyColumnsAsNull;
+			}
+
+			if( delayCellProcessorExceptions == null ) {
+				delayCellProcessorExceptions = new DelayCellProcessorExceptions();
 			}
 
 			if( quoteEscapeChar == delimiterChar ) {

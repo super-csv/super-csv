@@ -22,8 +22,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.exception.SuperCsvDelayException;
+import org.supercsv.exception.SuperCsvException;
 import org.supercsv.exception.SuperCsvReflectionException;
 import org.supercsv.prefs.CsvPreference;
+import org.supercsv.prefs.DelayCellProcessorExceptions;
 import org.supercsv.util.MethodCache;
 import org.supercsv.util.Util;
 
@@ -126,16 +129,26 @@ public class CsvBeanWriter extends AbstractCsvWriter implements ICsvBeanWriter {
 	public void write(final Object source, final String[] nameMapping, final CellProcessor[] processors)
 		throws IOException {
 		
+		DelayCellProcessorExceptions delayCellProcessorExceptions = getPreference().getDelayCellProcessorExceptions();
+
 		// update the current row/line numbers
 		super.incrementRowAndLineNo();
 		
 		// extract the bean values
 		extractBeanValues(source, nameMapping);
-		
-		// execute the processors for each column
-		Util.executeCellProcessors(processedColumns, beanValues, processors, getLineNumber(), getRowNumber());
-		
-		// write the list
+
+		try {
+			// execute the processors for each column
+			Util.executeCellProcessors(processedColumns, beanValues, processors, getLineNumber(), getRowNumber(),
+				delayCellProcessorExceptions);
+		}
+		catch( SuperCsvDelayException e ) {
+			if( !delayCellProcessorExceptions.isSkipExceptionsRow() ){
+				// write the list
+				super.writeRow(processedColumns);
+			}
+			throw new SuperCsvDelayException(e.toString());
+		}
 		super.writeRow(processedColumns);
 	}
 }
