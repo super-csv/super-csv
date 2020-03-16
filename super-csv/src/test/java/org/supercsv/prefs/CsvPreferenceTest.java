@@ -73,6 +73,7 @@ public class CsvPreferenceTest {
 		assertTrue(custom.getEncoder() instanceof DefaultCsvEncoder);
 		assertTrue(custom.getQuoteMode() instanceof NormalQuoteMode);
 		assertEquals('"', custom.getQuoteEscapeChar());
+		assertFalse(custom.getDelayCellProcessorExceptions().isDelayExceptions());
 	}
 	
 	/**
@@ -85,6 +86,13 @@ public class CsvPreferenceTest {
 				.useEncoder(new DefaultCsvEncoder())
 				.useQuoteMode(new AlwaysQuoteMode())
 				.setQuoteEscapeChar('\\')
+				.delayCellProcessorExceptions(new DelayCellProcessorExceptions(
+					false,
+					new CallBackOnException() {
+					public Object process(Object rawColumns) {
+						return "EMPTY COLUMN";
+					}
+				}))
 				.build();
 		assertEquals('"', custom.getQuoteChar());
 		assertEquals(',', custom.getDelimiterChar());
@@ -93,6 +101,10 @@ public class CsvPreferenceTest {
 		assertTrue(custom.getEncoder() instanceof DefaultCsvEncoder);
 		assertTrue(custom.getQuoteMode() instanceof AlwaysQuoteMode);
 		assertEquals('\\', custom.getQuoteEscapeChar());
+		assertTrue(custom.getDelayCellProcessorExceptions().isDelayExceptions());
+		assertFalse(custom.getDelayCellProcessorExceptions().isSkipExceptionsRow());
+		assertEquals("EMPTY COLUMN", custom.getDelayCellProcessorExceptions().getCallBack().process("\"\""));
+		assertEquals("EMPTY COLUMN", custom.getDelayCellProcessorExceptions().getCallBack().process(null));
 	}
 	
 	/**
@@ -108,6 +120,7 @@ public class CsvPreferenceTest {
 		assertEquals(EXCEL_PREFERENCE.getEncoder(), custom.getEncoder());
 		assertEquals(EXCEL_PREFERENCE.getQuoteMode(), custom.getQuoteMode());
 		assertEquals(EXCEL_PREFERENCE.getQuoteEscapeChar(), custom.getQuoteEscapeChar());
+		assertEquals(EXCEL_PREFERENCE.getDelayCellProcessorExceptions(), custom.getDelayCellProcessorExceptions());
 	}
 	
 	/**
@@ -184,5 +197,13 @@ public class CsvPreferenceTest {
 	@Test(expected = NullPointerException.class)
 	public void testSetEmptyColumnParsingWithNull() {
 		new CsvPreference.Builder(EXCEL_PREFERENCE).setEmptyColumnParsing(null);
+	}
+
+	/**
+	 * Tests construction delay cell processor with null (should throw an exception).
+	 */
+	@Test(expected = NullPointerException.class)
+	public void testDelayCellProcessorExceptionsWithNull() {
+		new CsvPreference.Builder(EXCEL_PREFERENCE).delayCellProcessorExceptions(null);
 	}
 }

@@ -16,6 +16,7 @@
 package org.supercsv.io;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.supercsv.SuperCsvTestUtils.CSV_FILE;
 import static org.supercsv.SuperCsvTestUtils.CUSTOMERS;
 import static org.supercsv.SuperCsvTestUtils.HEADER;
@@ -30,10 +31,13 @@ import java.io.Writer;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.supercsv.exception.SuperCsvDelayException;
 import org.supercsv.exception.SuperCsvReflectionException;
 import org.supercsv.mock.CustomerBean;
 import org.supercsv.mock.CustomerStringBean;
+import org.supercsv.prefs.CallBackOnException;
 import org.supercsv.prefs.CsvPreference;
+import org.supercsv.prefs.DelayCellProcessorExceptions;
 
 /**
  * Tests the CsvBeanWriter class.
@@ -110,6 +114,58 @@ public class CsvBeanWriterTest {
 		}
 		beanWriter.flush();
 		assertEquals(CSV_FILE, writer.toString());
+	}
+
+	/**
+	 * Tests the write() method with DelayCellProcessorExceptions
+	 */
+	@Test
+	public void testWriteWithDelayCellProcessorExceptions() throws IOException {
+		CustomerBean customer = new CustomerBean("1", "John", "Dunbar", null, null,
+			null, null, null, null, "jdunbar@gmail.com", 0L);
+		String message = "Suppressed Exceptions for row 1:\n"
+			+ "org.supercsv.exception.SuperCsvCellProcessorException: this processor does not accept null input - if the column is optional then chain an Optional() processor before this one\r\n"
+			+ "processor=org.supercsv.cellprocessor.FmtDate\r\n"
+			+ "context={lineNo=1, rowNo=1, columnNo=4, rowSource=[1, John, Dunbar, null, null, null, null, null, null, jdunbar@gmail.com, 0]}\n"
+			+ "org.supercsv.exception.SuperCsvCellProcessorException: this processor does not accept null input - if the column is optional then chain an Optional() processor before this one\r\n"
+			+ "processor=org.supercsv.cellprocessor.FmtSqlTime\r\n"
+			+ "context={lineNo=1, rowNo=1, columnNo=5, rowSource=[1, John, Dunbar, null, null, null, null, null, null, jdunbar@gmail.com, 0]}\n";
+
+		// skip write exceptions row;
+		CsvPreference preference = new CsvPreference.Builder(PREFS).delayCellProcessorExceptions(
+			new DelayCellProcessorExceptions(true)
+		).build();
+		Writer writer = new StringWriter();
+		CsvBeanWriter testWriter = new CsvBeanWriter(writer, preference);
+		try {
+			testWriter.write(customer, HEADER, WRITE_PROCESSORS);
+			fail("should thrown SuperCsvDelayException");
+		}
+		catch( SuperCsvDelayException e ){
+			assertEquals(message, e.toString());
+		}
+		testWriter.flush();
+		assertEquals("", writer.toString());
+
+		//no skip write exceptions row
+		preference = new CsvPreference.Builder(PREFS).delayCellProcessorExceptions(
+			new DelayCellProcessorExceptions(false, new CallBackOnException() {
+				public Object process(Object rawColumns) {
+					return "EMPTY COLUMNS";
+				}
+			})
+		).build();
+		writer = new StringWriter();
+		testWriter = new CsvBeanWriter(writer, preference);
+		try {
+			testWriter.write(customer, HEADER, WRITE_PROCESSORS);
+			fail("should thrown SuperCsvDelayException");
+		}
+		catch( SuperCsvDelayException e ){
+			assertEquals(message, e.toString());
+		}
+		testWriter.flush();
+		assertEquals("1,John,Dunbar,EMPTY COLUMNS,EMPTY COLUMNS,,,,,jdunbar@gmail.com,0\r\n", writer.toString());
 	}
 	
 	/**

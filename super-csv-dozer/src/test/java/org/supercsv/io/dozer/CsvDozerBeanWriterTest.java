@@ -31,10 +31,12 @@ import org.supercsv.cellprocessor.FmtBool;
 import org.supercsv.cellprocessor.Optional;
 import org.supercsv.cellprocessor.constraint.NotNull;
 import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.exception.SuperCsvDelayException;
 import org.supercsv.mock.dozer.Answer;
 import org.supercsv.mock.dozer.SurveyResponse;
+import org.supercsv.prefs.CallBackOnException;
 import org.supercsv.prefs.CsvPreference;
-
+import org.supercsv.prefs.DelayCellProcessorExceptions;
 /**
  * Tests the CsvDozerBeanWriter class.
  * 
@@ -289,5 +291,57 @@ public class CsvDozerBeanWriterTest {
 	public void testWriteWithProcessorsWithNullProcessors() throws IOException {
 		beanWriter.write(SurveyResponse.class, (CellProcessor[]) null);
 	}
-	
+
+	/**
+	 * Tests the write() method with DelayCellProcessorExceptions
+	 */
+	@Test
+	public void testWriteWithDelayCellProcessorExceptions() throws IOException{
+		CellProcessor[] processors = new CellProcessor[] { new NotNull(), new FmtBool("Y", "N"),
+			new NotNull(), new NotNull(), new NotNull(), new NotNull(), new NotNull(), new NotNull() };
+		SurveyResponse response = new SurveyResponse(66, true, Arrays.asList(new Answer(1, "Twelve"), new Answer(2,
+			null), new Answer(3, "Big Bang Theory")));
+		String message = "Suppressed Exceptions for row 1:\n"
+			+ "org.supercsv.exception.SuperCsvConstraintViolationException: null value encountered\r\n"
+			+ "processor=org.supercsv.cellprocessor.constraint.NotNull\r\n"
+			+ "context={lineNo=1, rowNo=1, columnNo=6, rowSource=[66, true, 1, Twelve, 2, null, 3, Big Bang Theory]}\n";
+
+		// skip write exceptions row;
+		CsvPreference preference = new CsvPreference.Builder(PREFS).delayCellProcessorExceptions(
+			new DelayCellProcessorExceptions(true)
+		).build();
+		Writer writer = new StringWriter();
+		CsvDozerBeanWriter testWriter = new CsvDozerBeanWriter(writer, preference);
+		testWriter.configureBeanMapping(SurveyResponse.class, FIELD_MAPPING);
+		try {
+			testWriter.write(response, processors);
+			fail("should thrown SuperCsvDelayException");
+		}
+		catch( SuperCsvDelayException e ){
+			assertEquals(message, e.toString());
+		}
+		testWriter.flush();
+		assertEquals("", writer.toString());
+
+		//no skip write exceptions row
+		preference = new CsvPreference.Builder(PREFS).delayCellProcessorExceptions(
+			new DelayCellProcessorExceptions(false, new CallBackOnException() {
+				public Object process(Object rawColumns) {
+					return "EMPTY COLUMNS";
+				}
+			})
+		).build();
+		writer = new StringWriter();
+		testWriter = new CsvDozerBeanWriter(writer, preference);
+		testWriter.configureBeanMapping(SurveyResponse.class, FIELD_MAPPING);
+		try {
+			testWriter.write(response, processors);
+			fail("should thrown SuperCsvDelayException");
+		}
+		catch( SuperCsvDelayException e ){
+			assertEquals(message, e.toString());
+		}
+		testWriter.flush();
+		assertEquals("66,Y,1,Twelve,2,EMPTY COLUMNS,3,Big Bang Theory\n", writer.toString());
+	}
 }

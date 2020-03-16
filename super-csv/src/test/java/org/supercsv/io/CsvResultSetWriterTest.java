@@ -35,10 +35,13 @@ import org.junit.Test;
 import org.supercsv.cellprocessor.FmtDate;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.exception.SuperCsvCellProcessorException;
+import org.supercsv.exception.SuperCsvDelayException;
 import org.supercsv.mock.CustomerBean;
 import org.supercsv.mock.CustomerStringBean;
 import org.supercsv.mock.ResultSetMock;
+import org.supercsv.prefs.CallBackOnException;
 import org.supercsv.prefs.CsvPreference;
+import org.supercsv.prefs.DelayCellProcessorExceptions;
 
 /**
  * Tests the CsvResultSetWriter class
@@ -213,5 +216,73 @@ public class CsvResultSetWriterTest {
 			assertEquals("row number not correct", ROW_NUMBER, actualRowNumber);
 			throw e;
 		}
+	}
+
+	/**
+	 * Tests the write() method with DelayCellProcessorExceptions
+	 */
+	@Test
+	public void testtestWriteWithDelayCellProcessorExceptions() throws SQLException, IOException {
+		final Object[][] causesException = { { "1", "Alexander\r\nGraham", date(1945, 6, 13), },
+			{ "2", "Bob", date(1919, 2, 25), }, { "3", "Alice", "CAUSES EXCEPTION", },
+			{ "4", "Bill", date(1973, 7, 10), }, { "5", "Miranda", null, }, };
+		final String[] headers = { "customerNo", "firstName", "birthDate" };
+		final CellProcessor[] cellProcessors = { null, null, new FmtDate("dd/MM/yyyy") };
+		String message = "Suppressed Exceptions for row 4:\n"
+			+ "org.supercsv.exception.SuperCsvCellProcessorException: the input value should be of type java.util.Date but is java.lang.String\r\n"
+			+ "processor=org.supercsv.cellprocessor.FmtDate\r\n"
+			+ "context={lineNo=5, rowNo=4, columnNo=3, rowSource=[3, Alice, CAUSES EXCEPTION]}\n" + "\n"
+			+ "Suppressed Exceptions for row 6:\n"
+			+ "org.supercsv.exception.SuperCsvCellProcessorException: this processor does not accept null input - if the column is optional then chain an Optional() processor before this one\r\n"
+			+ "processor=org.supercsv.cellprocessor.FmtDate\r\n"
+			+ "context={lineNo=7, rowNo=6, columnNo=3, rowSource=[5, Miranda, null]}\n" + "\n";
+
+		// skip write exceptions row;
+		CsvPreference preference = new CsvPreference.Builder(PREFS).delayCellProcessorExceptions(
+			new DelayCellProcessorExceptions(true)
+		).build();
+		Writer writer = new StringWriter();
+		CsvResultSetWriter testWriter = new CsvResultSetWriter(writer, preference);
+		ResultSet resultSet = new ResultSetMock(causesException, headers);
+		try {
+			testWriter.write(resultSet, cellProcessors);
+			fail("should thrown SuperCsvDelayException");
+		}
+		catch(SuperCsvDelayException e) {
+			assertEquals(message, e.toString());
+		}
+		testWriter.flush();
+		assertEquals("customerNo,firstName,birthDate\r\n"
+			+ "1,\"Alexander\r\n"
+			+ "Graham\",13/06/1945\r\n"
+			+ "2,Bob,25/02/1919\r\n"
+			+ "4,Bill,10/07/1973\r\n", writer.toString());
+
+		//no skip write exceptions row
+		preference = new CsvPreference.Builder(PREFS).delayCellProcessorExceptions(
+			new DelayCellProcessorExceptions(false, new CallBackOnException() {
+				public Object process(Object rawColumns) {
+					return "EMPTY COLUMNS";
+				}
+			})
+		).build();
+		writer = new StringWriter();
+		testWriter = new CsvResultSetWriter(writer, preference);
+		resultSet = new ResultSetMock(causesException, headers);
+		try {
+			testWriter.write(resultSet, cellProcessors);
+			fail("should thrown SuperCsvDelayException");
+		}
+		catch(SuperCsvDelayException e) {
+			assertEquals(message, e.toString());
+		}
+		testWriter.flush();
+		assertEquals("customerNo,firstName,birthDate\r\n"
+			+ "1,\"Alexander\r\n"
+			+ "Graham\",13/06/1945\r\n"
+			+ "2,Bob,25/02/1919\r\n"
+			+ "3,Alice,EMPTY COLUMNS\r\n"
+			+ "4,Bill,10/07/1973\r\n"
+			+ "5,Miranda,EMPTY COLUMNS\r\n", writer.toString());
 	}
 }

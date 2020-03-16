@@ -91,7 +91,7 @@ public final class Util {
 		boolean delayExceptions = delayCellProcessorExceptions.isDelayExceptions();
 		CallBackOnException callBack = delayCellProcessorExceptions.getCallBack();
 		boolean exceptionsFlag = false;
-		String exceptionsString = "Suppressed Exceptions for row" + rowNo + ":\n";
+		String exceptionsString = "Suppressed Exceptions for row " + rowNo + ":\n";
 		for( int i = 0; i < source.size(); i++ ) {
 			
 			context.setColumnNumber(i + 1); // update context (columns start at 1)

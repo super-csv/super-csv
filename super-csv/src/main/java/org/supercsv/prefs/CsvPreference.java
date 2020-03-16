@@ -505,9 +505,9 @@ public final class CsvPreference {
 		 *           the delayCellProcessorExceptions
 		 * @return the updated Builder
 		 */
-		public Builder delayCellProcessorError(DelayCellProcessorExceptions delayCellProcessorExceptions) {
+		public Builder delayCellProcessorExceptions(DelayCellProcessorExceptions delayCellProcessorExceptions) {
 			if( delayCellProcessorExceptions == null) {
-				throw new NullPointerException("delayCellProcessorError should not be null");
+				throw new NullPointerException("delayCellProcessorExceptions should not be null");
 			}
 			this.delayCellProcessorExceptions = delayCellProcessorExceptions;
 			return this;

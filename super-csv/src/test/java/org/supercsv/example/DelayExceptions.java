@@ -64,7 +64,7 @@ public class DelayExceptions {
 
 	private static void readDelayCellProcessorExceptions() throws Exception {
 		CsvPreference preference = new CsvPreference.Builder(CsvPreference.STANDARD_PREFERENCE)
-			.delayCellProcessorError(new DelayCellProcessorExceptions(false, new CallBackOnException() {
+			.delayCellProcessorExceptions(new DelayCellProcessorExceptions(false, new CallBackOnException() {
 				public Object process(Object rawColumns) {
 					return "###";
 				}
@@ -101,7 +101,7 @@ public class DelayExceptions {
 
 	private static void skipWriteExceptionsRow() throws Exception {
 		CsvPreference preference = new CsvPreference.Builder(CsvPreference.STANDARD_PREFERENCE)
-			.delayCellProcessorError(new DelayCellProcessorExceptions(true)).build();
+			.delayCellProcessorExceptions(new DelayCellProcessorExceptions(true)).build();
 		System.out.println("skipWriteExceptionsRow Exceptions:");
 		write(preference, "skipWriteExceptionsRow");
 		System.out.println("==================================");
@@ -109,7 +109,7 @@ public class DelayExceptions {
 
 	private static void writeExceptionsRow() throws Exception {
 		CsvPreference preference = new CsvPreference.Builder(CsvPreference.STANDARD_PREFERENCE)
-			.delayCellProcessorError(new DelayCellProcessorExceptions(false, new CallBackOnException() {
+			.delayCellProcessorExceptions(new DelayCellProcessorExceptions(false, new CallBackOnException() {
 				public Object process(Object rawColumns) {
 					return "###";
 				}

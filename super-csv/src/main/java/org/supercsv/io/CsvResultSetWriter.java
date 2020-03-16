@@ -117,6 +117,7 @@ public class CsvResultSetWriter extends AbstractCsvWriter implements ICsvResultS
 		boolean exceptionsFlag = false;
 		String exceptionsMessage = "";
 		while( resultSet.next() ) {
+			boolean columnFlag = false;
 			super.incrementRowAndLineNo(); // This will allow the correct row/line numbers to be used in any exceptions
 											// thrown before writing occurs
 			objects.clear();
@@ -128,10 +129,14 @@ public class CsvResultSetWriter extends AbstractCsvWriter implements ICsvResultS
 					delayCellProcessorExceptions);
 			}
 			catch( SuperCsvDelayException e ){
+				if( !delayCellProcessorExceptions.isSkipExceptionsRow() ){
+					super.writeRow(processedColumns);
+				}
+				columnFlag = true;
 				exceptionsFlag = true;
 				exceptionsMessage = exceptionsMessage + e.toString() + "\n";
 			}
-			if( !delayCellProcessorExceptions.isSkipExceptionsRow() ){
+			if( !columnFlag ){
 				super.writeRow(processedColumns);
 			}
 		}

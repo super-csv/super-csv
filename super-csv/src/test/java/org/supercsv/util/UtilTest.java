@@ -18,6 +18,7 @@ package org.supercsv.util;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
@@ -28,9 +29,12 @@ import java.util.Map;
 
 import org.junit.Test;
 import org.supercsv.cellprocessor.ParseInt;
+import org.supercsv.cellprocessor.constraint.NotNull;
 import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.exception.SuperCsvDelayException;
 import org.supercsv.exception.SuperCsvException;
 import org.supercsv.mock.IdentityTransform;
+import org.supercsv.prefs.CallBackOnException;
 import org.supercsv.prefs.DelayCellProcessorExceptions;
 
 /**
@@ -152,7 +156,40 @@ public class UtilTest {
 		assertEquals(Integer.valueOf(25), destinationList.get(1));
 		assertEquals("Venice", destinationList.get(2));
 	}
-	
+
+	/**
+	 * Tests the executeCellProcessors() method with DelayCellProcessorExceptions
+	 */
+	@Test public void testExecuteCellProcessorsWithDelayCellProcessorExceptions() {
+		List<Object> destinationList = new ArrayList<Object>();
+		List<String> list = Arrays.asList("Ezio", "AA", null);
+		CellProcessor[] processors = new CellProcessor[] { new IdentityTransform(), new ParseInt(), new NotNull() };
+		DelayCellProcessorExceptions delayExceptions = new DelayCellProcessorExceptions(false,
+			new CallBackOnException() {
+				public Object process(Object rawColumns) {
+					return "Error Columns";
+				}
+			});
+		try {
+			Util.executeCellProcessors(destinationList, list, processors, LINE_NO, ROW_NO, delayExceptions);
+			fail("should thrown SuperCsvDelayException");
+		}
+		catch( SuperCsvDelayException e ){
+			String message = "Suppressed Exceptions for row 12:\n"
+				+ "org.supercsv.exception.SuperCsvCellProcessorException: 'AA' could not be parsed as an Integer\r\n"
+				+ "processor=org.supercsv.cellprocessor.ParseInt\r\n"
+				+ "context={lineNo=23, rowNo=12, columnNo=2, rowSource=[Ezio, AA, null]}\n"
+				+ "org.supercsv.exception.SuperCsvConstraintViolationException: null value encountered\r\n"
+				+ "processor=org.supercsv.cellprocessor.constraint.NotNull\r\n"
+				+ "context={lineNo=23, rowNo=12, columnNo=3, rowSource=[Ezio, AA, null]}\n";
+			assertEquals(message, e.toString());
+		}
+		assertTrue(destinationList.size() == 3);
+		assertEquals("Ezio", destinationList.get(0));
+		assertEquals("Error Columns", destinationList.get(1));
+		assertEquals("Error Columns", destinationList.get(2));
+	}
+
 	/**
 	 * Tests the executeCellProcessors() method with a null destination List (should throw an Exception).
 	 */
