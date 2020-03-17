@@ -21,7 +21,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.exception.SuperCsvDelayException;
+import org.supercsv.exception.SuperCsvException;
 import org.supercsv.prefs.CsvPreference;
+import org.supercsv.prefs.DelayCellProcessorExceptions;
 import org.supercsv.util.Util;
 
 /**
@@ -54,12 +57,21 @@ public class CsvListWriter extends AbstractCsvWriter implements ICsvListWriter {
 	 * {@inheritDoc}
 	 */
 	public void write(final List<?> columns, final CellProcessor[] processors) throws IOException {
-		
+		DelayCellProcessorExceptions delayCellProcessorExceptions = getPreference().getDelayCellProcessorExceptions();
+
 		super.incrementRowAndLineNo();
-		
-		// execute the processors for each column
-		Util.executeCellProcessors(processedColumns, columns, processors, getLineNumber(), getRowNumber());
-		
+
+		try {
+			// execute the processors for each column
+			Util.executeCellProcessors(processedColumns, columns, processors, getLineNumber(), getRowNumber(),
+				delayCellProcessorExceptions);
+		}
+		catch( SuperCsvDelayException e ) {
+			if( !delayCellProcessorExceptions.isSkipExceptionsRow() ) {
+				super.writeRow(processedColumns);
+			}
+			throw new SuperCsvDelayException(e.toString());
+		}
 		super.writeRow(processedColumns);
 	}
 	

@@ -22,7 +22,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.exception.SuperCsvDelayException;
+import org.supercsv.exception.SuperCsvException;
 import org.supercsv.prefs.CsvPreference;
+import org.supercsv.prefs.DelayCellProcessorExceptions;
 import org.supercsv.util.Util;
 
 /**
@@ -84,13 +87,21 @@ public class CsvMapWriter extends AbstractCsvWriter implements ICsvMapWriter {
 	 */
 	public void write(final Map<String, ?> values, final String[] nameMapping, final CellProcessor[] processors)
 		throws IOException {
-		
+		DelayCellProcessorExceptions delayCellProcessorExceptions = getPreference().getDelayCellProcessorExceptions();
+
 		super.incrementRowAndLineNo();
-		
-		// execute the processors for each column
-		Util.executeCellProcessors(processedColumns, Util.filterMapToList(values, nameMapping), processors,
-			getLineNumber(), getRowNumber());
-		
+
+		try {
+			// execute the processors for each column
+			Util.executeCellProcessors(processedColumns, Util.filterMapToList(values, nameMapping), processors,
+				getLineNumber(), getRowNumber(), delayCellProcessorExceptions);
+		}
+		catch( SuperCsvDelayException e ){
+			if( !delayCellProcessorExceptions.isSkipExceptionsRow() ){
+				super.writeRow(processedColumns);
+			}
+			throw new SuperCsvDelayException(e.toString());
+		}
 		super.writeRow(processedColumns);
 	}
 }

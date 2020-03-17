@@ -1,0 +1,5 @@
+customerNo,firstName,lastName,birthDate,birthTime,mailingAddress,married,numberOfKids,favouriteQuote,email,loyaltyPoints
+1,John,Dunbar,13/06/1945,10:20:00,,,,,jdunbar@gmail.com,0
+2,Bob,Down,1919-02-25,10:20:00,"1601 Willow Rd.
+Menlo Park, CA 94025
+United States",Y,0,"""Frankly, my dear, I don't give a damn."" - Gone With The Wind",bobdown@hotmail.com,123456

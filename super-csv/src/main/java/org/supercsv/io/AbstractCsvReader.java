@@ -200,7 +200,8 @@ public abstract class AbstractCsvReader implements ICsvReader {
 	 *             if the wrong number of processors are supplied, or CellProcessor execution failed
 	 */
 	protected List<Object> executeProcessors(final List<Object> processedColumns, final CellProcessor[] processors) {
-		Util.executeCellProcessors(processedColumns, getColumns(), processors, getLineNumber(), getRowNumber());
+		Util.executeCellProcessors(processedColumns, getColumns(), processors, getLineNumber(), getRowNumber(),
+			preferences.getDelayCellProcessorExceptions());
 		return processedColumns;
 	}
 	

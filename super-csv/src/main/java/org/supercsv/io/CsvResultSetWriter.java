@@ -25,7 +25,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.exception.SuperCsvDelayException;
+import org.supercsv.exception.SuperCsvException;
 import org.supercsv.prefs.CsvPreference;
+import org.supercsv.prefs.DelayCellProcessorExceptions;
 import org.supercsv.util.Util;
 
 /**
@@ -107,18 +110,38 @@ public class CsvResultSetWriter extends AbstractCsvWriter implements ICsvResultS
 	}
 	
 	private void writeContents(ResultSet resultSet, CellProcessor[] writeProcessors) throws SQLException, IOException {
+		DelayCellProcessorExceptions delayCellProcessorExceptions = getPreference().getDelayCellProcessorExceptions();
 		final int numberOfColumns = resultSet.getMetaData().getColumnCount();
 		final List<Object> objects = new LinkedList<Object>();
 		final List<Object> processedColumns = new LinkedList<Object>();
+		boolean exceptionsFlag = false;
+		String exceptionsMessage = "";
 		while( resultSet.next() ) {
+			boolean columnFlag = false;
 			super.incrementRowAndLineNo(); // This will allow the correct row/line numbers to be used in any exceptions
 											// thrown before writing occurs
 			objects.clear();
 			for( int columnIndex = 1; columnIndex <= numberOfColumns; columnIndex++ ) {
 				objects.add(resultSet.getObject(columnIndex));
 			}
-			Util.executeCellProcessors(processedColumns, objects, writeProcessors, getLineNumber(), getRowNumber());
-			super.writeRow(processedColumns);
+			try {
+				Util.executeCellProcessors(processedColumns, objects, writeProcessors, getLineNumber(), getRowNumber(),
+					delayCellProcessorExceptions);
+			}
+			catch( SuperCsvDelayException e ){
+				if( !delayCellProcessorExceptions.isSkipExceptionsRow() ){
+					super.writeRow(processedColumns);
+				}
+				columnFlag = true;
+				exceptionsFlag = true;
+				exceptionsMessage = exceptionsMessage + e.toString() + "\n";
+			}
+			if( !columnFlag ){
+				super.writeRow(processedColumns);
+			}
+		}
+		if( exceptionsFlag ) {
+			throw new SuperCsvDelayException(exceptionsMessage);
 		}
 	}
 }

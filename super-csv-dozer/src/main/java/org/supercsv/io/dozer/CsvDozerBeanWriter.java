@@ -28,9 +28,12 @@ import org.dozer.loader.api.BeanMappingBuilder;
 import org.dozer.loader.api.FieldsMappingOptions;
 import org.dozer.loader.api.TypeMappingBuilder;
 import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.exception.SuperCsvDelayException;
+import org.supercsv.exception.SuperCsvException;
 import org.supercsv.io.AbstractCsvWriter;
 import org.supercsv.io.CsvBeanWriter;
 import org.supercsv.prefs.CsvPreference;
+import org.supercsv.prefs.DelayCellProcessorExceptions;
 import org.supercsv.util.Util;
 
 /**
@@ -130,10 +133,19 @@ public class CsvDozerBeanWriter extends AbstractCsvWriter implements ICsvDozerBe
 		// extract the bean values into the List using dozer
 		beanData.getColumns().clear();
 		dozerBeanMapper.map(source, beanData);
-		
-		// execute the cell processors
-		Util.executeCellProcessors(processedColumns, beanData.getColumns(), processors, getLineNumber(), getRowNumber());
-		
+
+		DelayCellProcessorExceptions delayCellProcessorExceptions = getPreference().getDelayCellProcessorExceptions();
+		try {
+			// execute the cell processors
+			Util.executeCellProcessors(processedColumns, beanData.getColumns(), processors, getLineNumber(),
+				getRowNumber(), delayCellProcessorExceptions);
+		}
+		catch( SuperCsvDelayException e ) {
+			if( !delayCellProcessorExceptions.isSkipExceptionsRow() ){
+				super.writeRow(processedColumns);
+			}
+			throw new SuperCsvDelayException(e.toString());
+		}
 		// write the list
 		super.writeRow(processedColumns);
 	}
