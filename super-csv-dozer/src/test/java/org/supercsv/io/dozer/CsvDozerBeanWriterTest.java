@@ -302,9 +302,9 @@ public class CsvDozerBeanWriterTest {
 		SurveyResponse response = new SurveyResponse(66, true, Arrays.asList(new Answer(1, "Twelve"), new Answer(2,
 			null), new Answer(3, "Big Bang Theory")));
 		String message = "Suppressed Exceptions for row 1:\n"
-			+ "org.supercsv.exception.SuperCsvConstraintViolationException: null value encountered\r\n"
-			+ "processor=org.supercsv.cellprocessor.constraint.NotNull\r\n"
-			+ "context={lineNo=1, rowNo=1, columnNo=6, rowSource=[66, true, 1, Twelve, 2, null, 3, Big Bang Theory]}\n";
+			+ "org.supercsv.exception.SuperCsvConstraintViolationException: null value encountered\n"
+			+ "processor=org.supercsv.cellprocessor.constraint.NotNull\n"
+			+ "context={lineNo=1, rowNo=1, columnNo=6, rowSource=[66, true, 1, Twelve, 2, null, 3, Big Bang Theory]}";
 
 		// skip write exceptions row;
 		CsvPreference preference = new CsvPreference.Builder(PREFS).delayCellProcessorExceptions(
@@ -318,7 +318,7 @@ public class CsvDozerBeanWriterTest {
 			fail("should thrown SuperCsvDelayException");
 		}
 		catch( SuperCsvDelayException e ){
-			assertEquals(message, e.toString());
+			assertEquals(message, e.toString().trim().replace("\r", ""));
 		}
 		testWriter.flush();
 		assertEquals("", writer.toString());
@@ -339,7 +339,7 @@ public class CsvDozerBeanWriterTest {
 			fail("should thrown SuperCsvDelayException");
 		}
 		catch( SuperCsvDelayException e ){
-			assertEquals(message, e.toString());
+			assertEquals(message, e.toString().trim().replace("\r", ""));
 		}
 		testWriter.flush();
 		assertEquals("66,Y,1,Twelve,2,EMPTY COLUMNS,3,Big Bang Theory\n", writer.toString());

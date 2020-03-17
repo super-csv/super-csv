@@ -176,13 +176,13 @@ public class UtilTest {
 		}
 		catch( SuperCsvDelayException e ){
 			String message = "Suppressed Exceptions for row 12:\n"
-				+ "org.supercsv.exception.SuperCsvCellProcessorException: 'AA' could not be parsed as an Integer\r\n"
-				+ "processor=org.supercsv.cellprocessor.ParseInt\r\n"
+				+ "org.supercsv.exception.SuperCsvCellProcessorException: 'AA' could not be parsed as an Integer\n"
+				+ "processor=org.supercsv.cellprocessor.ParseInt\n"
 				+ "context={lineNo=23, rowNo=12, columnNo=2, rowSource=[Ezio, AA, null]}\n"
-				+ "org.supercsv.exception.SuperCsvConstraintViolationException: null value encountered\r\n"
-				+ "processor=org.supercsv.cellprocessor.constraint.NotNull\r\n"
-				+ "context={lineNo=23, rowNo=12, columnNo=3, rowSource=[Ezio, AA, null]}\n";
-			assertEquals(message, e.toString());
+				+ "org.supercsv.exception.SuperCsvConstraintViolationException: null value encountered\n"
+				+ "processor=org.supercsv.cellprocessor.constraint.NotNull\n"
+				+ "context={lineNo=23, rowNo=12, columnNo=3, rowSource=[Ezio, AA, null]}";
+			assertEquals(message, e.toString().trim().replace("\r", ""));
 		}
 		assertTrue(destinationList.size() == 3);
 		assertEquals("Ezio", destinationList.get(0));

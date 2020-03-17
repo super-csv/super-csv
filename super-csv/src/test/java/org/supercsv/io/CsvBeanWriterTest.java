@@ -124,12 +124,12 @@ public class CsvBeanWriterTest {
 		CustomerBean customer = new CustomerBean("1", "John", "Dunbar", null, null,
 			null, null, null, null, "jdunbar@gmail.com", 0L);
 		String message = "Suppressed Exceptions for row 1:\n"
-			+ "org.supercsv.exception.SuperCsvCellProcessorException: this processor does not accept null input - if the column is optional then chain an Optional() processor before this one\r\n"
-			+ "processor=org.supercsv.cellprocessor.FmtDate\r\n"
+			+ "org.supercsv.exception.SuperCsvCellProcessorException: this processor does not accept null input - if the column is optional then chain an Optional() processor before this one\n"
+			+ "processor=org.supercsv.cellprocessor.FmtDate\n"
 			+ "context={lineNo=1, rowNo=1, columnNo=4, rowSource=[1, John, Dunbar, null, null, null, null, null, null, jdunbar@gmail.com, 0]}\n"
-			+ "org.supercsv.exception.SuperCsvCellProcessorException: this processor does not accept null input - if the column is optional then chain an Optional() processor before this one\r\n"
-			+ "processor=org.supercsv.cellprocessor.FmtSqlTime\r\n"
-			+ "context={lineNo=1, rowNo=1, columnNo=5, rowSource=[1, John, Dunbar, null, null, null, null, null, null, jdunbar@gmail.com, 0]}\n";
+			+ "org.supercsv.exception.SuperCsvCellProcessorException: this processor does not accept null input - if the column is optional then chain an Optional() processor before this one\n"
+			+ "processor=org.supercsv.cellprocessor.FmtSqlTime\n"
+			+ "context={lineNo=1, rowNo=1, columnNo=5, rowSource=[1, John, Dunbar, null, null, null, null, null, null, jdunbar@gmail.com, 0]}";
 
 		// skip write exceptions row;
 		CsvPreference preference = new CsvPreference.Builder(PREFS).delayCellProcessorExceptions(
@@ -142,7 +142,7 @@ public class CsvBeanWriterTest {
 			fail("should thrown SuperCsvDelayException");
 		}
 		catch( SuperCsvDelayException e ){
-			assertEquals(message, e.toString());
+			assertEquals(message, e.toString().trim().replace("\r", ""));
 		}
 		testWriter.flush();
 		assertEquals("", writer.toString());
@@ -162,7 +162,7 @@ public class CsvBeanWriterTest {
 			fail("should thrown SuperCsvDelayException");
 		}
 		catch( SuperCsvDelayException e ){
-			assertEquals(message, e.toString());
+			assertEquals(message, e.toString().trim().replace("\r", ""));
 		}
 		testWriter.flush();
 		assertEquals("1,John,Dunbar,EMPTY COLUMNS,EMPTY COLUMNS,,,,,jdunbar@gmail.com,0\r\n", writer.toString());

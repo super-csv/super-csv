@@ -229,13 +229,13 @@ public class CsvResultSetWriterTest {
 		final String[] headers = { "customerNo", "firstName", "birthDate" };
 		final CellProcessor[] cellProcessors = { null, null, new FmtDate("dd/MM/yyyy") };
 		String message = "Suppressed Exceptions for row 4:\n"
-			+ "org.supercsv.exception.SuperCsvCellProcessorException: the input value should be of type java.util.Date but is java.lang.String\r\n"
-			+ "processor=org.supercsv.cellprocessor.FmtDate\r\n"
+			+ "org.supercsv.exception.SuperCsvCellProcessorException: the input value should be of type java.util.Date but is java.lang.String\n"
+			+ "processor=org.supercsv.cellprocessor.FmtDate\n"
 			+ "context={lineNo=5, rowNo=4, columnNo=3, rowSource=[3, Alice, CAUSES EXCEPTION]}\n" + "\n"
 			+ "Suppressed Exceptions for row 6:\n"
-			+ "org.supercsv.exception.SuperCsvCellProcessorException: this processor does not accept null input - if the column is optional then chain an Optional() processor before this one\r\n"
-			+ "processor=org.supercsv.cellprocessor.FmtDate\r\n"
-			+ "context={lineNo=7, rowNo=6, columnNo=3, rowSource=[5, Miranda, null]}\n" + "\n";
+			+ "org.supercsv.exception.SuperCsvCellProcessorException: this processor does not accept null input - if the column is optional then chain an Optional() processor before this one\n"
+			+ "processor=org.supercsv.cellprocessor.FmtDate\n"
+			+ "context={lineNo=7, rowNo=6, columnNo=3, rowSource=[5, Miranda, null]}";
 
 		// skip write exceptions row;
 		CsvPreference preference = new CsvPreference.Builder(PREFS).delayCellProcessorExceptions(
@@ -249,7 +249,7 @@ public class CsvResultSetWriterTest {
 			fail("should thrown SuperCsvDelayException");
 		}
 		catch(SuperCsvDelayException e) {
-			assertEquals(message, e.toString());
+			assertEquals(message, e.toString().trim().replace("\r", ""));
 		}
 		testWriter.flush();
 		assertEquals("customerNo,firstName,birthDate\r\n"
@@ -274,7 +274,7 @@ public class CsvResultSetWriterTest {
 			fail("should thrown SuperCsvDelayException");
 		}
 		catch(SuperCsvDelayException e) {
-			assertEquals(message, e.toString());
+			assertEquals(message, e.toString().trim().replace("\r", ""));
 		}
 		testWriter.flush();
 		assertEquals("customerNo,firstName,birthDate\r\n"
