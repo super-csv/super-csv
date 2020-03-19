@@ -20,7 +20,7 @@ import org.supercsv.util.CsvContext;
 /**
  * Defines the interface of all <tt>CellProcessor</tt>s.
  */
-public interface CellProcessor {
+public interface CellProcessor<T> {
 	
 	/**
 	 * This method is invoked by the framework when the processor needs to process data or check constraints.
