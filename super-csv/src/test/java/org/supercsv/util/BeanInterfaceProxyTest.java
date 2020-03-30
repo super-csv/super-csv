@@ -31,12 +31,15 @@ public class BeanInterfaceProxyTest {
 	
 	private TestInterface testInterface;
 	
+	private TestPrimitiveInterface testPrimitiveInterface;
+	
 	/**
 	 * Creates the proxy for the test.
 	 */
 	@Before
 	public void setUp() {
 		testInterface = BeanInterfaceProxy.createProxy(TestInterface.class);
+		testPrimitiveInterface = BeanInterfaceProxy.createProxy(TestPrimitiveInterface.class);
 	}
 	
 	/**
@@ -80,6 +83,21 @@ public class BeanInterfaceProxyTest {
 	}
 	
 	/**
+	 * Tests the proxy support primitive type(return the default primitive value if the value hasn't been set).
+	 */
+	@Test
+	public void testPrimitiveInterface() {
+		assertEquals((byte) 0, testPrimitiveInterface.getByte());
+		assertEquals((short) 0, testPrimitiveInterface.getShort());
+		assertEquals((int) 0, testPrimitiveInterface.getInt());
+		assertEquals((long) 0, testPrimitiveInterface.getLong());
+		assertEquals((float) 0, testPrimitiveInterface.getFloat(), 1e-6);
+		assertEquals((double) 0, testPrimitiveInterface.getDouble(), 1e-6);
+		assertEquals('\u0000', testPrimitiveInterface.getChar());
+		assertEquals(false, testPrimitiveInterface.isBoolean());
+	}
+	
+	/**
 	 * Tests createProxy() with null.
 	 */
 	@Test(expected = NullPointerException.class)
@@ -92,7 +110,7 @@ public class BeanInterfaceProxyTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testNotGetterOrSetter() {
-		testInterface.isValueSet();
+		testInterface.doSomeThing();
 	}
 	
 	/**
@@ -148,8 +166,33 @@ public class BeanInterfaceProxyTest {
 		
 		public void setNothing(); // setters should have 1 param
 		
-		public boolean isValueSet(); // methods not starting with get/set are not allowed (yes, even boolean getters!)
+		public boolean isValueSet(); // boolean getters is supported
 		
+		public boolean doSomeThing(); // methods not starting with get/set are not allowed
+		
+	}
+	
+	/**
+	 * An interface with primitive types to use for testing.
+	 */
+	private interface TestPrimitiveInterface {
+		public byte getByte();
+		
+		public short getShort();
+		
+		public int getInt();
+		
+		public long getLong();
+		
+		public float getFloat();
+		
+		public double getDouble();
+		
+		public char getChar();
+		
+		public boolean isBoolean();
+		
+		public String getString();
 	}
 	
 }
