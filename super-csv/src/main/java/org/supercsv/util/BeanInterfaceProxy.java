@@ -17,6 +17,7 @@ package org.supercsv.util;
 
 import static org.supercsv.util.ReflectionUtils.GET_PREFIX;
 import static org.supercsv.util.ReflectionUtils.SET_PREFIX;
+import static org.supercsv.util.ReflectionUtils.IS_PREFIX;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -78,7 +79,7 @@ public final class BeanInterfaceProxy implements InvocationHandler {
 		
 		final String methodName = method.getName();
 		
-		if( methodName.startsWith(GET_PREFIX) ) {
+		if( methodName.startsWith(GET_PREFIX) || methodName.startsWith(IS_PREFIX) ) {
 			
 			if( method.getParameterTypes().length > 0 ) {
 				throw new IllegalArgumentException(String.format(
@@ -86,8 +87,7 @@ public final class BeanInterfaceProxy implements InvocationHandler {
 						.getName(), methodName));
 			}
 			
-			// simulate getter by retrieving value from bean state
-			return beanState.get(methodName.substring(GET_PREFIX.length()));
+			return getValue(method);
 			
 		} else if( methodName.startsWith(SET_PREFIX) ) {
 			
@@ -107,4 +107,44 @@ public final class BeanInterfaceProxy implements InvocationHandler {
 		}
 		
 	}
+	
+	/**
+	 * Return the value if the value has been set. Return the Default primitive value if the value hasn't been set.
+	 *
+	 * @param method
+	 *           the interface getX()/isX() getter method
+	 * @return the value invoke the method
+	 */
+	public Object getValue(Method method) {
+		String methodName = method.getName();
+		
+		// simulate getter by retrieving value from bean state
+		Object resultValue = methodName.startsWith(GET_PREFIX) ? beanState.get(methodName.substring(GET_PREFIX.length()))
+							 : beanState.get(methodName.substring(IS_PREFIX.length()));
+		if ( resultValue != null ) {
+			return resultValue;
+		}
+		
+		Class<?> returnType = method.getReturnType();
+		if( byte.class.equals(returnType) ) {
+			return (byte) 0;
+		} else if ( short.class.equals(returnType) ) {
+			return (short) 0;
+		} else if ( int.class.equals(returnType) ) {
+			return 0;
+		} else if ( long.class.equals(returnType) ) {
+			return (long) 0;
+		} else if ( float.class.equals(returnType) ) {
+			return (float) 0;
+		} else if ( double.class.equals(returnType) ) {
+			return (double) 0;
+		} else if ( char.class.equals(returnType) ) {
+			return '\u0000';
+		} else if ( boolean.class.equals(returnType) ) {
+			return false;
+		} else {
+			return null;
+		}
+	}
+	
 }
