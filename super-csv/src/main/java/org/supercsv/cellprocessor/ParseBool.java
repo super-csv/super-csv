@@ -23,6 +23,7 @@ import org.supercsv.cellprocessor.ift.BoolCellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.exception.SuperCsvCellProcessorException;
 import org.supercsv.util.CsvContext;
+import org.supercsv.util.Util;
 
 /**
  * Converts a String to a Boolean.
@@ -281,12 +282,8 @@ public class ParseBool extends CellProcessorAdaptor implements StringCellProcess
 	 *             if trueValue or falseValue is null
 	 */
 	private static void checkPreconditions(final String trueValue, final String falseValue) {
-		if( trueValue == null ) {
-			throw new NullPointerException("trueValue should not be null");
-		}
-		if( falseValue == null ) {
-			throw new NullPointerException("falseValue should not be null");
-		}
+		Util.requireNotNull(trueValue, "trueValue");
+		Util.requireNotNull(falseValue, "falseValue");
 	}
 	
 	/**
@@ -303,17 +300,10 @@ public class ParseBool extends CellProcessorAdaptor implements StringCellProcess
 	 */
 	private static void checkPreconditions(final String[] trueValues, final String[] falseValues) {
 		
-		if( trueValues == null ) {
-			throw new NullPointerException("trueValues should not be null");
-		} else if( trueValues.length == 0 ) {
-			throw new IllegalArgumentException("trueValues should not be empty");
-		}
-		
-		if( falseValues == null ) {
-			throw new NullPointerException("falseValues should not be null");
-		} else if( falseValues.length == 0 ) {
-			throw new IllegalArgumentException("falseValues should not be empty");
-		}
+		Util.requireNotNull(trueValues, "trueValues");
+		Util.requireNotEmpty(trueValues.length == 0, "trueValues");
+		Util.requireNotNull(falseValues, "falseValues");
+		Util.requireNotEmpty(falseValues.length == 0, "falseValues");
 		
 	}
 	

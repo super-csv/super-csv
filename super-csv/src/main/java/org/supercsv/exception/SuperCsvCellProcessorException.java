@@ -17,6 +17,7 @@ package org.supercsv.exception;
 
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.util.CsvContext;
+import org.supercsv.util.Util;
 
 /**
  * Exception thrown when CellProcessor execution fails (typically due to invalid input) - constraint validating
@@ -95,9 +96,7 @@ public class SuperCsvCellProcessorException extends SuperCsvException {
 	 *             if expectedType is null
 	 */
 	private static String getUnexpectedTypeMessage(final Class<?> expectedType, final Object actualValue) {
-		if( expectedType == null ) {
-			throw new NullPointerException("expectedType should not be null");
-		}
+		Util.requireNotNull(expectedType, "expectedType");
 		String expectedClassName = expectedType.getName();
 		String actualClassName = (actualValue != null) ? actualValue.getClass().getName() : "null";
 		return String.format("the input value should be of type %s but is %s", expectedClassName, actualClassName);

@@ -47,12 +47,8 @@ public abstract class AbstractTokenizer implements ITokenizer {
 	 *             if reader or preferences are null
 	 */
 	public AbstractTokenizer(final Reader reader, final CsvPreference preferences) {
-		if( reader == null ) {
-			throw new NullPointerException("reader should not be null");
-		}
-		if( preferences == null ) {
-			throw new NullPointerException("preferences should not be null");
-		}
+		Util.requireNotNull(reader, "reader");
+		Util.requireNotNull(preferences, "preferences");
 		this.preferences = preferences;
 		lnr = new LineNumberReader(reader);
 	}

@@ -25,6 +25,7 @@ import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.exception.SuperCsvCellProcessorException;
 import org.supercsv.util.CsvContext;
+import org.supercsv.util.Util;
 
 /**
  * Converts a String to a Joda Period.
@@ -113,9 +114,7 @@ public class ParsePeriod extends CellProcessorAdaptor implements StringCellProce
 	 *             if formatter is null
 	 */
 	private static void checkPreconditions(final PeriodFormatter formatter) {
-		if (formatter == null) {
-			throw new NullPointerException("formatter should not be null");
-		}
+		Util.requireNotNull(formatter, "formatter");
 	}
 
 	/**

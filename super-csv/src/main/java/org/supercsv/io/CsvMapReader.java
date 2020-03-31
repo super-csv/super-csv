@@ -70,9 +70,7 @@ public class CsvMapReader extends AbstractCsvReader implements ICsvMapReader {
 	 */
 	public Map<String, String> read(final String... nameMapping) throws IOException {
 		
-		if( nameMapping == null ) {
-			throw new NullPointerException("nameMapping should not be null");
-		}
+		Util.requireNotNull(nameMapping, "nameMapping");
 		
 		if( readRow() ) {
 			final Map<String, String> destination = new HashMap<String, String>();
@@ -88,11 +86,8 @@ public class CsvMapReader extends AbstractCsvReader implements ICsvMapReader {
 	 */
 	public Map<String, Object> read(final String[] nameMapping, final CellProcessor[] processors) throws IOException {
 		
-		if( nameMapping == null ) {
-			throw new NullPointerException("nameMapping should not be null");
-		} else if( processors == null ) {
-			throw new NullPointerException("processors should not be null");
-		}
+		Util.requireNotNull(nameMapping, "nameMapping");
+		Util.requireNotNull(processors, "precessors");
 		
 		if( readRow() ) {
 			// process the columns

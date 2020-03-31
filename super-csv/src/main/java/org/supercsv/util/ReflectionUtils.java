@@ -75,11 +75,8 @@ public final class ReflectionUtils {
 	 *             if the getter doesn't exist or is not visible
 	 */
 	public static Method findGetter(final Object object, final String fieldName) {
-		if( object == null ) {
-			throw new NullPointerException("object should not be null");
-		} else if( fieldName == null ) {
-			throw new NullPointerException("fieldName should not be null");
-		}
+		Util.requireNotNull(object, "object");
+		Util.requireNotNull(fieldName, "fieldName");
 		
 		final Class<?> clazz = object.getClass();
 		
@@ -161,13 +158,9 @@ public final class ReflectionUtils {
 	 *             if the setter doesn't exist or is not visible
 	 */
 	public static Method findSetter(final Object object, final String fieldName, final Class<?> argumentType) {
-		if( object == null ) {
-			throw new NullPointerException("object should not be null");
-		} else if( fieldName == null ) {
-			throw new NullPointerException("fieldName should not be null");
-		} else if( argumentType == null ) {
-			throw new NullPointerException("argumentType should not be null");
-		}
+		Util.requireNotNull(object, "object");
+		Util.requireNotNull(fieldName, "fieldName");
+		Util.requireNotNull(argumentType, "argumentType");
 		
 		final String setterName = getMethodNameForField(SET_PREFIX, fieldName);
 		final Class<?> clazz = object.getClass();

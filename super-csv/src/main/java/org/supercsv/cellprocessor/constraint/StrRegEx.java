@@ -25,6 +25,7 @@ import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.exception.SuperCsvCellProcessorException;
 import org.supercsv.exception.SuperCsvConstraintViolationException;
 import org.supercsv.util.CsvContext;
+import org.supercsv.util.Util;
 
 /**
  * This constraint ensures that the input data matches the given regular expression.
@@ -93,11 +94,8 @@ public class StrRegEx extends CellProcessorAdaptor implements StringCellProcesso
 	 *             if regex is empty
 	 */
 	private static void checkPreconditions(final String regex) {
-		if( regex == null ) {
-			throw new NullPointerException("regex should not be null");
-		} else if( regex.length() == 0 ) {
-			throw new IllegalArgumentException("regex should not be empty");
-		}
+		Util.requireNotNull(regex, "regex");
+		Util.requireNotEmpty(regex.length() == 0, "regex");
 	}
 	
 	/**

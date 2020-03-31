@@ -22,6 +22,7 @@ import java.util.List;
 import org.supercsv.comment.CommentMatcher;
 import org.supercsv.exception.SuperCsvException;
 import org.supercsv.prefs.CsvPreference;
+import org.supercsv.util.Util;
 
 /**
  * Reads the CSV file, line by line. If you want the line-reading functionality of this class, but want to define your
@@ -93,9 +94,7 @@ public class Tokenizer extends AbstractTokenizer {
 	 */
 	public boolean readColumns(final List<String> columns) throws IOException {
 		
-		if( columns == null ) {
-			throw new NullPointerException("columns should not be null");
-		}
+		Util.requireNotNull(columns, "columns");
 		
 		// clear the reusable List and StringBuilders
 		columns.clear();

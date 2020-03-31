@@ -62,13 +62,9 @@ public final class Util {
 	public static void executeCellProcessors(final List<Object> destination, final List<?> source,
 		final CellProcessor[] processors, final int lineNo, final int rowNo) {
 		
-		if( destination == null ) {
-			throw new NullPointerException("destination should not be null");
-		} else if( source == null ) {
-			throw new NullPointerException("source should not be null");
-		} else if( processors == null ) {
-			throw new NullPointerException("processors should not be null");
-		}
+		requireNotNull(destination, "destination");
+		requireNotNull(source, "source");
+		requireNotNull(processors, "processors");
 		
 		// the context used when cell processors report exceptions
 		final CsvContext context = new CsvContext(lineNo, rowNo, 1);
@@ -113,13 +109,10 @@ public final class Util {
 	 */
 	public static <T> void filterListToMap(final Map<String, T> destinationMap, final String[] nameMapping,
 		final List<? extends T> sourceList) {
-		if( destinationMap == null ) {
-			throw new NullPointerException("destinationMap should not be null");
-		} else if( nameMapping == null ) {
-			throw new NullPointerException("nameMapping should not be null");
-		} else if( sourceList == null ) {
-			throw new NullPointerException("sourceList should not be null");
-		} else if( nameMapping.length != sourceList.size() ) {
+		requireNotNull(destinationMap, "destinationMap");
+		requireNotNull(nameMapping, "nameMapping");
+		requireNotNull(sourceList, "sourceList");
+		if( nameMapping.length != sourceList.size() ) {
 			throw new SuperCsvException(
 				String
 					.format(
@@ -157,11 +150,8 @@ public final class Util {
 	 *             if map or nameMapping is null
 	 */
 	public static List<Object> filterMapToList(final Map<String, ?> map, final String[] nameMapping) {
-		if( map == null ) {
-			throw new NullPointerException("map should not be null");
-		} else if( nameMapping == null ) {
-			throw new NullPointerException("nameMapping should not be null");
-		}
+		requireNotNull(map, "map");
+		requireNotNull(nameMapping, "nameMapping");
 		
 		final List<Object> result = new ArrayList<Object>(nameMapping.length);
 		for( final String key : nameMapping ) {
@@ -183,11 +173,8 @@ public final class Util {
 	 */
 	public static Object[] filterMapToObjectArray(final Map<String, ?> values, final String[] nameMapping) {
 		
-		if( values == null ) {
-			throw new NullPointerException("values should not be null");
-		} else if( nameMapping == null ) {
-			throw new NullPointerException("nameMapping should not be null");
-		}
+		requireNotNull(values, "values");
+		requireNotNull(nameMapping, "nameMapping");
 		
 		final Object[] targetArray = new Object[nameMapping.length];
 		int i = 0;
@@ -248,5 +235,33 @@ public final class Util {
 			line = line.substring(1);
 		}
 		return line;
+	}
+	
+	/**
+	 * Util method for input parameter not null validation
+	 *
+	 * @param parameter
+	 *           the parameter should not be null
+	 * @param parameterName
+	 *           the parameter name
+	 */
+	public static void requireNotNull(final Object parameter, final String parameterName) {
+		if( parameter == null ) {
+			throw new NullPointerException(parameterName + " should not be null");
+		}
+	}
+	
+	/**
+	 * Util method for input parameter not empty validation
+	 *
+	 * @param isEmpty
+	 *           the parameter is empty condition
+	 * @param parameterName
+	 *           the parameter name
+	 */
+	public static void requireNotEmpty(final boolean isEmpty, final String parameterName) {
+		if( isEmpty ) {
+			throw new IllegalArgumentException(parameterName + " should not be empty");
+		}
 	}
 }

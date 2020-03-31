@@ -25,6 +25,7 @@ import org.supercsv.cellprocessor.ift.LongCellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.exception.SuperCsvCellProcessorException;
 import org.supercsv.util.CsvContext;
+import org.supercsv.util.Util;
 
 /**
  * Replaces each substring of the input string that matches the given regular expression with the given replacement. The
@@ -99,15 +100,9 @@ public class StrReplace extends CellProcessorAdaptor implements BoolCellProcesso
 	 *             if regex or replacement is null
 	 */
 	private static void checkPreconditions(final String regex, final String replacement) {
-		if( regex == null ) {
-			throw new NullPointerException("regex should not be null");
-		} else if( regex.length() == 0 ) {
-			throw new IllegalArgumentException("regex should not be empty");
-		}
-		
-		if( replacement == null ) {
-			throw new NullPointerException("replacement should not be null");
-		}
+		Util.requireNotNull(regex, "regex");
+		Util.requireNotEmpty(regex.length() == 0, "regex");
+		Util.requireNotNull(replacement, "replacement");
 	}
 	
 	/**

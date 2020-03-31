@@ -22,6 +22,7 @@ import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.exception.SuperCsvCellProcessorException;
 import org.supercsv.util.CsvContext;
+import org.supercsv.util.Util;
 
 /**
  * Convert a String to a BigDecimal. It uses the String constructor of BigDecimal (<tt>new BigDecimal("0.1")</tt>) as it
@@ -105,9 +106,7 @@ public class ParseBigDecimal extends CellProcessorAdaptor implements StringCellP
 	 *             if symbols is null
 	 */
 	private static void checkPreconditions(final DecimalFormatSymbols symbols) {
-		if( symbols == null ) {
-			throw new NullPointerException("symbols should not be null");
-		}
+		Util.requireNotNull(symbols, "symbols");
 	}
 	
 	/**

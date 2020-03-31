@@ -74,12 +74,8 @@ public class CsvBeanWriter extends AbstractCsvWriter implements ICsvBeanWriter {
 	 */
 	private void extractBeanValues(final Object source, final String[] nameMapping) {
 		
-		if( source == null ) {
-			throw new NullPointerException("the bean to write should not be null");
-		} else if( nameMapping == null ) {
-			throw new NullPointerException(
-				"the nameMapping array can't be null as it's used to map from fields to columns");
-		}
+		Util.requireNotNull(source, "source");
+		Util.requireNotNull(nameMapping, "nameMapping");
 		
 		beanValues.clear();
 		

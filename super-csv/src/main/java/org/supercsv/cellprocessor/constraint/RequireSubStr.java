@@ -25,6 +25,7 @@ import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.exception.SuperCsvCellProcessorException;
 import org.supercsv.exception.SuperCsvConstraintViolationException;
 import org.supercsv.util.CsvContext;
+import org.supercsv.util.Util;
 
 /**
  * Converts the input to a String and ensures that the input contains at least one of the specified substrings.
@@ -119,11 +120,8 @@ public class RequireSubStr extends CellProcessorAdaptor implements StringCellPro
 	 *             if requiredSubStrings is empty
 	 */
 	private static void checkPreconditions(String... requiredSubStrings) {
-		if( requiredSubStrings == null ) {
-			throw new NullPointerException("requiredSubStrings array should not be null");
-		} else if( requiredSubStrings.length == 0 ) {
-			throw new IllegalArgumentException("requiredSubStrings array should not be empty");
-		}
+		Util.requireNotNull(requiredSubStrings, "requiredSubStrings array");
+		Util.requireNotEmpty(requiredSubStrings.length == 0, "requiredSubStrings array");
 	}
 	
 	/**
@@ -137,11 +135,8 @@ public class RequireSubStr extends CellProcessorAdaptor implements StringCellPro
 	 *             if requiredSubStrings is empty
 	 */
 	private static void checkPreconditions(List<String> requiredSubStrings) {
-		if( requiredSubStrings == null ) {
-			throw new NullPointerException("requiredSubStrings List should not be null");
-		} else if( requiredSubStrings.isEmpty() ) {
-			throw new IllegalArgumentException("requiredSubStrings List should not be empty");
-		}
+		Util.requireNotNull(requiredSubStrings, "requiredSubStrings list");
+		Util.requireNotEmpty(requiredSubStrings.isEmpty(), "requiredSubStrings list");
 	}
 	
 	/**
@@ -154,9 +149,7 @@ public class RequireSubStr extends CellProcessorAdaptor implements StringCellPro
 	 */
 	private void checkAndAddRequiredSubStrings(final List<String> requiredSubStrings) {
 		for( String required : requiredSubStrings ) {
-			if( required == null ) {
-				throw new NullPointerException("required substring should not be null");
-			}
+			Util.requireNotNull(required, "required substring");
 			this.requiredSubStrings.add(required);
 		}
 	}

@@ -52,9 +52,7 @@ public class TwoDHashMap<K1, K2, V> {
 	 *             if map is null
 	 */
 	public TwoDHashMap(final HashMap<K1, HashMap<K2, V>> map) {
-		if( map == null ) {
-			throw new NullPointerException("map should not be null");
-		}
+		Util.requireNotNull(map, "map");
 		this.map = map;
 	}
 	

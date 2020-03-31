@@ -20,6 +20,7 @@ import java.util.Set;
 
 import org.supercsv.prefs.CsvPreference;
 import org.supercsv.util.CsvContext;
+import org.supercsv.util.Util;
 
 /**
  * A selective CsvEncoder implementation - only the desired column numbers (if any) are encoded. Use with caution -
@@ -42,9 +43,7 @@ public class SelectiveCsvEncoder extends DefaultCsvEncoder {
 	 *             if columnsToEncode is null
 	 */
 	public SelectiveCsvEncoder(final int... columnsToEncode) {
-		if( columnsToEncode == null ) {
-			throw new NullPointerException("columnsToEncode should not be null");
-		}
+		Util.requireNotNull(columnsToEncode, "columnsToEncode");
 		for( final Integer columnToEncode : columnsToEncode ) {
 			columnNumbers.add(columnToEncode);
 		}
@@ -60,9 +59,7 @@ public class SelectiveCsvEncoder extends DefaultCsvEncoder {
 	 *             if columnsToEncode is null
 	 */
 	public SelectiveCsvEncoder(final boolean[] columnsToEncode) {
-		if( columnsToEncode == null ) {
-			throw new NullPointerException("columnsToEncode should not be null");
-		}
+		Util.requireNotNull(columnsToEncode, "columnsToEncode");
 		for( int i = 0; i < columnsToEncode.length; i++ ) {
 			if( columnsToEncode[i] ) {
 				columnNumbers.add(i + 1); // column numbers start at 1

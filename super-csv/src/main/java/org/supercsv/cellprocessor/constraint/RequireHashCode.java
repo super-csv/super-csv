@@ -28,6 +28,7 @@ import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.exception.SuperCsvCellProcessorException;
 import org.supercsv.exception.SuperCsvConstraintViolationException;
 import org.supercsv.util.CsvContext;
+import org.supercsv.util.Util;
 
 /**
  * This processor converts the input to a String, and ensures that the input's hash function matches any of a given set
@@ -113,11 +114,8 @@ public class RequireHashCode extends CellProcessorAdaptor implements BoolCellPro
 	 *             if requiredHashcodes is empty
 	 */
 	private static void checkPreconditions(final int... requiredHashcodes) {
-		if( requiredHashcodes == null ) {
-			throw new NullPointerException("requiredHashcodes should not be null");
-		} else if( requiredHashcodes.length == 0 ) {
-			throw new IllegalArgumentException("requiredHashcodes should not be empty");
-		}
+		Util.requireNotNull(requiredHashcodes, "requiredHashcodes");
+		Util.requireNotEmpty(requiredHashcodes.length == 0, "requiredHashcodes");
 	}
 	
 	/**

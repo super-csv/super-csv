@@ -25,6 +25,7 @@ import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.exception.SuperCsvCellProcessorException;
 import org.supercsv.exception.SuperCsvConstraintViolationException;
 import org.supercsv.util.CsvContext;
+import org.supercsv.util.Util;
 
 /**
  * Converts the input to a String and ensures that it doesn't contain any of the supplied substrings. For example, this
@@ -136,11 +137,8 @@ public class ForbidSubStr extends CellProcessorAdaptor implements StringCellProc
 	 *             if forbiddenSubStrings is empty
 	 */
 	private static void checkPreconditions(final List<String> forbiddenSubStrings) {
-		if( forbiddenSubStrings == null ) {
-			throw new NullPointerException("forbiddenSubStrings list should not be null");
-		} else if( forbiddenSubStrings.isEmpty() ) {
-			throw new IllegalArgumentException("forbiddenSubStrings list should not be empty");
-		}
+		Util.requireNotNull(forbiddenSubStrings, "forbiddenSubStrings list");
+		Util.requireNotEmpty(forbiddenSubStrings.isEmpty(), "forbiddenSubStrings list");
 	}
 	
 	/**
@@ -154,11 +152,8 @@ public class ForbidSubStr extends CellProcessorAdaptor implements StringCellProc
 	 *             if forbiddenSubStrings is empty
 	 */
 	private static void checkPreconditions(final String... forbiddenSubStrings) {
-		if( forbiddenSubStrings == null ) {
-			throw new NullPointerException("forbiddenSubStrings array should not be null");
-		} else if( forbiddenSubStrings.length == 0 ) {
-			throw new IllegalArgumentException("forbiddenSubStrings array should not be empty");
-		}
+		Util.requireNotNull(forbiddenSubStrings, "forbiddenSubStrings array");
+		Util.requireNotEmpty(forbiddenSubStrings.length == 0, "forbiddenSubStrings array");
 	}
 	
 	/**
@@ -183,9 +178,7 @@ public class ForbidSubStr extends CellProcessorAdaptor implements StringCellProc
 	 */
 	private void checkAndAddForbiddenStrings(final List<String> forbiddenSubStrings) {
 		for( String forbidden : forbiddenSubStrings ) {
-			if( forbidden == null ) {
-				throw new NullPointerException("forbidden substring should not be null");
-			}
+			Util.requireNotNull(forbidden, "forbidden substring");
 			this.forbiddenSubStrings.add(forbidden);
 		}
 	}

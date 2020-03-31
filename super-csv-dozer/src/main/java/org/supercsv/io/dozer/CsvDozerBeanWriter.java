@@ -80,9 +80,7 @@ public class CsvDozerBeanWriter extends AbstractCsvWriter implements ICsvDozerBe
 	 */
 	public CsvDozerBeanWriter(final Writer writer, final CsvPreference preference, final DozerBeanMapper dozerBeanMapper) {
 		super(writer, preference);
-		if( dozerBeanMapper == null ) {
-			throw new NullPointerException("dozerBeanMapper should not be null");
-		}
+		Util.requireNotNull(dozerBeanMapper, "dozerBeanMapper");
 		this.dozerBeanMapper = dozerBeanMapper;
 	}
 	
@@ -98,9 +96,7 @@ public class CsvDozerBeanWriter extends AbstractCsvWriter implements ICsvDozerBe
 	 */
 	public void write(final Object source) throws IOException {
 		
-		if( source == null ) {
-			throw new NullPointerException("object to write should not be null");
-		}
+		Util.requireNotNull(source, "source");
 		
 		// update the current row/line numbers
 		super.incrementRowAndLineNo();
@@ -118,11 +114,8 @@ public class CsvDozerBeanWriter extends AbstractCsvWriter implements ICsvDozerBe
 	 */
 	public void write(final Object source, final CellProcessor[] processors) throws IOException {
 		
-		if( source == null ) {
-			throw new NullPointerException("object to write should not be null");
-		} else if( processors == null ) {
-			throw new NullPointerException("processors should not be null");
-		}
+		Util.requireNotNull(source, "source");
+		Util.requireNotNull(processors, "processors");
 		
 		// update the current row/line numbers
 		super.incrementRowAndLineNo();
@@ -157,11 +150,8 @@ public class CsvDozerBeanWriter extends AbstractCsvWriter implements ICsvDozerBe
 		 *             if clazz or fieldMapping (or one of its elements) is null
 		 */
 		public MappingBuilder(final Class<?> clazz, final String[] fieldMapping) {
-			if( clazz == null ) {
-				throw new NullPointerException("clazz should not be null");
-			} else if( fieldMapping == null ) {
-				throw new NullPointerException("fieldMapping should not be null");
-			}
+			Util.requireNotNull(clazz, "clazz");
+			Util.requireNotNull(fieldMapping, "fieldMapping");
 			this.clazz = clazz;
 			this.fieldMapping = fieldMapping;
 		}
