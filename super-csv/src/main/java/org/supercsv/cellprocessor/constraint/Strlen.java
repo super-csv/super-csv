@@ -24,6 +24,7 @@ import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.exception.SuperCsvCellProcessorException;
 import org.supercsv.exception.SuperCsvConstraintViolationException;
 import org.supercsv.util.CsvContext;
+import org.supercsv.util.Util;
 
 /**
  * This processor ensures that the input String has a length equal to any of the supplied lengths. The length
@@ -101,11 +102,8 @@ public class Strlen extends CellProcessorAdaptor implements StringCellProcessor 
 	 *             if requiredLengths is empty
 	 */
 	private static void checkPreconditions(final int... requiredLengths) {
-		if( requiredLengths == null ) {
-			throw new NullPointerException("requiredLengths should not be null");
-		} else if( requiredLengths.length == 0 ) {
-			throw new IllegalArgumentException("requiredLengths should not be empty");
-		}
+		Util.requireNotNull(requiredLengths, "requiredLengths");
+		Util.requireNotEmpty(requiredLengths.length == 0, "requiredLengths");
 	}
 	
 	/**

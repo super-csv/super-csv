@@ -21,6 +21,7 @@ import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.exception.SuperCsvCellProcessorException;
 import org.supercsv.util.CsvContext;
+import org.supercsv.util.Util;
 
 /**
  * Abstract base class for cell processors converting Strings to Joda types.
@@ -101,9 +102,7 @@ public abstract class AbstractJodaParsingProcessor<T> extends
 	 *             if formatter is null
 	 */
 	private static void checkPreconditions(final DateTimeFormatter formatter) {
-		if (formatter == null) {
-			throw new NullPointerException("formatter should not be null");
-		}
+		Util.requireNotNull(formatter, "formatter");
 	}
 
 	/**

@@ -23,6 +23,7 @@ import org.supercsv.cellprocessor.ift.LongCellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.exception.SuperCsvCellProcessorException;
 import org.supercsv.util.CsvContext;
+import org.supercsv.util.Util;
 
 /**
  * Abstract super class containing shared behaviour of all cell processors. Processors are linked together in a linked
@@ -54,9 +55,7 @@ public abstract class CellProcessorAdaptor implements CellProcessor {
 	 */
 	protected CellProcessorAdaptor(final CellProcessor next) {
 		super();
-		if( next == null ) {
-			throw new NullPointerException("next CellProcessor should not be null");
-		}
+		Util.requireNotNull(next, "next CellProcessor");
 		this.next = next;
 	}
 	

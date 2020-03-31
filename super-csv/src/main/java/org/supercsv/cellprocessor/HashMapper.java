@@ -25,6 +25,7 @@ import org.supercsv.cellprocessor.ift.LongCellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.exception.SuperCsvCellProcessorException;
 import org.supercsv.util.CsvContext;
+import org.supercsv.util.Util;
 
 /**
  * Maps from one object to another, by looking up a <tt>Map</tt> with the input as the key, and returning its
@@ -132,11 +133,8 @@ public class HashMapper extends CellProcessorAdaptor implements BoolCellProcesso
 	 *             if mapping is empty
 	 */
 	private static void checkPreconditions(final Map<Object, Object> mapping) {
-		if( mapping == null ) {
-			throw new NullPointerException("mapping should not be null");
-		} else if( mapping.isEmpty() ) {
-			throw new IllegalArgumentException("mapping should not be empty");
-		}
+		Util.requireNotNull(mapping, "mapping");
+		Util.requireNotEmpty(mapping.isEmpty(), "mapping");
 	}
 	
 	/**

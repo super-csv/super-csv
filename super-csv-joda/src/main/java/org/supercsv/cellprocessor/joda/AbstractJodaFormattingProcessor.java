@@ -22,6 +22,7 @@ import org.supercsv.cellprocessor.CellProcessorAdaptor;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.exception.SuperCsvCellProcessorException;
 import org.supercsv.util.CsvContext;
+import org.supercsv.util.Util;
 
 /**
  * Abstract base class for cell processors converting Joda types to Strings.
@@ -222,9 +223,7 @@ public abstract class AbstractJodaFormattingProcessor<T> extends
 	 *             if jodaClass is null
 	 */
 	private static void checkPreconditions(final Class<?> jodaClass) {
-		if (jodaClass == null) {
-			throw new NullPointerException("jodaClass should not be null");
-		}
+		Util.requireNotNull(jodaClass, "jodaClass");
 	}
 
 	/**
@@ -240,11 +239,8 @@ public abstract class AbstractJodaFormattingProcessor<T> extends
 	 */
 	private static void checkPreconditions(final Class<?> jodaClass,
 			final DateTimeFormatter formatter) {
-		if (jodaClass == null) {
-			throw new NullPointerException("jodaClass should not be null");
-		} else if (formatter == null) {
-			throw new NullPointerException("formatter should not be null");
-		}
+		Util.requireNotNull(jodaClass, "jodaClass");
+		Util.requireNotNull(formatter, "formatter");
 	}
 
 	/**
@@ -260,11 +256,8 @@ public abstract class AbstractJodaFormattingProcessor<T> extends
 	 */
 	private static void checkPreconditions(final Class<?> jodaClass,
 			final String pattern) {
-		if (jodaClass == null) {
-			throw new NullPointerException("jodaClass should not be null");
-		} else if (pattern == null) {
-			throw new NullPointerException("pattern should not be null");
-		}
+		Util.requireNotNull(jodaClass, "jodaClass");
+		Util.requireNotNull(pattern, "pattern");
 	}
 
 	/**

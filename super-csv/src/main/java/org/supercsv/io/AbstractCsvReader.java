@@ -55,11 +55,8 @@ public abstract class AbstractCsvReader implements ICsvReader {
 	 *             if reader or preferences are null
 	 */
 	public AbstractCsvReader(final Reader reader, final CsvPreference preferences) {
-		if( reader == null ) {
-			throw new NullPointerException("reader should not be null");
-		} else if( preferences == null ) {
-			throw new NullPointerException("preferences should not be null");
-		}
+		Util.requireNotNull(reader, "reader");
+		Util.requireNotNull(preferences, "preferences");
 		
 		this.preferences = preferences;
 		this.tokenizer = new Tokenizer(reader, preferences);
@@ -78,11 +75,8 @@ public abstract class AbstractCsvReader implements ICsvReader {
 	 *             if tokenizer or preferences are null
 	 */
 	public AbstractCsvReader(final ITokenizer tokenizer, final CsvPreference preferences) {
-		if( tokenizer == null ) {
-			throw new NullPointerException("tokenizer should not be null");
-		} else if( preferences == null ) {
-			throw new NullPointerException("preferences should not be null");
-		}
+		Util.requireNotNull(tokenizer, "tokenizer");
+		Util.requireNotNull(preferences, "preferences");
 		
 		this.preferences = preferences;
 		this.tokenizer = tokenizer;

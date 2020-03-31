@@ -29,6 +29,7 @@ import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.exception.SuperCsvCellProcessorException;
 import org.supercsv.exception.SuperCsvConstraintViolationException;
 import org.supercsv.util.CsvContext;
+import org.supercsv.util.Util;
 
 /**
  * This processor ensures that the input value belongs to a specific set of (unchangeable) values. If you want to check
@@ -126,11 +127,8 @@ public class IsIncludedIn extends CellProcessorAdaptor implements BoolCellProces
 	 *             if possibleValues is empty
 	 */
 	private static void checkPreconditions(final Set<Object> possibleValues) {
-		if( possibleValues == null ) {
-			throw new NullPointerException("possibleValues Set should not be null");
-		} else if( possibleValues.isEmpty() ) {
-			throw new IllegalArgumentException("possibleValues Set should not be empty");
-		}
+		Util.requireNotNull(possibleValues, "possibleValues set");
+		Util.requireNotEmpty(possibleValues.isEmpty(), "possibleValues set");
 	}
 	
 	/**
@@ -144,11 +142,8 @@ public class IsIncludedIn extends CellProcessorAdaptor implements BoolCellProces
 	 *             if possibleValues is empty
 	 */
 	private static void checkPreconditions(final Object... possibleValues) {
-		if( possibleValues == null ) {
-			throw new NullPointerException("possibleValues array should not be null");
-		} else if( possibleValues.length == 0 ) {
-			throw new IllegalArgumentException("possibleValues array should not be empty");
-		}
+		Util.requireNotNull(possibleValues, "possibleValues array");
+		Util.requireNotEmpty(possibleValues.length == 0, "possibleValues array");
 	}
 	
 	/**

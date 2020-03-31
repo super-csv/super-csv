@@ -76,11 +76,8 @@ public abstract class AbstractCsvWriter implements ICsvWriter {
 	 *             if writer or preference is null
 	 */
 	public AbstractCsvWriter(final Writer writer, final CsvPreference preference, boolean bufferizeWriter) {
-		if( writer == null ) {
-			throw new NullPointerException("writer should not be null");
-		} else if( preference == null ) {
-			throw new NullPointerException("preference should not be null");
-		}
+		Util.requireNotNull(writer, "writer");
+		Util.requireNotNull(preference, "preference");
 		
 		this.writer = bufferizeWriter ? new BufferedWriter(writer) : writer;
 		this.preference = preference;

@@ -22,6 +22,7 @@ import org.supercsv.cellprocessor.ift.LongCellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.exception.SuperCsvCellProcessorException;
 import org.supercsv.util.CsvContext;
+import org.supercsv.util.Util;
 
 /**
  * Ensure that Strings or String-representations of objects are truncated to a maximum size. If you desire, you can
@@ -129,9 +130,7 @@ public class Truncate extends CellProcessorAdaptor implements BoolCellProcessor,
 		if( maxSize <= 0 ) {
 			throw new IllegalArgumentException(String.format("maxSize should be > 0 but was %d", maxSize));
 		}
-		if( suffix == null ) {
-			throw new NullPointerException("suffix should not be null");
-		}
+		Util.requireNotNull(suffix, "suffix");
 	}
 	
 	/**

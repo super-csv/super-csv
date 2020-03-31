@@ -55,9 +55,7 @@ public final class BeanInterfaceProxy implements InvocationHandler {
 	 *             if proxyInterface is null
 	 */
 	public static <T> T createProxy(final Class<T> proxyInterface) {
-		if( proxyInterface == null ) {
-			throw new NullPointerException("proxyInterface should not be null");
-		}
+		Util.requireNotNull(proxyInterface, "proxyInterface");
 		return proxyInterface.cast(Proxy.newProxyInstance(proxyInterface.getClassLoader(),
 			new Class[] { proxyInterface }, new BeanInterfaceProxy()));
 	}

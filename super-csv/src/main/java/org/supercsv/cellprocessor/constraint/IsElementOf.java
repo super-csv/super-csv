@@ -26,6 +26,7 @@ import org.supercsv.cellprocessor.ift.LongCellProcessor;
 import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.exception.SuperCsvConstraintViolationException;
 import org.supercsv.util.CsvContext;
+import org.supercsv.util.Util;
 
 /**
  * This processor ensures that the input value is an element of a Collection. It differs from {@link IsIncludedIn} as
@@ -80,9 +81,7 @@ public class IsElementOf extends CellProcessorAdaptor implements BoolCellProcess
 	 *             if collection is null
 	 */
 	private static void checkPreconditions(final Collection<Object> collection) {
-		if( collection == null ) {
-			throw new NullPointerException("collection should not be null");
-		}
+		Util.requireNotNull(collection, "collection");
 	}
 	
 	/**

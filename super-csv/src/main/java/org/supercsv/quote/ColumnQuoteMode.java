@@ -20,6 +20,7 @@ import java.util.Set;
 
 import org.supercsv.prefs.CsvPreference;
 import org.supercsv.util.CsvContext;
+import org.supercsv.util.Util;
 
 /**
  * When using ColumnQuoteMode surrounding quotes are only applied if required to escape special characters (per
@@ -42,9 +43,7 @@ public class ColumnQuoteMode implements QuoteMode {
 	 *             if columnsToQuote is null
 	 */
 	public ColumnQuoteMode(final int... columnsToQuote) {
-		if( columnsToQuote == null ) {
-			throw new NullPointerException("columnsToQuote should not be null");
-		}
+		Util.requireNotNull(columnsToQuote, "columnsToQuote");
 		for( final Integer columnToQuote : columnsToQuote ) {
 			columnNumbers.add(columnToQuote);
 		}
@@ -61,9 +60,7 @@ public class ColumnQuoteMode implements QuoteMode {
 	 *             if columnsToQuote is null
 	 */
 	public ColumnQuoteMode(final boolean[] columnsToQuote) {
-		if( columnsToQuote == null ) {
-			throw new NullPointerException("columnsToQuote should not be null");
-		}
+		Util.requireNotNull(columnsToQuote, "columnsToQuote");
 		for( int i = 0; i < columnsToQuote.length; i++ ) {
 			if( columnsToQuote[i] ) {
 				columnNumbers.add(i + 1); // column numbers start at 1

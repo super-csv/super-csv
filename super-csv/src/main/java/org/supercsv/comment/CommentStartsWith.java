@@ -15,6 +15,8 @@
  */
 package org.supercsv.comment;
 
+import org.supercsv.util.Util;
+
 /**
  * CommentMatcher that matches lines that begin with a specified String.
  */
@@ -33,11 +35,8 @@ public class CommentStartsWith implements CommentMatcher {
 	 *             if value is empty
 	 */
 	public CommentStartsWith(final String value) {
-		if( value == null ) {
-			throw new NullPointerException("value should not be null");
-		} else if( value.length() == 0 ) {
-			throw new IllegalArgumentException("value should not be empty");
-		}
+		Util.requireNotNull(value, "value");
+		Util.requireNotEmpty(value.length() == 0, "value");
 		this.value = value;
 	}
 	

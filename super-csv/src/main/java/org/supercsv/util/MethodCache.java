@@ -51,11 +51,8 @@ public class MethodCache {
 	 *             if the getter doesn't exist or is not visible
 	 */
 	public Method getGetMethod(final Object object, final String fieldName) {
-		if( object == null ) {
-			throw new NullPointerException("object should not be null");
-		} else if( fieldName == null ) {
-			throw new NullPointerException("fieldName should not be null");
-		}
+		Util.requireNotNull(object, "object");
+		Util.requireNotNull(fieldName, "fieldName");
 		
 		Method method = getCache.get(object.getClass().getName(), fieldName);
 		if( method == null ) {
@@ -83,13 +80,9 @@ public class MethodCache {
 	 *             if the setter doesn't exist or is not visible
 	 */
 	public <T> Method getSetMethod(final Object object, final String fieldName, final Class<?> argumentType) {
-		if( object == null ) {
-			throw new NullPointerException("object should not be null");
-		} else if( fieldName == null ) {
-			throw new NullPointerException("fieldName should not be null");
-		} else if( argumentType == null ) {
-			throw new NullPointerException("argumentType should not be null");
-		}
+		Util.requireNotNull(object, "object");
+		Util.requireNotNull(fieldName, "fieldName");
+		Util.requireNotNull(argumentType, "argumentType");
 		
 		Method method = setMethodsCache.get(object.getClass(), argumentType, fieldName);
 		if( method == null ) {
