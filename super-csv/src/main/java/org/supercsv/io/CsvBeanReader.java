@@ -44,10 +44,10 @@ import org.supercsv.util.MethodCache;
 public class CsvBeanReader extends AbstractCsvReader implements ICsvBeanReader {
 	
 	// temporary storage of processed columns to be mapped to the bean
-	private final List<Object> processedColumns = new ArrayList<Object>();
+	protected final List<Object> processedColumns = new ArrayList<Object>();
 	
 	// cache of methods for mapping from columns to fields
-	private final MethodCache cache = new MethodCache();
+	protected final MethodCache cache = new MethodCache();
 	
 	/**
 	 * Constructs a new <tt>CsvBeanReader</tt> with the supplied Reader and CSV preferences. Note that the
@@ -89,7 +89,7 @@ public class CsvBeanReader extends AbstractCsvReader implements ICsvBeanReader {
 	 * @throws SuperCsvReflectionException
 	 *             if there was a reflection exception when instantiating the bean
 	 */
-	private static <T> T instantiateBean(final Class<T> clazz) {
+	protected static <T> T instantiateBean(final Class<T> clazz) {
 		final T bean;
 		if( clazz.isInterface() ) {
 			bean = BeanInterfaceProxy.createProxy(clazz);
@@ -130,7 +130,7 @@ public class CsvBeanReader extends AbstractCsvReader implements ICsvBeanReader {
 	 * @throws SuperCsvException
 	 *             if there was an exception invoking the setter
 	 */
-	private static void invokeSetter(final Object bean, final Method setMethod, final Object fieldValue) {
+	protected static void invokeSetter(final Object bean, final Method setMethod, final Object fieldValue) {
 		try {
 			setMethod.setAccessible(true);
 			setMethod.invoke(bean, fieldValue);
@@ -151,7 +151,7 @@ public class CsvBeanReader extends AbstractCsvReader implements ICsvBeanReader {
 	 * @throws SuperCsvReflectionException
 	 *             if there was a reflection exception while populating the bean
 	 */
-	private <T> T populateBean(final T resultBean, final String[] nameMapping) {
+	protected <T> T populateBean(final T resultBean, final String[] nameMapping) {
 		
 		// map each column to its associated field on the bean
 		for( int i = 0; i < nameMapping.length; i++ ) {
@@ -256,7 +256,7 @@ public class CsvBeanReader extends AbstractCsvReader implements ICsvBeanReader {
 	 * @throws SuperCsvReflectionException
 	 *             if there was an reflection exception while mapping the values to the bean
 	 */
-	private <T> T readIntoBean(final T bean, final String[] nameMapping, final CellProcessor[] processors)
+	protected <T> T readIntoBean(final T bean, final String[] nameMapping, final CellProcessor[] processors)
 		throws IOException {
 		
 		if( readRow() ) {

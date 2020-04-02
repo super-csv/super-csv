@@ -37,13 +37,13 @@ import org.supercsv.util.Util;
 public class CsvBeanWriter extends AbstractCsvWriter implements ICsvBeanWriter {
 	
 	// temporary storage of bean values
-	private final List<Object> beanValues = new ArrayList<Object>();
+	protected final List<Object> beanValues = new ArrayList<Object>();
 	
 	// temporary storage of processed columns to be written
-	private final List<Object> processedColumns = new ArrayList<Object>();
+	protected final List<Object> processedColumns = new ArrayList<Object>();
 	
 	// cache of methods for mapping from fields to columns
-	private final MethodCache cache = new MethodCache();
+	protected final MethodCache cache = new MethodCache();
 	
 	/**
 	 * Constructs a new <tt>CsvBeanWriter</tt> with the supplied Writer and CSV preferences. Note that the
@@ -72,7 +72,7 @@ public class CsvBeanWriter extends AbstractCsvWriter implements ICsvBeanWriter {
 	 * @throws SuperCsvReflectionException
 	 *             if there was a reflection exception extracting the bean value
 	 */
-	private void extractBeanValues(final Object source, final String[] nameMapping) {
+	protected void extractBeanValues(final Object source, final String[] nameMapping) {
 		
 		if( source == null ) {
 			throw new NullPointerException("the bean to write should not be null");
