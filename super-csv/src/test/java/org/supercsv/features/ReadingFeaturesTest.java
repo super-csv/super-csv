@@ -59,7 +59,7 @@ public class ReadingFeaturesTest {
 		String csv = "John+Connor";
 		CellProcessor[] processors = { new NotNull(), new NotNull() };
 		
-		char customSeparator = '+';
+		String customSeparator = "+";
 		CsvPreference customPreference = new Builder('"', customSeparator, "").build();
 		CsvListReader listReader = new CsvListReader(new StringReader(csv), customPreference);
 		List<Object> result = listReader.read(processors);
@@ -76,7 +76,7 @@ public class ReadingFeaturesTest {
 		CellProcessor[] processors = { new NotNull() };
 		
 		char customQuote = '|';
-		CsvPreference customPreference = new Builder(customQuote, ',', "").build();
+		CsvPreference customPreference = new Builder(customQuote, ",", "").build();
 		CsvListReader listReader = new CsvListReader(new StringReader(csv), customPreference);
 		List<Object> result = listReader.read(processors);
 		
@@ -97,7 +97,7 @@ public class ReadingFeaturesTest {
 		CellProcessor[] processors = { new NotNull(), new NotNull() };
 		
 		String customEndOfLine = "\r>\n";
-		CsvPreference customPreference = new Builder('"', ',', customEndOfLine).build();
+		CsvPreference customPreference = new Builder('"', ",", customEndOfLine).build();
 		CsvListReader listReader = new CsvListReader(new StringReader(csv), customPreference);
 		List<Object> result = listReader.read(processors);
 		
@@ -112,7 +112,7 @@ public class ReadingFeaturesTest {
 		String csv = "\"Jo\nhn\",\"Con\nnor\"\n";
 		CellProcessor[] processors = { new NotNull(), new NotNull() };
 		
-		CsvPreference customPreference = new Builder('"', ',', "\n").build();
+		CsvPreference customPreference = new Builder('"', ",", "\n").build();
 		CsvListReader listReader = new CsvListReader(new StringReader(csv), customPreference);
 		List<Object> result = listReader.read(processors);
 		
@@ -127,7 +127,7 @@ public class ReadingFeaturesTest {
 		String csv = "\"Joh\"\"n\",\"Con\"\"nor\"";
 		CellProcessor[] processors = { new NotNull(), new NotNull() };
 		
-		CsvPreference customPreference = new Builder('"', ',', "").build();
+		CsvPreference customPreference = new Builder('"', ",", "").build();
 		CsvListReader listReader = new CsvListReader(new StringReader(csv), customPreference);
 		List<Object> result = listReader.read(processors);
 		
@@ -149,7 +149,7 @@ public class ReadingFeaturesTest {
 		CellProcessor[] processors = { new Trim(), new Trim() };
 		
 		char customQuote = '"';
-		CsvPreference customPreference = new Builder(customQuote, ',', "").build();
+		CsvPreference customPreference = new Builder(customQuote, ",", "").build();
 		CsvListReader listReader = new CsvListReader(new StringReader(csv), customPreference);
 		List<Object> result = listReader.read(processors);
 		
@@ -287,7 +287,7 @@ public class ReadingFeaturesTest {
 		CellProcessor[] processors = { new NotNull(), new NotNull(), new ParseInt(), new ParseDate("yyyy-MM-dd"),
 			new ParseBigDecimal(decimalFormatSymbols) };
 		
-		CsvPreference customPreference = new Builder('"', '|', "\r\n").build();
+		CsvPreference customPreference = new Builder('"', "|", "\r\n").build();
 		CsvBeanReader beanReader = new CsvBeanReader(new StringReader(csv), customPreference);
 		FeatureBean character = beanReader.read(FeatureBean.class, mapping, processors);
 		
@@ -306,7 +306,7 @@ public class ReadingFeaturesTest {
 		CellProcessor[] processors = { new NotNull(), new NotNull(), new ParseInt(), new ParseDate("yyyy-MM-dd"),
 			new ParseBigDecimal(decimalFormatSymbols) };
 		
-		CsvPreference customPreference = new Builder('"', '|', "\r\n").build();
+		CsvPreference customPreference = new Builder('"', "|", "\r\n").build();
 		CsvBeanReader beanReader = new CsvBeanReader(new StringReader(csv), customPreference);
 		FeatureBean character = beanReader.read(FeatureBean.class, mapping, processors);
 		

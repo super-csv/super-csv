@@ -54,7 +54,7 @@ public class WritingFeaturesTest {
 		List<String> data = Arrays.asList("John", "Connor");
 		CellProcessor[] processors = { new NotNull(), new NotNull() };
 		
-		char customSeparator = '+';
+		String customSeparator = "+";
 		CsvPreference customPreference = new Builder('"', customSeparator, "").build();
 		String result = writeToCsv(data, processors, customPreference);
 		
@@ -67,7 +67,7 @@ public class WritingFeaturesTest {
 		CellProcessor[] processors = { new NotNull() };
 		
 		char customQuote = '|';
-		CsvPreference customPreference = new Builder(customQuote, ',', "").build();
+		CsvPreference customPreference = new Builder(customQuote, ",", "").build();
 		String result = writeToCsv(data, processors, customPreference);
 		
 		Assert.assertEquals("|John  Connor|", result);
@@ -85,7 +85,7 @@ public class WritingFeaturesTest {
 		CellProcessor[] processors = { new NotNull() };
 		
 		String customEndOfLine = ">\r\n";
-		CsvPreference customPreference = new Builder('"', ',', customEndOfLine).build();
+		CsvPreference customPreference = new Builder('"', ",", customEndOfLine).build();
 		String result = writeToCsv(data, processors, customPreference);
 		
 		Assert.assertEquals("John Connor>\r\n", result);
@@ -96,7 +96,7 @@ public class WritingFeaturesTest {
 		List<String> data = Arrays.asList("Jo\nhn", "Con\nnor");
 		CellProcessor[] processors = { new NotNull(), new NotNull() };
 		
-		CsvPreference customPreference = new Builder('"', ',', "\n").build();
+		CsvPreference customPreference = new Builder('"', ",", "\n").build();
 		String result = writeToCsv(data, processors, customPreference);
 		
 		Assert.assertEquals("\"Jo\nhn\",\"Con\nnor\"\n", result);
@@ -107,7 +107,7 @@ public class WritingFeaturesTest {
 		List<String> data = Arrays.asList("Joh\"n", "Con\"nor");
 		CellProcessor[] processors = { new NotNull(), new NotNull() };
 		
-		CsvPreference customPreference = new Builder('"', ',', "").build();
+		CsvPreference customPreference = new Builder('"', ",", "").build();
 		String result = writeToCsv(data, processors, customPreference);
 		
 		Assert.assertEquals("\"Joh\"\"n\",\"Con\"\"nor\"", result);
@@ -125,7 +125,7 @@ public class WritingFeaturesTest {
 		CellProcessor[] processors = { new Trim(), new Trim() };
 		
 		char customQuote = '"';
-		CsvPreference customPreference = new Builder(customQuote, ',', "").surroundingSpacesNeedQuotes(false).build();
+		CsvPreference customPreference = new Builder(customQuote, ",", "").surroundingSpacesNeedQuotes(false).build();
 		String result = writeToCsv(data, processors, customPreference);
 		
 		Assert.assertEquals("John,Connor", result);
@@ -190,7 +190,7 @@ public class WritingFeaturesTest {
 			new FmtNumber(formatter) };
 		
 		StringWriter writer = new StringWriter();
-		CsvPreference customPreference = new Builder('"', '|', "\r\n").build();
+		CsvPreference customPreference = new Builder('"', "|", "\r\n").build();
 		CsvBeanWriter beanWriter = new CsvBeanWriter(writer, customPreference);
 		beanWriter.write(character, mapping, processors);
 		beanWriter.close();
@@ -218,7 +218,7 @@ public class WritingFeaturesTest {
 			new FmtNumber(formatter) };
 		
 		StringWriter writer = new StringWriter();
-		CsvPreference customPreference = new Builder('"', '|', "\r\n").build();
+		CsvPreference customPreference = new Builder('"', "|", "\r\n").build();
 		CsvBeanWriter beanWriter = new CsvBeanWriter(writer, customPreference);
 		beanWriter.write(character, mapping, processors);
 		beanWriter.close();

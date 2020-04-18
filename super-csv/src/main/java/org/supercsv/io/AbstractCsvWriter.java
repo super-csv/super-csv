@@ -186,7 +186,7 @@ public abstract class AbstractCsvWriter implements ICsvWriter {
 			columnNumber = i + 1; // column no used by CsvEncoder
 			
 			if( i > 0 ) {
-				builder.append((char) preference.getDelimiterChar()); // delimiter
+				builder.append(preference.getDelimiterSymbols()); // delimiter
 			}
 			
 			final String csvElement = columns[i];

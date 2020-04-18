@@ -111,26 +111,26 @@ public final class CsvPreference {
 	/**
 	 * Ready to use configuration that should cover 99% of all usages.
 	 */
-	public static final CsvPreference STANDARD_PREFERENCE = new CsvPreference.Builder('"', ',', "\r\n").build();
+	public static final CsvPreference STANDARD_PREFERENCE = new CsvPreference.Builder('"', ",", "\r\n").build();
 	
 	/**
 	 * Ready to use configuration for Windows Excel exported CSV files.
 	 */
-	public static final CsvPreference EXCEL_PREFERENCE = new CsvPreference.Builder('"', ',', "\n").build();
+	public static final CsvPreference EXCEL_PREFERENCE = new CsvPreference.Builder('"', ",", "\n").build();
 	
 	/**
 	 * Ready to use configuration for north European excel CSV files (columns are separated by ";" instead of ",")
 	 */
-	public static final CsvPreference EXCEL_NORTH_EUROPE_PREFERENCE = new CsvPreference.Builder('"', ';', "\n").build();
+	public static final CsvPreference EXCEL_NORTH_EUROPE_PREFERENCE = new CsvPreference.Builder('"', ";", "\n").build();
 	
 	/**
 	 * Ready to use configuration for tab-delimited files.
 	 */
-	public static final CsvPreference TAB_PREFERENCE = new CsvPreference.Builder('"', '\t', "\n").build();
+	public static final CsvPreference TAB_PREFERENCE = new CsvPreference.Builder('"', "\t", "\n").build();
 	
 	private final char quoteChar;
 	
-	private final int delimiterChar;
+	private final String delimiterSymbols;
 	
 	private final String endOfLineSymbols;
 	
@@ -155,7 +155,7 @@ public final class CsvPreference {
 	 */
 	private CsvPreference(Builder builder) {
 		this.quoteChar = builder.quoteChar;
-		this.delimiterChar = builder.delimiterChar;
+		this.delimiterSymbols = builder.delimiterSymbols;
 		this.endOfLineSymbols = builder.endOfLineSymbols;
 		this.surroundingSpacesNeedQuotes = builder.surroundingSpacesNeedQuotes;
 		this.ignoreEmptyLines = builder.ignoreEmptyLines;
@@ -172,8 +172,8 @@ public final class CsvPreference {
 	 * 
 	 * @return the delimiter character
 	 */
-	public int getDelimiterChar() {
-		return delimiterChar;
+	public String getDelimiterSymbols() {
+		return delimiterSymbols;
 	}
 	
 	/**
@@ -276,7 +276,7 @@ public final class CsvPreference {
 		
 		private final char quoteChar;
 		
-		private final int delimiterChar;
+		private final String delimiterSymbols;
 		
 		private final String endOfLineSymbols;
 
@@ -305,7 +305,7 @@ public final class CsvPreference {
 		 */
 		public Builder(final CsvPreference preference) {
 			this.quoteChar = preference.quoteChar;
-			this.delimiterChar = preference.delimiterChar;
+			this.delimiterSymbols = preference.delimiterSymbols;
 			this.endOfLineSymbols = preference.endOfLineSymbols;
 			this.surroundingSpacesNeedQuotes = preference.surroundingSpacesNeedQuotes;
 			this.ignoreEmptyLines = preference.ignoreEmptyLines;
@@ -322,7 +322,7 @@ public final class CsvPreference {
 		 * 
 		 * @param quoteChar
 		 *            matching pairs of this character are used to escape columns containing the delimiter
-		 * @param delimiterChar
+		 * @param delimiterSymbols
 		 *            the character separating each column
 		 * @param endOfLineSymbols
 		 *            one or more symbols terminating the line, e.g. "\n". Only used for writing.
@@ -331,15 +331,17 @@ public final class CsvPreference {
 		 * @throws NullPointerException
 		 *             if endOfLineSymbols is null
 		 */
-		public Builder(final char quoteChar, final int delimiterChar, final String endOfLineSymbols) {
-			if( quoteChar == delimiterChar ) {
+		public Builder(final char quoteChar, final String delimiterSymbols, final String endOfLineSymbols) {
+			if( String.valueOf(quoteChar).equals(delimiterSymbols) ) {
 				throw new IllegalArgumentException(String.format(
-					"quoteChar and delimiterChar must not be the same character: %c", quoteChar));
+					"quoteChar and delimiterSymbols must not be the same character: %c", quoteChar));
 			} else if( endOfLineSymbols == null ) {
 				throw new NullPointerException("endOfLineSymbols should not be null");
+			} else if( delimiterSymbols == null ) {
+				throw new NullPointerException("delimiterSymbols should not be null");
 			}
 			this.quoteChar = quoteChar;
-			this.delimiterChar = delimiterChar;
+			this.delimiterSymbols = delimiterSymbols;
 			this.endOfLineSymbols = endOfLineSymbols;
 
 			// by default (RFC-spec) the quoteEscapeChar is the quoteChar
@@ -505,9 +507,9 @@ public final class CsvPreference {
 				emptyColumnParsing = EmptyColumnParsing.ParseEmptyColumnsAsNull;
 			}
 
-			if( quoteEscapeChar == delimiterChar ) {
+			if( String.valueOf(quoteEscapeChar).equals(delimiterSymbols) ) {
 				throw new IllegalArgumentException(String.format(
-						"quoteEscapeChar and delimiterChar must not be the same character: %c",
+						"quoteEscapeChar and delimiterSymbols must not be the same character: %c",
 						quoteEscapeChar));
 			}
 			
