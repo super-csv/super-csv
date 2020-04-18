@@ -21,6 +21,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.supercsv.prefs.CsvPreference.EXCEL_PREFERENCE;
+import static org.supercsv.prefs.CsvPreference.STANDARD_PREFERENCE;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -114,7 +115,7 @@ public class TokenizerTest {
 	public void testGetPreferences() throws Exception {
 		tokenizer = createTokenizer("", EXCEL_PREFERENCE);
 		CsvPreference prefs = tokenizer.getPreferences();
-		assertEquals(EXCEL_PREFERENCE.getDelimiterChar(), prefs.getDelimiterChar());
+		assertEquals(EXCEL_PREFERENCE.getDelimiterSymbols(), prefs.getDelimiterSymbols());
 		assertEquals(EXCEL_PREFERENCE.getEndOfLineSymbols(), prefs.getEndOfLineSymbols());
 		assertEquals(EXCEL_PREFERENCE.getQuoteChar(), prefs.getQuoteChar());
 		assertEquals(EXCEL_PREFERENCE.isSurroundingSpacesNeedQuotes(), prefs.isSurroundingSpacesNeedQuotes());
@@ -145,6 +146,31 @@ public class TokenizerTest {
 		assertEquals("this is the third line", columns.get(0));
 		assertEquals(3, tokenizer.getLineNumber());
 		assertEquals("this is the third line", tokenizer.getUntokenizedRow());
+	}
+	
+	/**
+	 * Tests delimiter symbols which length > 1.
+	 */
+	@Test
+	public void testDelimiterSymbolsWithString() throws IOException {
+		final String input = "name[|]age[|]address[country][|]address[city][|]address[]\n" +
+				"john[|]15[|]Denmark[|]Copenhagen[|]Denmark Copenhagen";
+		CsvPreference customPref = new CsvPreference.Builder('"',"[|]", "\n").build();
+		tokenizer = createTokenizer(input, customPref);
+		tokenizer.readColumns(columns);
+		assertEquals(5, columns.size());
+		assertEquals("name", columns.get(0));
+		assertEquals("age", columns.get(1));
+		assertEquals("address[country]", columns.get(2));
+		assertEquals("address[city]", columns.get(3));
+		assertEquals("address[]", columns.get(4));
+		tokenizer.readColumns(columns);
+		assertEquals(5, columns.size());
+		assertEquals("john", columns.get(0));
+		assertEquals("15", columns.get(1));
+		assertEquals("Denmark", columns.get(2));
+		assertEquals("Copenhagen", columns.get(3));
+		assertEquals("Denmark Copenhagen", columns.get(4));
 	}
 	
 	/**

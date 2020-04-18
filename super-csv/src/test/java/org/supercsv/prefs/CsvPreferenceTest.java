@@ -43,19 +43,19 @@ public class CsvPreferenceTest {
 	@Test
 	public void testConstants() {
 		assertEquals('"', STANDARD_PREFERENCE.getQuoteChar());
-		assertEquals(',', STANDARD_PREFERENCE.getDelimiterChar());
+		assertEquals(",", STANDARD_PREFERENCE.getDelimiterSymbols());
 		assertEquals("\r\n", STANDARD_PREFERENCE.getEndOfLineSymbols());
 		
 		assertEquals('"', EXCEL_PREFERENCE.getQuoteChar());
-		assertEquals(',', EXCEL_PREFERENCE.getDelimiterChar());
+		assertEquals(",", EXCEL_PREFERENCE.getDelimiterSymbols());
 		assertEquals("\n", EXCEL_PREFERENCE.getEndOfLineSymbols());
 		
 		assertEquals('"', EXCEL_NORTH_EUROPE_PREFERENCE.getQuoteChar());
-		assertEquals(';', EXCEL_NORTH_EUROPE_PREFERENCE.getDelimiterChar());
+		assertEquals(";", EXCEL_NORTH_EUROPE_PREFERENCE.getDelimiterSymbols());
 		assertEquals("\n", EXCEL_NORTH_EUROPE_PREFERENCE.getEndOfLineSymbols());
 		
 		assertEquals('"', TAB_PREFERENCE.getQuoteChar());
-		assertEquals('\t', TAB_PREFERENCE.getDelimiterChar());
+		assertEquals("\t", TAB_PREFERENCE.getDelimiterSymbols());
 		assertEquals("\n", TAB_PREFERENCE.getEndOfLineSymbols());
 	}
 	
@@ -64,9 +64,9 @@ public class CsvPreferenceTest {
 	 */
 	@Test
 	public void testCustomPreferenceWithDefaults() {
-		final CsvPreference custom = new CsvPreference.Builder('"', ',', "\n").build();
+		final CsvPreference custom = new CsvPreference.Builder('"', ",", "\n").build();
 		assertEquals('"', custom.getQuoteChar());
-		assertEquals(',', custom.getDelimiterChar());
+		assertEquals(",", custom.getDelimiterSymbols());
 		assertEquals("\n", custom.getEndOfLineSymbols());
 		assertFalse(custom.isSurroundingSpacesNeedQuotes());
 		assertNull(custom.getCommentMatcher());
@@ -80,14 +80,14 @@ public class CsvPreferenceTest {
 	 */
 	@Test
 	public void testCustomPreference() {
-		final CsvPreference custom = new CsvPreference.Builder('"', ',', "\n")
+		final CsvPreference custom = new CsvPreference.Builder('"', ",", "\n")
 				.surroundingSpacesNeedQuotes(true)
 				.useEncoder(new DefaultCsvEncoder())
 				.useQuoteMode(new AlwaysQuoteMode())
 				.setQuoteEscapeChar('\\')
 				.build();
 		assertEquals('"', custom.getQuoteChar());
-		assertEquals(',', custom.getDelimiterChar());
+		assertEquals(",", custom.getDelimiterSymbols());
 		assertEquals("\n", custom.getEndOfLineSymbols());
 		assertTrue(custom.isSurroundingSpacesNeedQuotes());
 		assertTrue(custom.getEncoder() instanceof DefaultCsvEncoder);
@@ -102,7 +102,7 @@ public class CsvPreferenceTest {
 	public void testCustomPreferenceBasedOnExistingWithDefaults() {
 		final CsvPreference custom = new CsvPreference.Builder(EXCEL_PREFERENCE).build();
 		assertEquals(EXCEL_PREFERENCE.getQuoteChar(), custom.getQuoteChar());
-		assertEquals(EXCEL_PREFERENCE.getDelimiterChar(), custom.getDelimiterChar());
+		assertEquals(EXCEL_PREFERENCE.getDelimiterSymbols(), custom.getDelimiterSymbols());
 		assertEquals(EXCEL_PREFERENCE.getEndOfLineSymbols(), custom.getEndOfLineSymbols());
 		assertEquals(EXCEL_PREFERENCE.isSurroundingSpacesNeedQuotes(), custom.isSurroundingSpacesNeedQuotes());
 		assertEquals(EXCEL_PREFERENCE.getEncoder(), custom.getEncoder());
@@ -118,7 +118,7 @@ public class CsvPreferenceTest {
 		final CsvPreference custom = new CsvPreference.Builder(EXCEL_PREFERENCE).surroundingSpacesNeedQuotes(true)
 			.useEncoder(new DefaultCsvEncoder()).useQuoteMode(new AlwaysQuoteMode()).build();
 		assertEquals(EXCEL_PREFERENCE.getQuoteChar(), custom.getQuoteChar());
-		assertEquals(EXCEL_PREFERENCE.getDelimiterChar(), custom.getDelimiterChar());
+		assertEquals(EXCEL_PREFERENCE.getDelimiterSymbols(), custom.getDelimiterSymbols());
 		assertEquals(EXCEL_PREFERENCE.getEndOfLineSymbols(), custom.getEndOfLineSymbols());
 		assertTrue(custom.isSurroundingSpacesNeedQuotes());
 		assertTrue(custom.getEncoder() instanceof DefaultCsvEncoder);
@@ -131,12 +131,12 @@ public class CsvPreferenceTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testCustomPreferenceWithInvalidQuoteAndDelimeterChars() {
-		new CsvPreference.Builder('|', '|', "\n").build();
+		new CsvPreference.Builder('|', "|", "\n").build();
 	}
 
 	@Test
 	public void testCustomPreferenceWithSameDelimiterAndQuoteEscapeChar() {
-		CsvPreference.Builder builder = new CsvPreference.Builder('"', ',', "\n").setQuoteEscapeChar(',');
+		CsvPreference.Builder builder = new CsvPreference.Builder('"', ",", "\n").setQuoteEscapeChar(',');
 
 		try {
 			builder.build();
@@ -147,11 +147,19 @@ public class CsvPreferenceTest {
 	}
 	
 	/**
+	 * Tests construction with null delimiter symbols (should thrown an exception).
+	 */
+	@Test(expected = NullPointerException.class)
+	public void testConstructorWithNullDelimiterSymbols() {
+		new CsvPreference.Builder('"', null, "\r\n");
+	}
+	
+	/**
 	 * Tests construction with null end of line symbols (should throw an exception).
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testConstructorWithNullEolSymbols() {
-		new CsvPreference.Builder('"', ',', null).build();
+		new CsvPreference.Builder('"', ",", null).build();
 	}
 	
 	/**

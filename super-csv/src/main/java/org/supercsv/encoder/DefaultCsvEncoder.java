@@ -38,13 +38,13 @@ public class DefaultCsvEncoder implements CsvEncoder {
 	public String encode(final String input, final CsvContext context, final CsvPreference preference) {
 		
 		final StringBuilder currentColumn = new StringBuilder();
-		final int delimiter = preference.getDelimiterChar();
+		final String delimiter = preference.getDelimiterSymbols();
 		final char quote = (char) preference.getQuoteChar();
 		final char quoteEscapeChar = (char) preference.getQuoteEscapeChar();
 		final String eolSymbols = preference.getEndOfLineSymbols();
 		final int lastCharIndex = input.length() - 1;
 		
-		boolean quotesRequiredForSpecialChar = false;
+		boolean quotesRequiredForSpecialChar = input.contains(delimiter);
 		
 		boolean skipNewline = false;
 		
@@ -59,10 +59,7 @@ public class DefaultCsvEncoder implements CsvEncoder {
 				}
 			}
 			
-			if( c == delimiter ) {
-				quotesRequiredForSpecialChar = true;
-				currentColumn.append(c);
-			} else if( c == quote ) {
+			if( c == quote ) {
 				quotesRequiredForSpecialChar = true;
 				currentColumn.append(quoteEscapeChar);
 				currentColumn.append(quote);

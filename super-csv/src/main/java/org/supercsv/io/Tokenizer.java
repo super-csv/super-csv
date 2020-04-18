@@ -45,7 +45,9 @@ public class Tokenizer extends AbstractTokenizer {
 	
 	private final char quoteChar;
 	
-	private final int delimiterChar;
+	private final String delimiterSymbols;
+	
+	private final int delimiterLength;
 	
 	private final boolean surroundingSpacesNeedQuotes;
 	
@@ -79,7 +81,8 @@ public class Tokenizer extends AbstractTokenizer {
 	public Tokenizer(final Reader reader, final CsvPreference preferences) {
 		super(reader, preferences);
 		this.quoteChar = preferences.getQuoteChar();
-		this.delimiterChar = preferences.getDelimiterChar();
+		this.delimiterSymbols = preferences.getDelimiterSymbols();
+		this.delimiterLength = preferences.getDelimiterSymbols().length();
 		this.surroundingSpacesNeedQuotes = preferences.isSurroundingSpacesNeedQuotes();
 		this.ignoreEmptyLines = preferences.isIgnoreEmptyLines();
 		this.commentMatcher = preferences.getCommentMatcher();
@@ -188,7 +191,7 @@ public class Tokenizer extends AbstractTokenizer {
 				 * NORMAL mode (not within quotes).
 				 */
 				
-				if( c == delimiterChar) {
+				if( c == delimiterSymbols.charAt(0) && isDelimiterSymbols(line, charIndex, delimiterSymbols, delimiterLength) ) {
 					/*
 					 * Delimiter. Save the column (trim trailing space if required) then continue to next character.
 					 */
@@ -199,6 +202,8 @@ public class Tokenizer extends AbstractTokenizer {
 					potentialSpaces = 0;
 					currentColumn.setLength(0);
 					
+					// slid charIndex into last char of delimiter symbols
+					charIndex += delimiterLength - 1;
 				} else if( c == SPACE ) {
 					/*
 					 * Space. Remember it, then continue to next character.
@@ -303,6 +308,33 @@ public class Tokenizer extends AbstractTokenizer {
 			charIndex++; // read next char of the line
 		}
 	}
+
+	/**
+	 * Matching delimiter symbols in line.
+	 *
+	 * @param line
+	 *           the context of readLine from csv file
+	 * @param startIndex
+	 *           the index of line where start matching
+	 * @param delimiterSymbols
+	 *           the delimiter symbols
+	 * @param delimiterLength
+	 *           the delimiter symbols length
+	 * @return
+	 */
+	private boolean isDelimiterSymbols(String line, int startIndex, String delimiterSymbols, int delimiterLength) {
+		int lineLen = line.length();
+		if( startIndex + delimiterLength > lineLen ) {
+			return false;
+		}
+		for( int i = 0; i < delimiterLength; i++ ) {
+			if( line.charAt(startIndex + i) != delimiterSymbols.charAt(i) ) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	/**
 	 * Adds the currentColumn to columns list managing the case with currentColumn.length() == 0
 	 * It was introduced to manage the emptyColumnParsing.

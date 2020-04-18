@@ -133,8 +133,6 @@ public class AbstractCsvWriterTest {
 	 * 
 	 * @param csvWriter
 	 *            the CSV writer
-	 * @param prefs
-	 *            the preferences
 	 * @throws IOException
 	 */
 	private void writeHeaderWithEmbeddedEndOfLineSymbols(final MockCsvWriter csvWriter) throws IOException {
@@ -201,7 +199,7 @@ public class AbstractCsvWriterTest {
 	@Test
 	public void testWriteHeaderWithCarriageReturn() throws IOException {
 		writeHeaderWithEmbeddedEndOfLineSymbols(new MockCsvWriter(writer,
-			new CsvPreference.Builder('"', ',', "\r").build()));
+			new CsvPreference.Builder('"', ",", "\r").build()));
 	}
 	
 	/**

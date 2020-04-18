@@ -28,7 +28,7 @@ CSV Preferences
 
     []
 
-    [delimiterChar] The delimiter character (separates each cell in a row).
+    [delimiterSymbols] The delimiter symbols (separates each cell in a row).
 
     []
 
@@ -73,17 +73,17 @@ CSV Preferences
 
   There are four 'ready to use' configurations for typical scenarios.
 
-*------------------------------------------------------------------------------------------------------------------+-------------*-----------------*----------------------*
- <<Constant>>                                                                                                      || Quote char || Delimiter char || End of line symbols 
-*------------------------------------------------------------------------------------------------------------------+-------------*-----------------*----------------------*
- {{{./apidocs/org/supercsv/prefs/CsvPreference.html#STANDARD_PREFERENCE}STANDARD_PREFERENCE}}                      |        "    |           ,     |       \\r\\n         
-*------------------------------------------------------------------------------------------------------------------+-------------*-----------------*----------------------*
- {{{./apidocs/org/supercsv/prefs/CsvPreference.html#EXCEL_PREFERENCE}EXCEL_PREFERENCE}}                            |        "    |           ,     |        \\n           
-*------------------------------------------------------------------------------------------------------------------+-------------*-----------------*----------------------*
- {{{./apidocs/org/supercsv/prefs/CsvPreference.html#EXCEL_NORTH_EUROPE_PREFERENCE}EXCEL_NORTH_EUROPE_PREFERENCE}}  |        "    |           ;     |        \\n           
-*------------------------------------------------------------------------------------------------------------------+-------------*-----------------*----------------------*
- {{{./apidocs/org/supercsv/prefs/CsvPreference.html#TAB_PREFERENCE}TAB_PREFERENCE}}                                |        "    |          \\t    |        \\n           
-*------------------------------------------------------------------------------------------------------------------+-------------*-----------------*----------------------*
+*------------------------------------------------------------------------------------------------------------------+-------------*--------------------*----------------------*
+ <<Constant>>                                                                                                      || Quote char || Delimiter symbols || End of line symbols 
+*------------------------------------------------------------------------------------------------------------------+-------------*--------------------*----------------------*
+ {{{./apidocs/org/supercsv/prefs/CsvPreference.html#STANDARD_PREFERENCE}STANDARD_PREFERENCE}}                      |        "    |           ,        |       \\r\\n         
+*------------------------------------------------------------------------------------------------------------------+-------------*--------------------*----------------------*
+ {{{./apidocs/org/supercsv/prefs/CsvPreference.html#EXCEL_PREFERENCE}EXCEL_PREFERENCE}}                            |        "    |           ,        |        \\n           
+*------------------------------------------------------------------------------------------------------------------+-------------*--------------------*----------------------*
+ {{{./apidocs/org/supercsv/prefs/CsvPreference.html#EXCEL_NORTH_EUROPE_PREFERENCE}EXCEL_NORTH_EUROPE_PREFERENCE}}  |        "    |           ;        |        \\n           
+*------------------------------------------------------------------------------------------------------------------+-------------*--------------------*----------------------*
+ {{{./apidocs/org/supercsv/prefs/CsvPreference.html#TAB_PREFERENCE}TAB_PREFERENCE}}                                |        "    |          \\t       |        \\n           
+*------------------------------------------------------------------------------------------------------------------+-------------*--------------------*----------------------*
 
 
   All of these configurations use the default values of:
@@ -110,7 +110,7 @@ CSV Preferences
   For example, the following code snippet creates preferences suitable for reading/writing pipe-delimited files.
 
 +----------------------------------------------------------------------------------------------------+
-private static final CsvPreference PIPE_DELIMITED = new CsvPreference.Builder('"', '|', "\n").build();
+private static final CsvPreference PIPE_DELIMITED = new CsvPreference.Builder('"', "|", "\n").build();
 +----------------------------------------------------------------------------------------------------+
 
 * Ignoring surrounding spaces if they're not within quotes

@@ -256,7 +256,7 @@ public class TokenizerEscapingTest {
 	public void testDoubleQuoteBackslashEscapeChar() throws Exception {
 
 		// quote char is ' and escape char is $
-		final CsvPreference csvPref = new CsvPreference.Builder('\'', ',', "\n")
+		final CsvPreference csvPref = new CsvPreference.Builder('\'', ",", "\n")
 				.setQuoteEscapeChar('$')
 				.build();
 
