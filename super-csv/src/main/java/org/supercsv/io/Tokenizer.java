@@ -193,7 +193,7 @@ public class Tokenizer extends AbstractTokenizer {
 				boolean isSeparator = false;
 				if (c == delimiterSymbols.charAt(0)) {
 
-					isSeparator = line.length() >= charIndex + delimiterSymbolsLength && line.substring(charIndex, charIndex + delimiterSymbolsLength).equals(delimiterSymbols);
+					isSeparator = line.length() >= charIndex + delimiterSymbolsLength && line.regionMatches(charIndex,delimiterSymbols,0, delimiterSymbolsLength);
 					if (isSeparator) {
 					/*
 					 * Delimiter. Save the column (trim trailing space if required) then continue to next character.
