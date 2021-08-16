@@ -28,7 +28,8 @@ import org.supercsv.quote.QuoteMode;
  * <strong>Please note:</strong> the end of line symbols are <em>only</em> used for writing.
  * </p>
  * <table border="0" cellpadding="1" >
- * <caption>Predefined configurations</caption> <tbody>
+ * <caption>Predefined configurations</caption>
+ * <tbody>
  * <tr>
  * <th align="left">Constant</th>
  * <th align="left">Quote character</th>
@@ -84,7 +85,7 @@ import org.supercsv.quote.QuoteMode;
  * <p>
  * {@code private static final CsvPreference PIPE_DELIMITED = new CsvPreference.Builder('"', '|', "\n").build();}
  * </p>
- * Other preferences incude:
+ * Other preferences include:
  * <ul>
  * <li>using a custom {@link CsvEncoder} when writing CSV (if you want complete control over how the CSV is encoded)</li>
  * <li>using a custom {@link QuoteMode} when writing CSV (if you want to enable quotes when they're not normally
@@ -96,6 +97,10 @@ import org.supercsv.quote.QuoteMode;
  * <li>ignoring empty lines (enabled by default)</li>
  * <li>setting the maximum number of lines a row of CSV can span (useful for debugging files with mismatched quotes)</li>
  * </ul>
+ * <p>
+ * <strong>Tip:</strong>Create a CsvPreference instance for each writer instead of using predefined static preferences
+ * in CsvPreference When writing in multi thread.
+ * </p>
  *
  * @author Kasper B. Graversen
  * @author James Bassett
@@ -483,6 +488,8 @@ public final class CsvPreference {
 		 * Builds the CsvPreference instance.
 		 *
 		 * @return the immutable CsvPreference instance
+		 * @throws IllegalArgumentException
+		 *             if quoteEscapeChar and delimiterChar are the same character
 		 */
 		public CsvPreference build() {
 

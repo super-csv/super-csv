@@ -1,8 +1,11 @@
+dist: trusty
 language: java
 jdk:
   - oraclejdk8
-script: mvn test $MVN_ARGS
+script: mvn test $MVN_ARGS jacoco:report
 env:
   - MVN_ARGS=
   - MVN_ARGS="-P germanLocale"
   - MVN_ARGS="-P englishLocale"
+after_success:
+  - mvn coveralls:report

@@ -1,0 +1,301 @@
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~ Copyright 2007 Kasper B. Graversen
+~~
+~~ Licensed under the Apache License, Version 2.0 (the "License");
+~~ you may not use this file except in compliance with the License.
+~~ You may obtain a copy of the License at
+~~
+~~     http://www.apache.org/licenses/LICENSE-2.0
+~~
+~~ Unless required by applicable law or agreed to in writing, software
+~~ distributed under the License is distributed on an "AS IS" BASIS,
+~~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~~ See the License for the specific language governing permissions and
+~~ limitations under the License.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                                    ---------------------------
+                                    Appending Writing CSV files
+                                    ---------------------------
+
+Appending Writing CSV files
+
+  This page contains some examples of appending writing CSV files using Super CSV. Please Read Writing CSV files first.
+  You can view the full source of the examples {{{./xref-test/org/supercsv/example/Writing.html}here}}.
+  For examples of writing CSV files with Dozer (using CsvDozerBeanWriter), click {{{./examples_dozer.html}here}}.
+
+* Appending writing with CsvBeanWriter
+
++-------------------------------------------------------------------------------------------------------------+
+/**
+ * An example of appending writing use CsvBeanWriter.
+ */
+private static void appendingWriteWithCsvBeanWriter() throws Exception {
+    // create the customer beans
+    final CustomerBean john = new CustomerBean("1", "John", "Dunbar",
+            new GregorianCalendar(1945, Calendar.JUNE, 13).getTime(),SuperCsvTestUtils.time(10, 20, 0),
+            "1600 Amphitheatre Parkway\nMountain View, CA 94043\nUnited States", null, null,
+            "\"May the Force be with you.\" - Star Wars", "jdunbar@gmail.com", 0L);
+    final CustomerBean bob = new CustomerBean("2", "Bob", "Down",
+            new GregorianCalendar(1919, Calendar.FEBRUARY, 25).getTime(),SuperCsvTestUtils.time(10, 20, 0),
+            "1601 Willow Rd.\nMenlo Park, CA 94025\nUnited States", true, 0,
+            "\"Frankly, my dear, I don't give a damn.\" - Gone With The Wind", "bobdown@hotmail.com", 123456L);
+    // the header elements are used to map the bean values to each column (names must match)
+    final String[] header = new String[] { "customerNo", "firstName", "lastName", "birthDate",
+            "mailingAddress", "married", "numberOfKids", "favouriteQuote", "email", "loyaltyPoints" };
+    final CellProcessor[] processors = getProcessors();
+    ICsvBeanWriter beanWriter = null;
+    try{
+        beanWriter = new CsvBeanWriter(new FileWriter("target/appendingWriteWithCsvBeanWriter.csv"),
+                CsvPreference.STANDARD_PREFERENCE);
+        beanWriter.writeHeader(header);
+        beanWriter.write(john, header, processors);
+    }
+    finally {
+        if( beanWriter != null ) {
+            beanWriter.close();
+        }
+    }
+
+    // appending write
+    try {
+        beanWriter = new CsvBeanWriter(
+                new FileWriter("target/appendingWriteWithCsvBeanWriter.csv", true),
+                CsvPreference.STANDARD_PREFERENCE);
+        beanWriter.write(bob, header, processors);
+    }
+    finally {
+        if( beanWriter != null ) {
+            beanWriter.close();
+        }
+    }
+}
++-------------------------------------------------------------------------------------------------------------+
+
+  Output:
+
+---------------------------------------------------------------------------------------------------------------
+customerNo,firstName,lastName,birthDate,mailingAddress,married,numberOfKids,favouriteQuote,email,loyaltyPoints
+1,John,Dunbar,13/06/1945,"1600 Amphitheatre Parkway
+Mountain View, CA 94043
+United States",,,"""May the Force be with you."" - Star Wars",jdunbar@gmail.com,0
+2,Bob,Down,25/02/1919,"1601 Willow Rd.
+Menlo Park, CA 94025
+United States",Y,0,"""Frankly, my dear, I don't give a damn."" - Gone With The Wind",bobdown@hotmail.com,123456
+---------------------------------------------------------------------------------------------------------------
+
+* Appending writing with CsvListWriter
+
++-------------------------------------------------------------------------------------------------------------+
+/**
+ * An example of appending writing use CsvListWriter.
+ */
+private static void appendingWriteWithCsvListWriter() throws Exception {
+    // create the customer Lists (CsvListWriter also accepts arrays!)
+    final List<Object> john = Arrays.asList(new Object[] { "1", "John", "Dunbar",
+            new GregorianCalendar(1945, Calendar.JUNE, 13).getTime(),
+            "1600 Amphitheatre Parkway\nMountain View, CA 94043\nUnited States", null, null,
+            "\"May the Force be with you.\" - Star Wars", "jdunbar@gmail.com", 0L });
+    final List<Object> bob = Arrays.asList(new Object[] { "2", "Bob", "Down",
+            new GregorianCalendar(1919, Calendar.FEBRUARY, 25).getTime(),
+            "1601 Willow Rd.\nMenlo Park, CA 94025\nUnited States", true, 0,
+            "\"Frankly, my dear, I don't give a damn.\" - Gone With The Wind", "bobdown@hotmail.com", 123456L });
+    final String[] header = new String[] { "customerNo", "firstName", "lastName", "birthDate",
+            "mailingAddress", "married", "numberOfKids", "favouriteQuote", "email", "loyaltyPoints" };
+    final CellProcessor[] processors = getProcessors();
+    ICsvListWriter listWriter = null;
+    try {
+        listWriter = new CsvListWriter(new FileWriter("target/appendingWriteWithCsvListWriter.csv"),
+                CsvPreference.STANDARD_PREFERENCE);
+
+        // write the header
+        listWriter.writeHeader(header);
+
+        // write the customer lists
+        listWriter.write(john, processors);
+    }
+    finally {
+        if ( listWriter != null ) {
+            listWriter.close();
+        }
+    }
+
+    // appending write
+    try {
+        listWriter = new CsvListWriter(
+                new FileWriter("target/appendingWriteWithCsvListWriter.csv", true),
+                CsvPreference.STANDARD_PREFERENCE);
+        listWriter.write(bob, processors);
+    }
+    finally {
+        if( listWriter != null ){
+            listWriter.close();
+        }
+    }
+}
++-------------------------------------------------------------------------------------------------------------+
+
+  Output:
+
+---------------------------------------------------------------------------------------------------------------
+customerNo,firstName,lastName,birthDate,mailingAddress,married,numberOfKids,favouriteQuote,email,loyaltyPoints
+1,John,Dunbar,13/06/1945,"1600 Amphitheatre Parkway
+Mountain View, CA 94043
+United States",,,"""May the Force be with you."" - Star Wars",jdunbar@gmail.com,0
+2,Bob,Down,25/02/1919,"1601 Willow Rd.
+Menlo Park, CA 94025
+United States",Y,0,"""Frankly, my dear, I don't give a damn."" - Gone With The Wind",bobdown@hotmail.com,123456
+---------------------------------------------------------------------------------------------------------------
+
+* Appending writing with CsvMapWriter.
+
++-------------------------------------------------------------------------------------------------------------+
+/**
+ * An example of appending writing use CsvMapWriter
+ */
+private static void appendingWriteWithCsvMapWriter() throws Exception {
+
+    final String[] header = new String[] { "customerNo", "firstName", "lastName", "birthDate", "mailingAddress",
+            "married", "numberOfKids", "favouriteQuote", "email", "loyaltyPoints" };
+
+    // create the customer Maps (using the header elements for the column keys)
+    final Map<String, Object> john = new HashMap<String, Object>();
+    john.put(header[0], "1");
+    john.put(header[1], "John");
+    john.put(header[2], "Dunbar");
+    john.put(header[3], new GregorianCalendar(1945, Calendar.JUNE, 13).getTime());
+    john.put(header[4], "1600 Amphitheatre Parkway\nMountain View, CA 94043\nUnited States");
+    john.put(header[5], null);
+    john.put(header[6], null);
+    john.put(header[7], "\"May the Force be with you.\" - Star Wars");
+    john.put(header[8], "jdunbar@gmail.com");
+    john.put(header[9], 0L);
+
+    final Map<String, Object> bob = new HashMap<String, Object>();
+    bob.put(header[0], "2");
+    bob.put(header[1], "Bob");
+    bob.put(header[2], "Down");
+    bob.put(header[3], new GregorianCalendar(1919, Calendar.FEBRUARY, 25).getTime());
+    bob.put(header[4], "1601 Willow Rd.\nMenlo Park, CA 94025\nUnited States");
+    bob.put(header[5], true);
+    bob.put(header[6], 0);
+    bob.put(header[7], "\"Frankly, my dear, I don't give a damn.\" - Gone With The Wind");
+    bob.put(header[8], "bobdown@hotmail.com");
+    bob.put(header[9], 123456L);
+
+    final CellProcessor[] processors = getProcessors();
+    ICsvMapWriter mapWriter = null;
+    try {
+        mapWriter = new CsvMapWriter(new FileWriter("target/appendingWriteWithCsvMapWriter.csv"),
+                CsvPreference.STANDARD_PREFERENCE);
+
+        // write the header
+        mapWriter.writeHeader(header);
+
+        // write the customer maps
+        mapWriter.write(john, header, processors);
+    }
+    finally {
+        if( mapWriter != null ) {
+            mapWriter.close();
+        }
+    }
+
+    // appending write
+    try {
+        mapWriter = new CsvMapWriter(
+                new FileWriter("target/appendingWriteWithCsvMapWriter.csv", true),
+                CsvPreference.STANDARD_PREFERENCE);
+        mapWriter.write(bob, header, processors);
+    }
+    finally {
+        if( mapWriter != null ){
+            mapWriter.close();
+        }
+    }
+}
++-------------------------------------------------------------------------------------------------------------+
+
+  Output:
+
+---------------------------------------------------------------------------------------------------------------
+customerNo,firstName,lastName,birthDate,mailingAddress,married,numberOfKids,favouriteQuote,email,loyaltyPoints
+1,John,Dunbar,13/06/1945,"1600 Amphitheatre Parkway
+Mountain View, CA 94043
+United States",,,"""May the Force be with you."" - Star Wars",jdunbar@gmail.com,0
+2,Bob,Down,25/02/1919,"1601 Willow Rd.
+Menlo Park, CA 94025
+United States",Y,0,"""Frankly, my dear, I don't give a damn."" - Gone With The Wind",bobdown@hotmail.com,123456
+---------------------------------------------------------------------------------------------------------------
+
+* Appending writing with CsvDozerBeanWriter.
+
++-------------------------------------------------------------------------------------------------------------+
+/**
+ * An example of appending writing using CsvDozerBeanWriter
+ */
+public static void appendingWriteWithCsvDozerBeanWriter() throws Exception {
+
+    final CellProcessor[] processors = new CellProcessor[] {
+            new Token(0, null),     // age
+            new FmtBool("Y", "N"),  // consent
+            new NotNull(),          // questionNo 1
+            new Optional(),         // answer 1
+            new NotNull(),          // questionNo 2
+            new Optional(),         // answer 2
+            new NotNull(),          // questionNo 3
+            new Optional() };       // answer 3
+
+    // create the survey responses to write
+    SurveyResponse response1 = new SurveyResponse(18, true, Arrays.asList(new Answer(1, "Twelve"), new Answer(2,
+            "Albert Einstein"), new Answer(3, "Big Bang Theory")));
+    SurveyResponse response2 = new SurveyResponse(0, true, Arrays.asList(new Answer(1, "Thirteen"), new Answer(2,
+            "Nikola Tesla"), new Answer(3, "Stargate")));
+    SurveyResponse response3 = new SurveyResponse(42, false, Arrays.asList(new Answer(1, null), new Answer(2,
+            "Carl Sagan"), new Answer(3, "Star Wars")));
+
+    ICsvDozerBeanWriter beanWriter = null;
+    try {
+        beanWriter = new CsvDozerBeanWriter(new FileWriter("target/appendingWriteWithCsvDozerBeanWriter.csv"),
+                CsvPreference.STANDARD_PREFERENCE);
+
+        // configure the mapping from the fields to the CSV columns
+        beanWriter.configureBeanMapping(SurveyResponse.class, FIELD_MAPPING);
+
+        // write the header
+        beanWriter.writeHeader("age", "consentGiven", "questionNo1", "answer1", "questionNo2", "answer2",
+                "questionNo3", "answer3");
+
+        // write the beans
+        beanWriter.write(response1, processors);
+    }
+    finally {
+        if( beanWriter != null ) {
+            beanWriter.close();
+        }
+    }
+
+    // appending write
+    try {
+        beanWriter = new CsvDozerBeanWriter(
+                new FileWriter("target/appendingWriteWithCsvDozerBeanWriter.csv", true),
+                CsvPreference.STANDARD_PREFERENCE);
+        beanWriter.configureBeanMapping(SurveyResponse.class, FIELD_MAPPING);
+        beanWriter.write(response2, processors);
+        beanWriter.write(response3, processors);
+    }
+    finally {
+        if( beanWriter != null ){
+            beanWriter.close();
+        }
+    }
+}
++-------------------------------------------------------------------------------------------------------------+
+
+  Output:
+
+---------------------------------------------------------------------------------------------------------------
+age,consentGiven,questionNo1,answer1,questionNo2,answer2,questionNo3,answer3
+18,Y,1,Twelve,2,Albert Einstein,3,Big Bang Theory
+,Y,1,Thirteen,2,Nikola Tesla,3,Stargate
+42,N,1,,2,Carl Sagan,3,Star Wars
+---------------------------------------------------------------------------------------------------------------

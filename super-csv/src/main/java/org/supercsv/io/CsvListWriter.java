@@ -44,7 +44,7 @@ public class CsvListWriter extends AbstractCsvWriter implements ICsvListWriter {
 	 * @param preference
 	 *            the CSV preferences
 	 * @throws NullPointerException
-	 *             if writer or preference are null
+	 *             if writer or preference is null
 	 */
 	public CsvListWriter(final Writer writer, final CsvPreference preference) {
 		super(writer, preference);

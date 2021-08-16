@@ -40,7 +40,7 @@ Super CSV
       
 ** Highly configurable
 
-  Choose your own delimiter, quote character and line separator - or just use one of the predefined configurations.
+  Choose your own delimiter, quote character, escape character, and line separator - or just use one of the predefined configurations.
   Comma-separated, tab-separated, semicolon-separated (Germany/Denmark) - it's all possible.
       
 ** Data conversion

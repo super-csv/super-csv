@@ -38,6 +38,8 @@ public class ColumnQuoteMode implements QuoteMode {
 	 * 
 	 * @param columnsToQuote
 	 *            the column numbers to quote
+	 * @throws NullPointerException
+	 *             if columnsToQuote is null
 	 */
 	public ColumnQuoteMode(final int... columnsToQuote) {
 		if( columnsToQuote == null ) {

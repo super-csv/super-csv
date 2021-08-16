@@ -171,4 +171,12 @@ public class CsvPreferenceTest {
 	public void testUseQuoteModeWithNull() {
 		new Builder(EXCEL_PREFERENCE).useQuoteMode(null).build();
 	}
+	
+	/**
+	 * Tests construction empty column parsing with null (should throw an exception).
+	 */
+	@Test(expected = NullPointerException.class)
+	public void testSetEmptyColumnParsingWithNull() {
+		new CsvPreference.Builder(EXCEL_PREFERENCE).setEmptyColumnParsing(null);
+	}
 }

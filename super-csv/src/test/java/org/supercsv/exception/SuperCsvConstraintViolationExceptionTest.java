@@ -31,6 +31,7 @@ import org.supercsv.util.CsvContext;
  */
 public class SuperCsvConstraintViolationExceptionTest {
 	
+	private static final String CLASSNAME = "org.supercsv.exception.SuperCsvConstraintViolationException";
 	private static final String MSG = "You violated the rules!";
 	private static final Throwable THROWABLE = new RuntimeException("I'm the cause of the problem");
 	private static final CellProcessor PROCESSOR = new IdentityTransform();
@@ -44,6 +45,7 @@ public class SuperCsvConstraintViolationExceptionTest {
 		assertEquals(MSG, e.getMessage());
 		assertEquals(ANONYMOUS_CSVCONTEXT, e.getCsvContext());
 		assertEquals(PROCESSOR, e.getProcessor());
+		assertEquals(String.format("%s: %s%nprocessor=%s%ncontext=%s", CLASSNAME, MSG, PROCESSOR, ANONYMOUS_CSVCONTEXT), e.toString());
 		
 		// test with null values
 		e = new SuperCsvConstraintViolationException(null, (CsvContext) null, (CellProcessor) null);
@@ -62,6 +64,7 @@ public class SuperCsvConstraintViolationExceptionTest {
 		assertEquals(ANONYMOUS_CSVCONTEXT, e.getCsvContext());
 		assertEquals(PROCESSOR, e.getProcessor());
 		assertEquals(THROWABLE, e.getCause());
+		assertEquals(String.format("%s: %s%nprocessor=%s%ncontext=%s", CLASSNAME, MSG, PROCESSOR, ANONYMOUS_CSVCONTEXT), e.toString());
 		
 		// test with null values
 		e = new SuperCsvConstraintViolationException(null, null, null, (Throwable) null);

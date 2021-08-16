@@ -245,8 +245,8 @@ public class CsvBeanReader extends AbstractCsvReader implements ICsvBeanReader {
 	 * @throws java.io.IOException
 	 *             if an I/O error occurred
 	 * @throws NullPointerException
-	 *             if bean or nameMapping are null
-	 * @throws org.supercsv.exception.SuperCsvConstraintViolationException
+	 *             if bean or nameMapping is null
+	 * @throws SuperCsvConstraintViolationException
 	 *             if a CellProcessor constraint failed
 	 * @throws org.supercsv.exception.SuperCsvException
 	 *             if there was a general exception while reading/processing

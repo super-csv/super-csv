@@ -50,7 +50,7 @@ public interface ICsvBeanReader extends ICsvReader {
 	 * @throws IllegalArgumentException
 	 *             if nameMapping.length != number of columns read
 	 * @throws NullPointerException
-	 *             if clazz or nameMapping are null
+	 *             if clazz or nameMapping is null
 	 * @throws SuperCsvException
 	 *             if there was a general exception while reading/processing
 	 * @throws SuperCsvReflectionException
@@ -77,7 +77,7 @@ public interface ICsvBeanReader extends ICsvReader {
 	 * @throws IllegalArgumentException
 	 *             if nameMapping.length != number of columns read
 	 * @throws NullPointerException
-	 *             if bean or nameMapping are null
+	 *             if bean or nameMapping is null
 	 * @throws SuperCsvException
 	 *             if there was a general exception while reading/processing
 	 * @throws SuperCsvReflectionException

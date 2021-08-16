@@ -19,6 +19,46 @@
 
 Release notes
 
+* 2.5.0
+
+  <01/2020>
+
+  Added some features and fixed some bugs, made super-csv better.
+
+  <<New features>>
+
+    * {{{https://github.com/super-csv/super-csv/issues/13}13}} - Add the feature to distinguish between null and empty columns
+
+    * {{{https://github.com/super-csv/super-csv/pull/75}75}} - New <<<ParseTime>>> to convert string to time objects
+
+    * {{{https://github.com/super-csv/super-csv/issues/92}92}} - Add support for non-public beans and setter methods
+
+    * {{{https://github.com/super-csv/super-csv/issues/93}93}} - New <<<ICsvTypedBeanWriter>>>, not rely on field names to map field to the column
+
+    * {{{https://github.com/super-csv/super-csv/pull/103}103}} - Add support for escaped character
+	
+	* {{{https://github.com/super-csv/super-csv/issues/142}142}} - Add support for reading utf8+utf16 with BOM
+
+    * {{{https://github.com/super-csv/super-csv/issues/160}160}} - Using <<<JaCoCo>>> instead of <<<Cobertura>>> to support java8
+
+  <<Bug fixes>>
+
+    * {{{https://github.com/super-csv/super-csv/issues/100}100}} - Let <<<ParseDuration>>>, <<<ParsePeriod>>>, <<<ParseZoneId>>>, etc. implement <<<StringCellProcessor>>>, so that we can build <<<CellProcessor>>> with trim. 
+
+    * {{{https://github.com/super-csv/super-csv/issues/136}136}} - Change the path of <<<customers.csv>>> to solve the problem of <<<org.supercsv.example.Reading>>> doesn't work on both eclipse and idea
+
+  <<General enhancements>>
+
+    * {{{https://github.com/super-csv/super-csv/issues/144}144}} - Make class CsvContext non-final, so it can be extended
+
+  <<Minor changes>>
+
+    * {{{https://github.com/super-csv/super-csv/issues/106}106}} - Remove the redundant variable <<<NORMAL_PREFERENCE>>>
+
+    * {{{https://github.com/super-csv/super-csv/issues/118}118}} - Add content to the list of Java 8 cell processors on the website
+
+    * {{{https://github.com/super-csv/super-csv/issues/127}127}} - Add tips for <<<CsvPreference>>>
+
 * 2.4.0
 
   <10/2015>

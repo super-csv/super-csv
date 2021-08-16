@@ -22,6 +22,7 @@ import org.joda.time.format.PeriodFormatter;
 import org.joda.time.format.PeriodFormatterBuilder;
 import org.supercsv.cellprocessor.CellProcessorAdaptor;
 import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.exception.SuperCsvCellProcessorException;
 import org.supercsv.util.CsvContext;
 
@@ -45,7 +46,7 @@ import org.supercsv.util.CsvContext;
  * @since 2.3.0
  * @author James Bassett
  */
-public class ParsePeriod extends CellProcessorAdaptor {
+public class ParsePeriod extends CellProcessorAdaptor implements StringCellProcessor {
 
 	private final PeriodFormatter formatter;
 

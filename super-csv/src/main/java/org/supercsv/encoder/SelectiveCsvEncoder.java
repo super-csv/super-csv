@@ -38,6 +38,8 @@ public class SelectiveCsvEncoder extends DefaultCsvEncoder {
 	 * 
 	 * @param columnsToEncode
 	 *            the column numbers to encode
+	 * @throws NullPointerException
+	 *             if columnsToEncode is null
 	 */
 	public SelectiveCsvEncoder(final int... columnsToEncode) {
 		if( columnsToEncode == null ) {
@@ -54,6 +56,8 @@ public class SelectiveCsvEncoder extends DefaultCsvEncoder {
 	 * 
 	 * @param columnsToEncode
 	 *            boolean array representing columns to encode (true indicates a column should be encoded).
+	 * @throws NullPointerException
+	 *             if columnsToEncode is null
 	 */
 	public SelectiveCsvEncoder(final boolean[] columnsToEncode) {
 		if( columnsToEncode == null ) {

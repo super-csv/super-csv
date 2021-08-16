@@ -45,7 +45,7 @@ public class CsvMapWriter extends AbstractCsvWriter implements ICsvMapWriter {
 	 * @param preference
 	 *            the CSV preferences
 	 * @throws NullPointerException
-	 *             if writer or preference are null
+	 *             if writer or preference is null
 	 * @since 1.0
 	 */
 	public CsvMapWriter(final Writer writer, final CsvPreference preference) {
@@ -64,7 +64,7 @@ public class CsvMapWriter extends AbstractCsvWriter implements ICsvMapWriter {
 	 *            if {@code true}, the <tt>writer</tt> will be wrapped in
 	 *            a <tt>BufferedWriter</tt> before accessed.
 	 * @throws NullPointerException
-	 *             if writer or preference are null
+	 *             if writer or preference is null
 	 * @since 1.0
 	 */
 	public CsvMapWriter(final Writer writer, final CsvPreference preference, boolean bufferizeWriter) {
