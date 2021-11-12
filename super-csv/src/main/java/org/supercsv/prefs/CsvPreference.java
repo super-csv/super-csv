@@ -83,7 +83,7 @@ import org.supercsv.quote.QuoteMode;
  * You can also create your own preferences. For example if your file was pipe-delimited, you could use the following:
  * </p>
  * <p>
- * {@code private static final CsvPreference PIPE_DELIMITED = new CsvPreference.Builder('"', '|', "\n").build();}
+ * {@code private static final CsvPreference PIPE_DELIMITED = new CsvPreference.Builder(DOUBLE_QUOTES, PIPE, NEW_LINE).build();}
  * </p>
  * Other preferences include:
  * <ul>
@@ -101,32 +101,37 @@ import org.supercsv.quote.QuoteMode;
  * <strong>Tip:</strong>Create a CsvPreference instance for each writer instead of using predefined static preferences
  * in CsvPreference When writing in multi thread.
  * </p>
- * 
+ *
  * @author Kasper B. Graversen
  * @author James Bassett
  * @author Pietro Aragona
  */
 public final class CsvPreference {
-	
+
+	public static final char DOUBLE_QUOTES = '"';
+	public static final char COMMA = ',';
+	public static final char SEMICOLON = ';';
+	public static final String CARRIAGE_RETURN_AND_NEW_LINE = "\r\n";
+	public static final String NEW_LINE = "\n";
+	public static final char TAB = '\t';
+	public static final char PIPE = '|';
+
 	/**
 	 * Ready to use configuration that should cover 99% of all usages.
 	 */
-	public static final CsvPreference STANDARD_PREFERENCE = new CsvPreference.Builder('"', ',', "\r\n").build();
-	
+	public static final CsvPreference STANDARD_PREFERENCE = new CsvPreference.Builder(DOUBLE_QUOTES, COMMA, CARRIAGE_RETURN_AND_NEW_LINE).build();
 	/**
 	 * Ready to use configuration for Windows Excel exported CSV files.
 	 */
-	public static final CsvPreference EXCEL_PREFERENCE = new CsvPreference.Builder('"', ',', "\n").build();
-	
+	public static final CsvPreference EXCEL_PREFERENCE = new CsvPreference.Builder(DOUBLE_QUOTES, COMMA, NEW_LINE).build();
 	/**
 	 * Ready to use configuration for north European excel CSV files (columns are separated by ";" instead of ",")
 	 */
-	public static final CsvPreference EXCEL_NORTH_EUROPE_PREFERENCE = new CsvPreference.Builder('"', ';', "\n").build();
-	
+	public static final CsvPreference EXCEL_NORTH_EUROPE_PREFERENCE = new CsvPreference.Builder(DOUBLE_QUOTES, SEMICOLON, NEW_LINE).build();
 	/**
 	 * Ready to use configuration for tab-delimited files.
 	 */
-	public static final CsvPreference TAB_PREFERENCE = new CsvPreference.Builder('"', '\t', "\n").build();
+	public static final CsvPreference TAB_PREFERENCE = new CsvPreference.Builder(DOUBLE_QUOTES, TAB, NEW_LINE).build();
 	
 	private final char quoteChar;
 	
@@ -149,7 +154,7 @@ public final class CsvPreference {
 	private final EmptyColumnParsing emptyColumnParsing;
 
 	private final char quoteEscapeChar;
-	
+
 	/**
 	 * Constructs a new <tt>CsvPreference</tt> from a Builder.
 	 */
@@ -273,33 +278,33 @@ public final class CsvPreference {
 	 * added in the future.
 	 */
 	public static class Builder {
-		
+
 		private final char quoteChar;
-		
+
 		private final int delimiterChar;
-		
+
 		private final String endOfLineSymbols;
 
 		private boolean surroundingSpacesNeedQuotes = false;
-		
+
 		private boolean ignoreEmptyLines = true;
-		
+
 		private CsvEncoder encoder;
-		
+
 		private QuoteMode quoteMode;
-		
+
 		private CommentMatcher commentMatcher;
-		
+
 		private int maxLinesPerRow = 0;
-		
+
 		private EmptyColumnParsing emptyColumnParsing;
 
 		private char quoteEscapeChar;
-		
+
 		/**
 		 * Constructs a Builder with all of the values from an existing <tt>CsvPreference</tt> instance. Useful if you
 		 * want to base your preferences off one of the existing CsvPreference constants.
-		 * 
+		 *
 		 * @param preference
 		 *            the existing preference
 		 */
@@ -316,10 +321,10 @@ public final class CsvPreference {
 			this.emptyColumnParsing = preference.emptyColumnParsing;
 			this.quoteEscapeChar = preference.quoteEscapeChar;
 		}
-		
+
 		/**
 		 * Constructs a Builder with the mandatory preference values.
-		 * 
+		 *
 		 * @param quoteChar
 		 *            matching pairs of this character are used to escape columns containing the delimiter
 		 * @param delimiterChar
@@ -345,12 +350,12 @@ public final class CsvPreference {
 			// by default (RFC-spec) the quoteEscapeChar is the quoteChar
 			this.quoteEscapeChar = quoteChar;
 		}
-		
+
 		/**
 		 * Flag indicating whether spaces at the beginning or end of a cell should be ignored if they're not surrounded
 		 * by quotes (applicable to both reading and writing CSV). The default is <tt>false</tt>, as spaces
 		 * "are considered part of a field and should not be ignored" according to RFC 4180.
-		 * 
+		 *
 		 * @since 2.0.0
 		 * @param surroundingSpacesNeedQuotes
 		 *            flag indicating whether spaces at the beginning or end of a cell should be ignored if they're not
@@ -361,11 +366,11 @@ public final class CsvPreference {
 			this.surroundingSpacesNeedQuotes = surroundingSpacesNeedQuotes;
 			return this;
 		}
-		
+
 		/**
 		 * Flag indicating whether empty lines (i.e. containing only end of line symbols) should be ignored. The default
 		 * is <tt>true</tt>.
-		 * 
+		 *
 		 * @since 2.2.1
 		 * @param ignoreEmptyLines
 		 *            flag indicating whether empty lines should be ignored
@@ -375,12 +380,12 @@ public final class CsvPreference {
 			this.ignoreEmptyLines = ignoreEmptyLines;
 			return this;
 		}
-		
+
 		/**
 		 * Enables the skipping of comments. You can supply your own comment matcher or use one of the predefined ones:
 		 * {@link org.supercsv.comment.CommentStartsWith CommentStartsWith} or
 		 * {@link org.supercsv.comment.CommentMatches CommentMatches}
-		 * 
+		 *
 		 * @since 2.1.0
 		 * @param commentMatcher
 		 *            the comment matcher to use
@@ -395,10 +400,10 @@ public final class CsvPreference {
 			this.commentMatcher = commentMatcher;
 			return this;
 		}
-		
+
 		/**
 		 * Uses a custom CsvEncoder to escape CSV for writing.
-		 * 
+		 *
 		 * @since 2.1.0
 		 * @param encoder
 		 *            the custom encoder
@@ -413,13 +418,13 @@ public final class CsvPreference {
 			this.encoder = encoder;
 			return this;
 		}
-		
+
 		/**
 		 * Uses a custom QuoteMode to determine if surrounding quotes should be applied when writing (only applicable if
 		 * a column doesn't contain any special characters and wouldn't otherwise be quoted). You can supply your own
 		 * quote mode or use one of the predefined ones: {@link org.supercsv.quote.AlwaysQuoteMode AlwaysQuoteMode} or
 		 * {@link org.supercsv.quote.ColumnQuoteMode ColumnQuoteMode}
-		 * 
+		 *
 		 * @since 2.1.0
 		 * @param quoteMode
 		 *            the quote mode
@@ -434,14 +439,14 @@ public final class CsvPreference {
 			this.quoteMode = quoteMode;
 			return this;
 		}
-		
+
 		/**
 		 * The maximum number of lines that a row can span before an exception is thrown (only applicable when reading
 		 * CSV). This option allows CSV readers to fail fast when encountering CSV with mismatching quotes - the normal
 		 * behaviour would be to continue reading until the matching quote is found, which could potentially mean
 		 * reading the whole file (and exhausting all available memory). Zero or a negative value will disable this
 		 * option. The default is <tt>0</tt>.
-		 * 
+		 *
 		 * @since 2.4.0
 		 * @param maxLinesPerRow
 		 *            the maximum number of lines a row can span before an exception is thrown
@@ -451,7 +456,7 @@ public final class CsvPreference {
 			this.maxLinesPerRow = maxLinesPerRow;
 			return this;
 		}
-		
+
 		/**
 		 * Uses an EmptyColumnParsing to determine whether empty String (i.e. "") should be read as empty string instead as null.
 		 * The default is <tt>ParseEmptyColumnsAsNull</tt>.
@@ -483,24 +488,24 @@ public final class CsvPreference {
 			this.quoteEscapeChar = quoteEscapeChar;
 			return this;
 		}
-		
+
 		/**
 		 * Builds the CsvPreference instance.
-		 * 
+		 *
 		 * @return the immutable CsvPreference instance
 		 * @throws IllegalArgumentException
 		 *             if quoteEscapeChar and delimiterChar are the same character
 		 */
 		public CsvPreference build() {
-			
+
 			if( encoder == null ) {
 				encoder = new DefaultCsvEncoder();
 			}
-			
+
 			if( quoteMode == null ) {
 				quoteMode = new NormalQuoteMode();
 			}
-			
+
 			if( emptyColumnParsing == null ) {
 				emptyColumnParsing = EmptyColumnParsing.ParseEmptyColumnsAsNull;
 			}
@@ -510,10 +515,10 @@ public final class CsvPreference {
 						"quoteEscapeChar and delimiterChar must not be the same character: %c",
 						quoteEscapeChar));
 			}
-			
+
 			return new CsvPreference(this);
 		}
-		
+
 	}
-	
+
 }
