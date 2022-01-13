@@ -43,7 +43,7 @@
 
 		<!-- properties ensure reporting plugin versions are same as managed versions -->
 		<coveralls.plugin.version>4.3.0</coveralls.plugin.version>
-		<jacoco.plugin.version>0.7.9</jacoco.plugin.version>
+		<jacoco.plugin.version>0.8.7</jacoco.plugin.version>
 		<findbugs-plugin.version>3.0.0</findbugs-plugin.version>
 		<javadoc.plugin.version>2.10.1</javadoc.plugin.version>
 		<jxr.plugin.version>2.5</jxr.plugin.version>
