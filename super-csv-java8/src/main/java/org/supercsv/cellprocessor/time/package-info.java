@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 /**
- * Provides <tt>CellProcessor</tt> classes for converting, formatting and parsing {@link java.time} classes.
+ * Provides <code>CellProcessor</code> classes for converting, formatting and parsing {@link java.time} classes.
  */
 package org.supercsv.cellprocessor.time;

@@ -50,8 +50,8 @@ public class CsvDozerBeanWriter extends AbstractCsvWriter implements ICsvDozerBe
 	private final List<Object> processedColumns = new ArrayList<Object>();
 	
 	/**
-	 * Constructs a new <tt>CsvDozerBeanWriter</tt> with the supplied Writer and CSV preferences and and creates it's
-	 * own DozerBeanMapper. Note that the <tt>writer</tt> will be wrapped in a <tt>BufferedWriter</tt> before accessed.
+	 * Constructs a new <code>CsvDozerBeanWriter</code> with the supplied Writer and CSV preferences and and creates it's
+	 * own DozerBeanMapper. Note that the <code>writer</code> will be wrapped in a <code>BufferedWriter</code> before accessed.
 	 * 
 	 * @param writer
 	 *            the writer
@@ -66,8 +66,8 @@ public class CsvDozerBeanWriter extends AbstractCsvWriter implements ICsvDozerBe
 	}
 	
 	/**
-	 * Constructs a new <tt>CsvDozerBeanWriter</tt> with the supplied Writer, CSV preferences and DozerBeanMapper. Note
-	 * that the <tt>writer</tt> will be wrapped in a <tt>BufferedWriter</tt> before accessed.
+	 * Constructs a new <code>CsvDozerBeanWriter</code> with the supplied Writer, CSV preferences and DozerBeanMapper. Note
+	 * that the <code>writer</code> will be wrapped in a <code>BufferedWriter</code> before accessed.
 	 * 
 	 * @param writer
 	 *            the writer
@@ -152,7 +152,7 @@ public class CsvDozerBeanWriter extends AbstractCsvWriter implements ICsvDozerBe
 		 * @param clazz
 		 *            the class to add mapping configuration for (same as the type passed into write methods)
 		 * @param fieldMapping
-		 *            the field mapping for for each column (cannot contain <tt>null</tt> elements)
+		 *            the field mapping for for each column (cannot contain <code>null</code> elements)
 		 * @throws NullPointerException
 		 *             if clazz or fieldMapping (or one of its elements) is null
 		 */

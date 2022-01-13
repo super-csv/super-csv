@@ -27,7 +27,7 @@ import org.supercsv.util.CsvContext;
  * Converts a double into a formatted string using the {@link DecimalFormat} class and the default locale. This is
  * useful, when you need to show numbers with a specific number of digits.
  * <p>
- * Please be aware that the constructors that use <tt>DecimalFormat</tt> are not thread-safe, so it is generally better
+ * Please be aware that the constructors that use <code>DecimalFormat</code> are not thread-safe, so it is generally better
  * to use the constructors that accept a date format String.
  * <p>
  * In the format string, the following characters are defined as : <br>
@@ -56,7 +56,7 @@ public class FmtNumber extends CellProcessorAdaptor implements DoubleCellProcess
 	private final DecimalFormat formatter;
 	
 	/**
-	 * Constructs a new <tt>FmtNumber</tt> processor, which converts a double into a formatted string using the supplied
+	 * Constructs a new <code>FmtNumber</code> processor, which converts a double into a formatted string using the supplied
 	 * decimal format String. This constructor is thread-safe.
 	 * 
 	 * @param decimalFormat
@@ -72,7 +72,7 @@ public class FmtNumber extends CellProcessorAdaptor implements DoubleCellProcess
 	}
 	
 	/**
-	 * Constructs a new <tt>FmtNumber</tt> processor, which converts a double into a formatted string using the supplied
+	 * Constructs a new <code>FmtNumber</code> processor, which converts a double into a formatted string using the supplied
 	 * decimal format String, then calls the next processor in the chain. This constructor is thread-safe.
 	 * 
 	 * @param decimalFormat
@@ -90,7 +90,7 @@ public class FmtNumber extends CellProcessorAdaptor implements DoubleCellProcess
 	}
 	
 	/**
-	 * Constructs a new <tt>FmtNumber</tt> processor, which converts a double into a formatted string using the supplied
+	 * Constructs a new <code>FmtNumber</code> processor, which converts a double into a formatted string using the supplied
 	 * decimal format. This constructor is not thread-safe.
 	 * 
 	 * @param formatter
@@ -106,7 +106,7 @@ public class FmtNumber extends CellProcessorAdaptor implements DoubleCellProcess
 	}
 	
 	/**
-	 * Constructs a new <tt>FmtNumber</tt> processor, which converts a double into a formatted string using the supplied
+	 * Constructs a new <code>FmtNumber</code> processor, which converts a double into a formatted string using the supplied
 	 * decimal format, then calls the next processor in the chain. This constructor is not thread-safe.
 	 * 
 	 * @param formatter

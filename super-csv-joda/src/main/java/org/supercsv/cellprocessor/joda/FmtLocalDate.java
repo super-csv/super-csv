@@ -48,7 +48,7 @@ public class FmtLocalDate extends AbstractJodaFormattingProcessor<LocalDate> {
 	private static final Class<LocalDate> JODA_CLASS = LocalDate.class;
 
 	/**
-	 * Constructs a new <tt>FmtLocalDate</tt> processor, which formats a Joda
+	 * Constructs a new <code>FmtLocalDate</code> processor, which formats a Joda
 	 * LocalDate as a String.
 	 */
 	public FmtLocalDate() {
@@ -56,7 +56,7 @@ public class FmtLocalDate extends AbstractJodaFormattingProcessor<LocalDate> {
 	}
 
 	/**
-	 * Constructs a new <tt>FmtLocalDate</tt> processor, which formats a Joda
+	 * Constructs a new <code>FmtLocalDate</code> processor, which formats a Joda
 	 * LocalDate as a String, then calls the next processor in the chain.
 	 * 
 	 * @param next
@@ -69,7 +69,7 @@ public class FmtLocalDate extends AbstractJodaFormattingProcessor<LocalDate> {
 	}
 
 	/**
-	 * Constructs a new <tt>FmtLocalDate</tt> processor, which formats a Joda
+	 * Constructs a new <code>FmtLocalDate</code> processor, which formats a Joda
 	 * LocalDate as a String using the supplied formatter.
 	 * 
 	 * @param formatter
@@ -82,7 +82,7 @@ public class FmtLocalDate extends AbstractJodaFormattingProcessor<LocalDate> {
 	}
 
 	/**
-	 * Constructs a new <tt>FmtLocalDate</tt> processor, which formats a Joda
+	 * Constructs a new <code>FmtLocalDate</code> processor, which formats a Joda
 	 * LocalDate as a String using the supplied formatter, then calls the next
 	 * processor in the chain.
 	 * 
@@ -99,7 +99,7 @@ public class FmtLocalDate extends AbstractJodaFormattingProcessor<LocalDate> {
 	}
 
 	/**
-	 * Constructs a new <tt>FmtLocalDate</tt> processor, which formats a Joda
+	 * Constructs a new <code>FmtLocalDate</code> processor, which formats a Joda
 	 * LocalDate as a String using the supplied pattern and the default locale.
 	 * 
 	 * @param pattern
@@ -112,7 +112,7 @@ public class FmtLocalDate extends AbstractJodaFormattingProcessor<LocalDate> {
 	}
 
 	/**
-	 * Constructs a new <tt>FmtLocalDate</tt> processor, which formats a Joda
+	 * Constructs a new <code>FmtLocalDate</code> processor, which formats a Joda
 	 * LocalDate as a String using the supplied pattern and the default locale,
 	 * then calls the next processor in the chain.
 	 * 
@@ -128,13 +128,13 @@ public class FmtLocalDate extends AbstractJodaFormattingProcessor<LocalDate> {
 	}
 
 	/**
-	 * Constructs a new <tt>FmtLocalDate</tt> processor, which formats a Joda
+	 * Constructs a new <code>FmtLocalDate</code> processor, which formats a Joda
 	 * LocalDate as a String using the supplied pattern and the locale.
 	 * 
 	 * @param pattern
 	 *            the pattern to use
 	 * @param locale
-	 *            the locale to use (default used if <tt>null</tt>)
+	 *            the locale to use (default used if <code>null</code>)
 	 * @throws NullPointerException
 	 *             if pattern is null
 	 */
@@ -143,14 +143,14 @@ public class FmtLocalDate extends AbstractJodaFormattingProcessor<LocalDate> {
 	}
 
 	/**
-	 * Constructs a new <tt>FmtLocalDate</tt> processor, which formats a Joda
+	 * Constructs a new <code>FmtLocalDate</code> processor, which formats a Joda
 	 * LocalDate as a String using the supplied pattern and the locale, then
 	 * calls the next processor in the chain.
 	 * 
 	 * @param pattern
 	 *            the pattern to use
 	 * @param locale
-	 *            the locale to use (default used if <tt>null</tt>)
+	 *            the locale to use (default used if <code>null</code>)
 	 * @param next
 	 *            the next processor in the chain
 	 * @throws NullPointerException

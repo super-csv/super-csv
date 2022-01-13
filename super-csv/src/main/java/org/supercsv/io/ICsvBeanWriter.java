@@ -31,13 +31,13 @@ public interface ICsvBeanWriter extends ICsvWriter {
 	
 	/**
 	 * Writes the fields of the object as columns of a CSV file, using the supplied name mapping to map fields to the
-	 * appropriate columns. <tt>toString()</tt> will be called on each element prior to writing.
+	 * appropriate columns. <code>toString()</code> will be called on each element prior to writing.
 	 * 
 	 * @param source
 	 *            the object (bean instance) containing the values to write
 	 * @param nameMapping
 	 *            an array of Strings linking the fields in the bean to their corresponding CSV columns (the array
-	 *            length should match the number of columns). A <tt>null</tt> entry in the array indicates that the
+	 *            length should match the number of columns). A <code>null</code> entry in the array indicates that the
 	 *            column should be ignored (the column will be empty).
 	 * @throws IOException
 	 *             if an I/O error occurred
@@ -53,18 +53,18 @@ public interface ICsvBeanWriter extends ICsvWriter {
 	
 	/**
 	 * Writes the fields of the object as columns of a CSV file, using the supplied name mapping to map fields to the
-	 * appropriate columns. <tt>toString()</tt> will be called on each (processed) element prior to writing.
+	 * appropriate columns. <code>toString()</code> will be called on each (processed) element prior to writing.
 	 * 
 	 * @param source
 	 *            the object (bean instance) containing the values to write
 	 * @param nameMapping
 	 *            an array of Strings linking the fields in the bean to their corresponding CSV columns (the array
-	 *            length should match the number of columns). A <tt>null</tt> entry in the array indicates that the
+	 *            length should match the number of columns). A <code>null</code> entry in the array indicates that the
 	 *            column should be ignored (the column will be empty).
 	 * @param processors
 	 *            an array of CellProcessors used to further process data before it is written (each element in the
 	 *            processors array corresponds with a CSV column - the number of processors should match the number of
-	 *            columns). A <tt>null</tt> entry indicates no further processing is required (the value returned by
+	 *            columns). A <code>null</code> entry indicates no further processing is required (the value returned by
 	 *            toString() will be written as the column value).
 	 * @throws IOException
 	 *             if an I/O error occurred

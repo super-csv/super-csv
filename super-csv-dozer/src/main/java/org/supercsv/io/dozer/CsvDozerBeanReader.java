@@ -46,8 +46,8 @@ public class CsvDozerBeanReader extends AbstractCsvReader implements ICsvDozerBe
 	private final CsvDozerBeanData beanData = new CsvDozerBeanData();
 	
 	/**
-	 * Constructs a new <tt>CsvDozerBeanReader</tt> with the supplied Reader and CSV preferences and creates it's own
-	 * DozerBeanMapper. Note that the <tt>reader</tt> will be wrapped in a <tt>BufferedReader</tt> before accessed.
+	 * Constructs a new <code>CsvDozerBeanReader</code> with the supplied Reader and CSV preferences and creates it's own
+	 * DozerBeanMapper. Note that the <code>reader</code> will be wrapped in a <code>BufferedReader</code> before accessed.
 	 * 
 	 * @param reader
 	 *            the reader
@@ -62,7 +62,7 @@ public class CsvDozerBeanReader extends AbstractCsvReader implements ICsvDozerBe
 	}
 	
 	/**
-	 * Constructs a new <tt>CsvDozerBeanReader</tt> with the supplied (custom) Tokenizer and CSV preferences and creates
+	 * Constructs a new <code>CsvDozerBeanReader</code> with the supplied (custom) Tokenizer and CSV preferences and creates
 	 * it's own DozerBeanMapper. The tokenizer should be set up with the Reader (CSV input) and CsvPreference
 	 * beforehand.
 	 * 
@@ -79,8 +79,8 @@ public class CsvDozerBeanReader extends AbstractCsvReader implements ICsvDozerBe
 	}
 	
 	/**
-	 * Constructs a new <tt>CsvDozerBeanReader</tt> with the supplied Reader, CSV preferences and DozerBeanMapper. Note
-	 * that the <tt>reader</tt> will be wrapped in a <tt>BufferedReader</tt> before accessed.
+	 * Constructs a new <code>CsvDozerBeanReader</code> with the supplied Reader, CSV preferences and DozerBeanMapper. Note
+	 * that the <code>reader</code> will be wrapped in a <code>BufferedReader</code> before accessed.
 	 * 
 	 * @param reader
 	 *            the reader
@@ -101,7 +101,7 @@ public class CsvDozerBeanReader extends AbstractCsvReader implements ICsvDozerBe
 	}
 	
 	/**
-	 * Constructs a new <tt>CsvDozerBeanReader</tt> with the supplied (custom) Tokenizer, CSV preferences and
+	 * Constructs a new <code>CsvDozerBeanReader</code> with the supplied (custom) Tokenizer, CSV preferences and
 	 * DozerBeanMapper. The tokenizer should be set up with the Reader (CSV input) and CsvPreference beforehand.
 	 * 
 	 * @param tokenizer
@@ -240,7 +240,7 @@ public class CsvDozerBeanReader extends AbstractCsvReader implements ICsvDozerBe
 		 * @param clazz
 		 *            the class to add mapping configuration for (same as the type passed into write methods)
 		 * @param fieldMapping
-		 *            the field mapping for for each column (may contain <tt>null</tt> elements to indicate ignored
+		 *            the field mapping for for each column (may contain <code>null</code> elements to indicate ignored
 		 *            columns)
 		 * @throws NullPointerException
 		 *             if clazz or fieldMapping is null
@@ -262,7 +262,7 @@ public class CsvDozerBeanReader extends AbstractCsvReader implements ICsvDozerBe
 		 * @param clazz
 		 *            the class to add mapping configuration for (same as the type passed into write methods)
 		 * @param fieldMapping
-		 *            the field mapping for for each column (may contain <tt>null</tt> elements to indicate ignored
+		 *            the field mapping for for each column (may contain <code>null</code> elements to indicate ignored
 		 *            columns)
 		 * @throws NullPointerException
 		 *             if clazz, fieldMapping or hintTypes is null

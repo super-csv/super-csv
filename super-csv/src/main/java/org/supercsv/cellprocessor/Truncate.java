@@ -42,7 +42,7 @@ public class Truncate extends CellProcessorAdaptor implements BoolCellProcessor,
 	private final String suffix;
 	
 	/**
-	 * Constructs a new <tt>Truncate</tt> processor, which truncates a String to ensure it is no longer than the
+	 * Constructs a new <code>Truncate</code> processor, which truncates a String to ensure it is no longer than the
 	 * specified size.
 	 * 
 	 * @param maxSize
@@ -55,7 +55,7 @@ public class Truncate extends CellProcessorAdaptor implements BoolCellProcessor,
 	}
 	
 	/**
-	 * Constructs a new <tt>Truncate</tt> processor, which truncates a String to ensure it is no longer than the
+	 * Constructs a new <code>Truncate</code> processor, which truncates a String to ensure it is no longer than the
 	 * specified size, then appends the <code>suffix</code> String to indicate that the String has been truncated.
 	 * 
 	 * @param maxSize
@@ -74,7 +74,7 @@ public class Truncate extends CellProcessorAdaptor implements BoolCellProcessor,
 	}
 	
 	/**
-	 * Constructs a new <tt>Truncate</tt> processor, which truncates a String to ensure it is no longer than the
+	 * Constructs a new <code>Truncate</code> processor, which truncates a String to ensure it is no longer than the
 	 * specified size, then appends the <code>suffix</code> String to indicate that the String has been truncated and
 	 * calls the next processor in the chain.
 	 * 
@@ -97,7 +97,7 @@ public class Truncate extends CellProcessorAdaptor implements BoolCellProcessor,
 	}
 	
 	/**
-	 * Constructs a new <tt>Truncate</tt> processor, which truncates a String to ensure it is no longer than the
+	 * Constructs a new <code>Truncate</code> processor, which truncates a String to ensure it is no longer than the
 	 * specified size, then calls the next processor in the chain.
 	 * 
 	 * @param maxSize

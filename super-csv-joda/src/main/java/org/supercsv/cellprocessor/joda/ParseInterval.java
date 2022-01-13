@@ -31,14 +31,14 @@ import org.supercsv.util.CsvContext;
 public class ParseInterval extends CellProcessorAdaptor implements StringCellProcessor {
 
 	/**
-	 * Constructs a new <tt>ParseInterval</tt> processor, which parses a String
+	 * Constructs a new <code>ParseInterval</code> processor, which parses a String
 	 * as a Joda Interval.
 	 */
 	public ParseInterval() {
 	}
 
 	/**
-	 * Constructs a new <tt>ParseInterval</tt> processor, which parses a String
+	 * Constructs a new <code>ParseInterval</code> processor, which parses a String
 	 * as a Joda Interval, then calls the next processor in the chain.
 	 * 
 	 * @param next

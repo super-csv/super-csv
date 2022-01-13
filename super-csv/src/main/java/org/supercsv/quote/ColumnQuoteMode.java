@@ -33,7 +33,7 @@ public class ColumnQuoteMode implements QuoteMode {
 	private final Set<Integer> columnNumbers = new HashSet<Integer>();
 	
 	/**
-	 * Constructs a new <tt>ColumnQuoteMode</tt> that quotes columns by column number. If no column numbers are supplied
+	 * Constructs a new <code>ColumnQuoteMode</code> that quotes columns by column number. If no column numbers are supplied
 	 * (i.e. no parameters) then quoting will be determined per RFC4180.
 	 * 
 	 * @param columnsToQuote
@@ -51,8 +51,8 @@ public class ColumnQuoteMode implements QuoteMode {
 	}
 	
 	/**
-	 * Constructs a new <tt>ColumnQuoteMode</tt> that quotes columns if the element representing that column in the
-	 * supplied array is true. Please note that <tt>false</tt> doesn't disable quoting, it just means that quoting is
+	 * Constructs a new <code>ColumnQuoteMode</code> that quotes columns if the element representing that column in the
+	 * supplied array is true. Please note that <code>false</code> doesn't disable quoting, it just means that quoting is
 	 * determined by RFC4180.
 	 * 
 	 * @param columnsToQuote

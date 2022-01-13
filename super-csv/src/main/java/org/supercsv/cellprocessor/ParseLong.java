@@ -28,14 +28,14 @@ import org.supercsv.util.CsvContext;
 public class ParseLong extends CellProcessorAdaptor implements StringCellProcessor {
 	
 	/**
-	 * Constructs a new <tt>ParseLong</tt> processor, which converts a String to a Long.
+	 * Constructs a new <code>ParseLong</code> processor, which converts a String to a Long.
 	 */
 	public ParseLong() {
 		super();
 	}
 	
 	/**
-	 * Constructs a new <tt>ParseLong</tt> processor, which converts a String to a Long, then calls the next processor
+	 * Constructs a new <code>ParseLong</code> processor, which converts a String to a Long, then calls the next processor
 	 * in the chain.
 	 * 
 	 * @param next

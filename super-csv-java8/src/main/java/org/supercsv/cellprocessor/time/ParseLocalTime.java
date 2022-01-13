@@ -38,7 +38,7 @@ import org.supercsv.cellprocessor.ift.CellProcessor;
 public class ParseLocalTime extends AbstractTemporalAccessorParsingProcessor<LocalTime> {
 
 	/**
-	 * Constructs a new <tt>ParseLocalTime</tt> processor, which parses a
+	 * Constructs a new <code>ParseLocalTime</code> processor, which parses a
 	 * String as a LocalTime, accepting the same format as {@link LocalTime#parse(CharSequence)}
 	 *
 	 */
@@ -46,7 +46,7 @@ public class ParseLocalTime extends AbstractTemporalAccessorParsingProcessor<Loc
 	}
 
 	/**
-	 * Constructs a new <tt>ParseLocalTime</tt> processor, which parses a
+	 * Constructs a new <code>ParseLocalTime</code> processor, which parses a
 	 * String as a LocalTime, then calls the next processor in the
 	 * chain.
 	 *
@@ -59,7 +59,7 @@ public class ParseLocalTime extends AbstractTemporalAccessorParsingProcessor<Loc
 	}
 
 	/**
-	 * Constructs a new <tt>ParseLocalTime</tt> processor, which parses a
+	 * Constructs a new <code>ParseLocalTime</code> processor, which parses a
 	 * String as a LocalTime using the supplied formatter.
 	 *
 	 * @param formatter the formatter used for parsing
@@ -70,7 +70,7 @@ public class ParseLocalTime extends AbstractTemporalAccessorParsingProcessor<Loc
 	}
 
 	/**
-	 * Constructs a new <tt>ParseLocalTime</tt> processor, which parses a
+	 * Constructs a new <code>ParseLocalTime</code> processor, which parses a
 	 * String as a LocalTime using the supplied formatter, then calls
 	 * the next processor in the chain.
 	 *

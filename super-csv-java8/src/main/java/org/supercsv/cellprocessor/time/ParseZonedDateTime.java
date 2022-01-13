@@ -38,7 +38,7 @@ import org.supercsv.cellprocessor.ift.CellProcessor;
 public class ParseZonedDateTime extends AbstractTemporalAccessorParsingProcessor<ZonedDateTime> {
 
 	/**
-	 * Constructs a new <tt>ParseZonedDateTime</tt> processor, which parses a String
+	 * Constructs a new <code>ParseZonedDateTime</code> processor, which parses a String
 	 * in the same format accepted by {@link ZonedDateTime#parse(CharSequence)}
 	 * as a ZonedDateTime.
 	 */
@@ -47,7 +47,7 @@ public class ParseZonedDateTime extends AbstractTemporalAccessorParsingProcessor
 	}
 
 	/**
-	 * Constructs a new <tt>ParseZonedDateTime</tt> processor, which parses a String
+	 * Constructs a new <code>ParseZonedDateTime</code> processor, which parses a String
 	 * as a ZonedDateTime, then calls the next processor in the chain.
 	 *
 	 * @param next the next processor in the chain
@@ -59,7 +59,7 @@ public class ParseZonedDateTime extends AbstractTemporalAccessorParsingProcessor
 	}
 
 	/**
-	 * Constructs a new <tt>ParseZonedDateTime</tt> processor, which parses a String
+	 * Constructs a new <code>ParseZonedDateTime</code> processor, which parses a String
 	 * as a ZonedDateTime using the supplied formatter.
 	 *
 	 * @param formatter the formatter used for parsing
@@ -70,7 +70,7 @@ public class ParseZonedDateTime extends AbstractTemporalAccessorParsingProcessor
 	}
 
 	/**
-	 * Constructs a new <tt>ParseZonedDateTime</tt> processor, which parses a String
+	 * Constructs a new <code>ParseZonedDateTime</code> processor, which parses a String
 	 * as a ZonedDateTime using the supplied formatter, then calls the next
 	 * processor in the chain.
 	 *

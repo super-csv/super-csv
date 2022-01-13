@@ -27,7 +27,7 @@ import org.supercsv.util.CsvContext;
 public class DefaultCsvEncoder implements CsvEncoder {
 	
 	/**
-	 * Constructs a new <tt>DefaultCsvEncoder</tt>.
+	 * Constructs a new <code>DefaultCsvEncoder</code>.
 	 */
 	public DefaultCsvEncoder() {
 	}

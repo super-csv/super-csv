@@ -51,7 +51,7 @@ public class ParsePeriod extends CellProcessorAdaptor implements StringCellProce
 	private final PeriodFormatter formatter;
 
 	/**
-	 * Constructs a new <tt>ParsePeriod</tt> processor, which parses a String as
+	 * Constructs a new <code>ParsePeriod</code> processor, which parses a String as
 	 * a Joda Period.
 	 */
 	public ParsePeriod() {
@@ -59,7 +59,7 @@ public class ParsePeriod extends CellProcessorAdaptor implements StringCellProce
 	}
 
 	/**
-	 * Constructs a new <tt>ParsePeriod</tt> processor, which parses a String as
+	 * Constructs a new <code>ParsePeriod</code> processor, which parses a String as
 	 * a Joda Period, then calls the next processor in the chain.
 	 * 
 	 * @param next
@@ -73,7 +73,7 @@ public class ParsePeriod extends CellProcessorAdaptor implements StringCellProce
 	}
 
 	/**
-	 * Constructs a new <tt>ParsePeriod</tt> processor, which parses a String as
+	 * Constructs a new <code>ParsePeriod</code> processor, which parses a String as
 	 * a Joda Period using the supplied formatter.
 	 * 
 	 * @param formatter
@@ -87,7 +87,7 @@ public class ParsePeriod extends CellProcessorAdaptor implements StringCellProce
 	}
 
 	/**
-	 * Constructs a new <tt>ParsePeriod</tt> processor, which parses a String as
+	 * Constructs a new <code>ParsePeriod</code> processor, which parses a String as
 	 * a Joda Period using the supplied formatter, then calls the next processor
 	 * in the chain.
 	 * 
