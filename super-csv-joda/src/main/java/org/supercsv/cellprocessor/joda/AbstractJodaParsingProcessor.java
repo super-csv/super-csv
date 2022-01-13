@@ -36,7 +36,7 @@ public abstract class AbstractJodaParsingProcessor<T> extends
 	private final DateTimeFormatter formatter;
 
 	/**
-	 * Constructs a new <tt>AbstractJodaParsingProcessor</tt> processor, which
+	 * Constructs a new <code>AbstractJodaParsingProcessor</code> processor, which
 	 * parses a String as a Joda type.
 	 */
 	public AbstractJodaParsingProcessor() {
@@ -44,7 +44,7 @@ public abstract class AbstractJodaParsingProcessor<T> extends
 	}
 
 	/**
-	 * Constructs a new <tt>AbstractJodaParsingProcessor</tt> processor, which
+	 * Constructs a new <code>AbstractJodaParsingProcessor</code> processor, which
 	 * parses a String as a Joda type, then calls the next processor in the
 	 * chain.
 	 * 
@@ -59,7 +59,7 @@ public abstract class AbstractJodaParsingProcessor<T> extends
 	}
 
 	/**
-	 * Constructs a new <tt>AbstractJodaParsingProcessor</tt> processor, which
+	 * Constructs a new <code>AbstractJodaParsingProcessor</code> processor, which
 	 * parses a String as a Joda type using the supplied formatter.
 	 * 
 	 * @param formatter
@@ -73,7 +73,7 @@ public abstract class AbstractJodaParsingProcessor<T> extends
 	}
 
 	/**
-	 * Constructs a new <tt>AbstractJodaParsingProcessor</tt> processor, which
+	 * Constructs a new <code>AbstractJodaParsingProcessor</code> processor, which
 	 * parses a String as a Joda type using the supplied formatter, then calls
 	 * the next processor in the chain.
 	 * 

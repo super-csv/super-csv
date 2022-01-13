@@ -27,14 +27,14 @@ import org.supercsv.quote.QuoteMode;
  * <p>
  * <strong>Please note:</strong> the end of line symbols are <em>only</em> used for writing.
  * </p>
- * <table border="0" cellpadding="1" >
+ * <table>
  * <caption>Predefined configurations</caption>
  * <tbody>
  * <tr>
- * <th align="left">Constant</th>
- * <th align="left">Quote character</th>
- * <th align="left">Delimiter character</th>
- * <th align="left">End of line symbols</th>
+ * <th>Constant</th>
+ * <th>Quote character</th>
+ * <th>Delimiter character</th>
+ * <th>End of line symbols</th>
  * </tr>
  * <tr>
  * <td><code>STANDARD_PREFERENCE</code></td>
@@ -69,7 +69,7 @@ import org.supercsv.quote.QuoteMode;
  * </p>
  * <p>
  * If you wish enable this functionality again, then you can create a CsvPreference with the
- * <tt>surroundingSpacesNeedQuotes</tt> flag set to true (the default is false). This means that surrounding spaces
+ * <code>surroundingSpacesNeedQuotes</code> flag set to true (the default is false). This means that surrounding spaces
  * without quotes will be trimmed when reading, and quotes will automatically be added for Strings containing
  * surrounding spaces when writing.
  * </p>
@@ -151,7 +151,7 @@ public final class CsvPreference {
 	private final char quoteEscapeChar;
 	
 	/**
-	 * Constructs a new <tt>CsvPreference</tt> from a Builder.
+	 * Constructs a new <code>CsvPreference</code> from a Builder.
 	 */
 	private CsvPreference(Builder builder) {
 		this.quoteChar = builder.quoteChar;
@@ -269,7 +269,7 @@ public final class CsvPreference {
 	}
 
 	/**
-	 * Builds immutable <tt>CsvPreference</tt> instances. The builder pattern allows for additional preferences to be
+	 * Builds immutable <code>CsvPreference</code> instances. The builder pattern allows for additional preferences to be
 	 * added in the future.
 	 */
 	public static class Builder {
@@ -297,7 +297,7 @@ public final class CsvPreference {
 		private char quoteEscapeChar;
 		
 		/**
-		 * Constructs a Builder with all of the values from an existing <tt>CsvPreference</tt> instance. Useful if you
+		 * Constructs a Builder with all of the values from an existing <code>CsvPreference</code> instance. Useful if you
 		 * want to base your preferences off one of the existing CsvPreference constants.
 		 * 
 		 * @param preference
@@ -348,7 +348,7 @@ public final class CsvPreference {
 		
 		/**
 		 * Flag indicating whether spaces at the beginning or end of a cell should be ignored if they're not surrounded
-		 * by quotes (applicable to both reading and writing CSV). The default is <tt>false</tt>, as spaces
+		 * by quotes (applicable to both reading and writing CSV). The default is <code>false</code>, as spaces
 		 * "are considered part of a field and should not be ignored" according to RFC 4180.
 		 * 
 		 * @since 2.0.0
@@ -364,7 +364,7 @@ public final class CsvPreference {
 		
 		/**
 		 * Flag indicating whether empty lines (i.e. containing only end of line symbols) should be ignored. The default
-		 * is <tt>true</tt>.
+		 * is <code>true</code>.
 		 * 
 		 * @since 2.2.1
 		 * @param ignoreEmptyLines
@@ -440,7 +440,7 @@ public final class CsvPreference {
 		 * CSV). This option allows CSV readers to fail fast when encountering CSV with mismatching quotes - the normal
 		 * behaviour would be to continue reading until the matching quote is found, which could potentially mean
 		 * reading the whole file (and exhausting all available memory). Zero or a negative value will disable this
-		 * option. The default is <tt>0</tt>.
+		 * option. The default is <code>0</code>.
 		 * 
 		 * @since 2.4.0
 		 * @param maxLinesPerRow
@@ -454,7 +454,7 @@ public final class CsvPreference {
 		
 		/**
 		 * Uses an EmptyColumnParsing to determine whether empty String (i.e. "") should be read as empty string instead as null.
-		 * The default is <tt>ParseEmptyColumnsAsNull</tt>.
+		 * The default is <code>ParseEmptyColumnsAsNull</code>.
 		 *
 		 * @since 2.4.1
 		 * @param emptyColumnParsing
@@ -471,8 +471,8 @@ public final class CsvPreference {
 
 		/**
 		 * Value indicating the character to use for escaping a quote char.  The default value is
-		 * the quote char (which is a double-quote <tt>"</tt> character by default).  This value
-		 * must not be the same as <tt>delimiterChar</tt>
+		 * the quote char (which is a double-quote <code>"</code> character by default).  This value
+		 * must not be the same as <code>delimiterChar</code>
 		 *
 		 * @since 2.5.0
 		 * @param quoteEscapeChar

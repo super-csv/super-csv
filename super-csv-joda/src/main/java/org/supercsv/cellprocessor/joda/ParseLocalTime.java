@@ -45,14 +45,14 @@ public class ParseLocalTime extends
 		AbstractJodaParsingProcessor<LocalTime> {
 
 	/**
-	 * Constructs a new <tt>ParseLocalTime</tt> processor, which parses a
+	 * Constructs a new <code>ParseLocalTime</code> processor, which parses a
 	 * String as a Joda LocalTime.
 	 */
 	public ParseLocalTime() {
 	}
 
 	/**
-	 * Constructs a new <tt>ParseLocalTime</tt> processor, which parses a
+	 * Constructs a new <code>ParseLocalTime</code> processor, which parses a
 	 * String as a Joda LocalTime, then calls the next processor in the
 	 * chain.
 	 * 
@@ -66,7 +66,7 @@ public class ParseLocalTime extends
 	}
 
 	/**
-	 * Constructs a new <tt>ParseLocalTime</tt> processor, which parses a
+	 * Constructs a new <code>ParseLocalTime</code> processor, which parses a
 	 * String as a Joda LocalTime using the supplied formatter.
 	 * 
 	 * @param formatter
@@ -79,7 +79,7 @@ public class ParseLocalTime extends
 	}
 
 	/**
-	 * Constructs a new <tt>ParseLocalTime</tt> processor, which parses a
+	 * Constructs a new <code>ParseLocalTime</code> processor, which parses a
 	 * String as a Joda LocalTime using the supplied formatter, then calls
 	 * the next processor in the chain.
 	 * 

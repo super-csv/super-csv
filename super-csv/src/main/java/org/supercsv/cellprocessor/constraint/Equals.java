@@ -41,7 +41,7 @@ public class Equals extends CellProcessorAdaptor implements BoolCellProcessor, D
 	private boolean constantSupplied;
 	
 	/**
-	 * Constructs a new <tt>Equals</tt> processor, which ensures all input data is equal.
+	 * Constructs a new <code>Equals</code> processor, which ensures all input data is equal.
 	 */
 	public Equals() {
 		super();
@@ -50,7 +50,7 @@ public class Equals extends CellProcessorAdaptor implements BoolCellProcessor, D
 	}
 	
 	/**
-	 * Constructs a new <tt>Equals</tt> processor, which ensures all input data is equal to the supplied constant value.
+	 * Constructs a new <code>Equals</code> processor, which ensures all input data is equal to the supplied constant value.
 	 * 
 	 * @param constantValue
 	 *            the constant value that all input must equal
@@ -62,7 +62,7 @@ public class Equals extends CellProcessorAdaptor implements BoolCellProcessor, D
 	}
 	
 	/**
-	 * Constructs a new <tt>Equals</tt> processor, which ensures all input data is equal, then calls the the next
+	 * Constructs a new <code>Equals</code> processor, which ensures all input data is equal, then calls the the next
 	 * processor in the chain.
 	 * 
 	 * @param next
@@ -77,7 +77,7 @@ public class Equals extends CellProcessorAdaptor implements BoolCellProcessor, D
 	}
 	
 	/**
-	 * Constructs a new <tt>Equals</tt> processor, which ensures all input data is equal to the supplied constant value,
+	 * Constructs a new <code>Equals</code> processor, which ensures all input data is equal to the supplied constant value,
 	 * then calls the the next processor in the chain.
 	 * 
 	 * @param constantValue

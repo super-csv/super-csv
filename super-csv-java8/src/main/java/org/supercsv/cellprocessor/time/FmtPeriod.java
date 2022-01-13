@@ -34,7 +34,7 @@ import org.supercsv.util.CsvContext;
 public class FmtPeriod extends CellProcessorAdaptor {
 
 	/**
-	 * Constructs a new <tt>FmtPeriod</tt> processor, which formats a
+	 * Constructs a new <code>FmtPeriod</code> processor, which formats a
 	 * Period as a String.
 	 */
 	public FmtPeriod() {
@@ -42,7 +42,7 @@ public class FmtPeriod extends CellProcessorAdaptor {
 	}
 
 	/**
-	 * Constructs a new <tt>FmtPeriod</tt> processor, which formats a
+	 * Constructs a new <code>FmtPeriod</code> processor, which formats a
 	 * Period as a String, then calls the next processor in the chain.
 	 *
 	 * @param next the next processor in the chain

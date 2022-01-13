@@ -23,7 +23,7 @@ import org.supercsv.exception.SuperCsvConstraintViolationException;
 import org.supercsv.util.CsvContext;
 
 /**
- * This processor checks if the input is <tt>null</tt> or an empty string, and raises an exception in that case. In all
+ * This processor checks if the input is <code>null</code> or an empty string, and raises an exception in that case. In all
  * other cases, the next processor in the chain is invoked.
  * <p>
  * You should only use this processor, when a column must be non-null, but you do not need to apply any other processor
@@ -38,14 +38,14 @@ import org.supercsv.util.CsvContext;
 public class StrNotNullOrEmpty extends CellProcessorAdaptor implements StringCellProcessor {
 	
 	/**
-	 * Constructs a new <tt>StrNotNullOrEmpty</tt> processor, which checks for null/empty Strings.
+	 * Constructs a new <code>StrNotNullOrEmpty</code> processor, which checks for null/empty Strings.
 	 */
 	public StrNotNullOrEmpty() {
 		super();
 	}
 	
 	/**
-	 * Constructs a new <tt>StrNotNullOrEmpty</tt> processor, which checks for null/empty Strings, then calls the next
+	 * Constructs a new <code>StrNotNullOrEmpty</code> processor, which checks for null/empty Strings, then calls the next
 	 * processor in the chain.
 	 * 
 	 * @param next

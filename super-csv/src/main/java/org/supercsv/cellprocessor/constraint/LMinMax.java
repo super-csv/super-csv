@@ -73,7 +73,7 @@ public class LMinMax extends CellProcessorAdaptor implements StringCellProcessor
 	private final long max;
 	
 	/**
-	 * Constructs a new <tt>LMinMax</tt> processor, which converts the input data to a Long and and ensures the value is
+	 * Constructs a new <code>LMinMax</code> processor, which converts the input data to a Long and and ensures the value is
 	 * between the supplied min and max values.
 	 * 
 	 * @param min
@@ -91,7 +91,7 @@ public class LMinMax extends CellProcessorAdaptor implements StringCellProcessor
 	}
 	
 	/**
-	 * Constructs a new <tt>LMinMax</tt> processor, which converts the input data to a Long and and ensures the value is
+	 * Constructs a new <code>LMinMax</code> processor, which converts the input data to a Long and and ensures the value is
 	 * between the supplied min and max values, then calls the next processor in the chain.
 	 * 
 	 * @param min

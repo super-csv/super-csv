@@ -39,7 +39,7 @@ public class FmtZoneId extends CellProcessorAdaptor {
 	private final Locale locale;
 
 	/**
-	 * Constructs a new <tt>FmtZoneId</tt> processor, which formats a
+	 * Constructs a new <code>FmtZoneId</code> processor, which formats a
 	 * ZoneId as a String.
 	 */
 	public FmtZoneId() {
@@ -48,7 +48,7 @@ public class FmtZoneId extends CellProcessorAdaptor {
 	}
 
 	/**
-	 * Constructs a new <tt>FmtZoneId</tt> processor, which formats a
+	 * Constructs a new <code>FmtZoneId</code> processor, which formats a
 	 * ZoneId as a String, then calls the next processor in the chain.
 	 *
 	 * @param next next processor in the chain
@@ -61,7 +61,7 @@ public class FmtZoneId extends CellProcessorAdaptor {
 	}
 
 	/**
-	 * Constructs a new <tt>FmtZoneId</tt> processor, which formats a
+	 * Constructs a new <code>FmtZoneId</code> processor, which formats a
 	 * ZoneId as String, then calls the next processor in the chain.
 	 *
 	 * @param textStyle the TextStyle to use for formatting
@@ -76,7 +76,7 @@ public class FmtZoneId extends CellProcessorAdaptor {
 	}
 
 	/**
-	 * Constructs a new <tt>FmtZoneId</tt> processor, which formats a
+	 * Constructs a new <code>FmtZoneId</code> processor, which formats a
 	 * ZoneId as String, then calls the next processor in the chain.
 	 *
 	 * @param textStyle the TextStyle to use for formatting

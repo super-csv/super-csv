@@ -29,11 +29,11 @@ import org.supercsv.util.CsvContext;
  * token". Such a token could be the string "[empty]" which could denote that a column is different from the empty
  * string "".
  * <p>
- * For example, to convert the String <tt>"[empty]"</tt> to -1 (an int representing 'empty') you could use <code>
+ * For example, to convert the String <code>"[empty]"</code> to -1 (an int representing 'empty') you could use <code>
  * new Token("[empty]", -1)
  * </code>
  * <p>
- * Comparison between the input and the <tt>token</tt> is based on the object's <tt>equals()</tt> method.
+ * Comparison between the input and the <code>token</code> is based on the object's <code>equals()</code> method.
  * 
  * @since 1.02
  * @author Kasper B. Graversen
@@ -45,7 +45,7 @@ public class Token extends CellProcessorAdaptor implements BoolCellProcessor, Da
 	private final Object token;
 	
 	/**
-	 * Constructs a new <tt>Token</tt> processor, which returns the supplied value if the token is encountered,
+	 * Constructs a new <code>Token</code> processor, which returns the supplied value if the token is encountered,
 	 * otherwise it returns the input unchanged.
 	 * 
 	 * @param token
@@ -60,7 +60,7 @@ public class Token extends CellProcessorAdaptor implements BoolCellProcessor, Da
 	}
 	
 	/**
-	 * Constructs a new <tt>Token</tt> processor, which returns the supplied value if the token is encountered,
+	 * Constructs a new <code>Token</code> processor, which returns the supplied value if the token is encountered,
 	 * otherwise it passes the input unchanged to the next processor in the chain.
 	 * 
 	 * @param token

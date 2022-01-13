@@ -39,7 +39,7 @@ public abstract class AbstractTemporalAccessorParsingProcessor<T extends Tempora
 	private final DateTimeFormatter formatter;
 
 	/**
-	 * Constructs a new <tt>AbstractTemporalAccessorParsingProcessor</tt> processor, which
+	 * Constructs a new <code>AbstractTemporalAccessorParsingProcessor</code> processor, which
 	 * parses a String as a {@link TemporalAccessor} type.
 	 */
 	public AbstractTemporalAccessorParsingProcessor() {
@@ -47,7 +47,7 @@ public abstract class AbstractTemporalAccessorParsingProcessor<T extends Tempora
 	}
 
 	/**
-	 * Constructs a new <tt>AbstractTemporalAccessorParsingProcessor</tt> processor, which
+	 * Constructs a new <code>AbstractTemporalAccessorParsingProcessor</code> processor, which
 	 * parses a String as a {@link TemporalAccessor} type, then calls the next processor in the
 	 * chain.
 	 *
@@ -60,7 +60,7 @@ public abstract class AbstractTemporalAccessorParsingProcessor<T extends Tempora
 	}
 
 	/**
-	 * Constructs a new <tt>AbstractTemporalAccessorParsingProcessor</tt> processor, which
+	 * Constructs a new <code>AbstractTemporalAccessorParsingProcessor</code> processor, which
 	 * parses a String as a {@link TemporalAccessor} type using the supplied formatter.
 	 *
 	 * @param formatter the formatter used for parsing
@@ -72,7 +72,7 @@ public abstract class AbstractTemporalAccessorParsingProcessor<T extends Tempora
 	}
 
 	/**
-	 * Constructs a new <tt>AbstractTemporalAccessorParsingProcessor</tt> processor, which
+	 * Constructs a new <code>AbstractTemporalAccessorParsingProcessor</code> processor, which
 	 * parses a String as a {@link TemporalAccessor} type using the supplied formatter, then calls
 	 * the next processor in the chain.
 	 *

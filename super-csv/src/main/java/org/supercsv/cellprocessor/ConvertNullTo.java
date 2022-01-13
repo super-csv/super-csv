@@ -24,14 +24,14 @@ import org.supercsv.cellprocessor.ift.StringCellProcessor;
 import org.supercsv.util.CsvContext;
 
 /**
- * This processor returns a specified default value if the input is <tt>null</tt>. This is handy when writing partially
+ * This processor returns a specified default value if the input is <code>null</code>. This is handy when writing partially
  * filled beans, maps and arrays, as for each column a default value can be specified.
  * <p>
- * To return the String <tt>""</tt> when a null is encountered use <code>
+ * To return the String <code>""</code> when a null is encountered use <code>
  * new ConvertNullTo("\"\"");
  * </code>
  * <p>
- * If you need further processing of the value in case the value is not <tt>null</tt>, you can link the processor with
+ * If you need further processing of the value in case the value is not <code>null</code>, you can link the processor with
  * other processors such as <code>
  * new ConvertNullTo("\"\"", new Truncate(3))
  * </code>
@@ -45,11 +45,11 @@ public class ConvertNullTo extends CellProcessorAdaptor implements BoolCellProce
 	private final Object returnValue;
 	
 	/**
-	 * Constructs a new <tt>ConvertNullTo</tt> processor, which returns a specified default value if the input is
-	 * <tt>null</tt>.
+	 * Constructs a new <code>ConvertNullTo</code> processor, which returns a specified default value if the input is
+	 * <code>null</code>.
 	 * 
 	 * @param returnValue
-	 *            the value to return if the input is <tt>null</tt>
+	 *            the value to return if the input is <code>null</code>
 	 */
 	public ConvertNullTo(final Object returnValue) {
 		super();
@@ -57,13 +57,13 @@ public class ConvertNullTo extends CellProcessorAdaptor implements BoolCellProce
 	}
 	
 	/**
-	 * Constructs a new <tt>ConvertNullTo</tt> processor, which returns a specified default value if the input is
-	 * <tt>null</tt>. If the input is not <tt>null</tt>, then the next processor is executed.
+	 * Constructs a new <code>ConvertNullTo</code> processor, which returns a specified default value if the input is
+	 * <code>null</code>. If the input is not <code>null</code>, then the next processor is executed.
 	 * 
 	 * @param returnValue
-	 *            the value to return if the input is <tt>null</tt>
+	 *            the value to return if the input is <code>null</code>
 	 * @param next
-	 *            the next <tt>CellProcessor</tt> in the chain
+	 *            the next <code>CellProcessor</code> in the chain
 	 * @throws NullPointerException
 	 *             if next is null
 	 */

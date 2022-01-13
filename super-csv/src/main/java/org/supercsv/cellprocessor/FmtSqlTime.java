@@ -40,7 +40,7 @@ public class FmtSqlTime extends CellProcessorAdaptor implements DateCellProcesso
 	private final String dateFormat;
 	
 	/**
-	 * Constructs a new <tt>FmtTime</tt> processor, which converts a time into a formatted string using
+	 * Constructs a new <code>FmtTime</code> processor, which converts a time into a formatted string using
 	 * SimpleDateFormat.
 	 * 
 	 * @param dateFormat
@@ -55,7 +55,7 @@ public class FmtSqlTime extends CellProcessorAdaptor implements DateCellProcesso
 	}
 	
 	/**
-	 * Constructs a new <tt>FmtTime</tt> processor, which converts a time into a formatted string using
+	 * Constructs a new <code>FmtTime</code> processor, which converts a time into a formatted string using
 	 * SimpleDateFormat, then calls the next processor in the chain.
 	 * 
 	 * @param dateFormat
