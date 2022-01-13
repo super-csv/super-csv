@@ -30,14 +30,14 @@ import org.supercsv.util.CsvContext;
 public class FmtInterval extends CellProcessorAdaptor {
 
 	/**
-	 * Constructs a new <tt>FmtInterval</tt> processor, which formats a Joda
+	 * Constructs a new <code>FmtInterval</code> processor, which formats a Joda
 	 * Interval as a String.
 	 */
 	public FmtInterval() {
 	}
 
 	/**
-	 * Constructs a new <tt>FmtInterval</tt> processor, which formats a Joda
+	 * Constructs a new <code>FmtInterval</code> processor, which formats a Joda
 	 * Interval as a String, then calls the next processor in the chain.
 	 * 
 	 * @param next

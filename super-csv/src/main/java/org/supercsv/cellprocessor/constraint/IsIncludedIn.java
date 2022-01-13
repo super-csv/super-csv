@@ -44,7 +44,7 @@ public class IsIncludedIn extends CellProcessorAdaptor implements BoolCellProces
 	private final Set<Object> possibleValues = new HashSet<Object>();
 	
 	/**
-	 * Constructs a new <tt>IsIncludedIn</tt> processor, which ensures that the input value belongs to a specific set of
+	 * Constructs a new <code>IsIncludedIn</code> processor, which ensures that the input value belongs to a specific set of
 	 * given values.
 	 * 
 	 * @param possibleValues
@@ -61,7 +61,7 @@ public class IsIncludedIn extends CellProcessorAdaptor implements BoolCellProces
 	}
 	
 	/**
-	 * Constructs a new <tt>IsIncludedIn</tt> processor, which ensures that the input value belongs to a specific set of
+	 * Constructs a new <code>IsIncludedIn</code> processor, which ensures that the input value belongs to a specific set of
 	 * given values, then calls the next processor in the chain.
 	 * 
 	 * @param possibleValues
@@ -80,7 +80,7 @@ public class IsIncludedIn extends CellProcessorAdaptor implements BoolCellProces
 	}
 	
 	/**
-	 * Constructs a new <tt>IsIncludedIn</tt> processor, which ensures that the input value belongs to a specific set of
+	 * Constructs a new <code>IsIncludedIn</code> processor, which ensures that the input value belongs to a specific set of
 	 * given values.
 	 * 
 	 * @param possibleValues
@@ -97,7 +97,7 @@ public class IsIncludedIn extends CellProcessorAdaptor implements BoolCellProces
 	}
 	
 	/**
-	 * Constructs a new <tt>IsIncludedIn</tt> processor, which ensures that the input value belongs to a specific set of
+	 * Constructs a new <code>IsIncludedIn</code> processor, which ensures that the input value belongs to a specific set of
 	 * given values, then calls the next processor in the chain.
 	 * 
 	 * @param possibleValues

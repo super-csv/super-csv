@@ -46,8 +46,8 @@ public class CsvBeanWriter extends AbstractCsvWriter implements ICsvBeanWriter {
 	private final MethodCache cache = new MethodCache();
 	
 	/**
-	 * Constructs a new <tt>CsvBeanWriter</tt> with the supplied Writer and CSV preferences. Note that the
-	 * <tt>writer</tt> will be wrapped in a <tt>BufferedWriter</tt> before accessed.
+	 * Constructs a new <code>CsvBeanWriter</code> with the supplied Writer and CSV preferences. Note that the
+	 * <code>writer</code> will be wrapped in a <code>BufferedWriter</code> before accessed.
 	 * 
 	 * @param writer
 	 *            the writer

@@ -36,8 +36,8 @@ public class CsvListWriter extends AbstractCsvWriter implements ICsvListWriter {
 	private final List<Object> processedColumns = new ArrayList<Object>();
 	
 	/**
-	 * Constructs a new <tt>CsvListWriter</tt> with the supplied Writer and CSV preferences. Note that the
-	 * <tt>reader</tt> will be wrapped in a <tt>BufferedReader</tt> before accessed.
+	 * Constructs a new <code>CsvListWriter</code> with the supplied Writer and CSV preferences. Note that the
+	 * <code>reader</code> will be wrapped in a <code>BufferedReader</code> before accessed.
 	 * 
 	 * @param writer
 	 *            the writer

@@ -45,7 +45,7 @@ public abstract class AbstractCsvReader implements ICsvReader {
 	private int rowNumber = 0;
 	
 	/**
-	 * Constructs a new <tt>AbstractCsvReader</tt>, using the default {@link Tokenizer}.
+	 * Constructs a new <code>AbstractCsvReader</code>, using the default {@link Tokenizer}.
 	 * 
 	 * @param reader
 	 *            the reader
@@ -66,7 +66,7 @@ public abstract class AbstractCsvReader implements ICsvReader {
 	}
 	
 	/**
-	 * Constructs a new <tt>AbstractCsvReader</tt>, using a custom {@link Tokenizer} (which should have already been set
+	 * Constructs a new <code>AbstractCsvReader</code>, using a custom {@link Tokenizer} (which should have already been set
 	 * up with the Reader, CsvPreference, and CsvContext). This constructor should only be used if the default Tokenizer
 	 * doesn't provide the required functionality.
 	 * 

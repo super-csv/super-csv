@@ -29,7 +29,7 @@ import org.supercsv.cellprocessor.ift.CellProcessor;
 public class ParseLocalDate extends AbstractTemporalAccessorParsingProcessor<LocalDate> {
 
 	/**
-	 * Constructs a new <tt>ParseLocalDate</tt> processor,
+	 * Constructs a new <code>ParseLocalDate</code> processor,
 	 * which parses a String recognised by {@link LocalDate#parse(CharSequence)}
 	 * as a LocalDate.
 	 */
@@ -37,7 +37,7 @@ public class ParseLocalDate extends AbstractTemporalAccessorParsingProcessor<Loc
 	}
 
 	/**
-	 * Constructs a new <tt>ParseLocalDate</tt> processor,
+	 * Constructs a new <code>ParseLocalDate</code> processor,
 	 * which parses a String recognised by {@link LocalDate#parse(CharSequence)}
 	 * as a LocalDate, then calls the next processor in the chain.
 	 *
@@ -49,7 +49,7 @@ public class ParseLocalDate extends AbstractTemporalAccessorParsingProcessor<Loc
 	}
 
 	/**
-	 * Constructs a new <tt>ParseLocalDate</tt> processor, which parses a String
+	 * Constructs a new <code>ParseLocalDate</code> processor, which parses a String
 	 * as a LocalDate using the supplied formatter.
 	 *
 	 * @param formatter the formatter used for parsing
@@ -60,7 +60,7 @@ public class ParseLocalDate extends AbstractTemporalAccessorParsingProcessor<Loc
 	}
 
 	/**
-	 * Constructs a new <tt>ParseLocalDate</tt> processor, which parses a String
+	 * Constructs a new <code>ParseLocalDate</code> processor, which parses a String
 	 * as a LocalDate using the supplied formatter, then calls the next
 	 * processor in the chain.
 	 *

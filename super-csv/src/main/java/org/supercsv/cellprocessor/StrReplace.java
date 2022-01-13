@@ -41,7 +41,7 @@ public class StrReplace extends CellProcessorAdaptor implements BoolCellProcesso
 	private final String replacement;
 	
 	/**
-	 * Constructs a new <tt>StrReplace</tt> processor, which replaces each substring of the input that matches the regex
+	 * Constructs a new <code>StrReplace</code> processor, which replaces each substring of the input that matches the regex
 	 * with the supplied replacement.
 	 * 
 	 * @param regex
@@ -63,7 +63,7 @@ public class StrReplace extends CellProcessorAdaptor implements BoolCellProcesso
 	}
 	
 	/**
-	 * Constructs a new <tt>StrReplace</tt> processor, which replaces each substring of the input that matches the regex
+	 * Constructs a new <code>StrReplace</code> processor, which replaces each substring of the input that matches the regex
 	 * with the supplied replacement, then calls the next processor in the chain.
 	 * 
 	 * @param regex

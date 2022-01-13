@@ -39,8 +39,8 @@ public interface ICsvDozerBeanReader extends ICsvReader {
 	 * <p>
 	 * Each element of the fieldMapping array represents a CSV column to be read and uses the standard Dozer field
 	 * mapping syntax. For example, if you were configuring the mappings for Person class you might define
-	 * <tt>firstName</tt> as the first element (just a simple field mapping), <tt>address.city</tt> as the second
-	 * element (a nested - or deep - field mapping), and <tt>accounts[0].balance</tt> as the third element (index based
+	 * <code>firstName</code> as the first element (just a simple field mapping), <code>address.city</code> as the second
+	 * element (a nested - or deep - field mapping), and <code>accounts[0].balance</code> as the third element (index based
 	 * mapping).
 	 * <p>
 	 * If you require access to the other features of Dozer in your mappings (customer getters/setters, bean factories,
@@ -49,7 +49,7 @@ public interface ICsvDozerBeanReader extends ICsvReader {
 	 * @param clazz
 	 *            the class to add mapping configuration for (same as the type passed into write methods)
 	 * @param fieldMapping
-	 *            the field mapping for for each column (may contain <tt>null</tt> elements to indicate ignored columns)
+	 *            the field mapping for for each column (may contain <code>null</code> elements to indicate ignored columns)
 	 * @throws NullPointerException
 	 *             if clazz or fieldMapping is null
 	 * @since 2.0.0
@@ -65,12 +65,12 @@ public interface ICsvDozerBeanReader extends ICsvReader {
 	 * <p>
 	 * Each element of the fieldMapping array represents a CSV column to be read and uses the standard Dozer field
 	 * mapping syntax. For example, if you were configuring the mappings for Person class you might define
-	 * <tt>firstName</tt> as the first element (just a simple field mapping), <tt>address.city</tt> as the second
-	 * element (a nested - or deep - field mapping), and <tt>accounts[0].balance</tt> as the third element (index based
+	 * <code>firstName</code> as the first element (just a simple field mapping), <code>address.city</code> as the second
+	 * element (a nested - or deep - field mapping), and <code>accounts[0].balance</code> as the third element (index based
 	 * mapping).
 	 * <p>
-	 * If you are mapping to an indexed list element (e.g. <tt>accounts[0]</tt>) and using a cell processor to return a
-	 * custom bean type (e.g. a <tt>ParseAccount</tt> processor that creates an <tt>Account</tt> bean), you will need to
+	 * If you are mapping to an indexed list element (e.g. <code>accounts[0]</code>) and using a cell processor to return a
+	 * custom bean type (e.g. a <code>ParseAccount</code> processor that creates an <code>Account</code> bean), you will need to
 	 * specify a hint for that column so Dozer can map that column.
 	 * <p>
 	 * If you require access to the other features of Dozer in your mappings (customer getters/setters, bean factories,
@@ -79,10 +79,10 @@ public interface ICsvDozerBeanReader extends ICsvReader {
 	 * @param clazz
 	 *            the class to add mapping configuration for (same as the type passed into write methods)
 	 * @param fieldMapping
-	 *            the field mapping for for each column (may contain <tt>null</tt> elements to indicate ignored columns)
+	 *            the field mapping for for each column (may contain <code>null</code> elements to indicate ignored columns)
 	 * @param hintTypes
 	 *            an array of types used as hints for Dozer when mapping to an indexed list element (e.g.
-	 *            <tt>accounts[0]</tt>) - a null element indicates no hint is required for that column
+	 *            <code>accounts[0]</code>) - a null element indicates no hint is required for that column
 	 * @throws NullPointerException
 	 *             if clazz, fieldMapping, or hintTypes is null
 	 * @throws IllegalArgumentException
@@ -136,7 +136,7 @@ public interface ICsvDozerBeanReader extends ICsvReader {
 	/**
 	 * Reads a row of a CSV file and populates an instance of the specified class, using Dozer to map column values to
 	 * the appropriate fields. Before population the data can be further processed by cell processors (each element in
-	 * the processors array corresponds with a CSV column). A <tt>null</tt> entry in the processors array indicates no
+	 * the processors array corresponds with a CSV column). A <code>null</code> entry in the processors array indicates no
 	 * further processing is required (the unprocessed String value will be set on the bean's field) - though Dozer will
 	 * attempt some conversions of it's own it the types don't match.
 	 * 
@@ -162,7 +162,7 @@ public interface ICsvDozerBeanReader extends ICsvReader {
 	/**
 	 * Reads a row of a CSV file and populates the supplied bean, using Dozer to map column values to the appropriate
 	 * fields. Before population the data can be further processed by cell processors (each element in the processors
-	 * array corresponds with a CSV column). A <tt>null</tt> entry in the processors array indicates no further
+	 * array corresponds with a CSV column). A <code>null</code> entry in the processors array indicates no further
 	 * processing is required (the unprocessed String value will be set on the bean's field) - though Dozer will attempt
 	 * some conversions of it's own it the types don't match.
 	 * 

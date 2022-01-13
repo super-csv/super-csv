@@ -195,7 +195,7 @@ public final class ReflectionUtils {
 	/**
 	 * Helper method for findSetter() that returns the setter method of the supplied name, whose parameter type is
 	 * compatible with the supplied argument type (will allow an object of that type to be used when invoking the
-	 * setter), or returns <tt>null</tt> if no match is found. Preference is given to setters whose parameter type is an
+	 * setter), or returns <code>null</code> if no match is found. Preference is given to setters whose parameter type is an
 	 * exact match, but if there is none, then the first compatible method found is returned.
 	 * 
 	 * @param clazz

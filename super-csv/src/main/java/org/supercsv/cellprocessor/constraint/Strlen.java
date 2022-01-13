@@ -38,7 +38,7 @@ public class Strlen extends CellProcessorAdaptor implements StringCellProcessor 
 	private final Set<Integer> requiredLengths = new HashSet<Integer>();
 	
 	/**
-	 * Constructs a new <tt>Strlen</tt> processor, which ensures that the input String has a length equal to any of the
+	 * Constructs a new <code>Strlen</code> processor, which ensures that the input String has a length equal to any of the
 	 * supplied lengths.
 	 * 
 	 * @param requiredLengths
@@ -55,7 +55,7 @@ public class Strlen extends CellProcessorAdaptor implements StringCellProcessor 
 	}
 	
 	/**
-	 * Constructs a new <tt>Strlen</tt> processor, which ensures that the input String has a length equal to the
+	 * Constructs a new <code>Strlen</code> processor, which ensures that the input String has a length equal to the
 	 * supplied length, then calls the next processor in the chain.
 	 * 
 	 * @param requiredLength
@@ -72,7 +72,7 @@ public class Strlen extends CellProcessorAdaptor implements StringCellProcessor 
 	}
 	
 	/**
-	 * Constructs a new <tt>Strlen</tt> processor, which ensures that the input String has a length equal to any of the
+	 * Constructs a new <code>Strlen</code> processor, which ensures that the input String has a length equal to any of the
 	 * supplied lengths, then calls the next processor in the chain.
 	 * 
 	 * @param requiredLengths

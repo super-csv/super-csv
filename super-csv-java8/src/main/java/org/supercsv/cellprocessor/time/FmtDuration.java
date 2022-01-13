@@ -34,7 +34,7 @@ import org.supercsv.util.CsvContext;
 public class FmtDuration extends CellProcessorAdaptor {
 
 	/**
-	 * Constructs a new <tt>FmtDuration</tt> processor, which formats a
+	 * Constructs a new <code>FmtDuration</code> processor, which formats a
 	 * Duration as a String in the ISO 8601 duration format,
 	 * in the same way as {@link Duration#toString()}
 	 *
@@ -44,7 +44,7 @@ public class FmtDuration extends CellProcessorAdaptor {
 	}
 
 	/**
-	 * Constructs a new <tt>FmtDuration</tt> processor, which formats a
+	 * Constructs a new <code>FmtDuration</code> processor, which formats a
 	 * Duration as a String, then calls the next processor in the chain.
 	 *
 	 * @param next next processor in the chain

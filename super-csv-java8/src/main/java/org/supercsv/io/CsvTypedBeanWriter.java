@@ -32,8 +32,8 @@ public final class CsvTypedBeanWriter<T> implements ICsvTypedBeanWriter<T> {
     private final ICsvListWriter writer;
 
     /**
-     * Constructs a new <tt>CsvTypedBeanWriter</tt> with the supplied Writer and CSV preferences.
-     * Note that the <tt>writer</tt> will be wrapped in a <tt>BufferedWriter</tt> before accessed.
+     * Constructs a new <code>CsvTypedBeanWriter</code> with the supplied Writer and CSV preferences.
+     * Note that the <code>writer</code> will be wrapped in a <code>BufferedWriter</code> before accessed.
      *
      * @param writer the writer
      * @param preference the CSV preferences

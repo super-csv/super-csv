@@ -33,7 +33,7 @@ public class SelectiveCsvEncoder extends DefaultCsvEncoder {
 	private final Set<Integer> columnNumbers = new HashSet<Integer>();
 	
 	/**
-	 * Constructs a new <tt>SelectiveCsvEncoder</tt> that encodes columns by column number. If no column numbers are
+	 * Constructs a new <code>SelectiveCsvEncoder</code> that encodes columns by column number. If no column numbers are
 	 * supplied (i.e. no parameters) then no columns will be encoded.
 	 * 
 	 * @param columnsToEncode
@@ -51,7 +51,7 @@ public class SelectiveCsvEncoder extends DefaultCsvEncoder {
 	}
 	
 	/**
-	 * Constructs a new <tt>SelectiveCsvEncoder</tt> that encodes columns if the element representing that column in the
+	 * Constructs a new <code>SelectiveCsvEncoder</code> that encodes columns if the element representing that column in the
 	 * supplied array is true.
 	 * 
 	 * @param columnsToEncode

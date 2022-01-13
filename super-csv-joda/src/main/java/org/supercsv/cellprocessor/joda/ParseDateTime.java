@@ -44,14 +44,14 @@ import org.supercsv.cellprocessor.ift.CellProcessor;
 public class ParseDateTime extends AbstractJodaParsingProcessor<DateTime> {
 
 	/**
-	 * Constructs a new <tt>ParseDateTime</tt> processor, which parses a String
+	 * Constructs a new <code>ParseDateTime</code> processor, which parses a String
 	 * as a Joda DateTime.
 	 */
 	public ParseDateTime() {
 	}
 
 	/**
-	 * Constructs a new <tt>ParseDateTime</tt> processor, which parses a String
+	 * Constructs a new <code>ParseDateTime</code> processor, which parses a String
 	 * as a Joda DateTime, then calls the next processor in the chain.
 	 * 
 	 * @param next
@@ -64,7 +64,7 @@ public class ParseDateTime extends AbstractJodaParsingProcessor<DateTime> {
 	}
 
 	/**
-	 * Constructs a new <tt>ParseDateTime</tt> processor, which parses a String
+	 * Constructs a new <code>ParseDateTime</code> processor, which parses a String
 	 * as a Joda DateTime using the supplied formatter.
 	 * 
 	 * @param formatter
@@ -77,7 +77,7 @@ public class ParseDateTime extends AbstractJodaParsingProcessor<DateTime> {
 	}
 
 	/**
-	 * Constructs a new <tt>ParseDateTime</tt> processor, which parses a String
+	 * Constructs a new <code>ParseDateTime</code> processor, which parses a String
 	 * as a Joda DateTime using the supplied formatter, then calls the next
 	 * processor in the chain.
 	 * 

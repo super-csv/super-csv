@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 /**
- * Provides <tt>CellProcessor</tt> classes for conversion, formatting and parsing.
+ * Provides <code>CellProcessor</code> classes for conversion, formatting and parsing.
  */
 package org.supercsv.cellprocessor;

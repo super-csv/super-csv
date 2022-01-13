@@ -35,14 +35,14 @@ public class Trim extends CellProcessorAdaptor implements BoolCellProcessor, Dat
 	LongCellProcessor, StringCellProcessor {
 	
 	/**
-	 * Constructs a new <tt>Trim</tt> processor, which trims a String to ensure it has no surrounding whitespace.
+	 * Constructs a new <code>Trim</code> processor, which trims a String to ensure it has no surrounding whitespace.
 	 */
 	public Trim() {
 		super();
 	}
 	
 	/**
-	 * Constructs a new <tt>Trim</tt> processor, which trims a String to ensure it has no surrounding whitespace then
+	 * Constructs a new <code>Trim</code> processor, which trims a String to ensure it has no surrounding whitespace then
 	 * calls the next processor in the chain.
 	 * 
 	 * @param next

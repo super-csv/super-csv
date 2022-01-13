@@ -23,7 +23,7 @@ public class CommentStartsWith implements CommentMatcher {
 	private final String value;
 	
 	/**
-	 * Constructs a new <tt>CommentStartsWith</tt> comment matcher.
+	 * Constructs a new <code>CommentStartsWith</code> comment matcher.
 	 * 
 	 * @param value
 	 *            the String a line must start with to be a comment
