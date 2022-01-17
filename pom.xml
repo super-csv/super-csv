@@ -43,12 +43,12 @@
 		<!-- properties ensure reporting plugin versions are same as managed versions -->
 		<coveralls.plugin.version>4.3.0</coveralls.plugin.version>
 		<jacoco.plugin.version>0.8.7</jacoco.plugin.version>
-		<findbugs-plugin.version>3.0.0</findbugs-plugin.version>
-		<javadoc.plugin.version>2.10.1</javadoc.plugin.version>
-		<jxr.plugin.version>2.5</jxr.plugin.version>
-		<pmd.plugin.version>3.3</pmd.plugin.version>
-		<project.info.reports.plugin.version>2.7</project.info.reports.plugin.version>
-		<surefire.plugin.version>2.18</surefire.plugin.version>
+		<findbugs-plugin.version>3.0.5</findbugs-plugin.version>
+		<javadoc.plugin.version>3.3.1</javadoc.plugin.version>
+		<jxr.plugin.version>3.1.1</jxr.plugin.version>
+		<pmd.plugin.version>3.14.0</pmd.plugin.version>
+		<project.info.reports.plugin.version>3.1.2</project.info.reports.plugin.version>
+		<surefire.plugin.version>2.20</surefire.plugin.version>
 	</properties>
 
 	<prerequisites>
@@ -59,19 +59,14 @@
 		<pluginManagement>
 			<plugins>
 				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>animal-sniffer-maven-plugin</artifactId>
-					<version>1.18</version>
-				</plugin>
-				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-assembly-plugin</artifactId>
-					<version>2.5.2</version>
+					<version>3.3.0</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.felix</groupId>
 					<artifactId>maven-bundle-plugin</artifactId>
-					<version>2.5.3</version>
+					<version>5.1.4</version>
 				</plugin>
 				<plugin>
 					<groupId>org.jacoco</groupId>
@@ -81,7 +76,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.2</version>
+					<version>3.8.1</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -96,7 +91,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-jar-plugin</artifactId>
-					<version>2.5</version>
+					<version>3.2.0</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -232,6 +227,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
+					<version>${surefire.plugin.version}</version>
 			</plugin>
 
 			<!-- Creates the sources jar -->
@@ -273,29 +269,6 @@
 					<tagNameFormat>v@{project.version}</tagNameFormat>
 				</configuration>
 			</plugin>
-
-			<!-- Ensures Java 1.5 compatibility -->
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>animal-sniffer-maven-plugin</artifactId>
-				<configuration>
-					<signature>
-						<groupId>org.codehaus.mojo.signature</groupId>
-						<artifactId>java15</artifactId>
-						<version>1.0</version>
-					</signature>
-				</configuration>
-				<executions>
-					<execution>
-						<id>check-java15-compatibility</id>
-						<phase>test</phase>
-						<goals>
-							<goal>check</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-
 		</plugins>
 	</build>
 
