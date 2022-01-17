@@ -48,7 +48,7 @@ public class FmtLocalTime extends AbstractJodaFormattingProcessor<LocalTime> {
 	private static final Class<LocalTime> JODA_CLASS = LocalTime.class;
 
 	/**
-	 * Constructs a new <tt>FmtLocalTime</tt> processor, which formats a Joda
+	 * Constructs a new <code>FmtLocalTime</code> processor, which formats a Joda
 	 * LocalTime as a String.
 	 */
 	public FmtLocalTime() {
@@ -56,7 +56,7 @@ public class FmtLocalTime extends AbstractJodaFormattingProcessor<LocalTime> {
 	}
 
 	/**
-	 * Constructs a new <tt>FmtLocalTime</tt> processor, which formats a Joda
+	 * Constructs a new <code>FmtLocalTime</code> processor, which formats a Joda
 	 * LocalTime as a String, then calls the next processor in the chain.
 	 * 
 	 * @param next
@@ -69,7 +69,7 @@ public class FmtLocalTime extends AbstractJodaFormattingProcessor<LocalTime> {
 	}
 
 	/**
-	 * Constructs a new <tt>FmtLocalTime</tt> processor, which formats a Joda
+	 * Constructs a new <code>FmtLocalTime</code> processor, which formats a Joda
 	 * LocalTime as a String using the supplied formatter.
 	 * 
 	 * @param formatter
@@ -82,7 +82,7 @@ public class FmtLocalTime extends AbstractJodaFormattingProcessor<LocalTime> {
 	}
 
 	/**
-	 * Constructs a new <tt>FmtLocalTime</tt> processor, which formats a Joda
+	 * Constructs a new <code>FmtLocalTime</code> processor, which formats a Joda
 	 * LocalTime as a String using the supplied formatter, then calls the next
 	 * processor in the chain.
 	 * 
@@ -99,7 +99,7 @@ public class FmtLocalTime extends AbstractJodaFormattingProcessor<LocalTime> {
 	}
 
 	/**
-	 * Constructs a new <tt>FmtLocalTime</tt> processor, which formats a Joda
+	 * Constructs a new <code>FmtLocalTime</code> processor, which formats a Joda
 	 * LocalTime as a String using the supplied pattern and the default locale.
 	 * 
 	 * @param pattern
@@ -112,7 +112,7 @@ public class FmtLocalTime extends AbstractJodaFormattingProcessor<LocalTime> {
 	}
 
 	/**
-	 * Constructs a new <tt>FmtLocalTime</tt> processor, which formats a Joda
+	 * Constructs a new <code>FmtLocalTime</code> processor, which formats a Joda
 	 * LocalTime as a String using the supplied pattern and the default locale,
 	 * then calls the next processor in the chain.
 	 * 
@@ -128,13 +128,13 @@ public class FmtLocalTime extends AbstractJodaFormattingProcessor<LocalTime> {
 	}
 
 	/**
-	 * Constructs a new <tt>FmtLocalTime</tt> processor, which formats a Joda
+	 * Constructs a new <code>FmtLocalTime</code> processor, which formats a Joda
 	 * LocalTime as a String using the supplied pattern and the locale.
 	 * 
 	 * @param pattern
 	 *            the pattern to use
 	 * @param locale
-	 *            the locale to use (default used if <tt>null</tt>)
+	 *            the locale to use (default used if <code>null</code>)
 	 * @throws NullPointerException
 	 *             if pattern is null
 	 */
@@ -143,14 +143,14 @@ public class FmtLocalTime extends AbstractJodaFormattingProcessor<LocalTime> {
 	}
 
 	/**
-	 * Constructs a new <tt>FmtLocalTime</tt> processor, which formats a Joda
+	 * Constructs a new <code>FmtLocalTime</code> processor, which formats a Joda
 	 * LocalTime as a String using the supplied pattern and the locale, then
 	 * calls the next processor in the chain.
 	 * 
 	 * @param pattern
 	 *            the pattern to use
 	 * @param locale
-	 *            the locale to use (default used if <tt>null</tt>)
+	 *            the locale to use (default used if <code>null</code>)
 	 * @param next
 	 *            the next processor in the chain
 	 * @throws NullPointerException

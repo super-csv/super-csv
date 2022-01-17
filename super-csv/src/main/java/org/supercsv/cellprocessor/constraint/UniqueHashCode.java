@@ -26,12 +26,12 @@ import org.supercsv.util.CsvContext;
 
 /**
  * Ensure that upon processing a CSV file (reading or writing), that values of the column are all unique. Comparison is
- * based upon each elements <tt>hashCode()</tt> method and lookup takes O(1).
+ * based upon each elements <code>hashCode()</code> method and lookup takes O(1).
  * <p>
  * Compared to {@link Unique} this processor is much more memory efficient as it only stores the set of encountered
  * hashcodes rather than storing references to all encountered objects. The tradeoff being possible false positives.
  * <p>
- * Prior to v1.50 this class was named <tt>Unique</tt> but has been renamed to clarify its inner workings.
+ * Prior to v1.50 this class was named <code>Unique</code> but has been renamed to clarify its inner workings.
  * 
  * @author Kasper B. Graversen
  * @author Dominique De Vito
@@ -42,14 +42,14 @@ public class UniqueHashCode extends CellProcessorAdaptor {
 	private final Set<Integer> uniqueSet = new HashSet<Integer>();
 	
 	/**
-	 * Constructs a new <tt>UniqueHashCode</tt> processor, which ensures that all rows in a column are unique.
+	 * Constructs a new <code>UniqueHashCode</code> processor, which ensures that all rows in a column are unique.
 	 */
 	public UniqueHashCode() {
 		super();
 	}
 	
 	/**
-	 * Constructs a new <tt>UniqueHashCode</tt> processor, which ensures that all rows in a column are unique, then
+	 * Constructs a new <code>UniqueHashCode</code> processor, which ensures that all rows in a column are unique, then
 	 * calls the next processor in the chain.
 	 * 
 	 * @param next

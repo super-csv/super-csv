@@ -19,10 +19,10 @@ import org.supercsv.cellprocessor.ift.CellProcessor;
 
 /**
  * This processor is used to indicate that a cell is optional, and will avoid executing further processors if it
- * encounters <tt>null</tt>. It is a simple customization of <tt>ConvertNullTo</tt>.
+ * encounters <code>null</code>. It is a simple customization of <code>ConvertNullTo</code>.
  * <p>
- * Prior to version 2.0.0, this processor returned <tt>null</tt> for empty String (""), but was updated because
- * Tokenizer now reads empty columns as <tt>null</tt>. It also means that Optional can now be used when writing as well
+ * Prior to version 2.0.0, this processor returned <code>null</code> for empty String (""), but was updated because
+ * Tokenizer now reads empty columns as <code>null</code>. It also means that Optional can now be used when writing as well
  * (instead of using {@code ConvertNullTo("")}).
  * 
  * @author Kasper B. Graversen
@@ -31,7 +31,7 @@ import org.supercsv.cellprocessor.ift.CellProcessor;
 public class Optional extends ConvertNullTo {
 	
 	/**
-	 * Constructs a new <tt>Optional</tt> processor, which when encountering <tt>null</tt> will return <tt>null</tt>,
+	 * Constructs a new <code>Optional</code> processor, which when encountering <code>null</code> will return <code>null</code>,
 	 * for all other values it will return the value unchanged.
 	 */
 	public Optional() {
@@ -39,7 +39,7 @@ public class Optional extends ConvertNullTo {
 	}
 	
 	/**
-	 * Constructs a new <tt>Optional</tt> processor, which when encountering <tt>null</tt> will return <tt>null</tt> ,
+	 * Constructs a new <code>Optional</code> processor, which when encountering <code>null</code> will return <code>null</code> ,
 	 * for all other values it will call the next processor in the chain.
 	 * 
 	 * @param next

@@ -120,8 +120,8 @@ public class BeanInterfaceProxyTest {
 	}
 	
 	/**
-	 * Tests invocation of the <tt>getClass</tt> method, inherited from <tt>Object</tt> (doesn't call the
-	 * <tt>InvocationHandler</tt>, but returns the proxy class!).
+	 * Tests invocation of the <code>getClass</code> method, inherited from <code>Object</code> (doesn't call the
+	 * <code>InvocationHandler</code>, but returns the proxy class!).
 	 */
 	@Test
 	public void testGetClass() {

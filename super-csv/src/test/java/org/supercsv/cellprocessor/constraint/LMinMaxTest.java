@@ -53,7 +53,7 @@ public class LMinMaxTest {
 	 */
 	@Test
 	public void testValidLong() {
-		long input = 123L;
+		Long input = 123L;
 		assertEquals(input, processor.execute(input, ANONYMOUS_CSVCONTEXT));
 		assertEquals(input, processorChain.execute(input, ANONYMOUS_CSVCONTEXT));
 	}
@@ -74,7 +74,7 @@ public class LMinMaxTest {
 	 */
 	@Test
 	public void testMinBoundary() {
-		long input = MIN_INTEGER;
+		Long input = (long) MIN_INTEGER;
 		assertEquals(input, processor.execute(input, ANONYMOUS_CSVCONTEXT));
 		assertEquals(input, processorChain.execute(input, ANONYMOUS_CSVCONTEXT));
 	}
@@ -84,7 +84,7 @@ public class LMinMaxTest {
 	 */
 	@Test
 	public void testMaxBoundary() {
-		long input = MAX_INTEGER;
+		Long input = (long) MAX_INTEGER;
 		assertEquals(input, processor.execute(input, ANONYMOUS_CSVCONTEXT));
 		assertEquals(input, processorChain.execute(input, ANONYMOUS_CSVCONTEXT));
 	}
@@ -95,7 +95,7 @@ public class LMinMaxTest {
 	@Test
 	public void testChainedAfterStringCellProcessor() {
 		final CellProcessor chain = new StrReplace("zero", "0", new LMinMax(MIN_INTEGER, MAX_INTEGER));
-		assertEquals(0L, chain.execute("zero", ANONYMOUS_CSVCONTEXT));
+		assertEquals(Long.valueOf(0L), chain.execute("zero", ANONYMOUS_CSVCONTEXT));
 	}
 	
 	/**

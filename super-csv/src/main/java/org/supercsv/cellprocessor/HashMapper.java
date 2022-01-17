@@ -27,7 +27,7 @@ import org.supercsv.exception.SuperCsvCellProcessorException;
 import org.supercsv.util.CsvContext;
 
 /**
- * Maps from one object to another, by looking up a <tt>Map</tt> with the input as the key, and returning its
+ * Maps from one object to another, by looking up a <code>Map</code> with the input as the key, and returning its
  * corresponding value.
  * 
  * @since 1.50
@@ -41,9 +41,9 @@ public class HashMapper extends CellProcessorAdaptor implements BoolCellProcesso
 	private final Object defaultValue;
 	
 	/**
-	 * Constructs a new <tt>HashMapper</tt> processor, which maps from one object to another, by looking up a
-	 * <tt>Map</tt> with the input as the key, and returning its corresponding value. If no mapping is found, then
-	 * <tt>null</tt> is returned.
+	 * Constructs a new <code>HashMapper</code> processor, which maps from one object to another, by looking up a
+	 * <code>Map</code> with the input as the key, and returning its corresponding value. If no mapping is found, then
+	 * <code>null</code> is returned.
 	 * 
 	 * @param mapping
 	 *            the Map
@@ -57,8 +57,8 @@ public class HashMapper extends CellProcessorAdaptor implements BoolCellProcesso
 	}
 	
 	/**
-	 * Constructs a new <tt>HashMapper</tt> processor, which maps from one object to another, by looking up a
-	 * <tt>Map</tt> with the input as the key, and returning its corresponding value. If no mapping is found, then the
+	 * Constructs a new <code>HashMapper</code> processor, which maps from one object to another, by looking up a
+	 * <code>Map</code> with the input as the key, and returning its corresponding value. If no mapping is found, then the
 	 * supplied default value is returned.
 	 * 
 	 * @param mapping
@@ -79,9 +79,9 @@ public class HashMapper extends CellProcessorAdaptor implements BoolCellProcesso
 	}
 	
 	/**
-	 * Constructs a new <tt>HashMapper</tt> processor, which maps from one object to another, by looking up a
-	 * <tt>Map</tt> with the input as the key, and returning its corresponding value. If no mapping is found, then
-	 * <tt>null</tt> is returned. Regardless of whether a mapping is found, the next processor in the chain will be
+	 * Constructs a new <code>HashMapper</code> processor, which maps from one object to another, by looking up a
+	 * <code>Map</code> with the input as the key, and returning its corresponding value. If no mapping is found, then
+	 * <code>null</code> is returned. Regardless of whether a mapping is found, the next processor in the chain will be
 	 * called.
 	 * 
 	 * @param mapping
@@ -98,8 +98,8 @@ public class HashMapper extends CellProcessorAdaptor implements BoolCellProcesso
 	}
 	
 	/**
-	 * Constructs a new <tt>HashMapper</tt> processor, which maps from one object to another, by looking up a
-	 * <tt>Map</tt> with the input as the key, and returning its corresponding value. If no mapping is found, then the
+	 * Constructs a new <code>HashMapper</code> processor, which maps from one object to another, by looking up a
+	 * <code>Map</code> with the input as the key, and returning its corresponding value. If no mapping is found, then the
 	 * supplied default value is returned. Regardless of whether a mapping is found, the next processor in the chain
 	 * will be called.
 	 * 

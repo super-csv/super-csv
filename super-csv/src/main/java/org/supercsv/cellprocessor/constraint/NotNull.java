@@ -27,7 +27,7 @@ import org.supercsv.exception.SuperCsvConstraintViolationException;
 import org.supercsv.util.CsvContext;
 
 /**
- * This processor ensures that the input is not <tt>null</tt>.
+ * This processor ensures that the input is not <code>null</code>.
  * <p>
  * You should only use this processor when a column must be non-null, but you do not need to apply any other processor
  * to the column (i.e. a mandatory String column with no other conversions or constraints)
@@ -42,15 +42,15 @@ public class NotNull extends CellProcessorAdaptor implements BoolCellProcessor, 
 	LongCellProcessor, StringCellProcessor {
 	
 	/**
-	 * Constructs a new <tt>NotNull</tt> which ensures that the input is not <tt>null</tt>.
+	 * Constructs a new <code>NotNull</code> which ensures that the input is not <code>null</code>.
 	 */
 	public NotNull() {
 		super();
 	}
 	
 	/**
-	 * Constructs a new <tt>NotNull</tt> which ensures that the input is not <tt>null</tt>, then calls the next
-	 * processor in the chain. All other processor should check for <tt>null</tt> inputs, so this constructor is not
+	 * Constructs a new <code>NotNull</code> which ensures that the input is not <code>null</code>, then calls the next
+	 * processor in the chain. All other processor should check for <code>null</code> inputs, so this constructor is not
 	 * typically required.
 	 * 
 	 * @param next

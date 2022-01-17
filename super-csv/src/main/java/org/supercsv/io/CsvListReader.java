@@ -24,7 +24,7 @@ import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.prefs.CsvPreference;
 
 /**
- * CsvListReader is a simple reader that reads a row from a CSV file into a <tt>List</tt> of Strings.
+ * CsvListReader is a simple reader that reads a row from a CSV file into a <code>List</code> of Strings.
  * 
  * @author Kasper B. Graversen
  * @author James Bassett
@@ -32,8 +32,8 @@ import org.supercsv.prefs.CsvPreference;
 public class CsvListReader extends AbstractCsvReader implements ICsvListReader {
 	
 	/**
-	 * Constructs a new <tt>CsvListReader</tt> with the supplied Reader and CSV preferences. Note that the
-	 * <tt>reader</tt> will be wrapped in a <tt>BufferedReader</tt> before accessed.
+	 * Constructs a new <code>CsvListReader</code> with the supplied Reader and CSV preferences. Note that the
+	 * <code>reader</code> will be wrapped in a <code>BufferedReader</code> before accessed.
 	 * 
 	 * @param reader
 	 *            the reader
@@ -47,7 +47,7 @@ public class CsvListReader extends AbstractCsvReader implements ICsvListReader {
 	}
 	
 	/**
-	 * Constructs a new <tt>CsvListReader</tt> with the supplied (custom) Tokenizer and CSV preferences. The tokenizer
+	 * Constructs a new <code>CsvListReader</code> with the supplied (custom) Tokenizer and CSV preferences. The tokenizer
 	 * should be set up with the Reader (CSV input) and CsvPreference beforehand.
 	 * 
 	 * @param tokenizer

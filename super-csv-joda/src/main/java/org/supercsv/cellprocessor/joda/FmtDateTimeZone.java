@@ -31,14 +31,14 @@ import org.supercsv.util.CsvContext;
 public class FmtDateTimeZone extends CellProcessorAdaptor {
 
 	/**
-	 * Constructs a new <tt>FmtDateTimeZone</tt> processor, which formats a Joda
+	 * Constructs a new <code>FmtDateTimeZone</code> processor, which formats a Joda
 	 * DateTimeZone as a String.
 	 */
 	public FmtDateTimeZone() {
 	}
 
 	/**
-	 * Constructs a new <tt>FmtDateTimeZone</tt> processor, which formats a Joda
+	 * Constructs a new <code>FmtDateTimeZone</code> processor, which formats a Joda
 	 * DateTimeZone as a String, then calls the next processor in the chain.
 	 * 
 	 * @param next

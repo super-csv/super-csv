@@ -40,9 +40,9 @@ public interface ICsvDozerBeanWriter extends ICsvWriter {
 	 * <p>
 	 * Each element of the fieldMapping array represents a CSV column to be written and uses the standard Dozer field
 	 * mapping syntax. For example, if you were configuring the mappings for Person class you might define
-	 * <tt>firstName</tt> as the first element (just a simple field mapping), <tt>address.city</tt> as the second
+	 * <code>firstName</code> as the first element (just a simple field mapping), <code>address.city</code> as the second
 	 * element (a nested - or deep - field mapping), and
-	 * <tt>accounts[0].balance</tt> as the third element (index based mapping).
+	 * <code>accounts[0].balance</code> as the third element (index based mapping).
 	 * <p>
 	 * If you require access to the other features of Dozer in your mappings (customer getters/setters, bean factories, custom converters), 
 	 * then you should supply your own DozerBeanMapper to the Writer instead.
@@ -50,7 +50,7 @@ public interface ICsvDozerBeanWriter extends ICsvWriter {
 	 * @param clazz
 	 *            the class to add mapping configuration for (same as the type passed into write methods)
 	 * @param fieldMapping
-	 *            the field mapping for for each column (cannot contain <tt>null</tt> elements)
+	 *            the field mapping for for each column (cannot contain <code>null</code> elements)
 	 * @throws NullPointerException
 	 *             if clazz or fieldMapping (or one of its elements) is null
 	 * @since 2.0.0
@@ -59,7 +59,7 @@ public interface ICsvDozerBeanWriter extends ICsvWriter {
 	
 	/**
 	 * Writes the fields of the object as columns of a CSV file, using the pre-configured DozerBeanMapper to map fields
-	 * to the appropriate columns. <tt>toString()</tt> will be called on each element prior to writing.
+	 * to the appropriate columns. <code>toString()</code> will be called on each element prior to writing.
 	 * 
 	 * @param source
 	 *            the object (bean instance) containing the values to write
@@ -80,8 +80,8 @@ public interface ICsvDozerBeanWriter extends ICsvWriter {
 	 * to the appropriate columns.
 	 * <p>
 	 * Before writing, the data can be further processed by cell processors (each element in the processors array
-	 * corresponds with a CSV column). A <tt>null</tt> entry in the processors array indicates no further processing is
-	 * required (the value returned by toString() will be written as the column value). <tt>toString()</tt> will be
+	 * corresponds with a CSV column). A <code>null</code> entry in the processors array indicates no further processing is
+	 * required (the value returned by toString() will be written as the column value). <code>toString()</code> will be
 	 * called on each (processed) element prior to writing.
 	 * 
 	 * @param source
@@ -89,7 +89,7 @@ public interface ICsvDozerBeanWriter extends ICsvWriter {
 	 * @param processors
 	 *            an array of CellProcessors used to further process data before it is written (each element in the
 	 *            processors array corresponds with a CSV column - the number of processors should match the number of
-	 *            columns). A <tt>null</tt> entry indicates no further processing is required (the value returned by
+	 *            columns). A <code>null</code> entry indicates no further processing is required (the value returned by
 	 *            toString() will be written as the column value).
 	 * @throws IOException
 	 *             if an I/O error occurred

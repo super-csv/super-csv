@@ -37,7 +37,7 @@ public abstract class AbstractTokenizer implements ITokenizer {
 	private final LineNumberReader lnr;
 	
 	/**
-	 * Constructs a new <tt>AbstractTokenizer</tt>, which reads the CSV file, line by line.
+	 * Constructs a new <code>AbstractTokenizer</code>, which reads the CSV file, line by line.
 	 * 
 	 * @param reader
 	 *            the reader
@@ -75,7 +75,7 @@ public abstract class AbstractTokenizer implements ITokenizer {
 	 * Reads a line of text. Whenever a line terminator is read the current line number is incremented.
 	 * 
 	 * @return A String containing the contents of the line, not including any line termination characters, or
-	 *         <tt>null</tt> if the end of the stream has been reached
+	 *         <code>null</code> if the end of the stream has been reached
 	 * @throws IOException
 	 *             If an I/O error occurs
 	 */

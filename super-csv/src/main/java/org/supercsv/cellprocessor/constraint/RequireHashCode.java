@@ -36,7 +36,7 @@ import org.supercsv.util.CsvContext;
  * This constraint is a very efficient way of ensuring constant expressions are present in certain columns of the CSV
  * file, such as "BOSS", "EMPLOYEE", or when a column denotes an action to be taken for the input line such as "D"
  * (delete), "I" (insert), ...
- * <p>
+ * </p>
  * 
  * @since 1.50
  * @author Kasper B. Graversen
@@ -48,7 +48,7 @@ public class RequireHashCode extends CellProcessorAdaptor implements BoolCellPro
 	private final Set<Integer> requiredHashCodes = new HashSet<Integer>();
 	
 	/**
-	 * Constructs a new <tt>RequireHashCode</tt> processor, which converts the input to a String, and ensures that the
+	 * Constructs a new <code>RequireHashCode</code> processor, which converts the input to a String, and ensures that the
 	 * input's hash function matches any of a given set of hashcodes.
 	 * 
 	 * @param requiredHashcodes
@@ -67,7 +67,7 @@ public class RequireHashCode extends CellProcessorAdaptor implements BoolCellPro
 	}
 	
 	/**
-	 * Constructs a new <tt>RequireHashCode</tt> processor, which converts the input to a String, ensures that the
+	 * Constructs a new <code>RequireHashCode</code> processor, which converts the input to a String, ensures that the
 	 * input's hash function matches the supplied hashcode, then calls the next processor in the chain.
 	 * 
 	 * @param requiredHashcode
@@ -82,7 +82,7 @@ public class RequireHashCode extends CellProcessorAdaptor implements BoolCellPro
 	}
 	
 	/**
-	 * Constructs a new <tt>RequireHashCode</tt> processor, which converts the input to a String, ensures that the
+	 * Constructs a new <code>RequireHashCode</code> processor, which converts the input to a String, ensures that the
 	 * input's hash function matches any of a given set of hashcodes, then calls the next processor in the chain.
 	 * 
 	 * @param requiredHashcodes

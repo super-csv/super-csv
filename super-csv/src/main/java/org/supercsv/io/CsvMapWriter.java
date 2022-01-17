@@ -37,8 +37,8 @@ public class CsvMapWriter extends AbstractCsvWriter implements ICsvMapWriter {
 	private final List<Object> processedColumns = new ArrayList<Object>();
 	
 	/**
-	 * Constructs a new <tt>CsvMapWriter</tt> with the supplied Writer and CSV preferences. Note that the
-	 * <tt>writer</tt> will be wrapped in a <tt>BufferedWriter</tt> before accessed.
+	 * Constructs a new <code>CsvMapWriter</code> with the supplied Writer and CSV preferences. Note that the
+	 * <code>writer</code> will be wrapped in a <code>BufferedWriter</code> before accessed.
 	 * 
 	 * @param writer
 	 *            the writer
@@ -53,7 +53,7 @@ public class CsvMapWriter extends AbstractCsvWriter implements ICsvMapWriter {
 	}
 
 	/**
-	 * Constructs a new <tt>CsvMapWriter</tt> with the supplied Writer, CSV preferences and option
+	 * Constructs a new <code>CsvMapWriter</code> with the supplied Writer, CSV preferences and option
 	 * to bufferize the writer.
 	 *
 	 * @param writer
@@ -61,8 +61,8 @@ public class CsvMapWriter extends AbstractCsvWriter implements ICsvMapWriter {
 	 * @param preference
 	 *            the CSV preferences
 	 * @param bufferizeWriter
-	 *            if {@code true}, the <tt>writer</tt> will be wrapped in
-	 *            a <tt>BufferedWriter</tt> before accessed.
+	 *            if {@code true}, the <code>writer</code> will be wrapped in
+	 *            a <code>BufferedWriter</code> before accessed.
 	 * @throws NullPointerException
 	 *             if writer or preference is null
 	 * @since 1.0

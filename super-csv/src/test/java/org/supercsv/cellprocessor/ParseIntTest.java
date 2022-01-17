@@ -55,12 +55,12 @@ public class ParseIntTest {
 	@Test
 	public void testValidInts() {
 		// positive values
-		assertEquals(POSITIVE_VAL, processor.execute(POSITIVE_VAL, ANONYMOUS_CSVCONTEXT));
-		assertEquals(POSITIVE_VAL, processorChain.execute(POSITIVE_VAL, ANONYMOUS_CSVCONTEXT));
+		assertEquals(Integer.valueOf(POSITIVE_VAL), processor.execute(POSITIVE_VAL, ANONYMOUS_CSVCONTEXT));
+		assertEquals(Integer.valueOf(POSITIVE_VAL), processorChain.execute(POSITIVE_VAL, ANONYMOUS_CSVCONTEXT));
 		
 		// negative values
-		assertEquals(NEGATIVE_VAL, processor.execute(NEGATIVE_VAL, ANONYMOUS_CSVCONTEXT));
-		assertEquals(NEGATIVE_VAL, processorChain.execute(NEGATIVE_VAL, ANONYMOUS_CSVCONTEXT));
+		assertEquals(Integer.valueOf(NEGATIVE_VAL), processor.execute(NEGATIVE_VAL, ANONYMOUS_CSVCONTEXT));
+		assertEquals(Integer.valueOf(NEGATIVE_VAL), processorChain.execute(NEGATIVE_VAL, ANONYMOUS_CSVCONTEXT));
 	}
 	
 	/**
@@ -69,12 +69,12 @@ public class ParseIntTest {
 	@Test
 	public void testValidIntStrings() {
 		// positive values
-		assertEquals(POSITIVE_VAL, processor.execute(POSITIVE_STRING, ANONYMOUS_CSVCONTEXT));
-		assertEquals(POSITIVE_VAL, processorChain.execute(POSITIVE_STRING, ANONYMOUS_CSVCONTEXT));
+		assertEquals(Integer.valueOf(POSITIVE_VAL), processor.execute(POSITIVE_STRING, ANONYMOUS_CSVCONTEXT));
+		assertEquals(Integer.valueOf(POSITIVE_VAL), processorChain.execute(POSITIVE_STRING, ANONYMOUS_CSVCONTEXT));
 		
 		// negative values
-		assertEquals(NEGATIVE_VAL, processor.execute(NEGATIVE_STRING, ANONYMOUS_CSVCONTEXT));
-		assertEquals(NEGATIVE_VAL, processorChain.execute(NEGATIVE_STRING, ANONYMOUS_CSVCONTEXT));
+		assertEquals(Integer.valueOf(NEGATIVE_VAL), processor.execute(NEGATIVE_STRING, ANONYMOUS_CSVCONTEXT));
+		assertEquals(Integer.valueOf(NEGATIVE_VAL), processorChain.execute(NEGATIVE_STRING, ANONYMOUS_CSVCONTEXT));
 	}
 	
 	/**

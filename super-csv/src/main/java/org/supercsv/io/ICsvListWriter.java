@@ -31,7 +31,7 @@ import org.supercsv.exception.SuperCsvException;
 public interface ICsvListWriter extends ICsvWriter {
 	
 	/**
-	 * Writes a List of Objects as columns of a CSV file. <tt>toString()</tt> will be called on each element prior to
+	 * Writes a List of Objects as columns of a CSV file. <code>toString()</code> will be called on each element prior to
 	 * writing.
 	 * 
 	 * @param columns
@@ -50,14 +50,14 @@ public interface ICsvListWriter extends ICsvWriter {
 	
 	/**
 	 * Writes a List of Objects as columns of a CSV file, performing any necessary processing beforehand.
-	 * <tt>toString()</tt> will be called on each (processed) element prior to writing.
+	 * <code>toString()</code> will be called on each (processed) element prior to writing.
 	 * 
 	 * @param columns
 	 *            the columns to write
 	 * @param processors
 	 *            an array of CellProcessors used to further process data before it is written (each element in the
 	 *            processors array corresponds with a CSV column - the number of processors should match the number of
-	 *            columns). A <tt>null</tt> entry indicates no further processing is required (the value returned by
+	 *            columns). A <code>null</code> entry indicates no further processing is required (the value returned by
 	 *            toString() will be written as the column value).
 	 * @throws IllegalArgumentException
 	 *             if columns.size == 0
@@ -74,7 +74,7 @@ public interface ICsvListWriter extends ICsvWriter {
 	void write(List<?> columns, CellProcessor[] processors) throws IOException;
 	
 	/**
-	 * Writes a array of Objects as columns of a CSV file. <tt>toString()</tt> will be called on each element prior to
+	 * Writes a array of Objects as columns of a CSV file. <code>toString()</code> will be called on each element prior to
 	 * writing.
 	 * 
 	 * @param columns

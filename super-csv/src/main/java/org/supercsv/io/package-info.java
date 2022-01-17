@@ -15,6 +15,6 @@
  */
 /**
  * Provides the various readers and writers used to read/write Strings, Maps, or Objects. In order to
- * use a reader/writer it should be configured with <tt>CellProcessor</tt>s and a <tt>CSVPreference</tt>.
+ * use a reader/writer it should be configured with <code>CellProcessor</code>s and a <code>CSVPreference</code>.
  */
 package org.supercsv.io;

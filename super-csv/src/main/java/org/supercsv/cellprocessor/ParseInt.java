@@ -28,14 +28,14 @@ import org.supercsv.util.CsvContext;
 public class ParseInt extends CellProcessorAdaptor implements StringCellProcessor {
 	
 	/**
-	 * Constructs a new <tt>ParseInt</tt> processor, which converts a String to an Integer.
+	 * Constructs a new <code>ParseInt</code> processor, which converts a String to an Integer.
 	 */
 	public ParseInt() {
 		super();
 	}
 	
 	/**
-	 * Constructs a new <tt>ParseInt</tt> processor, which converts a String to an Integer, then calls the next
+	 * Constructs a new <code>ParseInt</code> processor, which converts a String to an Integer, then calls the next
 	 * processor in the chain.
 	 * 
 	 * @param next

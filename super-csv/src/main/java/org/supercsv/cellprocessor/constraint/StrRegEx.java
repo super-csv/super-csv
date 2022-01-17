@@ -41,7 +41,7 @@ public class StrRegEx extends CellProcessorAdaptor implements StringCellProcesso
 	private static final Map<String, String> REGEX_MSGS = new HashMap<String, String>();
 	
 	/**
-	 * Constructs a new <tt>StrRegEx</tt> processor, which ensures that the input data matches the given regular
+	 * Constructs a new <code>StrRegEx</code> processor, which ensures that the input data matches the given regular
 	 * expression.
 	 * 
 	 * @param regex
@@ -61,7 +61,7 @@ public class StrRegEx extends CellProcessorAdaptor implements StringCellProcesso
 	}
 	
 	/**
-	 * Constructs a new <tt>StrRegEx</tt> processor, which ensures that the input data matches the given regular
+	 * Constructs a new <code>StrRegEx</code> processor, which ensures that the input data matches the given regular
 	 * expression, then calls the next processor in the chain.
 	 * 
 	 * @param regex

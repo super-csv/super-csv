@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 /**
- * Provides <tt>CellProcessor</tt> classes for formatting and parsing Joda-Time classes.
+ * Provides <code>CellProcessor</code> classes for formatting and parsing Joda-Time classes.
  */
 package org.supercsv.cellprocessor.joda;

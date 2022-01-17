@@ -32,7 +32,7 @@ public class SuperCsvCellProcessorException extends SuperCsvException {
 	private final CellProcessor processor;
 	
 	/**
-	 * Constructs a new <tt>SuperCsvCellProcessorException</tt>.
+	 * Constructs a new <code>SuperCsvCellProcessorException</code>.
 	 * 
 	 * @param msg
 	 *            the exception message
@@ -47,7 +47,7 @@ public class SuperCsvCellProcessorException extends SuperCsvException {
 	}
 	
 	/**
-	 * Constructs a new <tt>SuperCsvCellProcessorException</tt>.
+	 * Constructs a new <code>SuperCsvCellProcessorException</code>.
 	 * 
 	 * @param msg
 	 *            the exception message
@@ -65,7 +65,7 @@ public class SuperCsvCellProcessorException extends SuperCsvException {
 	}
 	
 	/**
-	 * Constructs a new <tt>SuperCsvCellProcessorException</tt> to indicate that the value received by a CellProcessor
+	 * Constructs a new <code>SuperCsvCellProcessorException</code> to indicate that the value received by a CellProcessor
 	 * wasn't of the correct type.
 	 * 
 	 * @param expectedType
