@@ -21,11 +21,13 @@ import static org.supercsv.util.ReflectionUtils.findGetter;
 import static org.supercsv.util.ReflectionUtils.findSetter;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.supercsv.exception.SuperCsvReflectionException;
+import org.supercsv.mock.FluentCustomerBean;
 import org.supercsv.mock.ReflectionBean;
 
 /**
@@ -74,7 +76,20 @@ public class ReflectionUtilsTest {
 		bean.setBooleanWrapper(boolValue);
 		assertEquals(boolValue, findGetter(bean, "booleanWrapper").invoke(bean));
 	}
-	
+
+	@Test
+	public void shouldFindFluentGetterNamedLikeField() throws Exception {
+		//given
+		String name = "John";
+		FluentCustomerBean bean = new FluentCustomerBean(name);
+
+		//when
+		Method getter = findGetter(bean, "customerName");
+
+		//then
+		assertEquals(name, getter.invoke(bean));
+	}
+
 	/**
 	 * Tests the findGetter() method with an 'is' style boolean getter.
 	 */

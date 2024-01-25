@@ -92,6 +92,10 @@ public final class ReflectionUtils {
 			final String booleanGetterName = getMethodNameForField(IS_PREFIX, fieldName);
 			getter = findGetterWithCompatibleReturnType(booleanGetterName, clazz, true);
 		}
+
+		if (getter == null) {
+			getter = findGetterWithCompatibleReturnType(fieldName, clazz, false);
+		}
 		
 		if( getter == null ) {
 			throw new SuperCsvReflectionException(
@@ -243,4 +247,5 @@ public final class ReflectionUtils {
 	private static String getMethodNameForField(final String prefix, final String fieldName) {
 		return prefix + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
 	}
+
 }
