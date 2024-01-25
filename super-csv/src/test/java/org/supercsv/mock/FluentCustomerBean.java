@@ -25,4 +25,7 @@ public class FluentCustomerBean {
 		return customerName;
 	}
 
+	public void customerName(String aName) {
+		this.customerName = aName;
+	}
 }

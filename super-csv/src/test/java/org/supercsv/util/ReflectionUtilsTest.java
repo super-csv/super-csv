@@ -148,7 +148,20 @@ public class ReflectionUtilsTest {
 		findSetter(bean, "primitiveBoolean", boolean.class).invoke(bean, true);
 		assertTrue(bean.isPrimitiveBoolean());
 	}
-	
+
+	@Test
+	public void shouldFindFluentSetterNamedLikeField() throws Exception {
+		//given
+		String name = "Kate";
+		FluentCustomerBean bean = new FluentCustomerBean("John");
+
+		//when
+		findSetter(bean, "customerName", String.class).invoke(bean, name);
+
+		//then
+		assertEquals(name, bean.customerName());
+	}
+
 	/**
 	 * Tests the findGetter() method with a field name that is all capitals.
 	 */

@@ -183,7 +183,11 @@ public final class ReflectionUtils {
 		if( setter == null && AUTOBOXING_CONVERTER.containsKey(argumentType) ) {
 			setter = findSetterWithCompatibleParamType(clazz, setterName, AUTOBOXING_CONVERTER.get(argumentType));
 		}
-		
+
+		if (setter == null) {
+			setter = findSetterWithCompatibleParamType(clazz, fieldName, argumentType);
+		}
+
 		if( setter == null ) {
 			throw new SuperCsvReflectionException(
 				String
