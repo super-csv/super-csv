@@ -15,11 +15,11 @@
  */
 package org.supercsv.util;
 
+import org.supercsv.exception.SuperCsvReflectionException;
+
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.supercsv.exception.SuperCsvReflectionException;
 
 /**
  * Provides useful utility methods for reflection.
@@ -92,7 +92,11 @@ public final class ReflectionUtils {
 			final String booleanGetterName = getMethodNameForField(IS_PREFIX, fieldName);
 			getter = findGetterWithCompatibleReturnType(booleanGetterName, clazz, true);
 		}
-		
+
+		if (getter == null) {
+			getter = findGetterWithCompatibleReturnType(fieldName, clazz, false);
+		}
+
 		if( getter == null ) {
 			throw new SuperCsvReflectionException(
 				String
@@ -179,7 +183,15 @@ public final class ReflectionUtils {
 		if( setter == null && AUTOBOXING_CONVERTER.containsKey(argumentType) ) {
 			setter = findSetterWithCompatibleParamType(clazz, setterName, AUTOBOXING_CONVERTER.get(argumentType));
 		}
-		
+
+		if (setter == null) {
+			setter = findSetterWithCompatibleParamType(clazz, fieldName, argumentType);
+		}
+
+		if( setter == null && AUTOBOXING_CONVERTER.containsKey(argumentType) ) {
+			setter = findSetterWithCompatibleParamType(clazz, fieldName, AUTOBOXING_CONVERTER.get(argumentType));
+		}
+
 		if( setter == null ) {
 			throw new SuperCsvReflectionException(
 				String
