@@ -81,7 +81,7 @@ public class ReflectionUtilsTest {
 	public void shouldFindFluentGetterNamedLikeField() throws Exception {
 		//given
 		String name = "John";
-		FluentCustomerBean bean = new FluentCustomerBean(name);
+		FluentCustomerBean bean = new FluentCustomerBean(name, 30);
 
 		//when
 		Method getter = findGetter(bean, "customerName");
@@ -147,6 +147,32 @@ public class ReflectionUtilsTest {
 	public void testFindSetterWithMethodOfSameName() throws Exception {
 		findSetter(bean, "primitiveBoolean", boolean.class).invoke(bean, true);
 		assertTrue(bean.isPrimitiveBoolean());
+	}
+
+	@Test
+	public void shouldFindFluentSetterNamedLikeField() throws Exception {
+		//given
+		String name = "Kate";
+		FluentCustomerBean bean = new FluentCustomerBean("John", 30);
+
+		//when
+		findSetter(bean, "customerName", String.class).invoke(bean, name);
+
+		//then
+		assertEquals(name, bean.customerName());
+	}
+
+	@Test
+	public void shouldFindFluentSetterIfArgumentTypeCanBeDeducedByAutoboxing() throws Exception {
+		//given
+		int age = 27;
+		FluentCustomerBean bean = new FluentCustomerBean("Cristina", age);
+
+		//when
+		findSetter(bean, "customerAge", int.class).invoke(bean, age);
+
+		//then
+		assertEquals(new Integer(age), bean.customerAge());
 	}
 
 	/**

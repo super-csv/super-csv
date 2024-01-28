@@ -17,12 +17,26 @@ public class FluentCustomerBean {
 
 	private String customerName;
 
-	public FluentCustomerBean(String customerName) {
+	private Integer customerAge;
+
+	public FluentCustomerBean(String customerName, Integer customerAge) {
 		this.customerName = customerName;
+		this.customerAge = customerAge;
 	}
 
 	public String customerName() {
 		return customerName;
 	}
 
+	public void customerName(String aName) {
+		this.customerName = aName;
+	}
+
+	public Integer customerAge() {
+		return customerAge;
+	}
+
+	public void customerAge(Integer customerAge) {
+		this.customerAge = customerAge;
+	}
 }
