@@ -63,4 +63,13 @@ public class ConvertNullToTest {
 		assertEquals(notNull, processorChain.execute(notNull, ANONYMOUS_CSVCONTEXT));
 	}
 	
+	/**
+	 * Tests that the substitute value is passed to the next processor when the input is null.
+	 */
+	@Test
+	public void testNullSubstitutePassedToNextProcessor() {
+		CellProcessor parseDefaultNegativeOne = new ConvertNullTo("-1", new ParseLong());
+		assertEquals(Long.valueOf(-1L), parseDefaultNegativeOne.execute(null, ANONYMOUS_CSVCONTEXT));
+	}
+	
 }

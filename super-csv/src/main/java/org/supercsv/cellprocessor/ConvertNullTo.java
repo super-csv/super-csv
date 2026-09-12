@@ -77,7 +77,7 @@ public class ConvertNullTo extends CellProcessorAdaptor implements BoolCellProce
 	 */
 	public Object execute(final Object value, final CsvContext context) {
 		if( value == null ) {
-			return returnValue;
+			return next.execute(returnValue, context);
 		}
 		
 		return next.execute(value, context);
